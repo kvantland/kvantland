@@ -17,8 +17,9 @@ main {
 	text-align: center;
 	font-size: 1.25rem;
 	font-weight: bold;
-	width: 12rem;
+	min-width: 12rem;
 	height: 3rem;
+	padding: 0.2em 0.5em;
 }
 
 .answer_area_radio li {

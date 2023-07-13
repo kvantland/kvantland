@@ -40,8 +40,8 @@ def show_question(cur):
 	print('</main>')
 
 def check_answer(cur):
-	cur.execute('select Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (вариант,))
-	(тип, название, описание, содержание), = cur.fetchall()
+	cur.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) join Группа using (группа) where вариант = %s', (вариант,))
+	(город, тип, название, описание, содержание), = cur.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
 
 	ok = typedesc.validate(содержание, ответ)
@@ -53,6 +53,9 @@ def check_answer(cur):
 	print(f'<p class="description">{описание}</p>')
 	print(f'<div class="result_area result_{ok}">')
 	print(result_text[ok])
+	print('</div>')
+	print('<div class="button_bar">')
+	print(f'<a href="/town/index.py?id={город}"><button>Вернуться в город</button></a>')
 	print('</div>')
 	print('</main>')
 
