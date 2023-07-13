@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2023-07-12T18:51:33.691Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/20.7.4 Chrome/106.0.5249.199 Electron/21.3.3 Safari/537.36" etag="88i_WYAconDAEQr2XCvZ" compressed="false" version="20.7.4" type="device" pages="2">
+<mxfile host="Electron" modified="2023-07-13T15:32:17.593Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/20.7.4 Chrome/106.0.5249.199 Electron/21.3.3 Safari/537.36" etag="uJjlr6srw54gAejlkDg4" compressed="false" version="20.7.4" type="device" pages="2">
   <diagram id="8aHN4h0mdV41nYYdj37R" name="Страница 1">
-    <mxGraphModel dx="2474" dy="1606" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1646" dy="949" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -17,7 +17,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="lObofczXTAJIooY1tHfW-282" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmany;startArrow=ERmandOne;rounded=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;endFill=0;" parent="1" source="lObofczXTAJIooY1tHfW-300" target="lObofczXTAJIooY1tHfW-298" edge="1">
+        <mxCell id="lObofczXTAJIooY1tHfW-282" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERmany;startArrow=ERmandOne;rounded=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;endFill=0;" parent="1" source="lObofczXTAJIooY1tHfW-300" target="lObofczXTAJIooY1tHfW-296" edge="1">
           <mxGeometry width="100" height="100" relative="1" as="geometry">
             <mxPoint x="890" y="-330.0000000000001" as="sourcePoint" />
             <mxPoint x="990" y="-430.0000000000001" as="targetPoint" />
@@ -62,7 +62,7 @@
           <mxGeometry y="30" width="160" height="90" as="geometry" />
         </mxCell>
         <mxCell id="lObofczXTAJIooY1tHfW-299" value="Тип" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="960" width="160" height="120" as="geometry" />
+          <mxGeometry x="720" y="160" width="160" height="120" as="geometry" />
         </mxCell>
         <mxCell id="lObofczXTAJIooY1tHfW-300" value="+название: text" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;" parent="lObofczXTAJIooY1tHfW-299" vertex="1">
           <mxGeometry y="30" width="160" height="90" as="geometry" />
