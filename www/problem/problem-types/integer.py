@@ -1,5 +1,5 @@
 def entry_form(data):
-	print('<input type="number" name="answer" />')
+	print('<input name="answer" type="number" required />')
 
 def validate(data, answer):
 	answer = int(answer)
