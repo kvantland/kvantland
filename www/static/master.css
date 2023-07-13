@@ -24,3 +24,11 @@ main {
 .answer_area_radio li {
 	list-style-type: none;
 }
+
+.result_False {
+	color: red;
+}
+
+.result_True {
+	color: green;
+}

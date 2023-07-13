@@ -15,6 +15,11 @@ print('Content-Type: text/html; charset=utf-8')
 print()
 print('<!DOCTYPE html>')
 
+result_text = {
+	True: 'Верно!',
+	False: 'Неверно',
+}
+
 def show_question(cur):
 	cur.execute('select Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (вариант,))
 	(тип, название, описание, содержание), = cur.fetchall()
@@ -38,13 +43,16 @@ def check_answer(cur):
 	cur.execute('select Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (вариант,))
 	(тип, название, описание, содержание), = cur.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
+
+	ok = typedesc.validate(содержание, ответ)
+
 	print(f'<title>{название}</title>')
 	print('<link rel="stylesheet" type="text/css" href="/static/master.css">')
 	print('<main>')
 	print(f'<h1>{название}</h1>')
 	print(f'<p class="description">{описание}</p>')
-	print('<div class="result_area">')
-	print(typedesc.validate(содержание, ответ))
+	print(f'<div class="result_area result_{ok}">')
+	print(result_text[ok])
 	print('</div>')
 	print('</main>')
 
