@@ -15,8 +15,9 @@ main {
 
 .button_bar button {
 	text-align: center;
+	font-family: inherit;
 	font-size: 1.25rem;
-	font-weight: bold;
+	font-weight: normal;
 	min-width: 12rem;
 	height: 3rem;
 	padding: 0.2em 0.5em;
