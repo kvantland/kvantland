@@ -34,6 +34,21 @@ main {
 	color: green;
 }
 
+
+.number_square {
+	border-spacing: 0;
+	border-collapse: collapse;
+	font-size: 1.25em;
+}
+
+.number_square td {
+	width: 1.75em;
+	height: 1.75em;
+	text-align: center;
+	vertical-align: middle;
+	border: 0.1em solid currentColor;
+}
+
 /** SVG **/
 /* NOTE: тут 1px — не 1px, а относительная единица. */
 
