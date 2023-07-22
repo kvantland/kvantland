@@ -33,3 +33,27 @@ main {
 .result_True {
 	color: green;
 }
+
+/** SVG **/
+/* NOTE: тут 1px — не 1px, а относительная единица. */
+
+text {
+	fill: currentColor;
+	stroke: none;
+}
+
+.map .town {
+	color: #322;
+	font-family: "Open Sans", sans-serif;
+	font-size: 3px;
+	font-variant: small-caps;
+}
+
+.map .town:hover {
+	color: #C30;
+}
+
+.map .town-name {
+	stroke: none;
+	font-weight: bold;
+}
