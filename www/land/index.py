@@ -3,7 +3,6 @@
 import json
 import os
 from sys import stdin
-from importlib import import_module
 from urllib.parse import parse_qsl
 from html import escape
 

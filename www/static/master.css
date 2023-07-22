@@ -42,15 +42,22 @@ text {
 	stroke: none;
 }
 
-.map .town {
+.map {
 	color: #322;
 	font-family: "Open Sans", sans-serif;
-	font-size: 3px;
-	font-variant: small-caps;
 }
 
-.map .town:hover {
+.map a {
+	color: inherit;
+}
+
+.map a:hover {
 	color: #C30;
+}
+
+.map .town {
+	font-size: 3px;
+	font-variant: small-caps;
 }
 
 .map .town-name {

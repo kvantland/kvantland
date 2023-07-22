@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 
-import psycopg2
 import json
 import os
 from sys import stdin
-from importlib import import_module
 from urllib.parse import parse_qsl
 from html import escape
 
@@ -29,9 +27,11 @@ def show_town(cur):
 	print('</main>')
 
 try:
+	import psycopg
+
 	город = int(query['id'])
 
-	with psycopg2.connect('postgres://kvantland:quant@127.0.0.1') as con:
+	with psycopg.connect('postgres://kvantland:quant@127.0.0.1') as con:
 		with con.cursor() as cur:
 			show_town(cur)
 except Exception as e:
