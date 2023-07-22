@@ -36,6 +36,9 @@ def show_town(cur):
 		print(f'<text class="level-value">{баллы}</text>')
 		print(f'</a>')
 	print('</svg>')
+	print('<div class="button_bar">')
+	print(f'<a href="/land/index.py"><button>К карте Квантландии</button></a>')
+	print('</div>')
 	print('</main>')
 
 try:
