@@ -42,8 +42,8 @@ class Handler(http.server.CGIHTTPRequestHandler):
 			self.send_error(e.code, e.text)
 
 	def run_cgi(self):
-		dir = ''
 		path = self.path
+		dir, rest = '', path
 		i = path.find('/', len(dir) + 1)
 		while i >= 0:
 			nextdir = path[:i]
