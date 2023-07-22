@@ -23,7 +23,7 @@ def show_town(cur):
 	print(f'<h1>{название}</h1>')
 	print('<svg class="map" viewBox="0 0 100 100">')
 	print(f'<image href="/static/map/town-{город}.jpg" width="100" height="100" />')
-	cur.execute('select группа, положение, баллы from Группа where город = %s', (город,))
+	cur.execute('select группа, положение, баллы from Группа where город = %s and exists(select 1 from Задача where Задача.группа = Группа.группа)', (город,))
 	for группа, положение, баллы in cur.fetchall():
 		try:
 			x, y = положение
