@@ -36,6 +36,11 @@ class PostgresPlugin(object):
 			except bottle.HTTPResponse as e:
 				if e.status_code // 100 in [2, 3]:
 					self.connection.commit()
+				else:
+					self.connection.rollback()
+				raise
+			except:
+				self.connection.rollback()
 				raise
 			else:
 				self.connection.commit()
