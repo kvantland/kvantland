@@ -89,13 +89,14 @@ text {
 	font-weight: bold;
 
 	fill: currentColor;
-	color: hsl(50 100% 50%);
-	stroke: hsl(45 100% 40%);
+	color: oklch(100% 70% 60);
+	stroke: oklch(60% 30% 60);
 	stroke-width: 0.2px;
 }
 
 .map .level:hover {
-	color: hsl(50 100% 80%);
+	color: oklch(80% 70% 30);
+	stroke: oklch(60% 30% 30);
 }
 
 .map .level-value {
