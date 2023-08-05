@@ -15,15 +15,15 @@ def show_town(db, town):
 	yield f'<h1>{название}</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/town-{town}.jpg" width="100" height="100" />'
-	db.execute('select группа, положение, баллы from Группа where город = %s and exists(select 1 from Задача where Задача.группа = Группа.группа)', (town,))
-	for группа, положение, баллы in db.fetchall():
+	db.execute('select задача, положение, баллы, название from Задача where город = %s', (town,))
+	for задача, положение, баллы, название in db.fetchall():
 		try:
 			x, y = положение
 		except TypeError:
 			μ, σ = 50.0, 15.0
 			x = random.normalvariate(μ, σ)
 			y = random.normalvariate(μ, σ)
-		yield f'<a class="level" transform="translate({x} {y})" href="/problem/next?group={группа}">'
+		yield f'<a class="level" transform="translate({x} {y})" href="/problem/next?problem={задача}"><title>{название}</title>'
 		yield f'<circle class="level-icon" r="0.65em" />'
 		yield f'<text class="level-value">{баллы}</text>'
 		yield f'</a>'

@@ -38,7 +38,7 @@ def show_question(db, variant):
 
 @route('/problem/<variant:int>/', method='POST')
 def check_answer(db, variant):
-	db.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) join Группа using (группа) where вариант = %s', (variant,))
+	db.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
 	(город, тип, название, описание, содержание), = db.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
 
@@ -61,14 +61,7 @@ def check_answer(db, variant):
 
 @route('/problem/next')
 def next_problem(db):
-	группа = int(request.query.group)
-
-	db.execute('select задача from Задача where группа = %s and видимость order by random() limit 1', (группа,))
-	задачи = db.fetchall()
-	if not задачи:
-		yield 'Задач не найдено!'
-		return
-	(задача, ), = задачи
+	задача = int(request.query.problem)
 
 	db.execute('select вариант from Вариант where задача = %s order by random() limit 1', (задача,))
 	варианты = db.fetchall()

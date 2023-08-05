@@ -15,20 +15,13 @@ create table Город (
 	, положение point
 );
 
-create table Группа (
-	группа int primary key generated always as identity
-	, город int not null references Город on delete cascade
-	, баллы int not null
-	, положение point
-	, unique (город, баллы)
-);
-
 create table Задача (
 	задача int primary key generated always as identity
-	, группа int not null references Группа on delete cascade
-	, тип int not null references Тип on delete cascade
+	, город int not null references Город on delete cascade
+	, тип int not null references Тип on delete restrict
 	, название text not null unique
-	, видимость bool not null default false
+	, положение point
+	, баллы int not null
 );
 
 create table Вариант (
