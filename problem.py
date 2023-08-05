@@ -8,7 +8,8 @@ result_text = {
 	False: 'Неверно',
 }
 
-@route('/problem/<variant:int>/')
+ученик = 1  # FIXME
+
 def show_question(db, variant):
 	db.execute('select Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
 	(тип, название, описание, содержание), = db.fetchall()
@@ -29,7 +30,6 @@ def show_question(db, variant):
 	yield '</form>'
 	yield '</main>'
 
-@route('/problem/<variant:int>/', method='POST')
 def check_answer(db, variant):
 	db.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
 	(город, тип, название, описание, содержание), = db.fetchall()
@@ -52,9 +52,21 @@ def check_answer(db, variant):
 	yield '</div>'
 	yield '</main>'
 
+@route('/problem/current')
+def problem_current(db):
+	db.execute('select вариант from ТекущаяЗадача where ученик = %s', (ученик, ))
+	(вариант, ), = db.fetchall()
+	yield from show_question(db, вариант)
+
+@route('/problem/current', method='POST')
+def problem_answer(db):
+	db.execute('select вариант from ТекущаяЗадача where ученик = %s', (ученик, ))
+	(вариант, ), = db.fetchall()
+	db.execute('delete from ТекущаяЗадача where ученик = %s', (ученик, ))
+	yield from check_answer(db, вариант)
+
 @route('/problem/next')
-def next_problem(db):
-	ученик = 1  # FIXME
+def problem_next(db):
 	задача = int(request.query.problem)
 
 	db.execute('select вариант from Вариант where задача = %s order by random() limit 1', (задача,))
@@ -64,6 +76,7 @@ def next_problem(db):
 		return
 	(вариант, ), = варианты
 
+	db.execute('insert into ТекущаяЗадача (ученик, вариант) values (%s, %s)', (ученик, вариант))
 	db.execute('insert into ЗакрытиеЗадачи (ученик, задача) values (%s, %s)', (ученик, задача))
 
-	redirect(f'{вариант}/')
+	redirect('current')
