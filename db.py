@@ -29,10 +29,16 @@ class PostgresPlugin(object):
 			return callback
 
 		def wrapper(*args, **kwargs):
-			with self.connection.transaction():
+			try:
 				with self.connection.cursor() as cur:
 					kwargs[keyword] = cur
 					yield from callback(*args, **kwargs)
+			except bottle.HTTPResponse as e:
+				if e.status_code // 100 in [2, 3]:
+					self.connection.commit()
+				raise
+			else:
+				self.connection.commit()
 
 		return wrapper
 
