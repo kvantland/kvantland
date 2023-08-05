@@ -1,14 +1,7 @@
 #!/usr/bin/python3
 
 from bottle import route, request, redirect
-
-import psycopg2
-import json
-import os
-from sys import stdin
 from importlib import import_module
-from urllib.parse import parse_qsl
-from html import escape
 
 result_text = {
 	True: 'Верно!',
