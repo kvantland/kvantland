@@ -15,18 +15,19 @@ def show_town(db, town):
 	yield f'<h1>{название}</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/town-{town}.jpg" width="100" height="100" />'
-	db.execute('select задача, положение, баллы, название from Задача where город = %s', (town,))
-	for задача, положение, баллы, название in db.fetchall():
+	db.execute('select задача, положение, баллы, название, ученик is null открыта from Задача left join (select * from ЗакрытиеЗадачи where ученик = %s) Закрытие using (задача) where город = %s', (1, town))
+	for задача, положение, баллы, название, открыта in db.fetchall():
 		try:
 			x, y = положение
 		except TypeError:
 			μ, σ = 50.0, 15.0
 			x = random.normalvariate(μ, σ)
 			y = random.normalvariate(μ, σ)
-		yield f'<a class="level" transform="translate({x} {y})" href="/problem/next?problem={задача}"><title>{название}</title>'
+		tag = 'a' if открыта else 'g'
+		yield f'<{tag} href="/problem/next?problem={задача}" class="level" transform="translate({x} {y})"><title>{название}</title>'
 		yield f'<circle class="level-icon" r="0.65em" />'
 		yield f'<text class="level-value">{баллы}</text>'
-		yield f'</a>'
+		yield f'</{tag}>'
 	yield '</svg>'
 	yield '<div class="button_bar">'
 	yield f'<a href="/"><button>К карте Квантландии</button></a>'

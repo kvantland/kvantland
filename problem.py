@@ -61,6 +61,7 @@ def check_answer(db, variant):
 
 @route('/problem/next')
 def next_problem(db):
+	ученик = 1  # FIXME
 	задача = int(request.query.problem)
 
 	db.execute('select вариант from Вариант where задача = %s order by random() limit 1', (задача,))
@@ -69,5 +70,7 @@ def next_problem(db):
 		yield 'Вариантов не найдено!'
 		return
 	(вариант, ), = варианты
+
+	db.execute('insert into ЗакрытиеЗадачи (ученик, задача) values (%s, %s)', (ученик, задача))
 
 	redirect(f'{вариант}/')
