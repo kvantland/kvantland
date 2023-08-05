@@ -29,9 +29,10 @@ class PostgresPlugin(object):
 			return callback
 
 		def wrapper(*args, **kwargs):
-			with self.connection.cursor() as cur:
-				kwargs[keyword] = cur
-				yield from callback(*args, **kwargs)
+			with self.connection.transaction():
+				with self.connection.cursor() as cur:
+					kwargs[keyword] = cur
+					yield from callback(*args, **kwargs)
 
 		return wrapper
 
