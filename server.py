@@ -3,18 +3,9 @@
 from pathlib import Path
 from bottle import route, run, static_file, install
 
-try:
-	import tomllib
-except ImportError:
-	import tomli as tomllib
-
 import db
-import land, town, problem
-
-ROOT = Path(__file__).parent
-
-with open(ROOT / 'config.toml', 'rb') as f:
-	config = tomllib.load(f)
+import land, town, problem, login
+from config import config, ROOT
 
 cfg_static = config.get('static')
 if cfg_static:
