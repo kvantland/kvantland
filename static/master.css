@@ -14,6 +14,10 @@ main {
 	margin: 1em auto;
 }
 
+p {
+	margin: 0.5em 0.0em;
+}
+
 
 .classic_form {
 	margin: 1em auto;
@@ -135,8 +139,8 @@ text {
 }
 
 .map a.level:hover {
-	color: oklch(80% 70% 30);
-	stroke: oklch(60% 30% 30);
+	color: oklch(100% 40% 60);
+	stroke: oklch(60% 15% 60);
 }
 
 .map .level-value {
