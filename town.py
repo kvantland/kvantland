@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
+import random
 from bottle import route
 
-import random
+import user
 
 @route('/town/<town:int>/')
 def show_town(db, town):
@@ -11,6 +12,7 @@ def show_town(db, town):
 	(название, ), = db.fetchall()
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield from user.display_banner(db)
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'

@@ -3,6 +3,8 @@
 from bottle import route, request, redirect
 from importlib import import_module
 
+import user
+
 result_text = {
 	True: 'Верно!',
 	False: 'Неверно',
@@ -17,6 +19,7 @@ def show_question(db, variant):
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield from user.display_banner(db)
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
@@ -41,6 +44,7 @@ def check_answer(db, variant):
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield from user.display_banner(db)
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
@@ -51,6 +55,11 @@ def check_answer(db, variant):
 	yield f'<a href="/town/{город}/"><button>Вернуться в город</button></a>'
 	yield '</div>'
 	yield '</main>'
+
+def has_current_problem(db, user):
+	db.execute('select exists(select 1 from ТекущаяЗадача where ученик = %s)', (user, ))
+	(has, ), = db.fetchall()
+	return has
 
 @route('/problem/current')
 def problem_current(db):

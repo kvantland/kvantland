@@ -1,5 +1,10 @@
 @charset "utf-8";
 
+* {
+	margin: 0;
+	padding: 0;
+}
+
 html {
 	font-family: "Linux Biolinum", sans-serif;
 }
@@ -39,6 +44,22 @@ main {
 	min-width: 12rem;
 	height: 3rem;
 	padding: 0.2em 0.5em;
+}
+
+nav.user_nav {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+nav.user_nav ul {
+	text-align: right;
+	margin: 0.5em 0.0em;
+}
+
+nav.user_nav li {
+	display: inline;
+	margin: 0.0em 1.0em;
 }
 
 .answer_area_radio li {
