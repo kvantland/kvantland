@@ -9,3 +9,6 @@ root = 'static'
 
 [db]
 url = 'postgres://user:password@127.0.0.1:5432/database'
+
+[keys]
+cookie = 'any random string'

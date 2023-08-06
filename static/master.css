@@ -6,8 +6,26 @@ html {
 
 main {
 	max-width: 50em;
-	margin: 1em 5em;
+	margin: 1em auto;
 }
+
+
+.classic_form {
+	margin: 1em auto;
+	width: 16em;
+}
+
+.classic_form .label,
+.classic_form input {
+	display: block;
+	width: 100%;
+}
+
+.classic_form label {
+	display: block;
+	margin: 0.5em 0.0em;
+}
+
 
 .button_bar {
 	text-align: right;
@@ -27,6 +45,7 @@ main {
 	list-style-type: none;
 }
 
+.error,
 .result_False {
 	color: red;
 }

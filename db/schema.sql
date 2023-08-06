@@ -34,7 +34,7 @@ create table Вариант (
 create table Ученик (
 	ученик int primary key generated always as identity
 	, логин text not null unique
-	, пароль bytea
+	, пароль text
 	, имя text
 	, счёт int not null default 10
 );
