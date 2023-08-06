@@ -7,8 +7,8 @@
 
 html {
 	font-family: "Linux Biolinum", sans-serif;
-	background: oklch(80% 15% 90);
-	color: oklch(10% 5% 90);
+	background: #cdbd92;
+	color: #050300;
 }
 
 main {
@@ -113,7 +113,7 @@ text {
 }
 
 svg.map {
-	color: oklch(93% 17% 90);
+	color: #f9e7b4;
 	font-family: "Open Sans", sans-serif;
 }
 
@@ -122,7 +122,7 @@ svg.map a {
 }
 
 svg.map a:hover {
-	color: oklch(93% 83% 90);
+	color: #ffd200;
 }
 
 svg.map .town {
@@ -143,14 +143,14 @@ svg.map .level {
 	font-weight: bold;
 
 	fill: currentColor;
-	color: oklch(80% 0% none);
-	stroke: oklch(60% 0% none);
+	color: #bebebe;
+	stroke: #808080;
 	stroke-width: 0.2px;
 }
 
 svg.map a.level:hover {
-	color: oklch(100% 40% 60);
-	stroke: oklch(60% 15% 60);
+	color: #ffe488;
+	stroke: #9b785c;
 }
 
 svg.map .level-value {
@@ -158,6 +158,6 @@ svg.map .level-value {
 }
 
 svg.map a.level {
-	color: oklch(100% 70% 60);
-	stroke: oklch(60% 30% 60);
+	color: #ffc400;
+	stroke: #b36d2a;
 }
