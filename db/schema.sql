@@ -39,16 +39,11 @@ create table Ученик (
 	, счёт int not null default 10
 );
 
-create table ТекущаяЗадача (
-	ученик int not null unique references Ученик on delete cascade,
-	вариант int not null references Вариант on delete cascade,
-	primary key (ученик, вариант)
-);
-
-create table ЗакрытиеЗадачи (
+create table ДоступнаяЗадача (
 	ученик int not null references Ученик on delete cascade,
-	задача int not null references Задача on delete cascade,
-	primary key (ученик, задача)
+	вариант int not null references Вариант on delete restrict,
+	ответ text,
+	primary key (ученик, вариант)
 );
 
 -- kate: syntax SQL (PostgreSQL);

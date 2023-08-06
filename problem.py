@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from bottle import route, request, redirect
+from bottle import route, request, redirect, HTTPError
 from importlib import import_module
 
 import user
@@ -9,8 +9,6 @@ result_text = {
 	True: 'Верно!',
 	False: 'Неверно',
 }
-
-ученик = 1  # FIXME
 
 def show_question(db, variant):
 	db.execute('select Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
@@ -33,13 +31,15 @@ def show_question(db, variant):
 	yield '</form>'
 	yield '</main>'
 
-def check_answer(db, variant):
-	db.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
-	(город, тип, название, описание, содержание), = db.fetchall()
+def check_answer(db, var_id, answer):
+	db.execute('select Тип.код, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	(тип, содержание), = db.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
+	return typedesc.validate(содержание, answer)
 
-	ответ = request.forms.answer
-	ok = typedesc.validate(содержание, ответ)
+def _display_result(db, var_id, ok):
+	db.execute('select город, название, описание from Задача join Вариант using (задача) where вариант = %s', (var_id,))
+	(город, название, описание), = db.fetchall()
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
@@ -61,31 +61,35 @@ def has_current_problem(db, user):
 	(has, ), = db.fetchall()
 	return has
 
-@route('/problem/current')
-def problem_current(db):
-	db.execute('select вариант from ТекущаяЗадача where ученик = %s', (ученик, ))
-	(вариант, ), = db.fetchall()
-	yield from show_question(db, вариант)
+@route('/problem/<var_id:int>/')
+def problem_show(db, var_id):
+	if (user_id := user.current_user()) == None:
+		raise HTTPError(403, 'Требуется вход')
+	db.execute('select ответ from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	try:
+		(answer, ), = db.fetchall()
+	except ValueError:
+		raise HTTPError(403, 'Задача недоступна')
+	if answer is not None:
+		ok = check_answer(db, var_id, answer)
+		return _display_result(db, var_id, ok)
+	return show_question(db, var_id)
 
-@route('/problem/current', method='POST')
-def problem_answer(db):
-	db.execute('select вариант from ТекущаяЗадача where ученик = %s', (ученик, ))
-	(вариант, ), = db.fetchall()
-	db.execute('delete from ТекущаяЗадача where ученик = %s', (ученик, ))
-	yield from check_answer(db, вариант)
+@route('/problem/<var_id:int>/', method='POST')
+def problem_answer(db, var_id):
+	if (user_id := user.current_user()) == None:
+		raise HTTPError(403, 'Требуется вход')
+	db.execute('select ответ from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	try:
+		(answer, ), = db.fetchall()
+	except ValueError:
+		raise HTTPError(403, 'Задача недоступна')
+	if answer is not None:
+		redirect('')
 
-@route('/problem/next')
-def problem_next(db):
-	задача = int(request.query.problem)
-
-	db.execute('select вариант from Вариант where задача = %s order by random() limit 1', (задача,))
-	варианты = db.fetchall()
-	if not варианты:
-		yield 'Вариантов не найдено!'
-		return
-	(вариант, ), = варианты
-
-	db.execute('insert into ТекущаяЗадача (ученик, вариант) values (%s, %s)', (ученик, вариант))
-	db.execute('insert into ЗакрытиеЗадачи (ученик, задача) values (%s, %s)', (ученик, задача))
-
-	redirect('current')
+	answer = request.forms.answer
+	db.execute('update ДоступнаяЗадача set ответ=%s where вариант = %s and ученик = %s', (answer, var_id, user_id))
+	ok = check_answer(db, var_id, answer)
+	if ok:
+		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
+	yield from _display_result(db, var_id, ok)
