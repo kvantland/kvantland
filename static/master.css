@@ -37,7 +37,10 @@ p {
 
 
 .button_bar {
-	text-align: right;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row-reverse;
+	gap: 2.0em;
 }
 
 .button_bar button {

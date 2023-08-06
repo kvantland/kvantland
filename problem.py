@@ -11,8 +11,8 @@ result_text = {
 }
 
 def show_question(db, variant):
-	db.execute('select Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
-	(тип, название, описание, содержание), = db.fetchall()
+	db.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
+	(город, тип, название, описание, содержание), = db.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
@@ -27,6 +27,7 @@ def show_question(db, variant):
 	yield '</div>'
 	yield '<div class="button_bar">'
 	yield '<button type="submit">Отправить</button>'
+	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'
 	yield '</div>'
 	yield '</form>'
 	yield '</main>'
@@ -52,7 +53,7 @@ def _display_result(db, var_id, ok):
 	yield result_text[ok]
 	yield '</div>'
 	yield '<div class="button_bar">'
-	yield f'<a href="/town/{город}/"><button>Вернуться в город</button></a>'
+	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'
 	yield '</div>'
 	yield '</main>'
 
