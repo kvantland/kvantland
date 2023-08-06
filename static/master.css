@@ -7,11 +7,18 @@
 
 html {
 	font-family: "Linux Biolinum", sans-serif;
+	background: oklch(80% 15% 90);
+	color: oklch(10% 5% 90);
 }
 
 main {
 	max-width: 50em;
 	margin: 1em auto;
+}
+
+main.map {
+	max-width: initial;
+	margin: 1em 4em;
 }
 
 p {
@@ -105,31 +112,31 @@ text {
 	stroke: none;
 }
 
-.map {
-	color: #322;
+svg.map {
+	color: oklch(93% 17% 90);
 	font-family: "Open Sans", sans-serif;
 }
 
-.map a {
+svg.map a {
 	color: inherit;
 }
 
-.map a:hover {
-	color: #C30;
+svg.map a:hover {
+	color: oklch(93% 83% 90);
 }
 
-.map .town {
+svg.map .town {
 	font-size: 3px;
 	font-variant: small-caps;
 }
 
-.map .town-name {
+svg.map .town-name {
 	stroke: none;
 	font-weight: bold;
 }
 
 
-.map .level {
+svg.map .level {
 	text-anchor: middle;
 	dominant-baseline: central;
 	font-size: 6px;
@@ -141,16 +148,16 @@ text {
 	stroke-width: 0.2px;
 }
 
-.map a.level:hover {
+svg.map a.level:hover {
 	color: oklch(100% 40% 60);
 	stroke: oklch(60% 15% 60);
 }
 
-.map .level-value {
+svg.map .level-value {
 	stroke: inherit;
 }
 
-.map a.level {
+svg.map a.level {
 	color: oklch(100% 70% 60);
 	stroke: oklch(60% 30% 60);
 }

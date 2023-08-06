@@ -15,7 +15,7 @@ def show_town(db, town):
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield from user.display_banner(db)
-	yield '<main>'
+	yield '<main class="map">'
 	yield f'<h1>{название}</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/town-{town}.jpg" width="100" height="100" />'
