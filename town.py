@@ -7,8 +7,8 @@ import user
 
 @route('/town/<town:int>/')
 def show_town(db, town):
-	if (user_id := user.current_user()) == None:
-		raise HTTPError(403)
+	user_id = user.current_user()
+
 	yield '<!DOCTYPE html>'
 	db.execute('select название from Город where город = %s', (town,))
 	(название, ), = db.fetchall()
@@ -19,7 +19,11 @@ def show_town(db, town):
 	yield f'<h1>{название}</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/town-{town}.jpg" width="100" height="100" />'
-	db.execute('select вариант, положение, баллы, название, ответ is null открыта from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = %s and ученик = %s', (town, user_id))
+
+	if user_id is not None:
+		db.execute('select вариант, положение, баллы, название, ответ is null открыта from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = %s and ученик = %s', (town, user_id))
+	else:
+		db.execute('select null, положение, баллы, название, true открыта from Задача where город = %s', (town,))
 	for вариант, положение, баллы, название, открыта in db.fetchall():
 		try:
 			x, y = положение
@@ -28,7 +32,8 @@ def show_town(db, town):
 			x = random.normalvariate(μ, σ)
 			y = random.normalvariate(μ, σ)
 		tag = 'a' if открыта else 'g'
-		yield f'<{tag} href="/problem/{вариант}/" class="level" transform="translate({x} {y})"><title>{название}</title>'
+		link = f'/problem/{вариант}/' if user_id is not None else f'/login?path=/town/{town}/'
+		yield f'<{tag} href="{link}" class="level" transform="translate({x} {y})"><title>{название}</title>'
 		yield f'<circle class="level-icon" r="0.65em" />'
 		yield f'<text class="level-value">{баллы}</text>'
 		yield f'</{tag}>'
