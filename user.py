@@ -13,6 +13,9 @@ def display_banner(db):
 	yield '<ul>'
 	yield f'<li><a href="/">На главную</a>'
 	if user != None:
+		db.execute('select счёт from Ученик where ученик = %s', (user,))
+		(money, ), = db.fetchall()
+		yield f'<li>Счёт: {money}'
 		yield f'<li><a class="login" href="/logout?path={path_arg}">Выйти</a>'
 	else:
 		yield f'<li><a class="login" href="/login?path={path_arg}">Войти</a>'
