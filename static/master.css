@@ -105,6 +105,25 @@ nav.user_nav li {
 	border: 0.1em solid currentColor;
 }
 
+.geometry {
+	display: block;
+	margin: 0.5em auto;
+
+	fill: none;
+	stroke: #05B;
+	stroke-width: 2px;
+	stroke-linecap: round;
+}
+
+.geometry text {
+	font-size: 16px;
+}
+
+.geometry .angle {
+	stroke: #E30;
+	stroke-width: 1px;
+}
+
 /** SVG **/
 /* NOTE: тут 1px — не 1px, а относительная единица. */
 
