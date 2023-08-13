@@ -2,6 +2,7 @@
 
 from bottle import route, request, redirect, HTTPError
 from importlib import import_module
+from pathlib import Path
 
 import user
 
@@ -10,13 +11,24 @@ result_text = {
 	False: 'Неверно',
 }
 
+def try_read_file(path):
+	path = Path(__file__).parent / path
+	try:
+		with open(path, 'r') as f:
+			return f.read()
+	except OSError:
+		return None
+
 def show_question(db, variant):
 	db.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
 	(город, тип, название, описание, содержание), = db.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
+	script = try_read_file(f'problem-types/{тип}.js')
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	if script:
+		yield f'<script type="text/ecmascript" defer>{script}</script>'
 	yield from user.display_banner(db)
 	yield '<main>'
 	yield f'<h1>{название}</h1>'

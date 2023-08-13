@@ -105,6 +105,45 @@ nav.user_nav li {
 	border: 0.1em solid currentColor;
 }
 
+.field {
+	border-spacing: 0;
+	border-collapse: collapse;
+	font-size: 4.0em;
+	margin: 1.0rem auto;
+}
+
+.field td {
+	width: 1.0em;
+	height: 1.0em;
+	text-align: center;
+	vertical-align: middle;
+	border: 0.03em solid rgba(0, 0, 0, 0.2);
+}
+
+.field td .label {
+	display: block;
+	font-size: 65%;
+}
+
+td.tile {
+	border: 0.07em solid currentColor;
+	background: #7C0;
+}
+
+td.tile:hover {
+	background: #AF6;
+}
+
+td.tile.checked {
+	background: #FA6;
+}
+
+td.tile.checked:hover {
+	background: #F60;
+}
+
+
+
 .geometry {
 	display: block;
 	margin: 0.5em auto;
