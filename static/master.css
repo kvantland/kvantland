@@ -143,7 +143,16 @@ nav.user_nav li {
 	background: #F60;
 }
 
+.chess td {
+	background: #ffffff;
+	border: 0.07em solid currentColor;
+}
 
+.chess tr:nth-child(odd) td:nth-child(even),
+.chess tr:nth-child(even) td:nth-child(odd)
+{
+	background: #e26e10;
+}
 
 
 .picture {
