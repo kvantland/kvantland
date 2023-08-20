@@ -5,10 +5,10 @@ def _shore(content=None):
 		yield str(content)
 		yield '</span>'
 
-def _river_row(w):
+def _river_row(w, text=''):
 	yield '<tr>'
 	yield from _shore()
-	yield w * '<td class="water">'
+	yield f'<td class="water" colspan="{w}">{text}'
 	yield from _shore()
 
 def entry_form(data):
@@ -30,7 +30,7 @@ def entry_form(data):
 			else:
 				yield '<td>'
 		yield from _shore('→')
-	yield from _river_row(data['width'])
+	yield from _river_row(data['width'], "Река")
 	yield '</table>'
 
 def validate(data, answer):
