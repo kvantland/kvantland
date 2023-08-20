@@ -70,33 +70,36 @@ def _display_result(db, var_id, ok):
 	yield '</div>'
 	yield '</main>'
 
+def require_user():
+	if (user_id := user.current_user()) == None:
+		raise HTTPError(403, 'Требуется вход')
+	return user_id
+
 def has_current_problem(db, user):
 	db.execute('select exists(select 1 from ТекущаяЗадача where ученик = %s)', (user, ))
 	(has, ), = db.fetchall()
 	return has
 
-@route('/problem/<var_id:int>/')
-def problem_show(db, var_id):
-	if (user_id := user.current_user()) == None:
-		raise HTTPError(403, 'Требуется вход')
+def get_past_answer_correctness(db, user_id, var_id):
 	db.execute('select ответ_верен from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
 	try:
 		(is_answer_correct, ), = db.fetchall()
 	except ValueError:
 		raise HTTPError(403, 'Задача недоступна')
+	return is_answer_correct
+
+@route('/problem/<var_id:int>/')
+def problem_show(db, var_id):
+	user_id = require_user()
+	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		return _display_result(db, var_id, is_answer_correct)
 	return show_question(db, var_id)
 
 @route('/problem/<var_id:int>/', method='POST')
 def problem_answer(db, var_id):
-	if (user_id := user.current_user()) == None:
-		raise HTTPError(403, 'Требуется вход')
-	db.execute('select ответ_верен from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
-	try:
-		(is_answer_correct, ), = db.fetchall()
-	except ValueError:
-		raise HTTPError(403, 'Задача недоступна')
+	user_id = require_user()
+	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		redirect('')
 
