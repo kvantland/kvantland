@@ -53,11 +53,10 @@ def show_question(db, variant, hint_mode):
 	yield '<div class="button_bar">'
 	yield '<button type="submit" form="problem_form">Отправить</button>'
 	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'
-	match hint_mode:
-		case HintMode.AFFORDABLE:
-			yield f'<form action="hint" method="post" class="hint"><button type="submit">Подсказку (стоимость: {стоимость_подсказки})</button></form>'
-		case HintMode.TOO_EXPENSIVE:
-			yield f'<button type="button" disabled title="Недостаточно квантиков">Подсказку (стоимость: {стоимость_подсказки})</button>'
+	if hint_mode == HintMode.AFFORDABLE:
+		yield f'<form action="hint" method="post" class="hint"><button type="submit">Подсказку (стоимость: {стоимость_подсказки})</button></form>'
+	elif hint_mode == HintMode.TOO_EXPENSIVE:
+		yield f'<button type="button" disabled title="Недостаточно квантиков">Подсказку (стоимость: {стоимость_подсказки})</button>'
 	yield '</div>'
 	yield '</main>'
 
