@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	const checked = 'checked';
-	const base = document.querySelector('.field');
+	const base = document.querySelector('.grid');
 	const sender = document.createElement('input');
 	sender.type = 'hidden';
 	sender.name = 'answer';

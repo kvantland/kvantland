@@ -113,6 +113,7 @@ nav.user_nav li {
 }
 
 .grid td {
+	min-width: 1.0em;
 	width: 1.0em;
 	height: 1.0em;
 	text-align: center;
@@ -142,6 +143,38 @@ nav.user_nav li {
 .field td.tile.checked:hover {
 	background: #F60;
 }
+
+
+.glass-bridge td.land {
+	background: #390;
+	min-width: 1.0em;
+	width: 2em;
+	border: none;
+}
+
+.glass-bridge td.water {
+	background: #69C;
+	height: 2em;
+	border: none;
+}
+
+.glass-bridge td.tile {
+	border: 0.07em solid currentColor;
+	background: #c9daf8;
+}
+
+.glass-bridge td.tile:hover {
+	background: #72b2ff;
+}
+
+.glass-bridge td.tile.checked {
+	background: #FC6;
+}
+
+.glass-bridge td.tile.checked:hover {
+	background: #F90;
+}
+
 
 .chess td {
 	background: #ffffff;
