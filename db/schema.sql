@@ -24,6 +24,13 @@ create table Задача (
 	, баллы int not null
 );
 
+create table Подсказка (
+	задача int not null references Задача on delete cascade,
+	текст text not null,
+	стоимость int not null,
+	primary key (задача)
+);
+
 create table Вариант (
 	вариант int primary key generated always as identity
 	, задача int not null references Задача on delete cascade
@@ -36,7 +43,7 @@ create table Ученик (
 	, логин text not null unique
 	, пароль text
 	, имя text
-	, счёт int not null default 10
+	, счёт int not null default 10 check (счёт >= 0)
 );
 
 create table ДоступнаяЗадача (
@@ -44,6 +51,7 @@ create table ДоступнаяЗадача (
 	вариант int not null references Вариант on delete restrict,
 	ответ_верен bool null,
 	ответ_дан bool generated always as (ответ_верен is not null) stored,
+	подсказка_взята bool not null default false,
 	primary key (ученик, вариант)
 );
 

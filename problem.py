@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
 from bottle import route, request, redirect, HTTPError
+from enum import Enum, auto
 from importlib import import_module
 from pathlib import Path
+import psycopg
 
 import user
 
@@ -10,6 +12,12 @@ result_text = {
 	True: 'Верно!',
 	False: 'Неверно',
 }
+
+class HintMode(Enum):
+	NONE = auto()
+	SHOW = auto()
+	AFFORDABLE = auto()
+	TOO_EXPENSIVE = auto()
 
 def try_read_file(path):
 	path = Path(__file__).parent / path
@@ -19,9 +27,9 @@ def try_read_file(path):
 	except OSError:
 		return None
 
-def show_question(db, variant):
-	db.execute('select город, Тип.код, Задача.название, описание, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (variant,))
-	(город, тип, название, описание, содержание), = db.fetchall()
+def show_question(db, variant, hint_mode):
+	db.execute('select город, Тип.код, Задача.название, описание, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) left join Подсказка using (задача) where вариант = %s', (variant,))
+	(город, тип, название, описание, содержание, подсказка, стоимость_подсказки), = db.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
 	script = try_read_file(f'problem-types/{тип}.js')
 	yield '<!DOCTYPE html>'
@@ -34,12 +42,22 @@ def show_question(db, variant):
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
-	yield f'<form method="post" id="problem_form" class="answer_area answer_area_{тип}">'
+	yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
 	yield from typedesc.entry_form(содержание)
 	yield '</form>'
+	if hint_mode == HintMode.SHOW:
+		yield '<section>'
+		yield '<h2>Подсказка</h2>'
+		yield f'<p class="hint">{подсказка}</p>'
+		yield '</section>'
 	yield '<div class="button_bar">'
 	yield '<button type="submit" form="problem_form">Отправить</button>'
 	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'
+	match hint_mode:
+		case HintMode.AFFORDABLE:
+			yield f'<form action="hint" method="post" class="hint"><button type="submit">Подсказку (стоимость: {стоимость_подсказки})</button></form>'
+		case HintMode.TOO_EXPENSIVE:
+			yield f'<button type="button" disabled title="Недостаточно квантиков">Подсказку (стоимость: {стоимость_подсказки})</button>'
 	yield '</div>'
 	yield '</main>'
 
@@ -92,7 +110,19 @@ def problem_show(db, var_id):
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		return _display_result(db, var_id, is_answer_correct)
-	return show_question(db, var_id)
+
+	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	(hinted, ), = db.fetchall()
+	if hinted:
+		hint_mode = HintMode.SHOW
+	else:
+		db.execute('select счёт >= стоимость from Подсказка join Вариант using (задача), Ученик where вариант = %s and ученик = %s', (var_id, user_id))
+		try:
+			(can_afford_hint, ), =db.fetchall()
+			hint_mode = HintMode.AFFORDABLE if can_afford_hint else HintMode.TOO_EXPENSIVE
+		except ValueError:
+			hint_mode = HintMode.NONE
+	return show_question(db, var_id, hint_mode)
 
 @route('/problem/<var_id:int>/', method='POST')
 def problem_answer(db, var_id):
@@ -107,3 +137,26 @@ def problem_answer(db, var_id):
 	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
 	yield from _display_result(db, var_id, is_answer_correct)
+
+
+def _request_hint(db, var_id):
+	user_id = require_user()
+	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
+	if is_answer_correct is not None:
+		return
+
+	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	(hinted, ), = db.fetchall()
+	if hinted:
+		return
+
+	db.execute('update ДоступнаяЗадача set подсказка_взята=true where вариант = %s and ученик = %s', (var_id, user_id))
+	try:
+		db.execute('update Ученик set счёт=счёт - (select стоимость from Подсказка join Вариант using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
+	except psycopg.errors.CheckViolation:
+		pass
+
+@route('/problem/<var_id:int>/hint', method='POST')
+def problem_request_hint(db, var_id):
+	_request_hint(db, var_id)
+	redirect('.')

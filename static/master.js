@@ -3,6 +3,15 @@ function confirm_answer(ev) {
 		ev.preventDefault()
 }
 
-for (let form of document.forms) {
+function confirm_hint(ev) {
+	if (!confirm('Точно запросить подсказку?'))
+		ev.preventDefault()
+}
+
+for (let form of document.querySelectorAll("form.problem")) {
 	form.addEventListener('submit', confirm_answer)
+}
+
+for (let form of document.querySelectorAll("form.hint")) {
+	form.addEventListener('submit', confirm_hint)
 }
