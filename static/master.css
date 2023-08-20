@@ -145,10 +145,13 @@ nav.user_nav li {
 
 
 
-.geometry {
+
+.picture {
 	display: block;
 	margin: 0.5em auto;
+}
 
+.geometry {
 	fill: none;
 	stroke: #05B;
 	stroke-width: 2px;
