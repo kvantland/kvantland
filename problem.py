@@ -42,14 +42,14 @@ def show_question(db, variant, hint_mode):
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
+	if hint_mode == HintMode.SHOW:
+		yield '<section class="hint">'
+		yield '<h2>Подсказка</h2>'
+		yield f'<p>{подсказка}</p>'
+		yield '</section>'
 	yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
 	yield from typedesc.entry_form(содержание)
 	yield '</form>'
-	if hint_mode == HintMode.SHOW:
-		yield '<section>'
-		yield '<h2>Подсказка</h2>'
-		yield f'<p class="hint">{подсказка}</p>'
-		yield '</section>'
 	yield '<div class="button_bar">'
 	yield '<button type="submit" form="problem_form">Отправить</button>'
 	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'

@@ -77,6 +77,12 @@ nav.user_nav li {
 	margin: 0.0em 1.0em;
 }
 
+section.hint {
+	border: 2px solid rgba(0, 0, 0, 0.15);
+	margin: 2em 0em;
+	padding: 0.5em 1em;
+}
+
 .answer_area_radio li {
 	list-style-type: none;
 }
