@@ -2,7 +2,7 @@ def entry_form(data):
 	mask = data['mask'].split('\n')
 	assert len(mask) == data['height']
 
-	yield '<table class="field">'
+	yield '<table class="grid field">'
 	for y, row in enumerate(mask):
 		assert len(row) == data['width']
 		yield '<tr>'

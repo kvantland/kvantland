@@ -105,14 +105,14 @@ nav.user_nav li {
 	border: 0.1em solid currentColor;
 }
 
-.field {
+.grid {
 	border-spacing: 0;
 	border-collapse: collapse;
 	font-size: 4.0em;
 	margin: 1.0rem auto;
 }
 
-.field td {
+.grid td {
 	width: 1.0em;
 	height: 1.0em;
 	text-align: center;
@@ -120,25 +120,26 @@ nav.user_nav li {
 	border: 0.03em solid rgba(0, 0, 0, 0.2);
 }
 
-.field td .label {
+.grid td .label {
 	display: block;
 	font-size: 65%;
 }
 
-td.tile {
+
+.field td.tile {
 	border: 0.07em solid currentColor;
 	background: #7C0;
 }
 
-td.tile:hover {
+.field td.tile:hover {
 	background: #AF6;
 }
 
-td.tile.checked {
+.field td.tile.checked {
 	background: #FA6;
 }
 
-td.tile.checked:hover {
+.field td.tile.checked:hover {
 	background: #F60;
 }
 
