@@ -79,31 +79,30 @@ def has_current_problem(db, user):
 def problem_show(db, var_id):
 	if (user_id := user.current_user()) == None:
 		raise HTTPError(403, 'Требуется вход')
-	db.execute('select ответ from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	db.execute('select ответ_верен from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
 	try:
-		(answer, ), = db.fetchall()
+		(is_answer_correct, ), = db.fetchall()
 	except ValueError:
 		raise HTTPError(403, 'Задача недоступна')
-	if answer is not None:
-		ok = check_answer(db, var_id, answer)
-		return _display_result(db, var_id, ok)
+	if is_answer_correct is not None:
+		return _display_result(db, var_id, is_answer_correct)
 	return show_question(db, var_id)
 
 @route('/problem/<var_id:int>/', method='POST')
 def problem_answer(db, var_id):
 	if (user_id := user.current_user()) == None:
 		raise HTTPError(403, 'Требуется вход')
-	db.execute('select ответ from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	db.execute('select ответ_верен from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
 	try:
-		(answer, ), = db.fetchall()
+		(is_answer_correct, ), = db.fetchall()
 	except ValueError:
 		raise HTTPError(403, 'Задача недоступна')
-	if answer is not None:
+	if is_answer_correct is not None:
 		redirect('')
 
 	answer = request.forms.answer
-	db.execute('update ДоступнаяЗадача set ответ=%s where вариант = %s and ученик = %s', (answer, var_id, user_id))
-	ok = check_answer(db, var_id, answer)
-	if ok:
+	is_answer_correct = check_answer(db, var_id, answer)
+	db.execute('update ДоступнаяЗадача set ответ_верен=%s where вариант = %s and ученик = %s', (is_answer_correct, var_id, user_id))
+	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	yield from _display_result(db, var_id, ok)
+	yield from _display_result(db, var_id, is_answer_correct)

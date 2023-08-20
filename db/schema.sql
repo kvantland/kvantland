@@ -42,7 +42,8 @@ create table Ученик (
 create table ДоступнаяЗадача (
 	ученик int not null references Ученик on delete cascade,
 	вариант int not null references Вариант on delete restrict,
-	ответ text,
+	ответ_верен bool null,
+	ответ_дан bool generated always as (ответ_верен is not null) stored,
 	primary key (ученик, вариант)
 );
 
