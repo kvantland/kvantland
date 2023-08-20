@@ -27,6 +27,7 @@ def show_question(db, variant):
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<script type="module" src="/static/master.js"></script>'
 	if script:
 		yield f'<script type="text/ecmascript" defer>{script}</script>'
 	yield from user.display_banner(db)
