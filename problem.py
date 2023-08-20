@@ -34,15 +34,13 @@ def show_question(db, variant):
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
-	yield '<form method="post">'
-	yield f'<div class="answer_area answer_area_{тип}">'
+	yield f'<form method="post" id="problem_form" class="answer_area answer_area_{тип}">'
 	yield from typedesc.entry_form(содержание)
-	yield '</div>'
+	yield '</form>'
 	yield '<div class="button_bar">'
-	yield '<button type="submit">Отправить</button>'
+	yield '<button type="submit" form="problem_form">Отправить</button>'
 	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'
 	yield '</div>'
-	yield '</form>'
 	yield '</main>'
 
 def check_answer(db, var_id, answer):
