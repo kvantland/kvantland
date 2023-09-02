@@ -1,12 +1,12 @@
 def _shore(content=None):
-	yield '<td class="land">'
+	yield '<td class="pad land">'
 	if content:
 		yield '<span class="label">'
 		yield str(content)
 		yield '</span>'
 
 def _river_row(w, text=''):
-	yield '<tr>'
+	yield '<tr class="pad">'
 	yield from _shore()
 	yield f'<td class="water" colspan="{w}">{text}'
 	yield from _shore()

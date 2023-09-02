@@ -16,9 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		let answer = [];
 		for (const row of base.rows) {
+			if (row.classList.contains('pad'))
+				continue;
 			let answer_row = [];
-			for (const cell of row.cells)
+			for (const cell of row.cells) {
+				if (cell.classList.contains('pad'))
+					continue;
 				answer_row.push(cell.classList.contains(checked) ? 'x' : '-');
+			}
 			answer.push(answer_row.join(''))
 		}
 		sender.value = answer.join('\n')
