@@ -11,7 +11,7 @@ def _river_row(w, text=''):
 	yield f'<td class="water" colspan="{w}">{text}'
 	yield from _shore()
 
-def entry_form(data):
+def entry_form(data, kwargs):
 	mask = data['mask']
 	assert len(mask) == data['height']
 

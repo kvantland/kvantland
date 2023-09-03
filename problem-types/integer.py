@@ -1,4 +1,4 @@
-def entry_form(data):
+def entry_form(data, kwargs):
 	attrs = [
 		'name="answer"',
 		'type="number"',

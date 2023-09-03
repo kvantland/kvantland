@@ -1,4 +1,4 @@
-def entry_form(data):
+def entry_form(data, kwargs):
 	yield '<ul>'
 	for k, answer in enumerate(data['answers']):
 		yield f'<li><label><input name="answer" type="radio" required value="{k}" />{answer}</label></li>'

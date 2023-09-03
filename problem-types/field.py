@@ -1,4 +1,4 @@
-def entry_form(data):
+def entry_form(data, kwargs):
 	mask = data['mask'].split('\n')
 	assert len(mask) == data['height']
 

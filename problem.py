@@ -28,9 +28,23 @@ def try_read_file(path):
 	except OSError:
 		return None
 
+def show_submit_button(**kwargs):
+	yield '<button type="submit" form="problem_form">Отправить</button>'
+
+def show_hint_button(*, hint_mode: HintMode, стоимость_подсказки: int, **kwargs):
+	if hint_mode == HintMode.AFFORDABLE:
+		yield f'<form action="hint" method="post" class="hint"><button type="submit">Подсказку (стоимость: {стоимость_подсказки})</button></form>'
+	elif hint_mode == HintMode.TOO_EXPENSIVE:
+		yield f'<button type="button" disabled title="Недостаточно квантиков">Подсказку (стоимость: {стоимость_подсказки})</button>'
+
+def show_buttons(**kwargs):
+	yield from show_submit_button(**kwargs)
+	yield from show_hint_button(**kwargs)
+
 def show_question(db, variant, hint_mode):
 	db.execute('select город, Город.название, Тип.код, Задача.название, описание, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
 	(город, название_города, тип, название, описание, содержание, подсказка, стоимость_подсказки), = db.fetchall()
+	kwargs = {'hint_mode': hint_mode, 'стоимость_подсказки': стоимость_подсказки}
 	typedesc = import_module(f'problem-types.{тип}')
 	script = try_read_file(f'problem-types/{тип}.js')
 	yield '<!DOCTYPE html>'
@@ -51,15 +65,16 @@ def show_question(db, variant, hint_mode):
 		yield f'<p>{подсказка}</p>'
 		yield '</section>'
 	yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
-	yield from typedesc.entry_form(содержание)
+	yield from typedesc.entry_form(содержание, kwargs)
 	yield '</form>'
-	yield '<div class="button_bar">'
-	yield '<button type="submit" form="problem_form">Отправить</button>'
-	if hint_mode == HintMode.AFFORDABLE:
-		yield f'<form action="hint" method="post" class="hint"><button type="submit">Подсказку (стоимость: {стоимость_подсказки})</button></form>'
-	elif hint_mode == HintMode.TOO_EXPENSIVE:
-		yield f'<button type="button" disabled title="Недостаточно квантиков">Подсказку (стоимость: {стоимость_подсказки})</button>'
-	yield '</div>'
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
+	if show_default_buttons:
+		yield '<div class="button_bar">'
+		yield from show_buttons(**kwargs)
+		yield '</div>'
 	yield '</main>'
 	yield '</div>'
 
