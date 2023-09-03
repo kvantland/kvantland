@@ -2,6 +2,7 @@
 
 from bottle import route
 
+import nav
 import user
 
 @route('/')
@@ -31,6 +32,7 @@ def show_land(db):
 	yield f'<title>Правила — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield from user.display_banner(db)
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<main class="rules">'
 	yield '<h1>Правила</h1>'
 	yield '<p>Игрок путешествует по стране Квантландия, оказываясь в разных городах и областях (Головоломск, Остров Лжецов, Республика Комби, Чиселбург, Геома) и зарабатывает виртуальную валюту «квантик» за решение задач соответствующей темы: Головоломки, Логика, Комбинаторика, Арифметика, Геометрия. Цель игры — получить как можно больше квантиков.'

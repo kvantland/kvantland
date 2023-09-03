@@ -4,6 +4,7 @@ from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
 
 from config import config
+import nav
 
 _key = config['keys']['cookie']
 
@@ -17,11 +18,7 @@ def display_login_form(err: str=None):
 	yield '<!DOCTYPE html>'
 	yield '<title>Вход — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield '<nav class="user_nav">'
-	yield '<ul>'
-	yield '<li><a href="/">На главную</a>'
-	yield '</ul>'
-	yield '</nav>'
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<main>'
 	yield '<h1>Вход</h1>'
 	yield '<form method="post">'

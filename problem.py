@@ -6,6 +6,7 @@ from importlib import import_module
 from pathlib import Path
 import psycopg
 
+import nav
 import user
 
 result_text = {
@@ -28,8 +29,8 @@ def try_read_file(path):
 		return None
 
 def show_question(db, variant, hint_mode):
-	db.execute('select город, Тип.код, Задача.название, описание, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) left join Подсказка using (задача) where вариант = %s', (variant,))
-	(город, тип, название, описание, содержание, подсказка, стоимость_подсказки), = db.fetchall()
+	db.execute('select город, Город.название, Тип.код, Задача.название, описание, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
+	(город, название_города, тип, название, описание, содержание, подсказка, стоимость_подсказки), = db.fetchall()
 	typedesc = import_module(f'problem-types.{тип}')
 	script = try_read_file(f'problem-types/{тип}.js')
 	yield '<!DOCTYPE html>'
@@ -39,6 +40,7 @@ def show_question(db, variant, hint_mode):
 	if script:
 		yield f'<script type="text/ecmascript" defer>{script}</script>'
 	yield from user.display_banner(db)
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
@@ -52,7 +54,6 @@ def show_question(db, variant, hint_mode):
 	yield '</form>'
 	yield '<div class="button_bar">'
 	yield '<button type="submit" form="problem_form">Отправить</button>'
-	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'
 	if hint_mode == HintMode.AFFORDABLE:
 		yield f'<form action="hint" method="post" class="hint"><button type="submit">Подсказку (стоимость: {стоимость_подсказки})</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
@@ -67,21 +68,19 @@ def check_answer(db, var_id, answer):
 	return typedesc.validate(содержание, answer)
 
 def _display_result(db, var_id, ok):
-	db.execute('select город, название, описание from Задача join Вариант using (задача) where вариант = %s', (var_id,))
-	(город, название, описание), = db.fetchall()
+	db.execute('select город, Город.название, Задача.название, описание from Задача join Вариант using (задача) join Город using (город) where вариант = %s', (var_id,))
+	(город, название_города, название, описание), = db.fetchall()
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield from user.display_banner(db)
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
 	yield f'<div class="result_area result_{ok}">'
 	yield result_text[ok]
-	yield '</div>'
-	yield '<div class="button_bar">'
-	yield f'<a href="/town/{город}/"><button type="button">Вернуться в город</button></a>'
 	yield '</div>'
 	yield '</main>'
 

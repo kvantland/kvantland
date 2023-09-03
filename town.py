@@ -3,6 +3,7 @@
 import random
 from bottle import route, HTTPError
 
+import nav
 import user
 
 @route('/town/<town:int>/')
@@ -16,6 +17,7 @@ def show_town(db, town):
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield from user.display_banner(db)
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
@@ -39,7 +41,4 @@ def show_town(db, town):
 		yield f'<text class="level-value">{баллы}</text>'
 		yield f'</{tag}>'
 	yield '</svg>'
-	yield '<div class="button_bar">'
-	yield f'<a href="/"><button>К карте Квантландии</button></a>'
-	yield '</div>'
 	yield '</main>'
