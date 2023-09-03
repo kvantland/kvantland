@@ -10,12 +10,13 @@ def show_town(db, town):
 	user_id = user.current_user()
 
 	yield '<!DOCTYPE html>'
+	yield '<html lang="ru" class="map">'
 	db.execute('select название from Город where город = %s', (town,))
 	(название, ), = db.fetchall()
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield from user.display_banner(db)
-	yield '<main class="map">'
+	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/town-{town}.jpg" width="100" height="100" />'

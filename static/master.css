@@ -12,20 +12,28 @@ html {
 	color: #050300;
 }
 
-main {
+body {
 	max-width: 50em;
 	margin: 1em auto;
 	hyphens: auto;
 	text-align: justify;
 }
 
-main.map {
+html.map body {
 	max-width: initial;
 	margin: 1em 4em;
 }
 
 p {
 	margin: 0.5em 0.0em;
+}
+
+h1.title {
+	font-size: 2rem;
+}
+
+h1 {
+	font-size: 2rem;
 }
 
 

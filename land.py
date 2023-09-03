@@ -7,11 +7,12 @@ import user
 @route('/')
 def show_land(db):
 	yield '<!DOCTYPE html>'
+	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield from user.display_banner(db)
-	yield '<main class="map">'
-	yield f'<h1>Квантландия</h1>'
+	yield '<main>'
+	yield f'<h1 class="title">Квантландия</h1>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/land.jpg" width="100" height="100" />'
 	db.execute('select город, название, положение from Город')
