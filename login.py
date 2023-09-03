@@ -18,6 +18,7 @@ def display_login_form(err: str=None):
 	yield '<!DOCTYPE html>'
 	yield '<title>Вход — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<div class="content_wrapper">'
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<main>'
 	yield '<h1>Вход</h1>'
@@ -33,6 +34,7 @@ def display_login_form(err: str=None):
 		yield f'<p class="error">{err}</p>'
 	yield '</form>'
 	yield '</main>'
+	yield '</div>'
 
 def check_login(db, user_name, password):
 	db.execute('select ученик, пароль from Ученик where логин = %s', (user_name, ))
