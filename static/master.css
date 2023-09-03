@@ -12,6 +12,11 @@
 	color: #050300;
 }
 
+button, input {
+	font-size: 1em; /* yes this is not the default */
+	font-family: inherit; /* neither this is */
+}
+
 body {
 	margin: 1em 0;
 }
@@ -19,6 +24,7 @@ body {
 main {
 	hyphens: auto;
 	text-align: justify;
+	font-size: 1.5rem;
 }
 
 :root.map svg.map {
@@ -45,7 +51,6 @@ h1 {
 
 
 .classic_form {
-	margin: 1em auto;
 	width: 16em;
 }
 
@@ -64,7 +69,7 @@ h1 {
 .button_bar {
 	display: flex;
 	flex-wrap: wrap;
-	flex-direction: row-reverse;
+	flex-direction: row;
 	gap: 2.0em;
 	margin: 1.5em 0em;
 }
@@ -77,6 +82,28 @@ h1 {
 	min-width: 12rem;
 	height: 3rem;
 	padding: 0.2em 0.5em;
+}
+
+.answer_bar {
+	display: flex;
+	justify-content: flex-start;
+	flex-flow: row wrap;
+	gap: 1.0em;
+	margin: 1.5em 0em;
+	line-height: 2.0em;
+	dominant-baseline: middle;
+}
+
+.answer_bar button {
+	padding: 0.3em 1.0em;
+	width: 8em;
+}
+
+.answer_bar input[type=number] {
+	padding: 0.3em;
+	appearance: textfield;
+	width: 6em;
+	text-align: right;
 }
 
 nav.user_nav {
@@ -133,7 +160,7 @@ section.hint {
 .grid {
 	border-spacing: 0;
 	border-collapse: collapse;
-	font-size: 4.0em;
+	font-size: 4.0rem;
 	margin: 1.0rem auto;
 }
 

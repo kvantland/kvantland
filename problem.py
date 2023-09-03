@@ -33,9 +33,9 @@ def show_submit_button(**kwargs):
 
 def show_hint_button(*, hint_mode: HintMode, стоимость_подсказки: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
-		yield f'<form action="hint" method="post" class="hint"><button type="submit">Подсказку (стоимость: {стоимость_подсказки})</button></form>'
+		yield f'<form action="hint" method="post" class="hint"><button type="submit" title="Получить подсказку (стоимость: {стоимость_подсказки})">Подсказка</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
-		yield f'<button type="button" disabled title="Недостаточно квантиков">Подсказку (стоимость: {стоимость_подсказки})</button>'
+		yield f'<button type="button" disabled title="Недостаточно квантиков (стоимость: {стоимость_подсказки})">Подсказка</button>'
 
 def show_buttons(**kwargs):
 	yield from show_submit_button(**kwargs)
