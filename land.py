@@ -11,9 +11,10 @@ def show_land(db):
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
-	yield '<main>'
 	yield f'<h1 class="title">Квантландия</h1>'
+	yield '</div>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/land.jpg" width="100" height="100" />'
 	db.execute('select город, название, положение from Город')
@@ -23,7 +24,6 @@ def show_land(db):
 		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{название}</text>'
 		yield f'</a>'
 	yield '</svg>'
-	yield '</main>'
 
 @route('/rules')
 def show_land(db):
@@ -31,6 +31,7 @@ def show_land(db):
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<main class="rules">'
@@ -41,3 +42,4 @@ def show_land(db):
 	yield '<p>Обратите внимание, что некоторые задачи интерактивны. В них требуется произвести действия, которые описаны в условии, чтобы получить нужный результат. Читайте условия внимательно!'
 	yield '<p>На Турнир вам даётся 90 минут. Оставшееся время отображается на таймере в углу экрана. Итоги соревнования подводятся по числу квантиков, которые у вас на счету к концу игры. Это число всегда отображается в правом верхнем углу экрана. Удачи!'
 	yield '</main>'
+	yield '</div>'

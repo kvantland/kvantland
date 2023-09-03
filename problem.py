@@ -39,6 +39,7 @@ def show_question(db, variant, hint_mode):
 	yield '<script type="module" src="/static/master.js"></script>'
 	if script:
 		yield f'<script type="text/ecmascript" defer>{script}</script>'
+	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
 	yield '<main>'
@@ -60,6 +61,7 @@ def show_question(db, variant, hint_mode):
 		yield f'<button type="button" disabled title="Недостаточно квантиков">Подсказку (стоимость: {стоимость_подсказки})</button>'
 	yield '</div>'
 	yield '</main>'
+	yield '</div>'
 
 def check_answer(db, var_id, answer):
 	db.execute('select Тип.код, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
@@ -74,6 +76,7 @@ def _display_result(db, var_id, ok):
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
 	yield '<main>'
@@ -83,6 +86,7 @@ def _display_result(db, var_id, ok):
 	yield result_text[ok]
 	yield '</div>'
 	yield '</main>'
+	yield '</div>'
 
 def require_user():
 	if (user_id := user.current_user()) == None:

@@ -16,10 +16,11 @@ def show_town(db, town):
 	(название, ), = db.fetchall()
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
-	yield '<main>'
 	yield f'<h1>{название}</h1>'
+	yield '</div>'
 	yield '<svg class="map" viewBox="0 0 100 100">'
 	yield f'<image href="/static/map/town-{town}.jpg" width="100" height="100" />'
 
@@ -41,4 +42,3 @@ def show_town(db, town):
 		yield f'<text class="level-value">{баллы}</text>'
 		yield f'</{tag}>'
 	yield '</svg>'
-	yield '</main>'
