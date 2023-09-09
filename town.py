@@ -11,7 +11,7 @@ def show_town(db, town):
 	user_id = user.current_user()
 
 	yield '<!DOCTYPE html>'
-	yield '<html lang="ru" class="map">'
+	yield f'<html lang="ru" class="map" style="background-image: url(&quot;/static/map/town-{town}.jpg&quot;)">'
 	db.execute('select название from Город where город = %s', (town,))
 	(название, ), = db.fetchall()
 	yield f'<title>{название}</title>'

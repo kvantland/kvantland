@@ -8,15 +8,26 @@
 
 :root {
 	font-family: "Linux Biolinum", sans-serif;
+	background-color: #26536a;
+	color: #ffffff;
+	min-height: 100%;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+body {
+	backdrop-filter: blur(8px);
+	position: absolute;
+	width: 100%;
+	min-height: 100%;
+	box-sizing: border-box;
+	padding: 1em 0;
 }
 
 button, input {
 	font-size: 1em; /* yes this is not the default */
 	font-family: inherit; /* neither this is */
-}
-
-body {
-	margin: 1em 0;
 }
 
 main {

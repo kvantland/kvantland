@@ -8,7 +8,7 @@ import user
 @route('/')
 def show_land(db):
 	yield '<!DOCTYPE html>'
-	yield '<html lang="ru" class="map">'
+	yield '<html lang="ru" class="map" style="background-image: url(&quot;/static/map/land.jpg&quot;)">'
 	yield f'<title>Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<div class="content_wrapper">'

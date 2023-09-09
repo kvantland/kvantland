@@ -49,6 +49,7 @@ def show_question(db, variant, hint_mode):
 	script = try_read_file(f'problem-types/{тип}.js')
 	style = try_read_file(f'problem-types/{тип}.css')
 	yield '<!DOCTYPE html>'
+	yield f'<html lang="ru" style="background-image: url(&quot;/static/map/town-{город}.jpg&quot;)">'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<script type="module" src="/static/master.js"></script>'
@@ -92,6 +93,7 @@ def _display_result(db, var_id, ok):
 	(город, название_города, название, описание), = db.fetchall()
 
 	yield '<!DOCTYPE html>'
+	yield f'<html lang="ru" style="background-image: url(&quot;/static/map/town-{город}.jpg&quot;)">'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<div class="content_wrapper">'
