@@ -22,6 +22,7 @@ create table Задача (
 	, название text not null unique
 	, положение point
 	, баллы int not null
+	, изображение text
 );
 
 create table Подсказка (

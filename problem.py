@@ -42,8 +42,8 @@ def show_buttons(**kwargs):
 	yield from show_hint_button(**kwargs)
 
 def show_question(db, variant, hint_mode):
-	db.execute('select город, Город.название, Тип.код, Задача.название, описание, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
-	(город, название_города, тип, название, описание, содержание, подсказка, стоимость_подсказки), = db.fetchall()
+	db.execute('select город, Город.название, Тип.код, Задача.название, описание, изображение, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
+	(город, название_города, тип, название, описание, изображение, содержание, подсказка, стоимость_подсказки), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'стоимость_подсказки': стоимость_подсказки}
 	typedesc = import_module(f'problem-types.{тип}')
 	script = try_read_file(f'problem-types/{тип}.js')
@@ -79,6 +79,8 @@ def show_question(db, variant, hint_mode):
 		yield '<div class="button_bar">'
 		yield from show_buttons(**kwargs)
 		yield '</div>'
+	if изображение:
+		yield f'<img class="picture" src="/static/problem/{изображение}">'
 	yield '</main>'
 	yield '</div>'
 
@@ -89,8 +91,8 @@ def check_answer(db, var_id, answer):
 	return typedesc.validate(содержание, answer)
 
 def _display_result(db, var_id, ok):
-	db.execute('select город, Город.название, Задача.название, описание from Задача join Вариант using (задача) join Город using (город) where вариант = %s', (var_id,))
-	(город, название_города, название, описание), = db.fetchall()
+	db.execute('select город, Город.название, Задача.название, описание, изображение from Задача join Вариант using (задача) join Город using (город) where вариант = %s', (var_id,))
+	(город, название_города, название, описание, изображение), = db.fetchall()
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
@@ -104,6 +106,8 @@ def _display_result(db, var_id, ok):
 	yield f'<div class="result_area result_{ok}">'
 	yield result_text[ok]
 	yield '</div>'
+	if изображение:
+		yield f'<img class="picture" src="/static/problem/{изображение}">'
 	yield '</main>'
 	yield '</div>'
 

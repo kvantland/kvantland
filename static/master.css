@@ -256,6 +256,10 @@ section.hint {
 	margin: 0.5em auto;
 }
 
+img.picture {
+	width: 100%;
+}
+
 .geometry {
 	fill: none;
 	stroke: #05B;
