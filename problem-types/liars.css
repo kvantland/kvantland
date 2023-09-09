@@ -1,0 +1,35 @@
+#playground {
+	overflow: visible;
+}
+
+text {
+	text-anchor: middle;
+	dominant-baseline: central;
+	fill: currentColor;
+	stroke: none;
+}
+
+circle {
+	fill: currentColor;
+	stroke: black;
+	stroke-width: 2px;
+}
+
+.person {
+	font-size: 48px;
+}
+
+.person text { color: white; }
+.person.liar { color: #ff0000; }
+.person.truthful { color: #00b050; }
+.person.sly { color: #2e75b6; }
+.chair { color: #f8cbad; }
+.table { color: #f4b183; }
+
+.grabbable {
+	cursor: grab;
+}
+
+#layer_dnd .grabbable {
+	cursor: grabbing;
+}

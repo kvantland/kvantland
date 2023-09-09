@@ -47,12 +47,15 @@ def show_question(db, variant, hint_mode):
 	kwargs = {'hint_mode': hint_mode, 'стоимость_подсказки': стоимость_подсказки}
 	typedesc = import_module(f'problem-types.{тип}')
 	script = try_read_file(f'problem-types/{тип}.js')
+	style = try_read_file(f'problem-types/{тип}.css')
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<script type="module" src="/static/master.js"></script>'
 	if script:
-		yield f'<script type="text/ecmascript" defer>{script}</script>'
+		yield f'<script type="text/ecmascript">{script}</script>'
+	if style:
+		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
