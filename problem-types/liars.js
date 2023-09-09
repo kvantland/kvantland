@@ -189,34 +189,34 @@ const type_map = {
 
 function recalc_answer() {
 	let answer = chairs.map((chair) => type_map[chair.person?.type]).join("")
-	// answer.value = chairs.map((chair) => type_map[chair.person?.type]).join("")
+	i_answer.value = answer
+	is_valid = answer.length == N
+	i_answer.setCustomValidity(is_valid ? "" : "Oops")
 }
 
-let dragger, chairs
+let dragger, chairs, is_valid
 
 document.addEventListener("DOMContentLoaded", (e) => {
 	dragger = new Dragger()
 
-	new PersonSource({x: sidebar_x + 48, y: sidebar_y + 1 * 48}, {type: "liar", title: "Лжец"})
-	new PersonSource({x: sidebar_x + 48, y: sidebar_y + 3 * 48}, {type: "truthful", title: "Правдолюб"})
-	new PersonSource({x: sidebar_x + 48, y: sidebar_y + 5 * 48}, {type: "sly", title: "Хитрец"})
-
-	set_attributes(playground, {
-		viewBox: `0 0 ${3*R_outer} ${2*R_outer}`,
-		width: `${3*R_outer}px`,
-		height: `${2*R_outer}px`,
-	})
-
-	layer_table.appendChild(create_svg("circle", {
-		"class": "table",
-		r: R_table,
-		cx: table_x,
-		cy: table_y,
-	}))
+	new PersonSource({x: x_persons, y: y_persons}, {type: "liar", title: "Лжец"})
+	new PersonSource({x: x_persons, y: y_persons + D_persons}, {type: "truthful", title: "Правдолюб"})
+	new PersonSource({x: x_persons, y: y_persons + 2 * D_persons}, {type: "sly", title: "Хитрец"})
 
 	chairs = []
 	for (let k = 0; k < N; k++) {
 		let phi = 2 * Math.PI * k / N
 		chairs[k] = new Chair(layer_table, table_x + R * Math.cos(phi), table_y + R * Math.sin(phi))
 	}
+
+	problem_form.removeEventListener('submit', confirm_answer)
+	problem_form.addEventListener("submit", (e) => {
+		if (!is_valid) {
+			e.preventDefault()
+			e.stopImmediatePropagation()
+			alert("Необходимо занять все стулья")
+		}
+	})
+	problem_form.addEventListener('submit', confirm_answer)
+
 })

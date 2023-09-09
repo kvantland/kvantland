@@ -6,25 +6,39 @@ def entry_form(data, kwargs):
 		'required'
 	]
 
-	yield '<svg id="playground">'
-	yield '<g id="layer_table"></g>'
-	yield '<g id="layer_persons"></g>'
-	yield '<g id="layer_ui"></g>'
-	yield '<g id="layer_dnd"></g>'
-	yield '</svg>'
+	r_chair = 32
+	r_person = 36
+	n_chairs = data['chairs']
+	r_base = 0.5 * r_chair * n_chairs
+	r_table = r_base - 1.5 * r_chair
+	r_outer = r_base + 1.5 * r_chair
+	D_persons = 3 * r_person
+	x_persons = 2 * r_base + 4 * r_chair + 0.5 * D_persons
+	y_persons = 0.5 * D_persons
 
-	yield f'<input id="i_answer" type="text" name="answer" />'
-	yield '<script type="text/ecmascript">'
-	yield '"use strict";'
-	yield f"const N = {data['chairs']};"
-	yield 'const R = 0.5 * r * N;'
-	yield 'const R_table = R - 1.5 * r;'
-	yield 'const R_outer = R + 1.5 * r;'
-	yield 'const table_x = R_outer;'
-	yield 'const table_y = R_outer;'
-	yield 'var sidebar_x = 2 * R_outer + 0.5 * r;'
-	yield 'var sidebar_y = 0;'
-	yield '</script>'
+	yield f"""
+		<svg id="playground" height="{2 * r_outer}px">
+			<g id="layer_table">
+				<circle class="table" r="{r_table}" cx="{r_outer}" cy="{r_outer}">
+			</g>
+			<g id="layer_persons"></g>
+			<g id="layer_ui"></g>
+			<g id="layer_dnd"></g>
+		</svg>
+
+		<input id="i_answer" type="hidden" name="answer" minlength="{n_chairs}" >
+
+		<script type="text/ecmascript">
+			"use strict"
+			const N = {n_chairs}
+			const R = {r_base}
+			const table_x = {r_outer}
+			const table_y = {r_outer}
+			const D_persons = {D_persons}
+			const x_persons = {x_persons}
+			const y_persons = {y_persons}
+		</script>
+		"""
 
 
 def validate(data, answer):
