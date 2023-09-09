@@ -137,6 +137,12 @@ section.hint {
 	list-style-type: none;
 }
 
+.result_area {
+	margin: 2.0rem;
+	font-size: 2.5rem;
+	text-align: center;
+}
+
 .error,
 .result_False {
 	color: red;
