@@ -15,8 +15,8 @@ def show_land(db):
 	yield from user.display_banner(db)
 	yield f'<h1 class="title">Квантландия</h1>'
 	yield '</div>'
-	yield '<svg class="map" viewBox="0 0 100 100">'
-	yield f'<image href="/static/map/land.jpg" width="100" height="100" />'
+	yield '<svg class="map" viewBox="0 0 1280 720">'
+	yield f'<image href="/static/map/land.jpg" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
 	db.execute('select город, название, положение from Город')
 	for город, название, (x, y) in db.fetchall():
 		yield f'<a class="town" transform="translate({x} {y})" href="/town/{город}/">'

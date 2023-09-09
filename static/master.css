@@ -8,8 +8,6 @@
 
 :root {
 	font-family: "Linux Biolinum", sans-serif;
-	background: #cdbd92;
-	color: #050300;
 }
 
 button, input {
@@ -35,7 +33,7 @@ main, nav {
 }
 
 :root.map svg.map {
-	margin: 1em 4em;
+	margin: 1em 0em;
 }
 
 .content_wrapper {
@@ -277,7 +275,7 @@ text {
 }
 
 svg.map {
-	color: #f9e7b4;
+	color: #ffffff;
 	font-family: "Open Sans", sans-serif;
 }
 
@@ -290,7 +288,7 @@ svg.map a:hover {
 }
 
 svg.map .town {
-	font-size: 3px;
+	font-size: 24px;
 	font-variant: small-caps;
 }
 
@@ -303,13 +301,13 @@ svg.map .town-name {
 svg.map .level {
 	text-anchor: middle;
 	dominant-baseline: central;
-	font-size: 6px;
+	font-size: 60px;
 	font-weight: bold;
 
 	fill: currentColor;
 	color: #bebebe;
 	stroke: #808080;
-	stroke-width: 0.2px;
+	stroke-width: 2px;
 }
 
 svg.map a.level:hover {

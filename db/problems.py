@@ -1,5 +1,6 @@
 #!/bin/python3
 
+import math
 import random
 import base64
 import os
@@ -41,12 +42,9 @@ def get_town_id(cur, название):
 
 
 def add_problem(cur, город, баллы, тип, название, подсказка=None, стоимость_подсказки=None):
-	μ, σ = 50.0, 15.0
 	тип = get_type_id(cur, тип)
 	город = get_town_id(cur, город)
-	x = random.normalvariate(μ, σ)
-	y = random.normalvariate(μ, σ)
-	cur.execute("insert into Задача (город, баллы, название, тип, положение) values (%s, %s, %s, %s, point(%s, %s)) returning задача", (город, баллы, название, тип, x, y))
+	cur.execute("insert into Задача (город, баллы, название, тип) values (%s, %s, %s, %s) returning задача", (город, баллы, название, тип))
 	(задача,), = cur.fetchall()
 	if подсказка:
 		if not стоимость_подсказки:
@@ -387,6 +385,26 @@ def РеспубликаКомби(cur):
 		add_variant(cur, задача, desc, json.dumps(cont))
 
 
+def update_positions_town(cur, town, problem_count):
+	x0 = 1280 / 2
+	y0 = 720 / 2
+	R = 300
+	base = 0
+	if problem_count % 2:
+		base = 0.25
+		y0 += 0.5 * R * (1 - math.cos(math.pi / problem_count))
+	cur.execute("select задача from Задача where город = %s", (town,))
+	for k, (problem, ) in enumerate(cur.fetchall()):
+		phi = 2 * math.pi * (k / problem_count + base)
+		x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
+		cur.execute("update Задача set положение = point(%s, %s) where задача = %s", (x, y, problem))
+
+def update_positions(cur):
+	cur.execute("select город, count(*) from Задача join Город using (город) group by город")
+	for town, problem_count in cur.fetchall():
+		update_positions_town(cur, town, problem_count)
+
+
 db = 'postgres://kvantland:quant@127.0.0.1'
 if len(sys.argv) > 1:
 	db = sys.argv[1]
@@ -398,4 +416,5 @@ with psycopg.connect(db) as con:
 			Геома(cur)
 			Головоломск(cur)
 			РеспубликаКомби(cur)
-			pass
+
+			update_positions(cur)

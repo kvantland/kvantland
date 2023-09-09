@@ -21,8 +21,8 @@ def show_town(db, town):
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield f'<h1>{название}</h1>'
 	yield '</div>'
-	yield '<svg class="map" viewBox="0 0 100 100">'
-	yield f'<image href="/static/map/town-{town}.jpg" width="100" height="100" />'
+	yield '<svg class="map" viewBox="0 0 1280 720">'
+	yield f'<image href="/static/map/town-{town}.jpg" width="1280" height="720" preserveAspectRatio="xMidYMid meet" />'
 
 	if user_id is not None:
 		db.execute('select вариант, положение, баллы, название, not ответ_дан открыта from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = %s and ученик = %s', (town, user_id))
