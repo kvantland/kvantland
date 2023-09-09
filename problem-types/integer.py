@@ -14,7 +14,9 @@ def entry_form(data, kwargs):
 	attrs = ' '.join(attrs)
 	yield '<div class="answer_bar">'
 	yield 'Введите ответ:'
+	yield f'<form method="post" id="problem_form" class="problem answer_area">'
 	yield f'<input {attrs} />'
+	yield '</form>'
 	yield from problem.show_buttons(**kwargs)
 	yield '</div>'
 

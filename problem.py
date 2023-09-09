@@ -67,14 +67,15 @@ def show_question(db, variant, hint_mode):
 		yield '<h2>Подсказка</h2>'
 		yield f'<p>{подсказка}</p>'
 		yield '</section>'
-	yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
-	yield from typedesc.entry_form(содержание, kwargs)
-	yield '</form>'
 	try:
 		show_default_buttons = not typedesc.CUSTOM_BUTTONS
 	except AttributeError:
 		show_default_buttons = True
 	if show_default_buttons:
+		yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
+	yield from typedesc.entry_form(содержание, kwargs)
+	if show_default_buttons:
+		yield '</form>'
 		yield '<div class="button_bar">'
 		yield from show_buttons(**kwargs)
 		yield '</div>'
