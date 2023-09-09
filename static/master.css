@@ -307,6 +307,9 @@ svg.map .town-name {
 	font-weight: bold;
 }
 
+svg.map .town_completed {
+	color: #bdbdbd;
+}
 
 svg.map .level {
 	text-anchor: middle;

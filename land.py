@@ -7,6 +7,8 @@ import user
 
 @route('/')
 def show_land(db):
+	user_id = user.current_user()
+
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -17,9 +19,15 @@ def show_land(db):
 	yield '</div>'
 	yield '<svg class="map" viewBox="0 0 1280 720">'
 	yield f'<image href="/static/map/land.jpg" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
-	db.execute('select город, название, положение from Город')
-	for город, название, (x, y) in db.fetchall():
-		yield f'<a class="town" transform="translate({x} {y})" href="/town/{город}/">'
+	if user_id is not None:
+		db.execute('select город, название, положение, exists(select 1 from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = Город.город and ученик = %s and ответ_дан = false) from Город', (user_id, ))
+	else:
+		db.execute('select город, название, положение, true from Город')
+	for город, название, (x, y), открыт in db.fetchall():
+		clazz = "town"
+		if not открыт:
+			clazz += " town_completed"
+		yield f'<a class="{clazz}" transform="translate({x} {y})" href="/town/{город}/">'
 		yield f'<circle class="town-icon" r="0.3em" fill="none" stroke="currentColor" stroke-width="0.2em" />'
 		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{название}</text>'
 		yield f'</a>'
