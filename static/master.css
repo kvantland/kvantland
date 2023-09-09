@@ -315,21 +315,39 @@ svg.map .level {
 	font-weight: bold;
 
 	fill: currentColor;
-	color: #bebebe;
-	stroke: #808080;
 	stroke-width: 2px;
-}
-
-svg.map a.level:hover {
-	color: #ffe488;
-	stroke: #9b785c;
 }
 
 svg.map .level-value {
 	stroke: inherit;
 }
 
-svg.map a.level {
+svg.map .level_open:hover {
+	color: #ffe488;
+	stroke: #9b785c;
+}
+
+svg.map .level_open {
 	color: #ffc400;
 	stroke: #b36d2a;
+}
+
+svg.map .level_solved {
+	color: #77cc33;
+	stroke: #339900;
+}
+
+svg.map .level_solved:hover {
+	color: #99dd44;
+	stroke: #55aa33;
+}
+
+svg.map .level_failed {
+	color: #dd5533;
+	stroke: #993300;
+}
+
+svg.map .level_failed:hover {
+	color: #ee6644;
+	stroke: #aa4433;
 }
