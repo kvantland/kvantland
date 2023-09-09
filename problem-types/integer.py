@@ -13,7 +13,7 @@ def entry_form(data, kwargs):
 			attrs.append(f'max="{b}"')
 	attrs = ' '.join(attrs)
 	yield '<div class="answer_bar">'
-	yield 'Ответ:'
+	yield 'Введите ответ:'
 	yield f'<input {attrs} />'
 	yield from problem.show_buttons(**kwargs)
 	yield '</div>'
