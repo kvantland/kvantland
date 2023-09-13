@@ -2,7 +2,7 @@
 
 set -e
 
-dir="$(dirname "$(realpath "$0")")"
+dir="$(dirname "$(realpath "postgres://postgres:Lordtop1_gg@127.0.0.1:5433/kvantland")")"
 postgres="$1"
 
 psql "$postgres" -1 -f "$dir/schema.sql"
