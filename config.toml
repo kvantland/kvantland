@@ -8,7 +8,7 @@ reloader = true
 root = 'static'
 
 [db]
-url = 'postgres://user:password@127.0.0.1:5432/database'
+url = 'postgres://postgres:Lordtop1_gg@127.0.0.1:5433/kvantland'
 
 [keys]
 cookie = 'something'
