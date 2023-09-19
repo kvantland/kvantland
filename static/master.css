@@ -74,9 +74,12 @@ h1 {
 .button_bar {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: space-between;
 	flex-direction: row;
 	gap: 2.0em;
-	margin: 1.5em 0em;
+	width: 83%;
+	margin-left: 2.5vw;
+	margin-right: 2.5vw;
 }
 
 .button_bar button {
@@ -84,9 +87,17 @@ h1 {
 	font-family: inherit;
 	font-size: 1.25rem;
 	font-weight: normal;
-	min-width: 12rem;
+	width: 17vh;
 	height: 3rem;
-	padding: 0.2em 0.5em;
+	border-radius: 5px;
+	background-color: #6AC474;
+	border: none;
+	color: white;
+}
+
+.button_bar button:hover{
+	cursor: pointer;
+	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
 
 .answer_bar {
@@ -353,4 +364,73 @@ svg.map .level_failed {
 svg.map .level_failed:hover {
 	color: #ee6644;
 	stroke: #aa4433;
+}
+
+
+form.login{
+	display: flex;
+	flex-direction: column;
+	height: 70%;
+	justify-content: space-between;
+}
+
+.login_form{
+	-webkit-user-select: none;
+	user-select: none;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width:30%;
+	height: 36vh;
+	align-self: center;
+	margin: 0 auto;
+	margin-top: 15vh;
+	background-color: #EDECEF;
+	border: 3px solid #D5D5D7;
+	padding-bottom: 3vh;
+	padding-top: 3vh;
+	border-radius: 10px;
+}
+
+.form_field{
+	border-color: #D5D5D7;
+	border-style: solid;
+	border-radius: 5px;
+	height: 130%;
+	width: 80%;
+	padding-left: 1.3vh;
+	background-color: #F5F5F5;
+}
+
+.auth{
+	border-radius: 9px;
+	background-size: 100%;
+	width: 5vh;
+	height: 5vh;
+}
+
+.vk{
+	background-image: url("../static/vk_icon.png");
+}
+
+.auth:hover{
+	cursor: pointer;
+}
+
+.auth_type{
+	color: #757575;
+	display: block;
+	border-width: 1px;
+	background-color: #EDECEF;
+	border-color: #EDECEF;
+	border-style: solid;
+	border-radius: 5px;
+	font-size: 2vh;
+	text-align: right;
+	margin-left: auto;
+	margin-right: 5vh;
+	width: 50%;
+	height: 10%;
+	margin-top: -5%;
 }

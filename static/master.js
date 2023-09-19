@@ -17,3 +17,16 @@ for (let form of document.querySelectorAll("form.problem")) {
 for (let form of document.querySelectorAll("form.hint")) {
 	form.addEventListener('submit', confirm_hint)
 }
+
+let auth_butt = document.getElementsByClassName('auth');
+let auth_type = document.getElementById('auth_type');
+for (let i = 0; i < auth_butt.length; ++i){
+	var curr_id = auth_butt[i].id;
+	var curr_butt = document.getElementById(curr_id);
+	curr_butt.onmouseover = function(e){
+		auth_type.innerHTML = 'Авторизироваться через ' + curr_id;
+	}
+	curr_butt.onmouseout = function(e){
+		auth_type.innerHTML = '';
+	}
+}
