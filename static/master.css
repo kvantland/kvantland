@@ -434,3 +434,9 @@ form.login{
 	height: 10%;
 	margin-top: -5%;
 }
+
+.vk_button{
+	display: block;
+	width: 100%;
+	height: 100%;
+}

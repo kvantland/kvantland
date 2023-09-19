@@ -44,7 +44,7 @@ def display_login_form(err: str=None):
 	yield '<div class="button_bar">'
 	yield '<button type="submit"> Войти </button>'
 	yield '<div class="vk auth" id="Vk">'
-	yield f'<a class="login" href="' + escape(auth_url + '?' + urllib.parse.urlencode(params)) + '"></a>'
+	yield f'<a class="vk_button" href="' + escape(auth_url + '?' + urllib.parse.urlencode(params)) + '"></a>'
 	yield '</div>' 
 	yield '</div>'
 	yield '</form>'
@@ -78,12 +78,10 @@ def current_user():
 		return None
 		
 def do_login(user):
-	response.set_cookie('user', str(user), secret=_key)
-	print('here', user, file=sys.stderr)
-
+	response.set_cookie('user', str(user), path='/', max_age=20, httponly=True, samesite='strict', secret=_key)
 
 def do_logout():
-	response.set_cookie('user', '', max_age=0, httponly=True, samesite='strict')
+	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='strict')
 
 def do_redirect():
 	path = request.query.path

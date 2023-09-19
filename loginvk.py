@@ -32,7 +32,7 @@ def login_attempt(db):
 		add_user(login, name, password, db)
 		user = check_login(db, login, password)
 		do_login(user)
-	yield '<!DOCTYPE html>'
+	do_redirect()
 
 def get_token():
 	if request.query['code']:
