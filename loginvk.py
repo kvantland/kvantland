@@ -1,23 +1,19 @@
 #!/usr/bin/python3
+
 from bottle import route, request, response, redirect
 
 from config import config
-import nav
 import json
 import urllib.request as urllib2
-import http.cookiejar as cookielib
-from login import check_login, do_redirect, do_login, current_user
+from login import do_login, current_user
 
 import urllib.parse
-from urllib.error import HTTPError
 
-
-client_id = 51749604
-redirect_uri = 'http://localhost:8080/login/vk'
-client_secret = 'oGUIYzsB2dsk7hwp6GBI'
-auth_url = 'http://oauth.vk.com/authorize'
-token_url = 'https://oauth.vk.com/access_token'
-info_url = 'https://api.vk.com/method/users.get'
+client_secret = config['vk']['client_secret']
+redirect_uri = config['vk']['redirect_uri']
+client_id = config['vk']['client_id']
+token_url = config['vk']['token_url']
+info_url = config['vk']['info_url']
 
 @route('/login/vk')	
 def login_attempt(db):
@@ -25,14 +21,21 @@ def login_attempt(db):
 	login = 'vk#' + str(user['id'])
 	password = None
 	name = user['first_name'] + ' ' + user['last_name']
-	password = ''
-	if (user := check_login(db, login, password)) != None:
+	if (user := vk_check_login(db, login)) != None:
 		do_login(user)
 	else:
 		add_user(login, name, password, db)
-		user = check_login(db, login, password)
+		user = vk_check_login(db, login)
 		do_login(user)
-	do_redirect()
+	redirect('/')
+
+def vk_check_login(db, user_name):
+	db.execute('select ученик from Ученик where логин = %s', (user_name, ))
+	try:
+		(user, ), = db.fetchall()
+	except ValueError:
+		return None
+	return int(user)
 
 def get_token():
 	if request.query['code']:
@@ -51,34 +54,18 @@ def get_token():
 
 def get_info(token):
 	if token['access_token']:
-		access_token = token['access_token'][6:]
 		params = {'user_ids': token['user_id'],
 		'fields': 'uid,first_name,last_name,screen_name,sex,bdate',
 		'access_token': token['access_token'],
-		'v': 5.131 
+		'v': '5.131' 
 		}
 		info_path = info_url + '?' + urllib.parse.urlencode(params)
-		try:
-			cont = urllib2.urlopen(info_path)
-			user_info = json.loads(cont.read())
-			return user_info
-		except HTTPError:
-			return {}
-
-def vk_current_user():
-	curr_user = request.get_cookie('user', secret=key)
-	yield '<p>' + str(curr_user) + '</p>'
-	try:
-		return int(curr_user)
-	except Exception:
-		return None
+		cont = urllib2.urlopen(info_path)
+		user_info = json.loads(cont.read())
+		return user_info
 
 def convert(info):
-	try:
-		if info['response']:
-			return info['response'][0]
-	except KeyError:
-		return 'Error'
+	return info['response'][0]
 
 def get_user():
 	return convert(get_info(get_token()))

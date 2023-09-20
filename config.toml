@@ -8,7 +8,15 @@ reloader = true
 root = 'static'
 
 [db]
-url = 'postgres://postgres:Lordtop1_gg@127.0.0.1:5433/kvantland'
+url = 'postgres://postgres:Lordtop1@127.0.0.1:5433/kvantland'
 
 [keys]
 cookie = 'something'
+
+[vk]
+client_id = 51749604
+redirect_uri = 'http://localhost:8080/login/vk'
+client_secret = 'oGUIYzsB2dsk7hwp6GBI'
+auth_url = 'http://oauth.vk.com/authorize'
+token_url = 'https://oauth.vk.com/access_token'
+info_url = 'https://api.vk.com/method/users.get'

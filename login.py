@@ -1,32 +1,25 @@
 #!/usr/bin/python3
 from html import escape
-import sys
 
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
-from pathlib import Path
 import urllib.parse
 
 from config import config
 import nav
-import json
-import urllib.request as urllib2
-import http.cookiejar as cookielib
 
 _key = config['keys']['cookie']
-ROOT = Path(__file__).parent
 
-client_id = 51749604
-redirect_uri = 'http://localhost:8080/login/vk'
-client_secret = 'oGUIYzsB2dsk7hwp6GBI'
-auth_url = 'http://oauth.vk.com/authorize'
-token_url = 'https://oauth.vk.com/access_token'
+client_id = config['vk']['client_id']
+redirect_uri = config['vk']['redirect_uri']
+auth_url = config['vk']['auth_url']
 
 params = {'client_id': 	client_id, 'redirect_uri': redirect_uri, 'response_type': 'code'}
 
 @route('/login')
 def login_form():
 	if current_user() != None:
+		print('here', file=sys.stderr)
 		do_redirect()
 	yield from display_login_form()
 
@@ -39,8 +32,8 @@ def display_login_form(err: str=None):
 	yield '<div class="login_form">'
 	yield '<h1>Вход</h1>'
 	yield '<form method="post" class="login">'
-	yield '<label><span class="label"></span><input name="login" type="text" placeholder="Логин..." class=form_field required /></label>'
-	yield '<label><span class="label"></span><input name="password" type="password" placeholder="Пароль..." class=form_field required /></label>'
+	yield '<label><input name="login" type="text" placeholder="Логин..." class=form_field required /></label>'
+	yield '<label><input name="password" type="password" placeholder="Пароль..." class=form_field required /></label>'
 	yield '<div class="button_bar">'
 	yield '<button type="submit"> Войти </button>'
 	yield '<div class="vk auth" id="Vk">'
@@ -64,8 +57,6 @@ def check_login(db, user_name, password):
 		(user, password_hash), = db.fetchall()
 	except ValueError:
 		return None
-	if user_name.startswith('vk#'):
-		return user
 	if pwhash.verify(password, password_hash):
 		return user
 	return None
@@ -78,10 +69,10 @@ def current_user():
 		return None
 		
 def do_login(user):
-	response.set_cookie('user', str(user), path='/', max_age=20, httponly=True, samesite='strict', secret=_key)
+	response.set_cookie('user', str(user), path='/', httponly=True, samesite='lax', secret=_key)
 
 def do_logout():
-	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='strict')
+	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='lax')
 
 def do_redirect():
 	path = request.query.path
