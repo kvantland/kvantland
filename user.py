@@ -1,11 +1,9 @@
 #!/usr/bin/python3
-
 from html import escape
 from urllib.parse import quote
 from bottle import route, request, response, redirect
 
 from login import current_user
-import urllib.parse
 
 def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
