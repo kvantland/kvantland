@@ -24,8 +24,7 @@ def login_attempt(db):
 	if (user := vk_check_login(db, login)) != None:
 		do_login(user)
 	else:
-		add_user(login, name, password, db)
-		user = vk_check_login(db, login)
+		user = add_user(login, name, password, db)
 		do_login(user)
 	redirect('/')
 
@@ -71,4 +70,7 @@ def get_user():
 	return convert(get_info(get_token()))
 
 def add_user(логин, имя, пароль, db):
-	db.execute("insert into Ученик (логин, пароль, имя) values (%s, %s, %s)", (логин, пароль, имя))
+	db.execute("insert into Ученик (логин, пароль, имя) values (%s, %s, %s) returning ученик", (логин, пароль, имя))
+	(user, ), = db.fetchall()
+	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
+	return user
