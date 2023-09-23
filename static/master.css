@@ -389,7 +389,7 @@ form.login{
 	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
 
-.button_bar {
+.auth_button_bar {
 	display: flex;
 	height: 20%;
 	padding: 0 0 0 5%;
@@ -417,4 +417,22 @@ form.login{
 	background-position: center;
 	background-repeat: no-repeat;
 	background-image: url("../static/vk_icon.png");
+}
+
+.button_bar {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	gap: 2.0em;
+	margin: 1.5em 0em;
+}
+
+.button_bar button {
+	text-align: center;
+	font-family: inherit;
+	font-size: 1.25rem;
+	font-weight: normal;
+	min-width: 12rem;
+	height: 3rem;
+	padding: 0.2em 0.5em;
 }
