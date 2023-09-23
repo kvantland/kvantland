@@ -12,3 +12,11 @@ url = 'postgres://user:password@127.0.0.1:5432/database'
 
 [keys]
 cookie = 'any random string'
+
+[vk]
+client_id = 11111111
+redirect_uri = 'http://localhost:8080/login/vk'
+client_secret = 'abcdefg'
+auth_url = 'http://oauth.vk.com/authorize'
+token_url = 'https://oauth.vk.com/access_token'
+info_url = 'https://api.vk.com/method/users.get'
