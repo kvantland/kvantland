@@ -52,8 +52,6 @@ def show_question(db, variant, hint_mode):
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<script type="module" src="/static/master.js"></script>'
-	if script:
-		yield f'<script type="text/ecmascript">{script}</script>'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
@@ -81,6 +79,8 @@ def show_question(db, variant, hint_mode):
 		yield '</div>'
 	if изображение:
 		yield f'<img class="picture" src="/static/problem/{изображение}">'
+	if script:
+		yield f'<script type="text/ecmascript">{script}</script>'
 	yield '</main>'
 	yield '</div>'
 
