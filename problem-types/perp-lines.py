@@ -3,16 +3,9 @@ def entry_form(data, kwargs):
 	points = data['points']
 	yield '<input name="answer" type="hidden" />'
 	yield '<div class="plot_area">'
-	yield '<table class="plot">'
-	yield '<tbody class="plot_body">'
-	for i in range(8):
-		yield '<tr class="plot_row">'
-		for j in range(8):
-			yield '<td class="square"></td>'
-		yield '</tr>'
-	yield '</tbody>'
-	yield '</table>'
 	yield'<svg class="full_window">'
+	yield '<path class="grid_line" d="M 6 7' + 9 * f' h {8*40} m {-8*40} {40}' + '" />'
+	yield '<path class="grid_line" d="M 6 7' + 9 * f' v {8*40} m {40} {-8*40}' + '" />'
 	for i in range(9):
 		for j in range(9):
 			if [j, i] in points:
