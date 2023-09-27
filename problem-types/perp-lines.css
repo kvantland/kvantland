@@ -5,11 +5,17 @@
 
 .base_point{
 	fill: red;
-	r: 6;
+	r: 6px;
 }
 
 .point:hover{
 	cursor: pointer;
+	fill: rgba(1, 0, 0, 0.5);
+}
+
+.base_point:hover{
+	cursor: default;
+	fill: red;
 }
 
 .full_window{
@@ -19,33 +25,37 @@
 }
 
 .plot{
-	display: flex;
 	position: absolute;
-	flex-direction: column;
-	width: 326.4px;
-	height: 326.4px;
-	border-top: 1px solid black;
-	border-left: 1px solid black;
-	margin: 0 6px 0 6px;
-	top: 6px;
+	margin: 6px 6px 6px 6px;
+	width: 320px;
+	height: 320px;
+	border-collapse: collapse;
+	box-sizing: border-box;
+	border-spacing: 0px;
+}
+
+.plot_body{
+	box-sizing: border-box;
+	width: 320px;
+	height: 320px;
 }
 
 .plot_row{
-	border: none;
-	display: flex;
-	flex-direction: row;
+	box-sizing: border-box;
+	height:40px;
+	width: 320px;
 }
 
 .square{
+	box-sizing: border-box;
 	width: 40px;
 	height: 40px;
-	border-bottom: 0.8px solid black;
-	border-right: 0.8px solid black;
+	border: 1px solid black;
 }
 
 .plot_area{
-	width: 338.4px;
-	height: 338.4px;
+	width: 332px;
+	height: 332px;
 	margin: 0 auto 0 auto;
 	position: relative;
 }
