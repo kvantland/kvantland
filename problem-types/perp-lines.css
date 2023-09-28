@@ -43,3 +43,11 @@
 	height: 20px;
 	display: block;
 }
+
+.invisible{
+	font-size: 0;
+}
+
+.visible{
+	font-size: 	inherit;
+}

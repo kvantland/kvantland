@@ -1,4 +1,5 @@
 var points = document.getElementsByClassName('point');
+var point_names = document.getElementsByClassName('invisible')
 var area = document.getElementsByClassName('plot_area')[0];
 var curr_point = '';
 var curr_point_name = '';
@@ -7,18 +8,12 @@ for (let i = 0; i < points.length; i++){
 	points[i].onclick = function(e){
 		if (curr_point){
 			curr_point.classList.remove('base_point');
-			curr_point_name.remove();
+			curr_point_name.classList.remove('visible');
 		}
 		points[i].classList.add('base_point');
+		point_names[i].classList.add('visible');
 		curr_point = points[i];
-		curr_point_name = document.createElement('div');
-		curr_point_name.className = "point_name";
-		curr_point_name.innerHTML = 'D';
-		var x = parseInt(curr_point.getAttribute('cx'), 10);
-		var y = parseInt(curr_point.getAttribute('cy'), 10);
-		curr_point_name.style.top = String(y - 26) + 'px';
-		curr_point_name.style.left = String(x - 26) + 'px';
-		area.append(curr_point_name);
+		curr_point_name = point_names[i];
 	}
 };
 

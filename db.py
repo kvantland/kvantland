@@ -3,7 +3,7 @@ from psycopg.types.composite import CompositeInfo, register_composite
 import bottle
 import inspect
 
-register_composite(CompositeInfo('point', 600, 1017, field_names=('x', 'y'), field_types=(701, 701)))
+register_composite(CompositeInfo('point', 600, 1017, field_names=('x', 'y'), field_types=[701, 701]))
 
 class PostgresPlugin(object):
 	name = 'postgres'
