@@ -24,33 +24,10 @@
 	height: 100%;
 }
 
-.plot{
-	position: absolute;
-	margin: 6px 6px 6px 6px;
-	width: 320px;
-	height: 320px;
-	border-collapse: collapse;
-	box-sizing: border-box;
-	border-spacing: 0px;
-}
-
-.plot_body{
-	box-sizing: border-box;
-	width: 320px;
-	height: 320px;
-}
-
-.plot_row{
-	box-sizing: border-box;
-	height:40px;
-	width: 320px;
-}
-
-.square{
-	box-sizing: border-box;
-	width: 40px;
-	height: 40px;
-	border: 1px solid black;
+.grid_line {
+	stroke: black;
+	stroke-width: 1px;
+	stroke-linecap: square;
 }
 
 .plot_area{
