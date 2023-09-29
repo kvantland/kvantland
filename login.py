@@ -24,29 +24,32 @@ def login_form():
 	yield from display_login_form()
 
 def display_login_form(err: str=None):
-	yield '<!DOCTYPE html>'
-	yield '<title>Вход — Квантландия</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
-	yield '<main>'
-	yield '<div class="login_form">'
-	yield '<div class="login_form_header">Вход</div>'
-	yield '<form method="post" class="login">'
-	yield '<input name="login" type="text" placeholder="Логин..." class=form_field required />'
-	yield '<input name="password" type="password" placeholder="Пароль..." class=form_field required />'
-	yield '<button type="submit" class="submit_button"> ВОЙТИ </button>'
-	yield '</form>'
-	yield '<div class="auth_button_bar">'
-	yield '<div class = button_bar_text> ВОЙТИ ЧЕРЕЗ: </div>'
-	yield '<div class="vk button_bar_item">'
-	yield f'<a class="button_bar_item" href="' + escape(auth_url + '?' + urllib.parse.urlencode(params)) + '"></a>'
-	yield '</div>' 
-	yield '</div>'
-	yield '</div>'
-	yield '</main>'
-	yield '<script type="text/javascript" src = "/static/master.js"></script>'
-	if err:
-		yield f'<p class="error">{err}</p>'
+  yield '<!DOCTYPE html>'
+  yield '<title>Вход — Квантландия</title>'
+  yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+  yield from nav.display_breadcrumbs(('/', 'Квантландия'))
+  yield '<main>'
+  yield '<div class="login_form">'
+  yield '<div class="login_form_header">Вход</div>'
+  yield '<form method="post" class="login">'
+  yield '<input name="login" type="text" placeholder="Логин..." class=form_field required />'
+  yield '<input name="password" type="password" placeholder="Пароль..." class=form_field required />'
+  yield '<button type="submit" class="submit_button"> ВОЙТИ </button>'
+  yield '</form>'
+  yield '<div class="auth_button_bar">'
+  yield '<div class = button_bar_text> ВОЙТИ ЧЕРЕЗ: </div>'
+  yield '<div class="vk button_bar_item">'
+  yield f'<a class="button_bar_item" href="' + escape(auth_url + '?' + urllib.parse.urlencode(params)) + '"></a>'
+  yield '</div>' 
+  yield '</div>'
+  yield '<div class="anon_reg">'
+  yield f'<a href="/reg"> Зарегестрироваться </a>'
+  yield '</div>'
+  yield '</div>'
+  yield '</main>'
+  yield '<script type="text/javascript" src = "/static/master.js"></script>'
+  if err:
+    yield f'<p class="error">{err}</p>'
 
 def check_login(db, user_name, password):
 	db.execute('select ученик, пароль from Ученик where логин = %s', (user_name, ))
