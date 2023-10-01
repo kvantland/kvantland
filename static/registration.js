@@ -1,6 +1,5 @@
 var dialogs = document.getElementsByClassName('reg_dialog');
 var dialog = '';
-var k = 0;
 
 if (dialogs.length > 0){
 	var dialog = dialogs[0];
