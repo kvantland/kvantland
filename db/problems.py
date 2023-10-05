@@ -17,8 +17,12 @@ def read_file(name):
 
 def get_type_id(cur, тип):
 	cur.execute("select тип from Тип where код = %s", (тип, ))
-	(тип,), = cur.fetchall()
-	return тип
+	if rows := cur.fetchall():
+		return rows[0][0]
+	cur.execute("insert into Тип (код) values (%s) returning тип", (тип, ))
+	if rows := cur.fetchall():
+		return rows[0][0]
+	raise Exception(f"Не удалось добавить тип {тип}")
 
 
 # def get_group_id(cur, город, баллы):
