@@ -1,10 +1,10 @@
 from login import do_login, current_user
 from bottle import route, request, response, redirect
+from passlib.hash import pbkdf2_sha256 as pwhash
 import nav
 import json
 from config import config
 import urllib.request as urllib2
-import sys
 import urllib.parse
 
 secret = config['reg']['secret']
@@ -55,7 +55,7 @@ def display_registration_form(err=None):
   yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def add_user(db, логин, пароль, имя, школа, класс):
-  db.execute("insert into Ученик (логин, пароль, имя, школа, класс) values (%s, %s, %s, %s, %s) returning ученик", (логин, пароль, имя, школа, класс))
+  db.execute("insert into Ученик (логин, пароль, имя, школа, класс) values (%s, %s, %s, %s, %s) returning ученик", (логин, pwhash.hash(пароль), имя, школа, класс))
   (user, ), = db.fetchall()
   db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
   return int(user)
@@ -82,7 +82,6 @@ def login_attempt(db):
       if check_login(db, request.forms.login):
         yield from display_registration_form('reg_error')
       else:
-        yield from display_registration_form()
         user = add_user(db, request.forms.login, request.forms.password, request.forms.name, request.forms.school, request.forms.clas)
         do_login(user)
         redirect('/')
