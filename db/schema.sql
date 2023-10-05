@@ -6,7 +6,6 @@ set search_path to Квантландия, public;
 create table Тип (
 	тип int primary key generated always as identity
 	, код text not null unique
-	, название text not null unique
 );
 
 create table Город (
