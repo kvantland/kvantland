@@ -89,8 +89,8 @@ def check_format(login, password, name, surname, school, clas):
     return "Слишком длинное название школы"
   if not(clas in [str(i) for i in range(1, 12)]):
     return "Класса с таким номером не существует"
-  if "vk" in login:
-    return "В логине не должно содержаться сочетание 'vk'"
+  if "vk#" in login:
+    return "В логине не должно содержаться сочетание 'vk#'"
   return False
 
 @route('/reg', method='POST')
