@@ -41,21 +41,35 @@ def display_registration_form(err=None):
   yield '<input name="login" type="text" placeholder="Логин" required />'
   yield '<input name="password" type="password" placeholder="Пароль" required />'
   yield '<input name="name" type="text" placeholder="Имя" required/>'
+  yield '<input name="surname" type="text" placeholder="Фамилия" required/>'
   yield '<input name="school" type="text" placeholder="Школа" required/>'
-  yield '<input name="clas" type="number" placeholder="Класс" required/>'
+  yield '<select name="clas" required>'
+  yield '<option value="" disabled selected> Класс </option>'
+  yield '<option> 1 </option>'
+  yield '<option> 2 </option>'
+  yield '<option> 3 </option>'
+  yield '<option> 4 </option>'
+  yield '<option> 5 </option>'
+  yield '<option> 6 </option>'
+  yield '<option> 7 </option>'
+  yield '<option> 8 </option>'
+  yield '<option> 9 </option>'
+  yield '<option> 10 </option>'
+  yield '<option> 11 </option>'
+  yield '</select>'
   yield '<div class="g-recaptcha" data-sitekey="6LcWR2MoAAAAABz4UpMRZlmwmWZlvne32dKbc1Kx"></div>'
-  yield '<button type="submit" class="reg_button"> Зарегестрироваться </button>'
+  yield '<button type="submit" class="reg_button"> Зарегистрироваться </button>'
   yield '</form>'
   yield '<div class="back_to_log">'
-  yield '<a href="/login"> Уже зарегестрированы? </a>'
+  yield '<a href="/login"> Уже зарегистрированы? </a>'
   yield '</div>'
   yield '</div>'
   yield '</main>'
   yield '<script type="text/javascript" src ="/static/registration.js"></script>'
   yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
-def add_user(db, логин, пароль, имя, школа, класс):
-  db.execute("insert into Ученик (логин, пароль, имя, школа, класс) values (%s, %s, %s, %s, %s) returning ученик", (логин, pwhash.hash(пароль), имя, школа, класс))
+def add_user(db, логин, пароль, имя, фамилия, школа, класс):
+  db.execute("insert into Ученик (логин, пароль, имя, фамилия, школа, класс) values (%s, %s, %s, %s, %s, %s) returning ученик", (логин, pwhash.hash(пароль), имя, фамилия, школа, класс))
   (user, ), = db.fetchall()
   db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
   return int(user)
@@ -82,7 +96,7 @@ def login_attempt(db):
       if check_login(db, request.forms.login):
         yield from display_registration_form('reg_error')
       else:
-        user = add_user(db, request.forms.login, request.forms.password, request.forms.name, request.forms.school, request.forms.clas)
+        user = add_user(db, request.forms.login, request.forms.password, request.forms.name, request.forms.surname, request.forms.school, request.forms.clas)
         do_login(user)
         redirect('/')
     else:

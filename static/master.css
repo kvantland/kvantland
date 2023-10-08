@@ -470,6 +470,28 @@ form.login{
   height: 15%;
 }
 
+.reg_form select{
+  font-size: 2.7vh;
+  border: 2px solid #D5D5D7;
+  border-radius: 5px;
+  padding: 0 0 0 1%;
+  background-color: #F5F5F5;
+  height: 15%;
+  font-family: inherit;
+}
+
+.reg_form select:required:invalid{
+	color: #757575;
+}
+
+option[value=""][disabled] {
+        display: none;
+}
+
+option{
+	color: black;
+}
+
 .reg_form_header{
   height: 10%;
   font-size: 3.5vh;
