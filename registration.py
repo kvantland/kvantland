@@ -22,13 +22,7 @@ def display_registration_form(err=None):
   yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
   if err:
     yield '<dialog open="open" class="reg_dialog">'
-    if err[0] == 'r':
-      yield '<p>К сожаление, пользователь с таким логином уже существует,</p>'
-      yield '<p align="left">попробуйте другой логин. </p>'
-    elif err[0] == 'c':
-      yield '<p>Заполните капчу!</p>'
-    else:
-      yield '<p>Ошибка заполнения капчи</p>'
+    yield f'<p> {err} </p>'
     yield '<form method="dialog">'
     yield '<button type="submit" class="dialog_button">Закрыть</button>'
     yield '</form>'
@@ -82,6 +76,23 @@ def check_login(db, логин):
     return None
   return user
 
+def check_format(login, password, name, surname, school, clas):
+  if len(login) > 40:
+    return "Слишком длинный логин"
+  if len(password) > 100:
+    return "Слишком длинный пароль"
+  if len(name) > 100:
+    return "Слишком длинное имя"
+  if len(surname) > 100:
+    return "Слишком длинная фамилия"
+  if len(school) > 200:
+    return "Слишком длинное название школы"
+  if not(clas in [str(i) for i in range(1, 12)]):
+    return "Класса с таким номером не существует"
+  if "vk" in login:
+    return "В логине не должно содержаться сочетание 'vk'"
+  return False
+
 @route('/reg', method='POST')
 def login_attempt(db):
   if len(request.forms['g-recaptcha-response']) != 0:
@@ -94,13 +105,22 @@ def login_attempt(db):
     not_robot = json.loads(cont.read())['success']
     if not_robot:
       if check_login(db, request.forms.login):
-        yield from display_registration_form('reg_error')
+        yield from display_registration_form('К сожалению, пользователь с таким логином уже существует, \n попробуйте другой логин')
       else:
-        user = add_user(db, request.forms.login, request.forms.password, request.forms.name, request.forms.surname, request.forms.school, request.forms.clas)
-        do_login(user)
-        redirect('/')
+        login = request.forms.login
+        password = request.forms.password
+        name = request.forms.name
+        surname = request.forms.surname
+        clas = request.forms.clas
+        school = request.forms.school
+        stat = check_format(login, password, name, surname, school, clas)
+        if not stat:
+          user = add_user(db, login, password, name, surname, shool, clas)
+          do_login(user)
+          redirect('/')
+        else:
+          yield from display_registration_form(stat)
     else:
-      yield from display_registration_form('not_human!')
+      yield from display_registration_form('Ошибка заполнения капчи')
   else:
-    yield from display_registration_form('captcha_error')
-  
+    yield from display_registration_form('Заполните капчу!')
