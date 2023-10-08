@@ -18,10 +18,20 @@
 	height: 1.5em;
 }
 
-.lamp_on {
-	background: #FF0;
+.real_lamps .grid {
+	font-size: 6.0rem;
 }
 
-.lamp_off {
-	background: #999;
+.lamp_bar .grid {
+	font-size: 3.0rem;
+}
+
+.lamp {
+	stroke: #AAA;
+	stroke-width: 0.1rem;
+	fill: none;
+}
+
+.lamp_on {
+	fill: #FE0;
 }

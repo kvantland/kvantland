@@ -149,7 +149,7 @@ section.hint {
 	border: 0.1em solid currentColor;
 }
 
-.grid {
+table.grid {
 	border-spacing: 0;
 	border-collapse: collapse;
 	font-size: 4.0rem;
@@ -170,6 +170,10 @@ section.hint {
 	font-size: 65%;
 }
 
+svg.grid {
+	display: block;
+	margin: 1.0rem auto;
+}
 
 .field td.tile {
 	border: 0.07em solid currentColor;
