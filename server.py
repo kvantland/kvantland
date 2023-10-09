@@ -4,7 +4,8 @@ from pathlib import Path
 from bottle import route, run, static_file, install
 
 import db
-import land, town, problem, login
+import nav
+import land, town, problem, login, loginvk
 from config import config, ROOT
 
 cfg_static = config.get('static')
