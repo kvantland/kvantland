@@ -441,7 +441,7 @@ form.login{
 .anon_reg{
   text-align: center;
   vertical-align: middle;
-  font-size: 2vh;
+  font-size: 3vh;
   padding: 0.5vh 0.5vh;
 }
 
@@ -521,7 +521,7 @@ form.reg{
 
 .back_to_log{
   text-align: center;
-  font-size: 2vh;
+  font-size: 3vh;
   padding: 0.5vh 0.5vh;
 }
 

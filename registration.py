@@ -50,6 +50,7 @@ def display_registration_form(err=None):
   yield '<option> 9 </option>'
   yield '<option> 10 </option>'
   yield '<option> 11 </option>'
+  yield '<option> Другое </option>'
   yield '</select>'
   yield '<div class="g-recaptcha" data-sitekey="6LcWR2MoAAAAABz4UpMRZlmwmWZlvne32dKbc1Kx"></div>'
   yield '<button type="submit" class="reg_button"> Зарегистрироваться </button>'
@@ -87,7 +88,7 @@ def check_format(login, password, name, surname, school, clas):
     return "Слишком длинная фамилия"
   if len(school) > 200:
     return "Слишком длинное название школы"
-  if not(clas in [str(i) for i in range(1, 12)]):
+  if not(clas in [str(i) for i in range(1, 12)]) and clas != "Другое":
     return "Класса с таким номером не существует"
   if "vk#" in login:
     return "В логине не должно содержаться сочетание 'vk#'"
