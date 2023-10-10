@@ -1,0 +1,89 @@
+body{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.plot_area{
+	width: 415px;
+	height: 332px;
+	margin: 0 auto 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.board_zone{
+	position: relative;
+	width: 80%;
+	padding: 6px;
+	z-index: 1;
+}
+
+.drag_zone{
+	width: 79px;
+	display: flex;
+	flex-direction: column;
+	padding: 6px 0 6px 0;
+}
+
+.full_window{
+	position: absolute;
+	width: 321px;
+	height: 321px;
+}
+
+.brown{
+	fill: brown;
+}
+
+.white{
+	fill: white;
+}
+
+.rook{
+	width: 79px;
+	height: 79px;
+	background-size: 100%;
+	background-image: url("/static/rook.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	z-index: 2;
+	position: absolute;
+}
+
+.rook:hover{
+	cursor: pointer;
+}
+
+.grid_line{
+	stroke: black;
+	stroke-width: 1px;
+	stroke-linecap: square;
+}
+
+.targeted{
+	position: absolute;
+	z-index: 100;
+}
+
+.reload{
+	width: 79px;
+	height: 79px;
+	background-size: 100%;
+	background-image: url("/static/reload.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	margin-top: auto;
+}
+
+.reload:hover{
+	cursor: pointer;
+}
+
+.rook_amount{
+	font-size: 2vh;
+	font-weight: 1000;
+	margin-top: 70px;
+	display: flex;
+	flex-direction: row;
+}
