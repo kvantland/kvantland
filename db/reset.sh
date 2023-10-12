@@ -2,7 +2,7 @@
 
 set -e
 
-dir="$(dirname "$(realpath "postgres://postgres:Lordtop1_gg@127.0.0.1:5433/kvantland")")"
+dir="$(dirname "$(realpath "$0")")"
 postgres="$1"
 
 if [ -z "$postgres" ]; then
