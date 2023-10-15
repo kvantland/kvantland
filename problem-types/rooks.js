@@ -1,37 +1,37 @@
-var rooks = document.querySelectorAll('.rook');
+var drag_rooks = document.querySelectorAll('.rook');
 var sender = document.getElementsByName('answer')[0];
 var def_rooks = document.getElementsByTagName('image');
 var cur_amount_text = document.querySelector('#amount');
-var cur_amount = 2;
+var drag_zone = document.querySelector('.drag_zone');
+var board_zone = document.querySelector('.board_zone');
+var board = document.getElementsByTagName('rect');
+var side = document.querySelector('rect').getAttribute('width');
+var line_width = document.querySelector('line').getAttribute('width');
 
 document.querySelector('button').onclick = function(e){
 	var curr = [];
-	for (const rook of rooks){
+	for (const rook of drag_rooks){
 		if (rook.classList.contains('choiced')){
-			var x = Math.floor((parseInt(rook.style.left, 10) - 7) / 80);
-			var y = Math.floor((parseInt(rook.style.top, 10) - 7) / 80);
+			var x = Math.floor((parseInt(rook.style.left, 10) - line_width) / side);
+			var y = Math.floor((parseInt(rook.style.top, 10) - line_width) / side);
 			curr.push([y, x]);
 		}
 	}
 	sender.value = [curr[0].join(''), curr[1].join('')].join(' ');
 }
 
-function in_def(rook){
-	for (const def of def_rooks){
-		if (def.getAttribute('x') == rook.getAttribute('x')){
-			if (def.getAttribute('y') == rook.getAttribute('y')){
-				return true;
-			}
+function check_if_empty(square){
+	for (const rook of drag_rooks){
+		if (rook.classList.contains('choiced')){
+			if (parseInt(rook.style.top, 10) == square.getAttribute('y') && parseInt(rook.style.left, 10) == square.getAttribute('x'))
+				return false;
 		}
 	}
-	return false;
-}
-
-function check(square){
-	for (const rook of rooks){
-		if (rook.classList.contains('choiced')){
-			if (parseInt(rook.style.top, 10) - square.getAttribute('y') == 6 && parseInt(rook.style.left, 10) - square.getAttribute('x') == 6)
+	for (const rook of def_rooks){
+		if (rook.getAttribute('x') == square.getAttribute('x')){
+			if (rook.getAttribute('y') == square.getAttribute('y')){
 				return false;
+			}
 		}
 	}
 	return true;
@@ -44,30 +44,63 @@ function moveAt(x, y){
 }
 
 function move(event){
-	moveAt(event.pageX, event.pageY);
+	width = document.documentElement.clientWidth;
+	height = document.documentElement.clientHeight;
+	if (event.pageX + side / 2 < width && event.pageY + side / 2 < height && event.pageX > side / 2 && event.pageY > side / 2)
+		moveAt(event.pageX, event.pageY);
+	else
+		back_to_drag();
+
 }
 
-function coord(rook){
-	y = (rook.style.top - 1) / 80;
-	x = (rook.style.left - 1) / 80;
-	return [x, y];
+function update_remained_rooks_amount(){
+	cur_amount_text.innerHTML = remained_rooks_amount()
 }
 
-for (const rook of document.getElementsByClassName('rook')){
+function remained_rooks_amount(){
+	let amount = 0;
+	for (rook of drag_rooks){
+		if (rook.classList.contains('choiced'))
+			continue;
+		if (rook.classList.contains('targeted'))
+			continue;
+		amount += 1;
+	}
+	return amount;
+}
+
+function back_to_drag(){
+	document.removeEventListener('mousemove', move);
+	a = document.querySelector('.targeted');
+	a.classList.remove('targeted');
+	a.classList.remove('choiced');
+	drag_zone = document.querySelector('.drag_zone');
+	a.style.top = '';
+	a.style.left = '';
+	drag_zone.append(a);
+	update_remained_rooks_amount();
+}
+
+function drop(square){
+	document.removeEventListener('mousemove', move);
+	a = document.querySelector('.targeted');
+	a.classList.remove('targeted');
+	a.classList.add('choiced');	
+	a.style.top = square.getAttribute('y')  + 'px';
+	a.style.left = square.getAttribute('x') + 'px';
+	board_zone.append(a);
+	update_remained_rooks_amount();
+}
+
+for (const rook of drag_rooks){
 	rook.onmousedown = function(event){
 		this.classList.add('targeted');
-		if (!this.classList.contains('choiced')){		
-			cur_amount_text.innerHTML = (cur_amount - 1);
-			cur_amount -= 1;
-		}
 		this.classList.remove('choiced');
+		cur_amount_text.innerHTML = remained_rooks_amount();
 		document.body.append(this);
 		moveAt(event.clientX, event.clientY);
 		document.addEventListener('mousemove', move)
 		this.onmouseup = function(event){
-			this.classList.remove('targeted');
-			document.removeEventListener('mousemove', move);
-			var board = document.getElementsByTagName('rect');
 			var min_diff = 10 ** 9;
 			var best_square = '';
 			for (const square of board){
@@ -79,36 +112,22 @@ for (const rook of document.getElementsByClassName('rook')){
 					min_diff = tot_diff;
 				}
 			};
-			if (min_diff < 80 ** 2 && check(best_square) && !in_def(best_square)){
-				board_zone = document.querySelector('.board_zone');
-				board_zone.append(this);
-				this.style.top = best_square.getAttribute('y') - (-6) + 'px';
-				this.style.left = best_square.getAttribute('x') - (-6) + 'px';
-				this.classList.add('choiced');
-			}
-			else{
-				used_square = '';
-				cur_amount += 1;
-				this.classList.remove('choiced');
-				drag_zone = document.querySelector('.drag_zone');
-				this.style.top = '';
-				this.style.left = '';
-				drag_zone.append(this);
-				cur_amount_text.innerHTML = cur_amount;
-			}
+			if (min_diff < side ** 2 && check_if_empty(best_square))
+				drop(best_square);
+			else
+				back_to_drag();
 		}
 	}
 }
 
 rel = document.querySelector('.reload');
 rel.onclick = function(){
-	for (const rook of rooks){
+	for (const rook of drag_rooks){
 		drag_zone = document.querySelector('.drag_zone');
 		rook.style.top = '';
 		rook.style.left = '';
 		rook.classList.remove('choiced');
 		drag_zone.append(rook);
 	}
-	cur_amount = 2;
-	cur_amount_text.innerHTML = cur_amount;
+	cur_amount_text.innerHTML = remained_rooks_amount();
 }
