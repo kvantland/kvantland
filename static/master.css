@@ -451,8 +451,8 @@ form.login{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 60vh;
-  height: 70vh;
+  width: 30vw;
+  min-width: 400px;
   margin: 10vh auto auto auto;
   background-color: #EDECEF;
   border: 3px solid #D5D5D7;
@@ -467,7 +467,6 @@ form.login{
   border-radius: 5px;
   padding: 0 0 0 2%;
   background-color: #F5F5F5;
-  height: 15%;
 }
 
 .reg_form select{
@@ -476,7 +475,6 @@ form.login{
   border-radius: 5px;
   padding: 0 0 0 1%;
   background-color: #F5F5F5;
-  height: 15%;
   font-family: inherit;
 }
 
@@ -502,7 +500,6 @@ option{
 .reg_button{
   font-size: 3vh;
   margin-top: 2vh;
-  height: 20%;
   border: 1px solid #494949;
 }
 
@@ -516,7 +513,6 @@ form.reg{
   flex-direction: column;
   justify-content: space-between;
   padding: 5% 5% 5% 5%;
-  height: 80%;
 }
 
 .back_to_log{

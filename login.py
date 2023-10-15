@@ -42,7 +42,7 @@ def display_login_form(err: str=None):
   yield '</div>' 
   yield '</div>'
   yield '<div class="anon_reg">'
-  yield f'<a href="/reg"> Зарегестрироваться </a>'
+  yield f'<a href="/reg"> Зарегистрироваться </a>'
   yield '</div>'
   yield '</div>'
   yield '</main>'
