@@ -439,43 +439,43 @@ form.login{
 }
 
 .anon_reg{
-  text-align: center;
-  vertical-align: middle;
-  font-size: 3vh;
-  padding: 0.5vh 0.5vh;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 3vh;
+	padding: 0.5vh 0.5vh;
 }
 
 .reg_form{
-  -webkit-user-select: none;
-  user-select: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30vw;
-  min-width: 400px;
-  margin: 10vh auto auto auto;
-  background-color: #EDECEF;
-  border: 3px solid #D5D5D7;
-  border-radius: 10px;
-  text-align: center;
-  color: #494949;
+	-webkit-user-select: none;
+	user-select: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 30vw;
+	min-width: 400px;
+	margin: 10vh auto auto auto;
+	background-color: #EDECEF;
+	border: 3px solid #D5D5D7;
+	border-radius: 10px;
+	text-align: center;
+	color: #494949;
 }
 
 .reg_form input{
-  font-size: 2.7vh;
-  border: 2px solid #D5D5D7;
-  border-radius: 5px;
-  padding: 0 0 0 2%;
-  background-color: #F5F5F5;
+	font-size: 2.7vh;
+	border: 2px solid #D5D5D7;
+	border-radius: 5px;
+	padding: 0 0 0 2%;
+	background-color: #F5F5F5;
 }
 
 .reg_form select{
-  font-size: 2.7vh;
-  border: 2px solid #D5D5D7;
-  border-radius: 5px;
-  padding: 0 0 0 1%;
-  background-color: #F5F5F5;
-  font-family: inherit;
+	font-size: 2.7vh;
+	border: 2px solid #D5D5D7;
+	border-radius: 5px;
+	padding: 0 0 0 1%;
+	background-color: #F5F5F5;
+	font-family: inherit;
 }
 
 .reg_form select:required:invalid{
@@ -483,7 +483,7 @@ form.login{
 }
 
 option[value=""][disabled] {
-        display: none;
+				display: none;
 }
 
 option{
@@ -491,34 +491,34 @@ option{
 }
 
 .reg_form_header{
-  height: 10%;
-  font-size: 3.5vh;
-  font-weight: 900;
-  padding: 1% 0 0 0;
+	height: 10%;
+	font-size: 3.5vh;
+	font-weight: 900;
+	padding: 1% 0 0 0;
 }
 
 .reg_button{
-  font-size: 3vh;
-  margin-top: 2vh;
-  border: 1px solid #494949;
+	font-size: 3vh;
+	margin-top: 2vh;
+	border: 1px solid #494949;
 }
 
 .reg_button:hover{
-  cursor: pointer;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+	cursor: pointer;
+	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
 
 form.reg{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 5% 5% 5% 5%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 5% 5% 5% 5%;
 }
 
 .back_to_log{
-  text-align: center;
-  font-size: 3vh;
-  padding: 0.5vh 0.5vh;
+	text-align: center;
+	font-size: 3vh;
+	padding: 0.5vh 0.5vh;
 }
 
 .reg_dialog{
