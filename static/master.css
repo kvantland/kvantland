@@ -483,7 +483,7 @@ form.login{
 }
 
 option[value=""][disabled] {
-				display: none;
+	display: none;
 }
 
 option{
