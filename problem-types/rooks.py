@@ -1,3 +1,5 @@
+import sys
+
 def entry_form(data, kwargs):
 	size = 4 # число клеточек в строке
 	line_width = 2 # ширина линий 
@@ -9,9 +11,7 @@ def entry_form(data, kwargs):
 	plot_width = pad + board_side + inner_side 
 	plot_height = board_side
 	yield '<input name="answer" type="hidden" />'
-	yield f'<div class="plot_area" style="width: {plot_width}px; height: {plot_height}px">'
-	yield f'<div class="board_zone" style="width: {board_side}px; padding-right: {pad}px">'
-	yield f'<svg class="full_window" style="width: {board_side}; height: {board_side}">'
+	yield f'<svg class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible">'
 	for y in range(0, size + 1):
 		yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + size * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
 	for x in range(0, size + 1):
@@ -19,29 +19,23 @@ def entry_form(data, kwargs):
 	for x in range(0, size):
 		for y in range(0, size):
 			if (x + y) % 2 == 1:
-				yield f'<rect class="brown" x="{x * side + 2 * ind}" y="{y * side + 2 * ind}" width="{inner_side}" height="{inner_side}" />'
+				yield f'<rect class="brown" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 			else:
-				yield f'<rect class="white" x="{x * side + 2 * ind}" y="{y * side + 2 * ind}" width="{inner_side}" height="{inner_side}" />'
+				yield f'<rect class="white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 			if [y, x] in data['cur']:
-					yield f'<image x="{x * side + 2 * ind}" y ="{y * side + 2 * ind}" width="{side - 2 * ind}" height="{side - 2 * ind}" href="/static/rook.png" />"'
-	yield '</svg>'
-	yield '</div>'
-	yield f'<div class="drag_zone" style="width: {inner_side}px">'
+					yield f'<image class="rook passive choiced" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/rook.png" />'
 	for i in range(2):
-		yield f'<div class="rook" style="width: {inner_side}px; height: {inner_side}px">'
-		yield '</div>'
-	yield f'<div class="rook_amount" style="width: {inner_side}px; margin-top: {inner_side}px; font-size: {inner_side * 0.19}px">'
-	yield '<p> Осталось </p>'
-	yield '<p id="amount"> 2 </p>'
-	yield '</div>'
-	yield f'<div class="reload" style="width: {inner_side}px; height: {inner_side}px">'
-	yield '</div>'
-	yield '</div>'
-	yield '</div>'
+		yield f'<image class="rook active" x="{pad + board_side}" y="0" width="{inner_side}" height="{inner_side}" href="/static/rook.png" />'
+	yield f'<text style="font-size: {inner_side * 0.2}" textLength="{inner_side}" x="{pad + board_side}" y="{inner_side * 1.2}">Осталось 2</text>'
+	yield f'<image class="reload" x = "{pad + board_side}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
+	yield '</svg>'
 
 def validate(data, answer):
 	correct = data['correct']
 	ans = list(answer.split(' '))
+	print(sorted(ans), file=sys.stderr)
+	for i in correct:
+		print(sorted(i), file=sys.stderr)
 	for i in correct:
 		if sorted(i) == sorted(ans):
 			return True

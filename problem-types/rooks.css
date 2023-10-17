@@ -10,11 +10,6 @@ body{
 	justify-content: space-between;	
 }
 
-.board_zone{
-	position: relative;
-	z-index: 1;
-}
-
 .drag_zone{
 	display: flex;
 	flex-direction: column;
@@ -32,35 +27,13 @@ body{
 	fill: white;
 }
 
-.rook{
-	background-size: 100%;
-	background-image: url("/static/rook.png");
-	background-position: center;
-	background-repeat: no-repeat;
-	z-index: 2;
-	position: absolute;
-}
-
-.rook:hover{
+.active:hover{
 	cursor: pointer;
 }
 
 .grid_line{
 	stroke: black;
 	stroke-linecap: square;
-}
-
-.targeted{
-	position: absolute;
-	z-index: 100;
-}
-
-.reload{
-	background-size: 100%;
-	background-image: url("/static/reload.png");
-	background-position: center;
-	background-repeat: no-repeat;
-	margin-top: auto;
 }
 
 .reload:hover{
@@ -72,4 +45,9 @@ body{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+}
+
+text{
+	font-family: inherit;
+	font-weight: 1000
 }

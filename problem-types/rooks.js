@@ -1,19 +1,31 @@
-var drag_rooks = document.querySelectorAll('.rook');
+var drag_rooks = document.querySelectorAll('.active');
 var sender = document.getElementsByName('answer')[0];
-var def_rooks = document.getElementsByTagName('image');
-var cur_amount_text = document.querySelector('#amount');
-var drag_zone = document.querySelector('.drag_zone');
-var board_zone = document.querySelector('.board_zone');
-var board = document.getElementsByTagName('rect');
+var def_rooks = document.querySelectorAll('.passive');
+var all_rooks = document.querySelectorAll('.rook');
+var cur_amount_text = document.querySelector('text');
+var board = document.querySelectorAll('rect');
 var side = document.querySelector('rect').getAttribute('width');
-var line_width = document.querySelector('line').getAttribute('width');
+var def_X = drag_rooks[0].getAttribute('x');
+var def_Y = drag_rooks[0].getAttribute('y');
+var svg_box = document.querySelector('.plot_area');
+
+const row_set = new Set();
+const column_set = new Set()
+
+for (square of board){
+	row_set.add(square.getAttribute('x'))
+	column_set.add(square.getAttribute('y'))
+}
+
+var in_row = row_set.size;
+var in_column = column_set.size;
 
 document.querySelector('button').onclick = function(e){
 	var curr = [];
 	for (const rook of drag_rooks){
-		if (rook.classList.contains('choiced')){
-			var x = Math.floor((parseInt(rook.style.left, 10) - line_width) / side);
-			var y = Math.floor((parseInt(rook.style.top, 10) - line_width) / side);
+		if (rook.classList.contains('choiced') && rook.classList.contains('active')){
+			var x = rook.getAttribute('column');
+			var y = rook.getAttribute('row');
 			curr.push([y, x]);
 		}
 	}
@@ -21,17 +33,10 @@ document.querySelector('button').onclick = function(e){
 }
 
 function check_if_empty(square){
-	for (const rook of drag_rooks){
+	for (const rook of all_rooks){
 		if (rook.classList.contains('choiced')){
-			if (parseInt(rook.style.top, 10) == square.getAttribute('y') && parseInt(rook.style.left, 10) == square.getAttribute('x'))
+			if (rook.getAttribute('y') == square.getAttribute('y') && rook.getAttribute('x') == square.getAttribute('x'))
 				return false;
-		}
-	}
-	for (const rook of def_rooks){
-		if (rook.getAttribute('x') == square.getAttribute('x')){
-			if (rook.getAttribute('y') == square.getAttribute('y')){
-				return false;
-			}
 		}
 	}
 	return true;
@@ -39,22 +44,28 @@ function check_if_empty(square){
 
 function moveAt(x, y){
 	a = document.querySelector('.targeted');
-	a.style.left = x - a.offsetWidth / 2 + 'px';
-	a.style.top = y - a.offsetHeight / 2 + 'px';
+	a.setAttribute('x', x);
+	a.setAttribute('y', y);
 }
 
 function move(event){
-	width = document.documentElement.clientWidth;
-	height = document.documentElement.clientHeight;
-	if (event.pageX + side / 2 < width && event.pageY + side / 2 < height && event.pageX > side / 2 && event.pageY > side / 2)
-		moveAt(event.pageX, event.pageY);
+	var svg_box_X = svg_box.getBoundingClientRect().left;
+	var svg_box_Y = svg_box.getBoundingClientRect().top;
+	var cur_X = event.pageX - svg_box_X;
+	var cur_Y = event.pageY - svg_box_Y;
+	var right = document.documentElement.clientWidth - svg_box_X;
+	var bottom = document.documentElement.clientHeight - svg_box_Y;
+	var left = -svg_box_X;
+	var top = -svg_box_Y;
+	if (cur_X + side / 2 < right && cur_X - side / 2 > left && cur_Y - side / 2 > top && cur_Y + side / 2 < bottom)
+		moveAt(cur_X - side / 2, cur_Y - side / 2);
 	else
 		back_to_drag();
 
 }
 
 function update_remained_rooks_amount(){
-	cur_amount_text.innerHTML = remained_rooks_amount()
+	cur_amount_text.textContent = 'Осталось ' + remained_rooks_amount()
 }
 
 function remained_rooks_amount(){
@@ -74,10 +85,8 @@ function back_to_drag(){
 	a = document.querySelector('.targeted');
 	a.classList.remove('targeted');
 	a.classList.remove('choiced');
-	drag_zone = document.querySelector('.drag_zone');
-	a.style.top = '';
-	a.style.left = '';
-	drag_zone.append(a);
+	a.setAttribute('x', def_X);
+	a.setAttribute('y', def_Y);
 	update_remained_rooks_amount();
 }
 
@@ -86,9 +95,8 @@ function drop(square){
 	a = document.querySelector('.targeted');
 	a.classList.remove('targeted');
 	a.classList.add('choiced');	
-	a.style.top = square.getAttribute('y')  + 'px';
-	a.style.left = square.getAttribute('x') + 'px';
-	board_zone.append(a);
+	a.setAttribute('y', square.getAttribute('y'));
+	a.setAttribute('x', square.getAttribute('x'));
 	update_remained_rooks_amount();
 }
 
@@ -96,24 +104,40 @@ for (const rook of drag_rooks){
 	rook.onmousedown = function(event){
 		this.classList.add('targeted');
 		this.classList.remove('choiced');
-		cur_amount_text.innerHTML = remained_rooks_amount();
-		document.body.append(this);
-		moveAt(event.clientX, event.clientY);
+		update_remained_rooks_amount();
+		svg_box.appendChild(this);
+		var svg_box_X = svg_box.getBoundingClientRect().left;
+		var svg_box_Y = svg_box.getBoundingClientRect().top;
+		moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
 		document.addEventListener('mousemove', move)
 		this.onmouseup = function(event){
 			var min_diff = 10 ** 9;
 			var best_square = '';
+			var best_square_row = 0;
+			var best_square_column = 0;
+			let row = 0;
+			let column = 0;
 			for (const square of board){
-				let x_diff = square.getBoundingClientRect().left - this.getBoundingClientRect().left;
-				let y_diff = square.getBoundingClientRect().top - this.getBoundingClientRect().top;
+				let x_diff = square.getAttribute('x') - this.getAttribute('x');
+				let y_diff = square.getAttribute('y') - this.getAttribute('y');
 				let tot_diff = x_diff ** 2 + y_diff ** 2;
 				if (tot_diff < min_diff){
 					best_square = square;
 					min_diff = tot_diff;
+					best_square_row = row;
+					best_square_column = column;
+				}
+				row += 1;
+				if (row == in_column){
+					row = 0;
+					column += 1;
 				}
 			};
-			if (min_diff < side ** 2 && check_if_empty(best_square))
+			if (min_diff < side ** 2 && check_if_empty(best_square)){
+				this.setAttribute('column', best_square_column);
+				this.setAttribute('row', best_square_row);
 				drop(best_square);
+			}
 			else
 				back_to_drag();
 		}
@@ -123,11 +147,9 @@ for (const rook of drag_rooks){
 rel = document.querySelector('.reload');
 rel.onclick = function(){
 	for (const rook of drag_rooks){
-		drag_zone = document.querySelector('.drag_zone');
-		rook.style.top = '';
-		rook.style.left = '';
 		rook.classList.remove('choiced');
-		drag_zone.append(rook);
+		rook.setAttribute('x', def_X);
+		rook.setAttribute('y', def_Y);
 	}
-	cur_amount_text.innerHTML = remained_rooks_amount();
+	update_remained_rooks_amount()
 }
