@@ -26,7 +26,8 @@ def entry_form(data, kwargs):
 					yield f'<image class="rook passive choiced" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/rook.png" />'
 	for i in range(2):
 		yield f'<image class="rook active" x="{pad + board_side}" y="0" width="{inner_side}" height="{inner_side}" href="/static/rook.png" />'
-	yield f'<text style="font-size: {inner_side * 0.2}" textLength="{inner_side}" x="{pad + board_side}" y="{inner_side * 1.2}">Осталось 2</text>'
+	yield f'<text style="font-size: {inner_side * 0.2}" textLength="{inner_side * 0.8}" x="{pad + board_side}" y="{inner_side * 1.2}">Осталось</text>'
+	yield f'<text class="amount" style="font-size: {inner_side * 0.2}" textLength="{inner_side * 0.1}" x="{pad + board_side + inner_side * 0.9}" y="{inner_side * 1.2}"> 2</text>'
 	yield f'<image class="reload" x = "{pad + board_side}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
 	yield '</svg>'
 

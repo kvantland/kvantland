@@ -2,7 +2,7 @@ var drag_rooks = document.querySelectorAll('.active');
 var sender = document.getElementsByName('answer')[0];
 var def_rooks = document.querySelectorAll('.passive');
 var all_rooks = document.querySelectorAll('.rook');
-var cur_amount_text = document.querySelector('text');
+var cur_amount_text = document.querySelector('.amount');
 var board = document.querySelectorAll('rect');
 var side = document.querySelector('rect').getAttribute('width');
 var def_X = drag_rooks[0].getAttribute('x');
@@ -65,7 +65,7 @@ function move(event){
 }
 
 function update_remained_rooks_amount(){
-	cur_amount_text.textContent = 'Осталось ' + remained_rooks_amount()
+	cur_amount_text.textContent = remained_rooks_amount()
 }
 
 function remained_rooks_amount(){
