@@ -30,7 +30,10 @@ field_amount = len(all_info) # количество полей в форме б�
 button_size = 70 # размер кнопки
 field_size = 40 # размер поля
 pad = 4 # расстояние между полями
-form_size = button_size + field_amount * field_size + pad * (field_size - 1) # размер формы
+captcha_size = 78 # размер каптчи
+button_margin = 20 # расстояние до кнопки
+form_size = button_size + field_amount * field_size + pad * field_amount + captcha_size  + button_margin # размер формы
+
 
 # отображаемая в форме пользовательсткая информация
 user_info = dict()
@@ -99,7 +102,7 @@ def display_registration_form(err=None):
 			yield f'<input style="height: {field_size}px" name="{name}" type="{type_}" placeholder="{placeholder_}" value="{value_}" required />'
 	yield '</select>'
 	yield f'<div class="g-recaptcha" data-sitekey="{sitekey}"></div>'
-	yield f'<button type="submit" class="reg_button" style="height: {button_size}px"> Зарегистрироваться </button>'
+	yield f'<button type="submit" class="reg_button" style="height: {button_size}px; margin-top: {button_margin}px"> Зарегистрироваться </button>'
 	yield '</form>'
 	yield '<div class="back_to_log">'
 	yield '<a href="/login"> Уже зарегистрированы? </a>'
