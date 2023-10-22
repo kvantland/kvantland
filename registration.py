@@ -11,53 +11,50 @@ import sys
 
 secret = config['reg']['secret']
 reg_url = config['reg']['reg_url']
+sitekey = config['reg']['sitekey']
 alph = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 alph_lower = 'abcdefghijklmnopqrstuvwxyz'
 alph_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 num = '0123456789'
 
-min_log_size = config['reg']['min_log_size']
-max_log_size = config['reg']['max_log_size']
-min_password_size = config['reg']['min_password_size']
-max_password_size = config['reg']['max_password_size']
-max_school_size = config['reg']['max_school_size']
-max_name_size = config['reg']['max_name_size']
-max_surname_size = config['reg']['max_surname_size']
-min_school_size = config['reg']['min_school_size']
+all_info = [['login', 'text', 'Логин'],
+			['password', 'password', 'Пароль'],
+			['name', 'text', 'Имя'],
+			['surname', 'text', 'Фамилия'],
+			['school', 'text', 'Школа'],
+			['city', 'text', 'Город'],
+			['clas', 'select', 'Класс', [str(i) for i in range(1, 12)] + ['Другое']]]
 
-field_amount = 6 # количество полей в форме без учета капчи и кнопки
+
+field_amount = len(all_info) # количество полей в форме без учета капчи и кнопки
 button_size = 70 # размер кнопки
 field_size = 40 # размер поля
 pad = 4 # расстояние между полями
 form_size = button_size + field_amount * field_size + pad * (field_size - 1) # размер формы
 
 # отображаемая в форме пользовательсткая информация
-user_info = {
-	'login': '',
-	'password': '',
-	'name': '',
-	'surname': '',
-	'school': '',
-	'clas': ''
-} 
+user_info = dict()
 
 # типы полей
-type_info = {
-	'login': 'text',
-	'password': 'password',
-	'name': 'text',
-	'surname': 'text',
-	'school': 'text'
-}
+type_info = dict()
 
 # Отображаемые названия полей
-placeholder_info = {
-	'login': 'Логин',
-	'password': 'Пароль',
-	'name': 'Имя',
-	'surname': 'Фамилия',
-	'school': 'Школа'
-}
+placeholder_info = dict()
+
+# Опции для полей с выбором
+option_info = dict()
+
+# Заполнение словарей
+for field in all_info:
+	field_name = field[0]
+	type_name = field[1]
+	placeholder_name = field[2]
+	user_info[field_name] = ''
+	type_info[field_name] = type_name
+	placeholder_info[field_name] = placeholder_name
+	if type_name == 'select':
+		options = field[3]
+		option_info[field_name] = options
 
 @route('/reg')
 def reg_from():
@@ -66,9 +63,10 @@ def reg_from():
 	yield from display_registration_form()
 
 def display_registration_form(err=None):
-	global user_info, type_info, placeholder_info
+	global user_info, type_info, placeholder_info, option_info
 	global field_size
 	yield '<!DOCTYPE html>'
+	yield '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
 	yield '<title> Регистрация — Квантландия </title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	if err:
@@ -83,22 +81,24 @@ def display_registration_form(err=None):
 	yield '<div class="reg_form">'
 	yield '<div class = "reg_form_header"> Регистрация </div>'
 	yield f'<form class="reg" style="height: {form_size}px" method="post">'
-	for i in placeholder_info:
-		placeholder_ = placeholder_info[i]
-		type_ = type_info[i]
-		value_ = user_info[i]
-		yield f'<input style="height: {field_size}px" name="{i}" type="{type_}" placeholder="{placeholder_}" value="{value_}" required />'
-	yield f'<select style="height: {field_size}px" name="clas" required>'
-	if not(user_info['clas']):
-		yield '<option value="" disabled selected> Класс </option>'
-	clas_opt = [str(i) for i in range(1, 12)] + ['Другое']
-	for i in clas_opt:
-		if user_info["clas"] != str(i):
-			yield f'<option> {i} </option>'
+	for name in placeholder_info:
+		placeholder_ = placeholder_info[name]
+		type_ = type_info[name]
+		value_ = user_info[name]
+		if type_ == 'select':
+			yield f'<select style="height: {field_size}px" name="{name}" required>'
+			if not(user_info[name]):
+				yield f'<option value="" disabled selected> {placeholder_} </option>'
+			opt_list = option_info[name]
+			for opt in opt_list:
+				if user_info[name] != str(opt):
+					yield f'<option> {opt} </option>'
+				else:
+					yield f'<option selected> {opt} </option>'
 		else:
-			yield f'<option selected> {i} </option>'
+			yield f'<input style="height: {field_size}px" name="{name}" type="{type_}" placeholder="{placeholder_}" value="{value_}" required />'
 	yield '</select>'
-	yield '<div class="g-recaptcha" data-sitekey="6LcWR2MoAAAAABz4UpMRZlmwmWZlvne32dKbc1Kx"></div>'
+	yield f'<div class="g-recaptcha" data-sitekey="{sitekey}"></div>'
 	yield f'<button type="submit" class="reg_button" style="height: {button_size}px"> Зарегистрироваться </button>'
 	yield '</form>'
 	yield '<div class="back_to_log">'
@@ -109,8 +109,8 @@ def display_registration_form(err=None):
 	yield '<script type="text/javascript" src ="/static/registration.js"></script>'
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
-def add_user(db, логин, пароль, имя, фамилия, школа, класс):
-	db.execute("insert into Ученик (логин, пароль, имя, фамилия, школа, класс) values (%s, %s, %s, %s, %s, %s) returning ученик", (логин, pwhash.hash(пароль), имя, фамилия, школа, класс))
+def add_user(db, info):
+	db.execute("insert into Ученик (логин, пароль, имя, фамилия, школа, класс, город) values (%s, %s, %s, %s, %s, %s, %s) returning ученик", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['city']))
 	(user, ), = db.fetchall()
 	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
 	return int(user)
@@ -123,40 +123,40 @@ def check_login(db, логин):
 		return None
 	return user
 
-def check_format(login, password, name, surname, school, clas):
-	if len(login) > max_log_size:
-		return "Слишком длинный логин", 'login'
-	for s in login:
-		if s != '_' and s != '-' and s not in alph:
-			return "Логин должен состоять из английских букв и символов - и _ <br /> Ваш логин содержит недопустимые символы", 'login'
-	if len(login) < min_log_size:
-		return "Количество символов в логине должно составлять минимум " + str(min_log_size), 'login'
-	if len(password) > max_password_size:
-		return "Слишком длинный пароль", 'password'
-	if len(password) < min_password_size:
-		return "Количество символов в пароле должно составлять минимум " + str(min_password_size), 'password'
-	tmp_upper = 0
-	tmp_lower = 0
-	tmp_number = 0
-	for s in password:
-		if s in alph_upper:
-			tmp_upper = 1
-		if s in alph_lower:
-			tmp_lower = 1
-		if s in num:
-			tmp_number = 1
-	if not(tmp_lower and tmp_upper and tmp_number):
-		return "Пароль должен содержать заглавные и строчные буквы, а так же цифры", 'password'
-	if len(name) > max_name_size:
-		return "Слишком длинное имя", 'name'
-	if len(surname) > max_surname_size:
-		return "Слишком длинная фамилия", 'surname'
-	if len(school) > max_school_size:
-		return "Слишком длинное название школы", 'school'
-	if len(school) < min_school_size:
-		return "Слишком короткое название школы", 'school'
-	if not(clas in [str(i) for i in range(1, 12)]) and clas != "Другое":
-		return "Класса с таким номером не существует", 'clas'
+def check_format():
+	global user_info, placeholder_info, type_info, option_info
+	
+	for field in user_info:
+		min_size = config['reg']['min_' + field + '_size']
+		max_size = config['reg']['max_' + field + '_size']
+		name = placeholder_info[field]
+
+		if type_info[field] == "select":
+			if not(user_info[field] in option_info[field]):
+				return "Недопустимое значение в поле " + name + "<br /> Пожалуйста, выберите значение из выпадающего списка", field
+
+		if field == "login":
+			for s in user_info[field]:
+				if s != '_' and s != '-' and s not in alph:
+					return "Логин должен состоять из английских букв и символов - и _ <br /> Ваш логин содержит недопустимые символы", field
+	
+		if type_info[field] == "password":
+			tmp_upper, tmp_lower, tmp_number = (0, 0, 0)
+			for s in user_info[field]	:
+				if s in alph_upper:
+					tmp_upper = 1
+				if s in alph_lower:
+					tmp_lower = 1
+				if s in num:
+					tmp_number = 1
+			if not(tmp_lower and tmp_upper and tmp_number):
+				return "Пароль должен содержать заглавные и строчные буквы, а так же цифры", field
+
+		if len(user_info[field]) < min_size:
+			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size),  field
+		if len(user_info[field]) > max_size:
+			return "Слишком много символов в поле " + name, field
+
 	return False, ''
 
 def update_info(param):
@@ -167,21 +167,9 @@ def update_info(param):
 def login_attempt(db):
 	global user_info
 
-	login = request.forms.login.strip()
-	password = request.forms.password.strip()
-	name = request.forms.name.strip()
-	surname = request.forms.surname.strip()
-	clas = request.forms.clas.strip()
-	school = request.forms.school.strip()
-
-	user_info = {
-	"login": login,
-	"password": password,
-	"name": name,
-	"surname": surname,
-	"school": school,
-	"clas": clas
-	}
+	for name in user_info:
+		new_value = request.forms.get(name).encode('l1').decode().strip()
+		user_info[name] = new_value
 
 	if len(request.forms['g-recaptcha-response']) != 0:
 		params = {
@@ -197,9 +185,9 @@ def login_attempt(db):
 				update_info('login')
 				yield from display_registration_form('К сожалению, пользователь с таким логином уже существует, <br /> попробуйте другой логин')
 			else:
-				mes, param_to_change = check_format(login, password, name, surname, school, clas)
+				mes, param_to_change = check_format()
 				if not mes:
-					user = add_user(db, login, password, name, surname, school, clas)
+					user = add_user(db, user_info)
 					do_login(user)
 					redirect('/')
 				else:

@@ -47,6 +47,7 @@ create table Ученик (
 	, фамилия text
 	, школа text 
   	, класс text
+  	, город text
 	, счёт int not null default 10 check (счёт >= 0)
 );
 
