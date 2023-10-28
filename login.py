@@ -79,6 +79,9 @@ def do_redirect():
 		path = '/'
 	redirect(path)
 
+def do_redirect_to_root():
+	redirect('/')
+
 @route('/login', method='POST')
 def login_attempt(db):
 	if (user := check_login(db, request.forms.login, request.forms.password)) != None:
@@ -91,4 +94,4 @@ def login_attempt(db):
 @route('/logout')
 def logout():
 	do_logout()
-	do_redirect()
+	do_redirect_to_root()
