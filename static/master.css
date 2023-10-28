@@ -355,9 +355,9 @@ form.login{
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	width: 30vw;
-	height: 40vh;
-	margin: 20vh 35vw 30vh 35vw;
+	width: 60vh;
+	height: 45vh;
+	margin: 20vh auto auto auto;
 	background-color: #EDECEF;
 	border: 3px solid #D5D5D7;
 	border-radius: 10px;
@@ -395,9 +395,10 @@ form.login{
 
 .auth_button_bar {
 	display: flex;
-	height: 20%;
+	height: 13%;
 	padding: 0 0 0 5%;
 	border-top: 3px solid #D5D5D7;
+	border-bottom: 3px solid #D5D5D7;
 }
 
 .button_bar_text{
@@ -439,4 +440,102 @@ form.login{
 	min-width: 12rem;
 	height: 3rem;
 	padding: 0.2em 0.5em;
+}
+
+.anon_reg{
+	text-align: center;
+	vertical-align: middle;
+	font-size: 3vh;
+	padding: 0.5vh 0.5vh;
+}
+
+.reg_form{
+	-webkit-user-select: none;
+	user-select: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 30vw;
+	min-width: 400px;
+	margin: 10vh auto auto auto;
+	background-color: #EDECEF;
+	border: 3px solid #D5D5D7;
+	border-radius: 10px;
+	text-align: center;
+	color: #494949;
+}
+
+.reg_form input{
+	font-size: 20px;
+	border: 2px solid #D5D5D7;
+	border-radius: 5px;
+	box-sizing: border-box;
+	padding: 0 0 0 2%;
+	background-color: #F5F5F5;
+}
+
+.reg_form select{
+	font-size: 20px;
+	border: 2px solid #D5D5D7;
+	border-radius: 5px;
+	padding: 0 0 0 1%;
+	background-color: #F5F5F5;
+	box-sizing: border-inside;
+	font-family: inherit;
+}
+
+.reg_form select:required:invalid{
+	color: #757575;
+}
+
+option[value=""][disabled] {
+	display: none;
+}
+
+option{
+	color: black;
+}
+
+.reg_form_header{
+	height: 10%;
+	font-size: 26px;
+	font-weight: 900;
+	padding: 1% 0 0 0;
+}
+
+.reg_button{
+	font-size: 24px;
+	border: 1px solid #494949;
+	box-sizing: border-box;
+}
+
+.reg_button:hover{
+	cursor: pointer;
+	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+}
+
+form.reg{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 5% 5% 5% 5%;
+}
+
+.back_to_log{
+	text-align: center;
+	font-size: 24px;
+	padding: 0.5vh 0.5vh;
+}
+
+.reg_dialog{
+	position: fixed;
+	margin: 2vh auto 0 auto;
+	padding: 10px;
+	z-index: 1;
+	text-align: center;
+}
+
+.blur_zone{
+	filter: blur(5px);
+	pointer-events: none
 }

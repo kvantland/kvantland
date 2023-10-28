@@ -5,7 +5,7 @@ from bottle import route, run, static_file, install
 
 import db
 import nav
-import land, town, problem, login, loginvk
+import land, town, problem, login, loginvk, registration
 from config import config, ROOT
 
 cfg_static = config.get('static')
