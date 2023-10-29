@@ -1,6 +1,7 @@
 from login import do_login, current_user
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
+from html import escape
 import nav
 import json
 from config import config
@@ -99,7 +100,7 @@ def display_registration_form(err=None):
 				else:
 					yield f'<option selected> {opt} </option>'
 		else:
-			yield f'<input style="height: {field_size}px" name="{name}" type="{type_}" placeholder="{placeholder_}" value="{value_}" required />'
+			yield f'<input style="height: {field_size}px" name="{name}" type="{type_}" placeholder="{placeholder_}" value="{escape(value_)}" required />'
 	yield '</select>'
 	yield f'<div class="g-recaptcha" data-sitekey="{sitekey}"></div>'
 	yield f'<button type="submit" class="reg_button" style="height: {button_size}px; margin-top: {button_margin}px"> Зарегистрироваться </button>'
