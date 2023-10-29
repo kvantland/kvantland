@@ -1,0 +1,53 @@
+body{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.plot_area{
+	margin: 0 auto 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;	
+}
+
+.drag_zone{
+	display: flex;
+	flex-direction: column;
+}
+
+.full_window{
+	position: absolute;
+}
+
+.brown{
+	fill: brown;
+}
+
+.white{
+	fill: white;
+}
+
+.active:hover{
+	cursor: pointer;
+}
+
+.grid_line{
+	stroke: black;
+	stroke-linecap: square;
+}
+
+.reload:hover{
+	cursor: pointer;
+}
+
+.rook_amount{
+	font-weight: 1000;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+text{
+	font-family: inherit;
+	font-weight: 1000
+}

@@ -79,10 +79,10 @@ def show_question(db, variant, hint_mode):
 		yield '</div>'
 	if изображение:
 		yield f'<img class="picture" src="/static/problem/{изображение}">'
-	if script:
-		yield f'<script type="text/ecmascript">{script}</script>'
 	yield '</main>'
 	yield '</div>'
+	if script:
+		yield f'<script type="text/ecmascript">{script}</script>'
 
 def check_answer(db, var_id, answer):
 	db.execute('select Тип.код, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
