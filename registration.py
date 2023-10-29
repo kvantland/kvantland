@@ -140,9 +140,9 @@ def check_format():
 
 		if field == "login":
 			for s in user_info[field]:
-				if s != '_' and s != '-' and s not in alph:
-					return "Логин должен состоять из английских букв и символов - и _ <br /> Ваш логин содержит недопустимые символы", field
-	
+				if s != '_' and s != '-' and s not in alph and s not in num:
+					return "Логин должен состоять из английских букв, цифр и символов - и _ <br /> Ваш логин содержит недопустимые символы", field
+
 		if type_info[field] == "password":
 			tmp_upper, tmp_lower, tmp_number = (0, 0, 0)
 			for s in user_info[field]	:
