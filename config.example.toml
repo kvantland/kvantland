@@ -20,3 +20,22 @@ client_secret = 'abcdefg'
 auth_url = 'http://oauth.vk.com/authorize'
 token_url = 'https://oauth.vk.com/access_token'
 info_url = 'https://api.vk.com/method/users.get'
+
+[reg]
+secret = 'ABCDabcdABCDabcdABCDabcdABCDabcdABCDabcd'
+sitekey = 'efghIJKLefghIJKLefghIJKLefghIJKLefghIJKL'
+reg_url = 'https://www.google.com/recaptcha/api/siteverify'
+min_login_size = 4
+max_login_size = 20
+min_password_size = 6
+max_password_size = 1000
+min_name_size = 4
+max_name_size = 1000
+min_surname_size = 4
+max_surname_size = 1000
+min_school_size = 4
+max_school_size = 1000
+min_city_size = 4
+max_city_size = 1000
+min_clas_size = 1
+max_clas_size = 100
