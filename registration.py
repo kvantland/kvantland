@@ -1,7 +1,6 @@
 from login import do_login, current_user
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
-from html import escape
 import nav
 import json
 from config import config
@@ -100,8 +99,8 @@ def display_registration_form(err=None):
 				else:
 					yield f'<option selected> {opt} </option>'
 		else:
-			yield f'<input style="height: {field_size}px" name="{name}" type="{type_}" placeholder="{placeholder_}" value="{escape(value_)}" required />'
-	yield '</select>'
+			yield f'<input style="height: {field_size}px" name="{name}" type="{type_}" placeholder="{placeholder_}" value="{value_}" required />'
+	yield '</select>'	
 	yield f'<div class="g-recaptcha" data-sitekey="{sitekey}"></div>'
 	yield f'<button type="submit" class="reg_button" style="height: {button_size}px; margin-top: {button_margin}px"> Зарегистрироваться </button>'
 	yield '</form>'
@@ -140,10 +139,16 @@ def check_format():
 				return "Недопустимое значение в поле " + name + "<br /> Пожалуйста, выберите значение из выпадающего списка", field
 
 		if field == "login":
+			tmp_alph = 0
 			for s in user_info[field]:
-				if s != '_' and s != '-' and s not in alph:
-					return "Логин должен состоять из английских букв и символов - и _ <br /> Ваш логин содержит недопустимые символы", field
-	
+				if s != '_' and s != '-' and s not in alph and s not in num:
+					return "Логин должен состоять из английских букв, цифр и символов - и _ <br /> Ваш логин содержит недопустимые символы", field
+				if s in alph:
+					tmp_alph = 1
+			if not tmp_alph:
+				return "Логин должен содержать буквы", field
+
+
 		if type_info[field] == "password":
 			tmp_upper, tmp_lower, tmp_number = (0, 0, 0)
 			for s in user_info[field]	:
