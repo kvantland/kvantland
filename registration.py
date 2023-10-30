@@ -202,6 +202,6 @@ def login_attempt(db):
 					user_info[param_to_change] = ''
 					yield from display_registration_form(user_info, mes)
 		else:
-			yield from display_registration_form('Ошибка заполнения капчи')
+			yield from display_registration_form(user_info, 'Ошибка заполнения капчи')
 	else:
-		yield from display_registration_form('Заполните капчу!')
+		yield from display_registration_form(user_info,'Заполните капчу!')
