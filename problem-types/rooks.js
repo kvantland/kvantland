@@ -11,8 +11,6 @@ var svg_box = document.querySelector('.plot_area');
 
 var button = document.querySelector('button');
 var nav = document.querySelector('nav');
-button.style['z-index'] = -1;
-nav.style['z-index'] = -1;
 
 const row_set = new Set();
 const column_set = new Set()
@@ -54,6 +52,8 @@ function moveAt(x, y){
 }
 
 function move(event){
+	button.style['z-index'] = -1;
+	nav.style['z-index'] = -1;
 	var svg_box_X = svg_box.getBoundingClientRect().left;
 	var svg_box_Y = svg_box.getBoundingClientRect().top;
 	var cur_X = event.pageX - svg_box_X;
@@ -93,6 +93,8 @@ function back_to_drag(){
 	a.setAttribute('x', def_X);
 	a.setAttribute('y', def_Y);
 	update_remained_rooks_amount();
+	button.style['z-index'] = 1;
+	na.style['z-index'] = 1;
 }
 
 function drop(square){
@@ -103,6 +105,8 @@ function drop(square){
 	a.setAttribute('y', square.getAttribute('y'));
 	a.setAttribute('x', square.getAttribute('x'));
 	update_remained_rooks_amount();
+	button.style['z-index'] = 1;
+	nav.style['z-index'] = 1;
 }
 
 for (const rook of drag_rooks){
