@@ -2,6 +2,10 @@
 
 const r = 32
 
+var send_button = document.querySelector('button');
+var hint_area = document.querySelector('.hint');
+var nav = document.querySelector('nav');
+
 function set_attributes(on, attrs) {
 	for (const key in attrs)
 		on.setAttribute(key, attrs[key])
@@ -113,6 +117,10 @@ class Dragger {
 	}
 
 	start(e, person) {
+		send_button.style['z-index'] = -1;
+		hint_area.style['z-index'] = -1;
+		nav.style['z-index'] = -1;
+
 		this.#object = person
 		this.#object.chair = null
 		this.#offset = Dragger.get_mouse_position(e)
@@ -152,6 +160,10 @@ class Dragger {
 	}
 
 	#finish(e) {
+		send_button.style['z-index'] = 0;
+		hint_area.style['z-index'] = 0;
+		nav.style['z-index'] = 0;
+
 		if (!this.#object)
 			return
 
@@ -198,9 +210,8 @@ let dragger, chairs, is_valid
 
 document.addEventListener("DOMContentLoaded", (e) => {
 	dragger = new Dragger()
-
 	new PersonSource({x: x_persons, y: y_persons}, {type: "liar", title: "Лжец"})
-	new PersonSource({x: x_persons, y: y_persons + D_persons}, {type: "truthful", title: "Правдолюб"})
+	new PersonSource({x: x_persons, y: y_persons + D_persons}, {type: "truthful", title: "Рыцарь"})
 	new PersonSource({x: x_persons, y: y_persons + 2 * D_persons}, {type: "sly", title: "Хитрец"})
 
 	chairs = []
