@@ -5,14 +5,20 @@ import sys
 from login import current_user
 from config import config
 
-all_info = config['reg']['all_info']
+all_info = [['login', 'text', 'Логин'],
+			['password', 'password', 'Пароль'],
+			['name', 'text', 'Имя'],
+			['surname', 'text', 'Фамилия'],
+			['school', 'text', 'Школа'],
+			['city', 'text', 'Город'],
+			['clas', 'select', 'Класс', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
 
 alph_en = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 alph_ru = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя'
 symb = ' -_'
 
 # поля в которых могут использоваться только буквы и символы из symb
-let_only = ['name', 'surname', 'city']
+lett_only = ['name', 'surname', 'city']
 
 field_amount = len(all_info) - 1 # количество полей в форме
 field_size = 40 # размер поля
@@ -20,9 +26,6 @@ pad = 4 # расстояние между полями
 button_margin = 20 # расстояние до кнопки
 button_size = 70 # размер кнопки
 form_size = button_size + field_amount * field_size + pad * field_amount + button_margin # размер формы
-
-# отображаемая в форме пользовательсткая информация
-user_info = dict()
 
 # типы полей
 type_info = dict()
@@ -38,7 +41,6 @@ for field in all_info:
 	field_name = field[0]
 	type_name = field[1]
 	placeholder_name = field[2]
-	user_info[field_name] = ''
 	type_info[field_name] = type_name
 	placeholder_info[field_name] = placeholder_name
 	if type_name == 'select':
@@ -84,7 +86,7 @@ def display_pers_acc(db, err=''):
 			yield '</select>'
 		yield '</div>'
 	yield '<div class="acc_field">'
-	yield '<p>Счёт</p>'
+	yield '<p>Счёт:</p>'
 	yield f'<input class="acc" style="height: {field_size}px" value="{user[5]}" readonly/>'
 	yield '</div>'
 	yield f'<button type="submit" class="acc_submit_button" style="height: {button_size}px; margin-top:{button_margin}px"> СОХРАНИТЬ </button>'
@@ -104,7 +106,7 @@ def check_format(user_info):
 		max_size = config['reg']['max_' + field + '_size']
 		name = placeholder_info[field]
 
-		if field in let_only:
+		if field in lett_only:
 			tmp_en = 0
 			tmp_ru = 0
 			for s in user_info[field]:
@@ -140,7 +142,7 @@ def check_new_params(db):
 
 	for i in range(2, len(all_info)):
 		name = all_info[i][0]
-		user_info[name] = request.forms.get(name).encode('l1').decode().strip()
+		user_info[name] = request.forms.decode().get(name).strip()
 
 	if not(stat := check_format(user_info)):
 		set_new_params(db, user_info)

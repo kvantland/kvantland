@@ -584,7 +584,7 @@ form.reg{
 
 .acc_header{
 	height: 10%;
-	font-size: 3.5vh;
+	font-size: 30px;
 	font-weight: 900;
 	padding: 1% 0 0 0;
 }
@@ -619,7 +619,6 @@ select.acc{
 }
 
 .acc_field{
-	height: 6.2vh;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -632,11 +631,11 @@ form.acc{
 }
 
 .acc_field p{
-	font-size: 3.2vh;
+	font-size: 20px;
 }
 
 .acc_submit_button{
-	font-size: 3vh;
+	font-size: 20px;
 	border: 1px solid #494949;
 	box-sizing: border-box;
 }
