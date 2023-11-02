@@ -9,11 +9,6 @@ var def_X = drag_rooks[0].getAttribute('x');
 var def_Y = drag_rooks[0].getAttribute('y');
 var svg_box = document.querySelector('.plot_area');
 
-var button = document.querySelector('button');
-var nav = document.querySelector('nav');
-button.style['z-index'] = -1;
-nav.style['z-index'] = -1;
-
 const row_set = new Set();
 const column_set = new Set()
 

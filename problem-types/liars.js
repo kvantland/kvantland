@@ -198,9 +198,8 @@ let dragger, chairs, is_valid
 
 document.addEventListener("DOMContentLoaded", (e) => {
 	dragger = new Dragger()
-
 	new PersonSource({x: x_persons, y: y_persons}, {type: "liar", title: "Лжец"})
-	new PersonSource({x: x_persons, y: y_persons + D_persons}, {type: "truthful", title: "Правдолюб"})
+	new PersonSource({x: x_persons, y: y_persons + D_persons}, {type: "truthful", title: "Рыцарь"})
 	new PersonSource({x: x_persons, y: y_persons + 2 * D_persons}, {type: "sly", title: "Хитрец"})
 
 	chairs = []

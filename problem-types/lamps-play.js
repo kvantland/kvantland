@@ -1,5 +1,15 @@
 "use strict"
 
+var buttons = document.querySelectorAll('.lamp_switch');
+
+for (let button of buttons){
+	button.onclick = function(){
+		if (button.classList.contains('active'))
+			button.classList.remove('active');
+		else
+			button.classList.add('active');
+	}
+}
 document.addEventListener("DOMContentLoaded", () => {
 	let answer = Array(switches.length).fill(0)
 

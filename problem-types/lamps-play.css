@@ -18,6 +18,10 @@
 	height: 1.5em;
 }
 
+.active{
+	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
+}
+
 .real_lamps .grid {
 	font-size: 6.0rem;
 }
@@ -35,3 +39,5 @@
 .lamp_on {
 	fill: #FE0;
 }
+
+
