@@ -499,8 +499,8 @@ option{
 .reg_form_header{
 	height: 10%;
 	font-size: 26px;
-	font-weight: 900;
-	padding: 1% 0 0 0;
+	display: flex;
+	flex-direction: column;
 }
 
 .reg_button{
@@ -538,4 +538,109 @@ form.reg{
 .blur_zone{
 	filter: blur(5px);
 	pointer-events: none
+}
+
+.acc_li{
+	position: relative;
+}
+
+.acc_icon{
+	margin-left: auto;
+	width: 40px;
+	height: 40px;
+	background-image: url('/static/user_icon.png');
+	background-size: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.acc:hover{
+	cursor: pointer;
+}
+
+.acc_href{
+	display: block;
+	width: inherit;
+	height: inherit;
+}
+
+.flex_ul{
+	display: flex;
+	flex-direction: row;
+}
+
+.acc_plot{
+	margin: 10vh auto auto auto;
+	width: 30vw;
+	background-color: #EDECEF;
+	border: 3px solid #D5D5D7;
+	border-radius: 10px;
+	text-align: center;
+	color: #494949;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.acc_header{
+	height: 10%;
+	font-size: 30px;
+	font-weight: 900;
+	padding: 1% 0 0 0;
+}
+
+.acc_form{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 5% 5% 5% 5%;
+}
+
+input.acc{
+	font-size: 20px;
+	border: 2px solid #D5D5D7;
+	border-radius: 5px;
+	padding: 0 0 0 2%;
+	background-color: #F5F5F5;
+	width: 60%;
+	box-sizing: border-box;
+}
+
+select.acc{
+	font-size: 20px;
+	border: 2px solid #D5D5D7;
+	border-radius: 5px;
+	padding: 0 0 0 2%;
+	background-color: #F5F5F5;
+	width: 60%;
+	font-family: inherit;
+	box-sizing: border-box;
+
+}
+
+.acc_field{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+form.acc{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.acc_field p{
+	font-size: 20px;
+}
+
+.acc_submit_button{
+	font-size: 20px;
+	border: 1px solid #494949;
+	box-sizing: border-box;
+}
+
+.acc_submit_button:hover{
+	cursor: pointer;
+	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
