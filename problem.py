@@ -181,7 +181,10 @@ def problem_answer(db, var_id):
 	content = request.forms.progress
 
 	is_answer_correct = check_answer(db, var_id, answer)
-	db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, content, var_id, user_id))
+	if  тип != 'integer':
+		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, content, var_id, user_id))
+	else:
+		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
 	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
 	if тип != 'integer':
