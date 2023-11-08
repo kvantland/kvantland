@@ -28,6 +28,9 @@ form.style['z-index'] = 'inherit';
 
 form.appendChild(progress);
 
-send_button.onclick = function(){
+function save_progress(){
 	progress.value = form.outerHTML;
 }
+
+send_button.addEventListener('click', save_progress);
+
