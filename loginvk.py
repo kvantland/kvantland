@@ -9,6 +9,8 @@ from login import do_login, current_user
 
 import urllib.parse
 
+import sys
+
 client_secret = config['vk']['client_secret']
 redirect_uri = config['vk']['redirect_uri']
 client_id = config['vk']['client_id']
@@ -19,12 +21,16 @@ info_url = config['vk']['info_url']
 def login_attempt(db):
 	user = get_user()
 	login = 'vk#' + str(user['id'])
-	password = None
-	name = user['first_name'] + ' ' + user['last_name']
+	password, name, surname, city, school = (None, None, None, None, None)
+	name = user['first_name']
+	surname = user['last_name']
+	city = user['city']['title']
+	if user['schools']:
+		school = user['schools'][0]['name']
 	if (user := vk_check_login(db, login)) != None:
 		do_login(user)
 	else:
-		user = add_user(login, name, password, db)
+		user = add_user(login, name, surname, city, school, password, db)
 		do_login(user)
 	redirect('/')
 
@@ -54,7 +60,7 @@ def get_token():
 def get_info(token):
 	if token['access_token']:
 		params = {'user_ids': token['user_id'],
-		'fields': 'uid,first_name,last_name,screen_name,sex,bdate',
+		'fields': 'uid, first_name, last_name, city, schools',
 		'access_token': token['access_token'],
 		'v': '5.131' 
 		}
@@ -69,8 +75,8 @@ def convert(info):
 def get_user():
 	return convert(get_info(get_token()))
 
-def add_user(логин, имя, пароль, db):
-	db.execute("insert into Ученик (логин, пароль, имя) values (%s, %s, %s) returning ученик", (логин, пароль, имя))
+def add_user(логин, имя, фамилия, город, школа, пароль, db):
+	db.execute("insert into Ученик (логин, имя, фамилия, город, школа, пароль) values (%s, %s, %s, %s, %s, %s) returning ученик", (логин, имя, фамилия, город, школа, пароль))
 	(user, ), = db.fetchall()
 	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
 	return user
