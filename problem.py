@@ -83,7 +83,6 @@ def show_question(db, variant, hint_mode):
 		yield f'<img class="picture" src="/static/problem/{изображение}">'
 	yield '</main>'
 	yield '</div>'
-	yield '<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.js"></script>'
 	if script:
 		yield f'<script type="text/ecmascript">{script}</script>'
 
@@ -112,7 +111,13 @@ def _display_result(db, var_id, ok, content):
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
 	yield '<div style="z-index: -1">'
-	yield content
+	if тип == 'integer':
+		yield '<div class="answer_bar">'
+		yield 'Введите ответ:'
+		yield f'<input name="answer" type="number" value="{content}" readonly/>'
+		yield '</div>'
+	else:
+		yield content
 	yield '</div>'
 	yield f'<div class="result_area result_{ok}">'
 	yield result_text[ok]
@@ -164,6 +169,9 @@ def problem_show(db, var_id):
 
 @route('/problem/<var_id:int>/', method='POST')
 def problem_answer(db, var_id):
+	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	тип = db.fetchall()[0][0]
+	
 	user_id = require_user()
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
@@ -176,7 +184,10 @@ def problem_answer(db, var_id):
 	db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, content, var_id, user_id))
 	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	yield from _display_result(db, var_id, is_answer_correct, content)
+	if тип != 'integer':
+		yield from _display_result(db, var_id, is_answer_correct, content)
+	else:
+		yield from _display_result(db, var_id, is_answer_correct, answer)
 
 
 def _request_hint(db, var_id):
