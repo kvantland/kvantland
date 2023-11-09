@@ -644,3 +644,13 @@ form.acc{
 	cursor: pointer;
 	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
+
+.timer {
+  width: 7em;
+  border: 1px solid #333;
+  padding: 8px 10px;
+	margin: 10px 10px;
+	text-align: center;
+	font-size: xx-large;
+  background-image: linear-gradient(180deg, #fff, #ddd 40%, #ccc);
+}

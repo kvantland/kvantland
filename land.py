@@ -1,16 +1,22 @@
 #!/usr/bin/python3
 
-from bottle import route
+from bottle import route, redirect
 
 import nav
+import timer
 import user
 
+user_timer = timer.Timer()
 @route('/')
 def show_land(db):
 	user_id = user.current_user()
-
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
+
+	yield '<div class="timer">'
+	yield f'<p> {user_timer.display_timer()} </p>'
+	yield '</div>'
+
 	yield f'<title>Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<div class="content_wrapper">'

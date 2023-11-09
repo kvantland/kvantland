@@ -17,3 +17,9 @@ for (let form of document.querySelectorAll("form.problem")) {
 for (let form of document.querySelectorAll("form.hint")) {
 	form.addEventListener('submit', confirm_hint)
 }
+
+document.addEventListener("DOMContentLoaded", timer_reload())
+
+function timer_reload(){
+setInterval(function(){document.querySelector(".timer").reload()}, 1)
+}
