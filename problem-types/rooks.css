@@ -42,13 +42,6 @@ body{
 	cursor: pointer;
 }
 
-.rook_amount{
-	font-weight: 1000;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-}
-
 text{
 	font-family: inherit;
 	font-weight: 1000
