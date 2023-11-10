@@ -4,7 +4,7 @@ def entry_form(data, kwargs):
 	size = len(data['table'][0]) # число клеточек в строке
 	line_width = 3 # ширина линий 
 	ind = line_width // 2 # отступ
-	side = 60 # длина стороны квадрата с границами
+	side = 70 # длина стороны квадрата с границами
 	inner_side = side - line_width # длина стороны квадрата без границ 
 	board_side = line_width + size * side # длина стороны доски
 	pad = 20 # расстояние между доской и зоной перетаскивания
