@@ -56,6 +56,7 @@ create table ДоступнаяЗадача (
 	ответ_верен bool null,
 	ответ_дан bool generated always as (ответ_верен is not null) stored,
 	подсказка_взята bool not null default false,
+	решение text,
 	primary key (ученик, вариант)
 );
 

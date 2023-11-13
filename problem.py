@@ -29,7 +29,7 @@ def try_read_file(path):
 		return None
 
 def show_submit_button(**kwargs):
-	yield '<button type="submit" form="problem_form">Отправить</button>'
+	yield '<button id="send" type="submit" form="problem_form">Отправить</button>'
 
 def show_hint_button(*, hint_mode: HintMode, стоимость_подсказки: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
@@ -90,19 +90,40 @@ def check_answer(db, var_id, answer):
 	typedesc = import_module(f'problem-types.{тип}')
 	return typedesc.validate(содержание, answer)
 
-def _display_result(db, var_id, ok):
+def _display_result(db, var_id, ok, content):
+	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	тип = db.fetchall()[0][0]
 	db.execute('select город, Город.название, Задача.название, описание, изображение from Задача join Вариант using (задача) join Город using (город) where вариант = %s', (var_id,))
 	(город, название_города, название, описание, изображение), = db.fetchall()
+	
+	typedesc = import_module(f'problem-types.{тип}')
+	style = try_read_file(f'problem-types/{тип}.css')
+
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	if style:
+		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
+	yield '<div style="z-index: -1">'
+	if not show_default_buttons:
+		yield '<div class="answer_bar">'
+		yield 'Введите ответ:'
+		yield f'<input name="answer" type="number" value="{content}" readonly/>'
+		yield '</div>'
+	else:
+		yield content
+	yield '</div>'
 	yield f'<div class="result_area result_{ok}">'
 	yield result_text[ok]
 	yield '</div>'
@@ -134,7 +155,9 @@ def problem_show(db, var_id):
 	user_id = require_user()
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
-		return _display_result(db, var_id, is_answer_correct)
+		db.execute('select решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+		content = db.fetchall()[0][0]
+		return _display_result(db, var_id, is_answer_correct, content)
 
 	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
 	(hinted, ), = db.fetchall()
@@ -151,17 +174,35 @@ def problem_show(db, var_id):
 
 @route('/problem/<var_id:int>/', method='POST')
 def problem_answer(db, var_id):
+	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	тип = db.fetchall()[0][0]
+	
 	user_id = require_user()
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		redirect('')
 
 	answer = request.forms.answer
+	content = request.forms.progress
+
+	typedesc = import_module(f'problem-types.{тип}')
+
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
+
 	is_answer_correct = check_answer(db, var_id, answer)
-	db.execute('update ДоступнаяЗадача set ответ_верен=%s where вариант = %s and ученик = %s', (is_answer_correct, var_id, user_id))
+	if  show_default_buttons:
+		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, content, var_id, user_id))
+	else:
+		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
 	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	yield from _display_result(db, var_id, is_answer_correct)
+	if show_default_buttons:
+		yield from _display_result(db, var_id, is_answer_correct, content)
+	else:
+		yield from _display_result(db, var_id, is_answer_correct, answer)
 
 
 def _request_hint(db, var_id):
