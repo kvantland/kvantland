@@ -199,7 +199,7 @@ def problem_answer(db, var_id):
 		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
 	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	if show_default_buttons:
+	if тип != 'integer':
 		yield from _display_result(db, var_id, is_answer_correct, content)
 	else:
 		yield from _display_result(db, var_id, is_answer_correct, answer)
