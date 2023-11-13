@@ -9,8 +9,6 @@ import psycopg
 import nav
 import user
 
-import sys
-
 result_text = {
 	True: 'Верно!',
 	False: 'Неверно',
@@ -109,7 +107,8 @@ def _display_result(db, var_id, ok, content):
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield f'<style type="text/css">{style}</style>'
+	if style:
+		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
@@ -200,7 +199,7 @@ def problem_answer(db, var_id):
 		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
 	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	if тип != 'integer':
+	if show_default_buttons:
 		yield from _display_result(db, var_id, is_answer_correct, content)
 	else:
 		yield from _display_result(db, var_id, is_answer_correct, answer)
