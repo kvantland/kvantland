@@ -5,9 +5,7 @@ import sys
 from login import current_user
 from config import config
 
-all_info = [['login', 'text', 'Логин'],
-			['password', 'password', 'Пароль'],
-			['name', 'text', 'Имя'],
+all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
 			['school', 'text', 'Школа'],
 			['city', 'text', 'Город'],
@@ -20,7 +18,7 @@ symb = ' -_'
 # поля в которых могут использоваться только буквы и символы из symb
 lett_only = ['name', 'surname', 'city']
 
-field_amount = len(all_info) - 1 # количество полей в форме
+field_amount = len(all_info) + 1 # количество полей в форме
 field_size = 40 # размер поля
 pad = 4 # расстояние между полями
 button_margin = 20 # расстояние до кнопки
@@ -47,8 +45,14 @@ for field in all_info:
 		options = field[3]
 		option_info[field_name] = options
 
+def empty_user_info():
+	user_info = dict()
+	for field in all_info:
+		user_info[field[0]] = ''
+	return user_info
+
 @route('/acc')
-def display_pers_acc(db, err=''):
+def display_pers_acc(db, err='', user_info=empty_user_info()):
 	yield '<!DOCTYPE html>'
 	yield '<title>Личный кабинет</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
@@ -65,21 +69,25 @@ def display_pers_acc(db, err=''):
 	yield '<div class="acc_header"> Личный кабинет </div>'
 	yield '<div class="acc_form">'
 	yield f'<form method="post" class="acc" style="height: {form_size}px">'
-	user = get_user(db, current_user())
-	for i in range(2, len(all_info)):
+	start_user_info = get_user(db, current_user())
+	for i in range(len(all_info)):
 		field = all_info[i]
-		if user[i - 2] == None:
-			user[i - 2] = ''
+		if user_info[field[0]]:
+			value = user_info[field[0]]
+		else:
+			value = start_user_info[field[0]]
+		if value == None:
+			value = ''
 		yield '<div class="acc_field">'
 		yield f'<p> {field[2]}: </p>'
 		if field[1] != 'select':
-			yield f'<input class="acc" style="height: {field_size}px" name="{field[0]}" type="{field[1]}" value="{user[i - 2]}" required/>'
+			yield f'<input class="acc" style="height: {field_size}px" name="{field[0]}" type="{field[1]}" value="{value}" required/>'
 		else:
 			yield f'<select class="acc" style="height: {field_size}px" name="{field[0]}" required>'
 			yield f'<option  value="" disabled selected> </option>'
 			opt_list = field[3]
 			for opt in opt_list:
-				if user[i - 2] != str(opt):
+				if value != str(opt):
 					yield f'<option> {opt} </option>'
 				else:
 					yield f'<option selected> {opt} </option>'
@@ -87,7 +95,7 @@ def display_pers_acc(db, err=''):
 		yield '</div>'
 	yield '<div class="acc_field">'
 	yield '<p>Счёт:</p>'
-	yield f'<input class="acc" style="height: {field_size}px" value="{user[5]}" readonly/>'
+	yield f'<input class="acc" style="height: {field_size}px" value="{start_user_info["score"]}" readonly/>'
 	yield '</div>'
 	yield f'<button type="submit" class="acc_submit_button" style="height: {button_size}px; margin-top:{button_margin}px"> СОХРАНИТЬ </button>'
 	yield '</form>'
@@ -98,7 +106,13 @@ def display_pers_acc(db, err=''):
 def get_user(db, user):
 	db.execute('select имя, фамилия, школа, город, класс, счёт from Ученик where ученик= %s', (user, ))
 	user_list = list(db.fetchall()[0])
-	return user_list
+	user_info = {'name': user_list[0],
+				'surname': user_list[1],
+				'school': user_list[2],
+				'city': user_list[3],
+				'clas': user_list[4],
+				'score': user_list[5]}
+	return user_info
 
 def check_format(user_info):
 	for field in user_info:
@@ -117,38 +131,45 @@ def check_format(user_info):
 				elif s in symb:
 					continue
 				else:
-					return "Недопустимые символы в поле " + name
+					return "Недопустимые символы в поле " + name, field
 			if tmp_ru + tmp_en == 0:
-				return "В поле " + name + " должны присутствовать буквы"
+				return "В поле " + name + " должны присутствовать буквы", field
 			if tmp_ru + tmp_en == 2:
-				return "В поле " + name + " присутствуют буквы из разных языков"
+				return "В поле " + name + " присутствуют буквы из разных языков", field
 
 
 		if type_info[field] == "select":
 			if not(user_info[field] in option_info[field]):
-				return "Недопустимое значение в поле " + name + "<br /> Пожалуйста, выберите значение из выпадающего списка"
+				return "Недопустимое значение в поле " + name + "<br /> Пожалуйста, выберите значение из выпадающего списка", field
 
 		if len(user_info[field]) < min_size:
-			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size)
+			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size), field
 		if len(user_info[field]) > max_size:
-			return "Слишком много символов в поле " + name
+			return "Слишком много символов в поле " + name, field
 
-	return False
+	return False, ''
+
+def update_info(user_info, field):
+	user_info[field] = ''
+	return user_info
 
 @route('/acc', method="post")
 def check_new_params(db):
 
 	user_info = dict()
 
-	for i in range(2, len(all_info)):
+	for i in range(len(all_info)):
 		name = all_info[i][0]
 		user_info[name] = request.forms.decode().get(name).strip()
 
-	if not(stat := check_format(user_info)):
+	stat, field_to_update = check_format(user_info)
+
+	if not stat:
 		set_new_params(db, user_info)
 		redirect('/')
 	else:
-		yield from display_pers_acc(db, stat)
+		user_info = update_info(user_info, field_to_update)
+		yield from display_pers_acc(db, stat, user_info)
 
 def set_new_params(db, user_info):
 	new_name = user_info['name']
