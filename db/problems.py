@@ -44,15 +44,26 @@ def get_town_id(cur, название):
 	(город,), = cur.fetchall()
 	return город
 
-
+def lang_form(score):
+	if score % 100 >= 10 and score % 100 < 20:
+		return 'квантиков'
+	else:
+		if score % 10 in [2, 3, 4]:
+			return 'квантика'
+		elif score % 10 == 1:
+			return 'квантик'
+		else:
+			return 'квантиков'
+			
 def add_problem(cur, город, баллы, тип, название, подсказка=None, стоимость_подсказки=None, изображение=None):
 	тип = get_type_id(cur, тип)
 	город = get_town_id(cur, город)
+	название = f"{название} ({баллы} {lang_form(баллы)})"
 	cur.execute("insert into Задача (город, баллы, название, тип, изображение) values (%s, %s, %s, %s, %s) returning задача", (город, баллы, название, тип, изображение))
 	(задача,), = cur.fetchall()
 	if подсказка:
 		if not стоимость_подсказки:
-			стоимость_подсказки = (баллы + 1) // 2
+			стоимость_подсказки = 1
 		cur.execute("insert into Подсказка (задача, текст, стоимость) values (%s, %s, %s)", (задача, подсказка, стоимость_подсказки))
 	return задача
 
