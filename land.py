@@ -28,7 +28,7 @@ def show_land(db):
 		if not открыт:
 			clazz += " town_completed"
 		yield f'<a class="{clazz}" transform="translate({x} {y})" href="/town/{город}/">'
-		yield f'<circle class="town-icon" r="0.3em" fill="none" stroke="currentColor" stroke-width="0.2em" />'
+		yield f'<circle class="town-icon" r="0.3em" fill="rgba(0, 0, 0, 0)" stroke="currentColor" stroke-width="0.2em" />'
 		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{название}</text>'
 		yield f'</a>'
 	yield '</svg>'
