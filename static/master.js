@@ -23,13 +23,21 @@ progress.type = 'hidden';
 progress.name = 'progress';
 
 var send_button = document.querySelector('#send');
+var interactive = document.querySelector('#interactive_problem_form');
 var form = document.querySelector('#problem_form');
-form.style['z-index'] = 'inherit';
+
+if (interactive)
+	interactive.style['z-index'] = 'inherit';
+else
+	form.style['z-index'] = 'inherit';
 
 form.appendChild(progress);
 
 function save_progress(){
-	progress.value = form.outerHTML;
+	if (interactive)
+		progress.value = interactive.outerHTML;
+	else
+		progress.value = form.outerHTML;
 }
 
 send_button.addEventListener('click', save_progress);

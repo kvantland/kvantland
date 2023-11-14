@@ -649,3 +649,7 @@ form.acc{
 #problem_form *{
 	z-index: inherit;
 }
+
+#interactive_form *{
+	z-index: inherit;
+}
