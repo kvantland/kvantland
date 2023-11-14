@@ -25,3 +25,4 @@ def validate(data, answer):
 	return answer == data['correct']
 
 CUSTOM_BUTTONS = True
+SAVE_PROGRESS = False

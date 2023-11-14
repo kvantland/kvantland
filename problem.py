@@ -66,14 +66,29 @@ def show_question(db, variant, hint_mode):
 		yield f'<p>{подсказка}</p>'
 		yield '</section>'
 	try:
+		save_progress = typedesc.SAVE_PROGRESS
+	except AttributeError:
+		save_progress = True
+
+	try:
 		show_default_buttons = not typedesc.CUSTOM_BUTTONS
 	except AttributeError:
 		show_default_buttons = True
-	if show_default_buttons:
-		yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
+
+	try:
+		hybrid = typedesc.HYBRID
+	except AttributeError:
+		hybrid = False
+
+	if save_progress:
+		if hybrid:
+			yield f'<div id="interactive_problem_form">'
+		else:
+			yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
 	yield from typedesc.entry_form(содержание, kwargs)
-	if show_default_buttons:
+	if save_progress and not hybrid:
 		yield '</form>'
+	if show_default_buttons:
 		yield '<div class="button_bar">'
 		yield from show_buttons(**kwargs)
 		yield '</div>'
@@ -90,9 +105,9 @@ def check_answer(db, var_id, answer):
 	typedesc = import_module(f'problem-types.{тип}')
 	return typedesc.validate(содержание, answer)
 
-def _display_result(db, var_id, ok, content):
+def _display_result(db, var_id, ok, answer=None, solution=None):
 	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
-	тип = db.fetchall()[0][0]
+	(тип, ), = db.fetchall()
 	db.execute('select город, Город.название, Задача.название, описание, изображение from Задача join Вариант using (задача) join Город using (город) where вариант = %s', (var_id,))
 	(город, название_города, название, описание, изображение), = db.fetchall()
 	
@@ -103,6 +118,11 @@ def _display_result(db, var_id, ok, content):
 		show_default_buttons = not typedesc.CUSTOM_BUTTONS
 	except AttributeError:
 		show_default_buttons = True
+
+	try:
+		save_progress = typedesc.SAVE_PROGRESS
+	except AttributeError:
+		save_progress = True
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{название}</title>'
@@ -116,13 +136,13 @@ def _display_result(db, var_id, ok, content):
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
 	yield '<div style="z-index: -1">'
+	if save_progress:
+		yield solution
 	if not show_default_buttons:
 		yield '<div class="answer_bar">'
 		yield 'Введите ответ:'
-		yield f'<input name="answer" type="number" value="{content}" readonly/>'
+		yield f'<input name="answer" type="number" value="{answer}" readonly/>'
 		yield '</div>'
-	else:
-		yield content
 	yield '</div>'
 	yield f'<div class="result_area result_{ok}">'
 	yield result_text[ok]
@@ -155,9 +175,9 @@ def problem_show(db, var_id):
 	user_id = require_user()
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
-		db.execute('select решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
-		content = db.fetchall()[0][0]
-		return _display_result(db, var_id, is_answer_correct, content)
+		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+		(answer, solution, ), = db.fetchall()
+		return _display_result(db, var_id, is_answer_correct, answer, solution)
 
 	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
 	(hinted, ), = db.fetchall()
@@ -183,26 +203,24 @@ def problem_answer(db, var_id):
 		redirect('')
 
 	answer = request.forms.answer
-	content = request.forms.progress
+	solution = request.forms.progress
 
 	typedesc = import_module(f'problem-types.{тип}')
 
 	try:
-		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+		save_progress = typedesc.SAVE_PROGRESS
 	except AttributeError:
-		show_default_buttons = True
+		save_progress = True
 
 	is_answer_correct = check_answer(db, var_id, answer)
-	if  show_default_buttons:
-		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, content, var_id, user_id))
+	if save_progress:
+		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s, ответ=%s where вариант = %s and ученик = %s', (is_answer_correct, solution, answer, var_id, user_id))
 	else:
-		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
+		db.execute('update ДоступнаяЗадача set ответ_верен=%s, ответ=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
 	if is_answer_correct:
 		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	if тип != 'integer':
-		yield from _display_result(db, var_id, is_answer_correct, content)
-	else:
-		yield from _display_result(db, var_id, is_answer_correct, answer)
+	
+	yield from _display_result(db, var_id, is_answer_correct, answer, solution)
 
 
 def _request_hint(db, var_id):
