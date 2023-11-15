@@ -59,8 +59,6 @@ function move(event){
 function back_to_drag(){
 	document.removeEventListener('mousemove', move);
 	a = document.querySelector('.targeted');
-	a.classList.remove('targeted');
-	a.classList.remove('choiced');
 	a.parentNode.removeChild(a);
 }
 
@@ -95,17 +93,19 @@ function add_horse(type)	{
 	svg_box.appendChild(new_horse);
 }
 
-update_horse();
+document.addEventListener('DOMContentLoaded', update_horse());
 
 function update_horse()
 {
 	var drag_horses = document.querySelectorAll('.active');
 	for (const horse of drag_horses){
 		horse.onmousedown = function(event){
-			if (this.classList.contains('allowed'))
-				add_horse('allowed');
-			else
-				add_horse('rejected');
+			if (!this.classList.contains('choiced')){
+				if (this.classList.contains('allowed') )
+					add_horse('allowed');
+				else
+					add_horse('rejected');
+			}
 			this.classList.add('targeted');
 			this.classList.remove('choiced');
 			svg_box.appendChild(this);
@@ -113,37 +113,24 @@ function update_horse()
 			var svg_box_Y = svg_box.getBoundingClientRect().top;
 			moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
 			document.addEventListener('mousemove', move)
-			this.onmouseup = function(event){
-				var min_diff = 10 ** 9;
-				var best_square = '';
-				var best_square_row = 0;
-				var best_square_column = 0;
-				let row = 0;
-				let column = 0;
-				for (const square of board){
-					let x_diff = square.getAttribute('x') - this.getAttribute('x');
-					let y_diff = square.getAttribute('y') - this.getAttribute('y');
-					let tot_diff = x_diff ** 2 + y_diff ** 2;
-					if (tot_diff < min_diff){
-						best_square = square;
-						min_diff = tot_diff;
-						best_square_row = row;
-						best_square_column = column;
-					}
-					row += 1;
-					if (row == in_column){
-						row = 0;
-						column += 1;
-					}
-				};
-				if (min_diff < side ** 2 && check_if_empty(best_square)){
-					this.setAttribute('column', best_square_column);
-					this.setAttribute('row', best_square_row);
-					drop(best_square);
+			update_horse();
+		}
+		horse.onmouseup = function(event){
+			var min_diff = 10 ** 9;
+			var best_square = '';
+			for (const square of board){
+				let x_diff = square.getAttribute('x') - this.getAttribute('x');
+				let y_diff = square.getAttribute('y') - this.getAttribute('y');
+				let tot_diff = x_diff ** 2 + y_diff ** 2;
+				if (tot_diff < min_diff){
+					best_square = square;
+					min_diff = tot_diff;
 				}
-				else
-					back_to_drag();
-			}
+			};
+			if (min_diff < side ** 2 && check_if_empty(best_square))
+				drop(best_square);
+			else
+				back_to_drag();
 			update_horse();
 		}
 	}
@@ -156,4 +143,5 @@ rel.onclick = function(){
 		horse.classList.remove('choiced');
 		horse.parentNode.removeChild(horse);
 	}
+	update_horse();
 }
