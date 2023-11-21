@@ -20,6 +20,7 @@ num = '0123456789'
 
 all_info = [['login', 'text', 'Логин'],
 			['password', 'password', 'Пароль'],
+			['email', 'email', 'Почта'],
 			['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
 			['school', 'text', 'Школа'],
