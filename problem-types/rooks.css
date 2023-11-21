@@ -29,8 +29,12 @@ body{
 	fill: white;
 }
 
-.active:hover{
-	cursor: pointer;
+.active{
+	cursor: grab;
+}
+
+.targeted{
+	cursor: grabbing;
 }
 
 .grid_line{
