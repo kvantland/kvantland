@@ -29,10 +29,15 @@ text {
 	user-select: none
 }
 
-.active:hover {
-	cursor: pointer;
+.active{
+	cursor: grab;
+}
+
+.targeted{
+	cursor: grabbing;
 }
 
 .reload:hover {
 	cursor: pointer;
 }
+

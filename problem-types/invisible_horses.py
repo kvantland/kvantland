@@ -25,7 +25,7 @@ def entry_form(data, kwargs):
 				if data['table'][y][x] != 'x':
 					yield f'<text x="{x * side + line_width + inner_side // 2}" y ="{y * side + line_width + inner_side // 2}">{data["table"][y][x]}</text>'
 				else:
-					yield f'<image class="horse rejected passive" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/rejected_horse.png" />'
+					yield f'<image class="passive" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/question.png" />'
 			else:
 				if (x + y) % 2 == 1:
 					yield f'<rect class="orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
