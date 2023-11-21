@@ -51,8 +51,8 @@ function moveAt(x, y){
 function move(event){
 	var svg_box_X = svg_box.getBoundingClientRect().left;
 	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	var cur_X = event.pageX - svg_box_X;
-	var cur_Y = event.pageY - svg_box_Y;
+	var cur_X = event.clientX - svg_box_X;
+	var cur_Y = event.clientY - svg_box_Y;
 	var right = document.documentElement.clientWidth - svg_box_X;
 	var bottom = document.documentElement.clientHeight - svg_box_Y;
 	var left = -svg_box_X;
