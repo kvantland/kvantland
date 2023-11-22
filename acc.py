@@ -9,6 +9,7 @@ all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
 			['school', 'text', 'Школа'],
 			['city', 'text', 'Город'],
+			['email', 'email', 'Почта'],
 			['clas', 'select', 'Класс', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
 
 alph_en = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
@@ -104,14 +105,15 @@ def display_pers_acc(db, err='', user_info=empty_user_info()):
 	yield '</main>'
 
 def get_user(db, user):
-	db.execute('select имя, фамилия, школа, город, класс, счёт from Ученик where ученик= %s', (user, ))
+	db.execute('select имя, фамилия, школа, город, класс, счёт, почта from Ученик where ученик= %s', (user, ))
 	user_list = list(db.fetchall()[0])
 	user_info = {'name': user_list[0],
 				'surname': user_list[1],
 				'school': user_list[2],
 				'city': user_list[3],
 				'clas': user_list[4],
-				'score': user_list[5]}
+				'score': user_list[5],
+				'email': user_list[6]}
 	return user_info
 
 def check_format(user_info):
@@ -177,4 +179,5 @@ def set_new_params(db, user_info):
 	new_school = user_info['school']
 	new_city = user_info['city']
 	new_class = user_info['clas']
-	db.execute('update Ученик set имя=%s, фамилия=%s, школа=%s, город=%s, класс=%s where ученик=%s', (new_name, new_surname, new_school, new_city, new_class, current_user(), ))
+	new_email = user_info['email']
+	db.execute('update Ученик set имя=%s, фамилия=%s, школа=%s, город=%s, класс=%s, почта=%s where ученик=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(), ))
