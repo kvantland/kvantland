@@ -1,14 +1,44 @@
 #!/usr/bin/python3
 
-from bottle import route
+from bottle import route, redirect
 
 import nav
 import user
 
+def lang_form(score):
+	if score % 100 >= 10 and score % 100 < 20:
+		return 'квантиков'
+	else:
+		if score % 10 in [2, 3, 4]:
+			return 'квантика'
+		elif score % 10 == 1:
+			return 'квантик'
+		else:
+			return 'квантиков'
+
+def tournament_completed(db, user_id):
+	not_completed = False
+	if user_id is not None:
+		db.execute('select город, exists(select 1 from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = Город.город and ученик = %s and ответ_дан = false) from Город', (user_id, ))
+	else:
+		db.execute('select город, true from Город')
+	for город, открыт in db.fetchall():
+		if открыт:
+			not_completed = True
+	return not not_completed
+
+def finished(db, user_id):
+	if user_id == None:
+		return False
+	db.execute('select закончил from Ученик where ученик=%s', (user_id, ))
+	(finish, ), = db.fetchall()
+	return finish
+
 @route('/')
 def show_land(db):
 	user_id = user.current_user()
-
+	if finished(db, user_id):
+		redirect("/final_page")
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -19,6 +49,10 @@ def show_land(db):
 	yield '</div>'
 	yield '<svg class="map" viewBox="0 0 1280 720">'
 	yield f'<image href="/static/map/land.jpg" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
+	if tournament_completed(db, user_id):
+		yield '<a transform="translate(640 0)" href="/final_page">' 
+		yield '<text class="town-name to_results" font-size="2em" text-anchor="middle" y="2em"> Завершить турнир </text>'
+		yield '</a>'
 	if user_id is not None:
 		db.execute('select город, название, положение, exists(select 1 from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = Город.город and ученик = %s and ответ_дан = false) from Город', (user_id, ))
 	else:
@@ -32,9 +66,11 @@ def show_land(db):
 		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{название}</text>'
 		yield f'</a>'
 	yield '</svg>'
+	yield '<script type="module" src="/static/results.js"></script>'
 
 @route('/rules')
 def show_land(db):
+	user_id = user.current_user()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
@@ -51,3 +87,23 @@ def show_land(db):
 	yield '<p>На Турнир вам даётся 90 минут. Оставшееся время отображается на таймере в углу экрана. Итоги соревнования подводятся по числу квантиков, которые у вас на счету к концу игры. Это число всегда отображается в правом верхнем углу экрана. Удачи!'
 	yield '</main>'
 	yield '</div>'
+
+@route('/final_page')
+def show_result(db):
+	user_id = user.current_user()
+	db.execute('update Ученик set закончил=true where ученик=%s', (user_id, ))
+	db.execute('select счёт from Ученик where ученик= %s', (user_id, ))
+	(score, ), = db.fetchall()
+	yield '<!DOCTYPE html>'
+	yield '<html lang="ru" class="map">'
+	yield f'<title>Квантландия</title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<div class="content_wrapper">'
+	yield from user.display_banner(db)
+	yield '</div>'
+	yield '<svg class="map final_result_area" viewBox="0 0 1280 720">'
+	yield f'<image href="/static/map/land.jpg" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
+	yield '<text text-anchor="middle" x="640" y="4em"> Поздравляем! </text>'
+	yield '<text text-anchor="middle" x="640" y="6em"> Вы успешно завершили турнир. </text>'
+	yield f'<text text-anchor="middle" x="640" y="8em"> Ваш результат составляет {score} {lang_form(score)}. </text>'
+	yield '</svg>'

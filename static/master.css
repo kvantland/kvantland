@@ -653,3 +653,9 @@ form.acc{
 #interactive_problem_form *{
 	z-index: inherit;
 }
+
+.final_result_area{
+	text-shadow: 1px 1px 3px black;
+	font-weight: 1000;
+	font-size: 2.4em;
+}
