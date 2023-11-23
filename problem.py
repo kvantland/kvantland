@@ -135,7 +135,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '<main>'
 	yield f'<h1>{название}</h1>'
 	yield f'<p class="description">{описание}</p>'
-	yield '<div style="z-index: -1">'
+	yield '<div class="save_zone_wrapper" style="z-index: -1">'
 	if save_progress:
 		yield solution
 	if not show_default_buttons:

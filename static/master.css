@@ -646,12 +646,9 @@ form.acc{
 	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 }
 
-#problem_form *{
-	z-index: inherit;
-}
-
-#interactive_problem_form *{
-	z-index: inherit;
+.save_zone_wrapper *{
+	position: relative;
+	z-index: -1;
 }
 
 .final_result_area{
