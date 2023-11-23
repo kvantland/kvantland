@@ -12,6 +12,7 @@ for (let button of buttons){
 }
 document.addEventListener("DOMContentLoaded", () => {
 	let answer = Array(switches.length).fill(0)
+	i_answer.value = JSON.stringify('')
 
 	function toggle_switch(id) {
 		answer[id] ^= 1
