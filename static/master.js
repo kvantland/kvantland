@@ -26,11 +26,6 @@ var send_button = document.querySelector('#send');
 var interactive = document.querySelector('#interactive_problem_form');
 var form = document.querySelector('#problem_form');
 
-if (interactive)
-	interactive.style['z-index'] = 'inherit';
-else
-	form.style['z-index'] = 'inherit';
-
 form.appendChild(progress);
 
 function save_progress(){
