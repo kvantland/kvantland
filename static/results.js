@@ -6,4 +6,5 @@ function confirm_ending(ev) {
 }
 
 var to_results = document.querySelector('.to_results');
-to_results.addEventListener('click', confirm_ending);
+if (to_results)
+	to_results.addEventListener('click', confirm_ending);
