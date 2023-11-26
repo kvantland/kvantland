@@ -33,7 +33,7 @@ main, nav {
 }
 
 :root.map svg.map {
-	margin: 1em 0em;
+	margin: 1em 0em 0em 0em;
 }
 
 .content_wrapper {
@@ -655,4 +655,11 @@ form.acc{
 	text-shadow: 1px 1px 3px black;
 	font-weight: 1000;
 	font-size: 2.4em;
+}
+
+.contacts_block{
+	display: flex;
+	flex-direction: column;
+	padding-left: 5em;
+	font-size: 1.2em;
 }
