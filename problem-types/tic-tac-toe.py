@@ -1,5 +1,3 @@
-import sys
-
 def entry_form(data, kwargs):
 	mask = data['mask']
 	width = 3 # число клеточек в строке
@@ -34,7 +32,6 @@ def entry_form(data, kwargs):
 def validate(data, answer):
 	for variant in data['correct']:
 		y, x = variant
-		print(y, x, file=sys.stderr)
 		if str(y * 3 + x) == answer:
 			return True
 	return False
