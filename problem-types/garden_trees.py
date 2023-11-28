@@ -1,5 +1,3 @@
-import sys
-
 def entry_form(data, kwargs):
 	width = data['n'] # число клеточек в строке
 	height = data['m'] # число строк в таблице
@@ -33,7 +31,6 @@ def validate(data, answer):
 	n = data['n']
 	m = data['m']
 	for variant in check:
-		print(variant, file=sys.stderr)
 		tmp = 1
 		for i in range(m):
 			for j in range(n):
