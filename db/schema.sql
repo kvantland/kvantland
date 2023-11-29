@@ -44,6 +44,7 @@ create table Ученик (
 	, пароль text
 	, имя text
 	, фамилия text
+	, отчество text
 	, школа text 
   	, класс text
   	, город text

@@ -23,6 +23,7 @@ all_info = [['login', 'text', 'Логин'],
 			['email', 'email', 'Почта'],
 			['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
+			['patronymic', 'text', 'Отчество'],
 			['school', 'text', 'Школа'],
 			['city', 'text', 'Город'],
 			['clas', 'select', 'Класс', [str(i) for i in range(1, 12)] + ['Другое']]]
@@ -109,7 +110,7 @@ def display_registration_form(user_info, err=None):
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def add_user(db, info):
-	db.execute("insert into Ученик (логин, пароль, имя, фамилия, школа, класс, город, почта) values (%s, %s, %s, %s, %s, %s, %s, %s) returning ученик", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['city'], info['email']))
+	db.execute("insert into Ученик (логин, пароль, имя, фамилия, отчество, школа, класс, город, почта) values (%s, %s, %s, %s, %s, %s, %s, %s, %s) returning ученик", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['patronymic'], info['school'], info['clas'], info['city'], info['email']))
 	(user, ), = db.fetchall()
 	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
 	return int(user)

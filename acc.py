@@ -7,6 +7,7 @@ from config import config
 
 all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
+			['patronymic', 'text', 'Отчество'],
 			['school', 'text', 'Школа'],
 			['city', 'text', 'Город'],
 			['email', 'email', 'Почта'],
@@ -17,7 +18,7 @@ alph_ru = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯа�
 symb = ' -_'
 
 # поля в которых могут использоваться только буквы и символы из symb
-lett_only = ['name', 'surname', 'city']
+lett_only = ['name', 'surname', 'patronymic', 'city']
 
 field_amount = len(all_info) + 1 # количество полей в форме
 field_size = 40 # размер поля
@@ -105,7 +106,7 @@ def display_pers_acc(db, err='', user_info=empty_user_info()):
 	yield '</main>'
 
 def get_user(db, user):
-	db.execute('select имя, фамилия, школа, город, класс, счёт, почта from Ученик where ученик= %s', (user, ))
+	db.execute('select имя, фамилия, школа, город, класс, счёт, почта, отчество from Ученик where ученик= %s', (user, ))
 	user_list = list(db.fetchall()[0])
 	user_info = {'name': user_list[0],
 				'surname': user_list[1],
@@ -113,7 +114,8 @@ def get_user(db, user):
 				'city': user_list[3],
 				'clas': user_list[4],
 				'score': user_list[5],
-				'email': user_list[6]}
+				'email': user_list[6],
+				'patronymic': user_list[7]}
 	return user_info
 
 def check_format(user_info):
@@ -176,8 +178,9 @@ def check_new_params(db):
 def set_new_params(db, user_info):
 	new_name = user_info['name']
 	new_surname = user_info['surname']
+	new_patronymic = user_info['patronymic']
 	new_school = user_info['school']
 	new_city = user_info['city']
 	new_class = user_info['clas']
 	new_email = user_info['email']
-	db.execute('update Ученик set имя=%s, фамилия=%s, школа=%s, город=%s, класс=%s, почта=%s where ученик=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(), ))
+	db.execute('update Ученик set имя=%s, фамилия=%s, отчество=%s, школа=%s, город=%s, класс=%s, почта=%s where ученик=%s', (new_name, new_surname, new_patronymic, new_school, new_city, new_class, new_email, current_user(), ))
