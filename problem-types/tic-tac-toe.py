@@ -21,7 +21,7 @@ def entry_form(data, kwargs):
 		for x in range(0, width):
 			if mask[y][x] == 0:
 				yield f'<rect class="occupied white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
-				yield f'<text x="{x * side + line_width / 2 + side / 2}" y="{y * side + line_width / 2 + side / 2}"> 0 </text>'
+				yield f'<text style="font-size:50px" x="{x * side + line_width / 2 + side / 2}" y="{y * side + line_width / 2 + side / 2}"> 0 </text>'
 			elif mask[y][x] == 1:
 				yield f'<rect class="occupied white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 				yield f'<text x="{x * side + line_width / 2 + side / 2}" y="{y * side + line_width / 2 + side / 2}"> ❌ </text>'
