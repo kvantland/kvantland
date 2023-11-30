@@ -161,7 +161,7 @@ def check_format(user_info):
 				if s in num:
 					tmp_number = 1
 			if not(tmp_lower and tmp_upper and tmp_number):
-				return "Пароль должен содержать заглавные и строчные буквы, а так же цифры", field
+				return "Пароль должен содержать заглавные и строчные буквы, а также цифры", field
 
 		if len(user_info[field]) < min_size:
 			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size),  field

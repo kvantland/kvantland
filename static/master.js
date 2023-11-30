@@ -6,7 +6,7 @@ function confirm_answer(ev) {
 }
 
 function confirm_hint(ev) {
-	if (!confirm('Точно запросить подсказку?'))
+	if (!confirm('Точно запросить подсказку? Её стоимость составляет 1 квантик.'))
 		ev.preventDefault()
 }
 
