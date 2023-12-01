@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import sys 
 
 from bottle import route, request, redirect, HTTPError
 from enum import Enum, auto
@@ -33,7 +34,7 @@ def show_submit_button(**kwargs):
 
 def show_hint_button(*, hint_mode: HintMode, стоимость_подсказки: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
-		yield f'<form action="hint" method="post" class="hint"><button type="submit" title="Получить подсказку (стоимость: {стоимость_подсказки})">Подсказка</button></form>'
+		yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {стоимость_подсказки})">Подсказка</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
 		yield f'<button type="button" disabled title="Недостаточно квантиков (стоимость: {стоимость_подсказки})">Подсказка</button>'
 
@@ -42,6 +43,7 @@ def show_buttons(**kwargs):
 	yield from show_hint_button(**kwargs)
 
 def show_question(db, variant, hint_mode):
+	user_id = require_user()
 	db.execute('select город, Город.название, Тип.код, Задача.название, описание, изображение, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
 	(город, название_города, тип, название, описание, изображение, содержание, подсказка, стоимость_подсказки), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'стоимость_подсказки': стоимость_подсказки}
@@ -79,15 +81,21 @@ def show_question(db, variant, hint_mode):
 		hybrid = typedesc.HYBRID
 	except AttributeError:
 		hybrid = False
-
-	if save_progress:
-		if hybrid:
-			yield f'<div id="interactive_problem_form">'
-		else:
-			yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
-	yield from typedesc.entry_form(содержание, kwargs)
-	if save_progress and not hybrid:
-		yield '</form>'
+	if hint_mode == HintMode.SHOW and save_progress:
+		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (variant, user_id))
+		(answer, solution, ), = db.fetchall()
+		yield solution
+	else:
+		if save_progress:
+			if hybrid:
+				yield f'<div id="interactive_problem_form">'
+			else:
+				yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
+		yield from typedesc.entry_form(содержание, kwargs)
+		if save_progress and not hybrid:
+			yield '</form>'
+		elif hybrid:
+			yield '</div>'
 	if show_default_buttons:
 		yield '<div class="button_bar">'
 		yield from show_buttons(**kwargs)
@@ -242,5 +250,25 @@ def _request_hint(db, var_id):
 
 @route('/problem/<var_id:int>/hint', method='POST')
 def problem_request_hint(db, var_id):
+	user_id = require_user()
+	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	тип = db.fetchall()[0][0]
+
+	answer = request.forms.hint_answer
+	solution = request.forms.hint_progress
+	print(answer, solution, file=sys.stderr)
+
+	typedesc = import_module(f'problem-types.{тип}')
+
+	try:
+		save_progress = typedesc.SAVE_PROGRESS
+	except AttributeError:
+		save_progress = True
+
+	if save_progress:
+		db.execute('update ДоступнаяЗадача set решение=%s, ответ=%s where вариант = %s and ученик = %s', (solution, answer, var_id, user_id))
+	else:
+		db.execute('update ДоступнаяЗадача set ответ=%s where вариант = %s and ученик = %s', (answer, var_id, user_id))
+
 	_request_hint(db, var_id)
 	redirect('.')
