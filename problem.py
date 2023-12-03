@@ -1,14 +1,19 @@
 #!/usr/bin/python3
 import sys 
 
-from bottle import route, request, redirect, HTTPError
+from bottle import route, request, redirect, HTTPError, response
 from enum import Enum, auto
 from importlib import import_module
 from pathlib import Path
 import psycopg
+from answer_area import show_answer_area
 
 import nav
 import user
+
+from config import config
+
+_key = config['keys']['cookie']
 
 result_text = {
 	True: 'Верно!',
@@ -81,25 +86,22 @@ def show_question(db, variant, hint_mode):
 		hybrid = typedesc.HYBRID
 	except AttributeError:
 		hybrid = False
-	if hint_mode == HintMode.SHOW and save_progress:
-		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (variant, user_id))
-		(answer, solution, ), = db.fetchall()
-		yield solution
-	else:
-		if save_progress:
-			if hybrid:
-				yield f'<div id="interactive_problem_form">'
-			else:
-				yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
-		yield from typedesc.entry_form(содержание, kwargs)
-		if save_progress and not hybrid:
-			yield '</form>'
-		elif hybrid:
-			yield '</div>'
-	if show_default_buttons:
-		yield '<div class="button_bar">'
-		yield from show_buttons(**kwargs)
+		
+	if save_progress:
+		if hybrid:
+			yield f'<div id="interactive_problem_form">'
+		else:
+			yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
+	yield from typedesc.entry_form(содержание, kwargs)
+	if save_progress and not hybrid:
+		yield '</form>'
+	elif hybrid:
 		yield '</div>'
+	if show_default_buttons:
+		yield from show_answer_area(содержание, 'without_input', kwargs)
+	else:
+		yield from show_answer_area(содержание, 'with_input', kwargs)
+
 	if изображение:
 		yield f'<img class="picture" src="/static/problem/{изображение}">'
 	yield '</main>'
@@ -250,25 +252,5 @@ def _request_hint(db, var_id):
 
 @route('/problem/<var_id:int>/hint', method='POST')
 def problem_request_hint(db, var_id):
-	user_id = require_user()
-	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
-	тип = db.fetchall()[0][0]
-
-	answer = request.forms.hint_answer
-	solution = request.forms.hint_progress
-	print(answer, solution, file=sys.stderr)
-
-	typedesc = import_module(f'problem-types.{тип}')
-
-	try:
-		save_progress = typedesc.SAVE_PROGRESS
-	except AttributeError:
-		save_progress = True
-
-	if save_progress:
-		db.execute('update ДоступнаяЗадача set решение=%s, ответ=%s where вариант = %s and ученик = %s', (solution, answer, var_id, user_id))
-	else:
-		db.execute('update ДоступнаяЗадача set ответ=%s where вариант = %s and ученик = %s', (answer, var_id, user_id))
-
 	_request_hint(db, var_id)
 	redirect('.')
