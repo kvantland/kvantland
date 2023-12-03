@@ -43,7 +43,7 @@ function check_if_empty(square){
 }
 
 function moveAt(x, y){
-	a = document.querySelector('.targeted');
+	var a = document.querySelector('.targeted');
 	a.setAttribute('x', x);
 	a.setAttribute('y', y);
 }
@@ -82,7 +82,9 @@ function remained_rooks_amount(){
 
 function back_to_drag(){
 	document.removeEventListener('mousemove', move);
-	a = document.querySelector('.targeted');
+	var a = document.querySelector('.targeted');
+	if (!a)
+		return;
 	a.classList.remove('targeted');
 	a.classList.remove('choiced');
 	a.setAttribute('x', def_X);
@@ -92,7 +94,9 @@ function back_to_drag(){
 
 function drop(square){
 	document.removeEventListener('mousemove', move);
-	a = document.querySelector('.targeted');
+	var a = document.querySelector('.targeted');
+	if (!a)
+		return;
 	a.classList.remove('targeted');
 	a.classList.add('choiced');	
 	a.setAttribute('y', square.getAttribute('y'));
@@ -144,7 +148,7 @@ for (const rook of drag_rooks){
 	}
 }
 
-rel = document.querySelector('.reload');
+var rel = document.querySelector('.reload');
 rel.onclick = function(){
 	for (const rook of drag_rooks){
 		rook.classList.remove('choiced');
