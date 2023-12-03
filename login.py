@@ -46,7 +46,6 @@ def display_login_form(err: str=None):
   yield '</div>'
   yield '</div>'
   yield '</main>'
-  yield '<script type="text/javascript" src = "/static/master.js"></script>'
   if err:
     yield f'<p class="error">{err}</p>'
 
