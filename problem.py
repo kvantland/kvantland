@@ -187,6 +187,7 @@ def problem_show(db, var_id):
 	if is_answer_correct is not None:
 		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
 		(answer, solution, ), = db.fetchall()
+		print(answer, solution, file=sys.stderr)
 		return _display_result(db, var_id, is_answer_correct, answer, solution)
 
 	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
