@@ -1,13 +1,19 @@
 #!/usr/bin/python3
+import sys 
 
-from bottle import route, request, redirect, HTTPError
+from bottle import route, request, redirect, HTTPError, response
 from enum import Enum, auto
 from importlib import import_module
 from pathlib import Path
 import psycopg
+from answer_area import show_answer_area
 
 import nav
 import user
+
+from config import config
+
+_key = config['keys']['cookie']
 
 result_text = {
 	True: 'Верно!',
@@ -33,7 +39,7 @@ def show_submit_button(**kwargs):
 
 def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
-		yield f'<form action="hint" method="post" class="hint"><button type="submit" title="Получить подсказку (стоимость: {hint_cost})">Подсказка</button></form>'
+		yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {hint_cost})">Подсказка</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
 		yield f'<button type="button" disabled title="Недостаточно квантиков (стоимость: {hint_cost})">Подсказка</button>'
 
@@ -42,6 +48,7 @@ def show_buttons(**kwargs):
 	yield from show_hint_button(**kwargs)
 
 def show_question(db, variant, hint_mode):
+	user_id = require_user()
 	db.execute('select город, Город.название, Тип.код, Задача.название, описание, изображение, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
 	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost}
@@ -79,7 +86,7 @@ def show_question(db, variant, hint_mode):
 		hybrid = typedesc.HYBRID
 	except AttributeError:
 		hybrid = False
-
+		
 	if save_progress:
 		if hybrid:
 			yield f'<div id="interactive_problem_form">'
@@ -88,10 +95,13 @@ def show_question(db, variant, hint_mode):
 	yield from typedesc.entry_form(content, kwargs)
 	if save_progress and not hybrid:
 		yield '</form>'
-	if show_default_buttons:
-		yield '<div class="button_bar">'
-		yield from show_buttons(**kwargs)
+	elif hybrid:
 		yield '</div>'
+  if show_default_buttons:
+		yield from show_answer_area(content, 'without_input', kwargs)
+	else:
+		yield from show_answer_area(content, 'with_input', kwargs)
+
 	if image:
 		yield f'<img class="picture" src="/static/problem/{image}">'
 	yield '</main>'
@@ -177,6 +187,7 @@ def problem_show(db, var_id):
 	if is_answer_correct is not None:
 		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
 		(answer, solution, ), = db.fetchall()
+		print(answer, solution, file=sys.stderr)
 		return _display_result(db, var_id, is_answer_correct, answer, solution)
 
 	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
