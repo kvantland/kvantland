@@ -114,8 +114,8 @@ def add_user(db, info):
 	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
 	return int(user)
 
-def check_login(db, логин):
-	db.execute("select ученик from Ученик where логин = %s", (логин,))
+def check_login(db, login):
+	db.execute("select ученик from Ученик where логин = %s", (login,))
 	try:
 		(user,) = db.fetchall()
 	except ValueError:

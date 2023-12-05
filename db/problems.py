@@ -15,14 +15,14 @@ def read_file(name):
 	with open(Path(__file__).parent / name, 'rb') as f:
 		return f.read()
 
-def get_type_id(cur, тип):
-	cur.execute("select тип from Тип where код = %s", (тип, ))
+def get_type_id(cur, type_):
+	cur.execute("select тип from Тип where код = %s", (type_, ))
 	if rows := cur.fetchall():
 		return rows[0][0]
-	cur.execute("insert into Тип (код) values (%s) returning тип", (тип, ))
+	cur.execute("insert into Тип (код) values (%s) returning тип", (type_, ))
 	if rows := cur.fetchall():
 		return rows[0][0]
-	raise Exception(f"Не удалось добавить тип {тип}")
+	raise Exception(f"Не удалось добавить тип {type_}")
 
 
 # def get_group_id(cur, город, баллы):
@@ -39,10 +39,10 @@ def get_type_id(cur, тип):
 # 	return задача
 
 
-def get_town_id(cur, название):
-	cur.execute("select город from Город where название = %s", (название, ))
-	(город,), = cur.fetchall()
-	return город
+def get_town_id(cur, name):
+	cur.execute("select город from Город where название = %s", (name, ))
+	(town,), = cur.fetchall()
+	return town
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -56,75 +56,75 @@ def lang_form(score):
 			return 'квантиков'
 
 def cmp(item):
-	return item['баллы']
+	return item['points']
 
-def add_problem_to_list(список_задач, cur, город, баллы, тип, название, подсказка=None, стоимость_подсказки=None, изображение=None):
-	список_задач.append({
+def add_problem_to_list(problems_list, cur, town, points, type_, name, hint=None, hint_cost=None, image=None):
+	problems_list.append({
 		'cur': cur,
-		'город': город,
-		'баллы': баллы,
-		'тип': тип,
-		'название': название,
-		'подсказка': подсказка,
-		'стоимость_подсказки': стоимость_подсказки,
-		'изображение': изображение
+		'town': town,
+		'points': points,
+		'type': type_,
+		'name': name,
+		'hint': hint,
+		'hint_cost': hint_cost,
+		'image': image
 		})
-	return список_задач
+	return problems_list
 
-def add_variant_to_list(список_вариантов, название, описание, содержание):
+def add_variant_to_list(variants_list, name, description, content):
 	try:
-		список_вариантов[название]
-		список_вариантов[название]['описание'].append(описание)
-		список_вариантов[название]['содержание'].append(содержание)
+		variants_list[name]
+		variants_list[name]['description'].append(description)
+		variants_list[name]['content'].append(content)
 	except KeyError:
-		список_вариантов[название] = dict()
-		список_вариантов[название]['описание'] = [описание]
-		список_вариантов[название]['содержание'] = [содержание]
-	return список_вариантов
+		variants_list[name] = dict()
+		variants_list[name]['description'] = [description]
+		variants_list[name]['content'] = [content]
+	return variants_list
 
-def add_list(список_задач, список_вариантов):
-	список_задач.sort(key=cmp)
-	for задача in список_задач:
-		cur = задача['cur']
-		город = задача['город']
-		баллы = задача['баллы']
-		тип = задача['тип']
-		название = задача['название']
-		подсказка = задача['подсказка']
-		стоимость_подсказки = задача['стоимость_подсказки']
-		изображение = задача['изображение']
-		задача = add_problem(cur, город, баллы, тип, название, подсказка, стоимость_подсказки, изображение)
+def add_list(problems_list, variants_list):
+	problems_list.sort(key=cmp)
+	for problem in problems_list:
+		cur = problem['cur']
+		town = problem['town']
+		points = problem['points']
+		type_ = problem['type']
+		name = problem['name']
+		hint = problem['hint']
+		hint_cost = problem['hint_cost']
+		image = problem['image']
+		problem = add_problem(cur, town, points, type_, name, hint, hint_cost, image)
 
-		for i in range(len(список_вариантов[название]['описание'])):
-			описание = список_вариантов[название]['описание'][i]
-			содержание = список_вариантов[название]['содержание'][i]
-			add_variant(cur, задача, описание, содержание)
+		for i in range(len(variants_list[name]['description'])):
+			description = variants_list[name]['description'][i]
+			content = variants_list[name]['content'][i]
+			add_variant(cur, problem, description, content)
 
-def add_problem(cur, город, баллы, тип, название, подсказка=None, стоимость_подсказки=None, изображение=None):
-	тип = get_type_id(cur, тип)
-	город = get_town_id(cur, город)
-	название = f"{название} ({баллы} {lang_form(баллы)})"
-	cur.execute("insert into Задача (город, баллы, название, тип, изображение) values (%s, %s, %s, %s, %s) returning задача", (город, баллы, название, тип, изображение))
-	(задача,), = cur.fetchall()
-	if подсказка:
-		if not стоимость_подсказки:
-			стоимость_подсказки = 1
-		cur.execute("insert into Подсказка (задача, текст, стоимость) values (%s, %s, %s)", (задача, подсказка, стоимость_подсказки))
-	return задача
-
-
-def add_variant(cur, задача, описание, содержание):
-	cur.execute("insert into Вариант (задача, описание, содержание) values (%s, %s, %s) returning вариант", (задача, описание, содержание))
-	(вариант,), = cur.fetchall()
-	return вариант
+def add_problem(cur, town, points, type_, name, hint=None, hint_cost=None, image=None):
+	type_ = get_type_id(cur, type_)
+	town = get_town_id(cur, town)
+	name = f"{name} ({points} {lang_form(points)})"
+	cur.execute("insert into Задача (город, баллы, название, тип, изображение) values (%s, %s, %s, %s, %s) returning задача", (town, points, name, type_, image))
+	(problem,), = cur.fetchall()
+	if hint:
+		if not hint_cost:
+			hint_cost = 1
+		cur.execute("insert into Подсказка (задача, текст, стоимость) values (%s, %s, %s)", (problem, hint, hint_cost))
+	return problem
 
 
-def ОстровЛжецов(cur):
-	список_задач = []
-	список_вариантов = dict()
+def add_variant(cur, problem, description, content):
+	cur.execute("insert into Вариант (задача, описание, содержание) values (%s, %s, %s) returning вариант", (problem, description, content))
+	(variant,), = cur.fetchall()
+	return variant
+
+
+def IslandOfLiars(cur):
+	problems_list = []
+	variants_list = dict()
 	# задача = add_problem(cur, "Остров Лжецов", 2, 'radio', "Выборы мэра острова")
 	# for N in [15, 17, 19, 21]:
-	# 	desc = f"Каждый кандидат в мэры острова либо лжец, либо правдолюб. Лжецы всегда лгут, правдолюбы всегда говорят правду, и все кандидаты знают, кто есть кто. В начале дебатов каждый из {N} кандидатов заявил: «Среди остальных присутствующих  лжецов больше, чем правдолюбов». После того как подошёл опоздавший {N+1}-й кандидат, каждый из кандидатов повторил своё заявление. Кто опоздавший: лжец или правдолюб?"
+	# desc = f"Каждый кандидат в мэры острова либо лжец, либо правдолюб. Лжецы всегда лгут, правдолюбы всегда говорят правду, и все кандидаты знают, кто есть кто. В начале дебатов каждый из {N} кандидатов заявил: «Среди остальных присутствующих  лжецов больше, чем правдолюбов». После того как подошёл опоздавший {N+1}-й кандидат, каждый из кандидатов повторил своё заявление. Кто опоздавший: лжец или правдолюб?"
 	# 	cont = {
 	# 		'answers': [
 	# 			"Лжец",
@@ -135,7 +135,7 @@ def ОстровЛжецов(cur):
 	# 	}
 	# 	add_variant(cur, задача, desc, json.dumps(cont))
 
-	список_задач = add_problem_to_list(список_задач, cur, "Остров Лжецов", 1, 'lamps-play', "Игра с лампочками")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 1, 'lamps-play', "Игра с лампочками")
 	for sw, A in [
 			# ((0b0111), (0b0110), (0b0011), (0b1101), (0b1011)),
 			# ((0b1110), (0b0110), (0b1100), (0b1101), (0b1011)),
@@ -155,9 +155,9 @@ def ОстровЛжецов(cur):
 			'switches': sw,
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Игра с лампочками", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Игра с лампочками", desc, json.dumps(cont))
 
-	список_задач = add_problem_to_list(список_задач, cur, "Остров Лжецов", 3, 'liars', "Лжецы и хитрецы", "Возьмите какого-нибудь рыцаря (Р), рядом с ним по условию должны сидеть хитрец (Х) и лжец (Л).  Докажите, что рядом с лжецом сидит ещё один рыцарь.")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'liars', "Лжецы и хитрецы", "Возьмите какого-нибудь рыцаря (Р), рядом с ним по условию должны сидеть хитрец (Х) и лжец (Л).  Докажите, что рядом с лжецом сидит ещё один рыцарь.")
 	for N, A in [(10, "STLTSSTLTS"), (11, "STLTSSTLTSS"), (15, "STLTSSTLTSSTLTS"), (16, "STLTSSTLTSSTLTSS")]:
 		assert len(A) == N
 		desc = f"""За круглым столом сидят {N} человек, каждый из которых либо рыцарь (всегда говорит
@@ -170,7 +170,7 @@ def ОстровЛжецов(cur):
 			'chairs': N,
 			'correct': list(rotations),
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Лжецы и хитрецы", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Лжецы и хитрецы", desc, json.dumps(cont))
  #
 	# задача = add_problem(cur, "Остров Лжецов", 1, 'integer', "За круглым столом")
 	# for N, A in [(12, 8), (15, 10), (18, 12), (21, 14)]:
@@ -188,7 +188,7 @@ def ОстровЛжецов(cur):
 	# 	}
 	# 	add_variant(cur, задача, desc, json.dumps(cont))
 
-	список_задач = add_problem_to_list(список_задач, cur, "Остров Лжецов", 2, 'radio', "Дело о краже кораллов", изображение="thieves.jpg", подсказка="Предположите по очереди, что один из них сказал правду. Посмотрите, получается противоречие или нет. Результаты удобно отражать в таблице.")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'radio', "Дело о краже кораллов", image="thieves.jpg", hint="Предположите по очереди, что один из них сказал правду. Посмотрите, получается противоречие или нет. Результаты удобно отражать в таблице.")
 	for a, b, c, A in [
 			("Я не крал. Карл украл.", "Карл не крал. Алекс украл.", "Я не крал. Бен не крал.", 0),
 			("Я не крал. Карл не крал.", "Я не крал. Алекс украл.", "Алекс не крал. Бен украл.", 1),
@@ -205,14 +205,14 @@ def ОстровЛжецов(cur):
 			],
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Дело о краже кораллов", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Дело о краже кораллов", desc, json.dumps(cont))
 
-	add_list(список_задач, список_вариантов)
+	add_list(problems_list, variants_list)
 
 
-def Чиселбург(cur):
-	список_задач = []
-	список_вариантов = dict()
+def Chiselburg(cur):
+	problems_list = []
+	variants_list = dict()
 	# Задача "Равенство"
 	# Вариации: [[97, 98, 99, 100],
 	# 			 [98, 99, 100, 101],
@@ -225,7 +225,7 @@ def Чиселбург(cur):
 	#  ['-', '*', '-', '+', '-', '*']]
 
 
-	список_задач = add_problem_to_list(список_задач, cur, "Чиселбург", 2, 'integer', "На перемене", изображение="during_a_break.jpg", подсказка="В любой день число уроков на один больше числа партий, которые Петя сыграл в этот день.")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "На перемене", image="during_a_break.jpg", hint="В любой день число уроков на один больше числа партий, которые Петя сыграл в этот день.")
 	for N, A in [
 		(22, 28),
 		(32, 38),
@@ -238,17 +238,17 @@ def Чиселбург(cur):
 		cont = {
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "На перемене", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "На перемене", desc, json.dumps(cont))
 
 
-	список_задач = add_problem_to_list(список_задач, cur, "Чиселбург", 1, 'integer', "Вычёркиваем цифры", изображение="cross_out_numbers.jpg")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'integer', "Вычёркиваем цифры", image="cross_out_numbers.jpg")
 	for N, A in [(123123123123123, 33323123), (321321321321321, 33332321), (231231231231231, 33331231), (213213213213213, 33323213)]:
 		desc = f"Какое наибольшее число можно получить, вычеркнув 7 цифр из числа {N}?"
 		cont = {
 			'range': {'min': 10000000, 'max': 99999999},
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Вычёркиваем цифры", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Вычёркиваем цифры", desc, json.dumps(cont))
  #
 	# # TODO: Рядом в ряд таблички с цветными буквами, из которых выложено слово КВАНТИК (буквы К одного цвета). Когда игрок нажимает на какую-нибудь букву, она заменяется на окошко, в которое можно ввести цифру.
 	# задача = add_problem(cur, "Чиселбург", 2, 'integer', "Ноутик и Квантик развлекаются")
@@ -303,7 +303,7 @@ def Чиселбург(cur):
 	# 	}
 	# 	add_variant(cur, задача, desc, json.dumps(cont))
 
-	список_задач = add_problem_to_list(список_задач, cur, "Чиселбург", 3, 'integer', "Как такое возможно?", изображение="birthday.jpg", подсказка="Такое возможно, если цена книги больше, чем значение, при котором доставка бесплатна, но если применить скидку, то придётся платить за доставку. Пусть <i>х</i> — цена книги. Тогда цена книги со скидкой <nobr>0,9·<i>х</i></nobr>. Составьте уравнение относительно <i>х</i>.")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'integer', "Как такое возможно?", image="birthday.jpg", hint="Такое возможно, если цена книги больше, чем значение, при котором доставка бесплатна, но если применить скидку, то придётся платить за доставку. Пусть <i>х</i> — цена книги. Тогда цена книги со скидкой <nobr>0,9·<i>х</i></nobr>. Составьте уравнение относительно <i>х</i>.")
 	for N, M, D, A in [
 			(250, 750, 170, 800),
 			(300, 800, 214, 860),
@@ -314,9 +314,9 @@ def Чиселбург(cur):
 		cont = {
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Как такое возможно?", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Как такое возможно?", desc, json.dumps(cont))
 
-	add_list(список_задач, список_вариантов)
+	add_list(problems_list, variants_list)
 
 	# задача = add_problem(cur, "Чиселбург", 2, 'integer', "Числовой ребус")
 	# for N, A in [(6101, 20), (6505, 24), (9151, 30), (9262, 21)]:
@@ -327,9 +327,9 @@ def Чиселбург(cur):
 	# 	add_variant(cur, задача, desc, json.dumps(cont))
 
 
-def Геома(cur):
-	список_задач = []
-	список_вариантов = dict()
+def Geom(cur):
+	problems_list = []
+	variants_list = dict()
 
 	def check_mask(mask, w, h):
 		rows = mask.split('\n')
@@ -338,7 +338,7 @@ def Геома(cur):
 		assert all(c in {'x', '-'} for row in rows for c in row)
 	swapper = {('\n', '\n'): '\n', ('-', '-'): '-', ('x', '-'): 'x', ('x', 'x'): '-'}
 
-	список_задач = add_problem_to_list(список_задач, cur, "Геома", 3, 'field', "Раздел участка", "Попробуйте разделить на две фигуры, которые можно совместить при повороте и/или симметрии. Фигуры должны состоять из одинакового числа клеток.")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'field', "Раздел участка", "Попробуйте разделить на две фигуры, которые можно совместить при повороте и/или симметрии. Фигуры должны состоять из одинакового числа клеток.")
 	for w, h, mask, correct in [
 			(5, 4, 'x----\nxxxxx\nxxxxx\nxxxxx', ['x----\nx----\nxxx--\nxxx--']),
 			(5, 6, 'x----\nx----\nx----\nxxxxx\nxxxxx\nxxxxx', ['x----\nx----\nx----\nxxx--\nxxx--\n-----']),
@@ -360,18 +360,18 @@ def Геома(cur):
 			'mask': mask,
 			'corrects': correct + inverses,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Раздел участка", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Раздел участка", desc, json.dumps(cont))
 
-	список_задач = add_problem_to_list(список_задач, cur, "Геома", 4, 'integer', "Точка на основании", "Постройте правильный треугольник со стороной BM.")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Точка на основании", "Постройте правильный треугольник со стороной BM.")
 	for N, A in [(4, 13), (5, 16), (6, 19), (7, 22)]:
 		desc = f"На основании AC равнобедренного треугольника АВС взяли точку М так, что угол AMB=120°. Оказалось, что AM={N}, BM={N+1}. Найдите AC."
 		desc += read_file('geoma3.svg').decode('utf-8')
 		cont = {
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Точка на основании", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Точка на основании", desc, json.dumps(cont))
 
-	список_задач = add_problem_to_list(список_задач, cur, "Геома", 2, 'perp-lines', "Прямые на клетчатой бумаге", "Пусть чтобы попасть из A в B требуется пройти n клеток вправо и m вверх, а чтобы попасть из C в D требуется пройти m клеток влево и n вверх. Тогда AB и CD перпендикулярны.")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'perp-lines', "Прямые на клетчатой бумаге", "Пусть чтобы попасть из A в B требуется пройти n клеток вправо и m вверх, а чтобы попасть из C в D требуется пройти m клеток влево и n вверх. Тогда AB и CD перпендикулярны.")
 	for points, D in [
 		([[7, 1], [6, 6], [6, 3]], [1, 2]),
 		([[3, 1], [6, 6], [7, 3]], [2, 6]), 
@@ -383,8 +383,8 @@ def Геома(cur):
 			'points' : points,
 			'correct': D,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Прямые на клетчатой бумаге", desс, json.dumps(cont))
-	add_list(список_задач, список_вариантов)
+		variants_list = add_variant_to_list(variants_list, "Прямые на клетчатой бумаге", desс, json.dumps(cont))
+	add_list(problems_list, variants_list)
 
 
 def make_chess_board(data):
@@ -398,11 +398,11 @@ def make_chess_board(data):
 			for cell in row)) for row in data))
 
 
-def Головоломск(cur):
-	список_задач = []
-	список_вариантов = dict()
+def Golovolomsk(cur):
+	problems_list = []
+	variants_list = dict()
 
-	список_задач = add_problem_to_list(список_задач, cur, "Головоломск", 2, 'glass-bridge', "Стеклянный мост", "Отметьте все клетки из закалённого стекла, а потом уберите лишние.")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'glass-bridge', "Стеклянный мост", "Отметьте все клетки из закалённого стекла, а потом уберите лишние.")
 	for mask in [[
 				[14, 54, 15, 82, 20, 36, 40, 98, 52, 22],
 				[63, 68, 31, 96, 28, 10, 84, 45, 28, 15],
@@ -448,10 +448,10 @@ def Головоломск(cur):
 			'mask': mask,
 			'corrects': correct,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Стеклянный мост", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Стеклянный мост", desc, json.dumps(cont))
 
 
-	список_задач = add_problem_to_list(список_задач, cur, "Головоломск", 3, 'invisible_horses', "Кони-невидимки", "Сначала рассмотрите угловую клетку, в которой стоит число 2.")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'invisible_horses', "Кони-невидимки", "Сначала рассмотрите угловую клетку, в которой стоит число 2.")
 	_ = '_'
 	x = 'x'
 	for T, A in [([[1, _, 2, _, 2], [_, 1, _, _, _], [2, _, x, _, 1], [_, _, _, 3, _], [_, _, 2, _, _]], 3),
@@ -466,10 +466,10 @@ def Головоломск(cur):
 			'table': T,
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Кони-невидимки", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Кони-невидимки", desc, json.dumps(cont))
 
 
-	список_задач = add_problem_to_list(список_задач, cur, "Головоломск", 1, 'rooks', "Ладьи на доске 4×4")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'rooks', "Ладьи на доске 4×4")
 	for T, A in [([[1, 2], [2, 0]], [['31', '03'], ['01', '33']]),
 				([[1, 0], [3, 3]], [['01', '22'], ['02', '21']]),
 				([[0, 2], [3, 0]], [['11', '23'], ['21', '13']]),
@@ -479,14 +479,14 @@ def Головоломск(cur):
 			'cur': T,
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Ладьи на доске 4×4", desc, json.dumps(cont))
-	add_list(список_задач, список_вариантов)
+		variants_list = add_variant_to_list(variants_list, "Ладьи на доске 4×4", desc, json.dumps(cont))
+	add_list(problems_list, variants_list)
 
-def РеспубликаКомби(cur):
-	список_задач = []
-	список_вариантов = dict()
+def CombiRepublic(cur):
+	problems_list = []
+	variants_list = dict()
 
-	список_задач = add_problem_to_list(список_задач, cur, "Республика Комби", 1, 'integer', "Непростой выбор", изображение="dif_choice.jpg")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 1, 'integer', "Непростой выбор", image="dif_choice.jpg")
 	for subjects, A in [
 		("физика, химия, история, информатика, биология, география, английский, литература", 28),
 		("физика, химия, история, информатика, биология, география, литература", 21),
@@ -501,11 +501,11 @@ def РеспубликаКомби(cur):
 		cont = {
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Непростой выбор", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Непростой выбор", desc, json.dumps(cont))
 
 
 
-	список_задач = add_problem_to_list(список_задач, cur, "Республика Комби", 2, 'integer', "Дружба", изображение="friends.jpg", подсказка="Отметим несколько точек, которые обозначают мальчиков, и несколько точек, которые обозначают девочек. Если мальчик и девочка знакомы, то соединим две соответствующие точки отрезком. Теперь общее число отрезков можно посчитать двумя способами и составить уравнение.")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Дружба", image="friends.jpg", hint="Отметим несколько точек, которые обозначают мальчиков, и несколько точек, которые обозначают девочек. Если мальчик и девочка знакомы, то соединим две соответствующие точки отрезком. Теперь общее число отрезков можно посчитать двумя способами и составить уравнение.")
 	for desc, A in [
 			("В классе 24 ученика. Оказалось, что каждый мальчик дружит с тремя девочками,а каждая девочка с пятью мальчиками. Сколько всего девочек в этом классе?", 9),
 			("В классе 28 учеников. Оказалось, что каждый мальчик дружит с тремя девочками, а каждая девочка с четырьмя мальчиками. Сколько всего мальчиков в этом классе?", 16),
@@ -515,36 +515,37 @@ def РеспубликаКомби(cur):
 		cont = {
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Дружба", desc, json.dumps(cont))
-
-	список_задач = add_problem_to_list(список_задач, cur, "Республика Комби", 4, 'integer', "В тире", "На картинке сделаны выстрелы в 8, 9 и 10 очков. Среди них только 8 и 10 не могут стоять рядом (9 отличается от 8 и 10 ровно на единицу). Поэтому любая последовательность выстрелов, удовлетворяющая условию задачи, задается взаимным расположением 8 и 10 (8 раньше 10 или 10 раньше 8), а также количеством девяток левее 8 и 10, между ними и правее них. И, наоборот, можно задать последовательность, поставив сначала все девятки. Далее нужно понять, сколькими способами можно поставить 8 и 10 между девятками так, чтобы 8 и 10 не были соседними.")
+		variants_list = add_variant_to_list(variants_list, "Дружба", desc, json.dumps(cont))
+	
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'integer', "В тире", 
+	                                    "На картинке сделаны выстрелы в 8, 9 и 10 очков. Среди них только 8 и 10 не могут стоять рядом (9 отличается от 8 и 10 ровно на единицу). Поэтому любая последовательность выстрелов, удовлетворяющая условию задачи, задается взаимным расположением 8 и 10 (8 раньше 10 или 10 раньше 8), а также количеством девяток левее 8 и 10, между ними и правее них. И, наоборот, можно задать последовательность, поставив сначала все девятки. Далее нужно понять, сколькими способами можно поставить 8 и 10 между девятками так, чтобы 8 и 10 не были соседними.")
 	img_template = read_file('target.svg').decode('utf-8')
 	img_hit = read_file('hit-white.png')
 	for hits, A in [
-			([(32, 4), (38, -80), (85, -27), (86, 56), (-2, 90), (-80, 64), (-95, -11), (-61, -39), (-98, 148)], 56),
-			([(32, 4), (38, -80), (85, -27), (86, 56), (-2, 90), (-80, 64), (-95, -11), (-61, -39), (-45, -91), (-98, 148)], 72),
-			([(32, 4), (38, -80), (85, -27), (86, 56), (42, 63), (-2, 90), (-80, 64), (-95, -11), (-61, -39), (-45, -91), (-98, 148)], 90),
-			([(32, 4), (38, -80), (85, -27), (86, 56), (42, 63), (-2, 90), (-33, 59), (-80, 64), (-95, -11), (-61, -39), (-45, -91), (-98, 148)], 110),
-			]:
+	                ([(32, 4), (38, -80), (85, -27), (86, 56), (-2, 90), (-80, 64), (-95, -11), (-61, -39), (-98, 148)], 56),
+	                ([(32, 4), (38, -80), (85, -27), (86, 56), (-2, 90), (-80, 64), (-95, -11), (-61, -39), (-45, -91), (-98, 148)], 72),
+	                ([(32, 4), (38, -80), (85, -27), (86, 56), (42, 63), (-2, 90), (-80, 64), (-95, -11), (-61, -39), (-45, -91), (-98, 148)], 90),
+	                ([(32, 4), (38, -80), (85, -27), (86, 56), (42, 63), (-2, 90), (-33, 59), (-80, 64), (-95, -11), (-61, -39), (-45, -91), (-98, 148)], 110),
+	                ]:
 		N = len(hits)
 		hit_img = 'data:image/png;base64,' + base64.b64encode(img_hit).decode('ascii')
 		img = img_template % {'hit-img': hit_img, 'hit-list': ''.join(f'<use href="#hit" x="{x}" y="{y}" />' for x, y in hits)}
 		desc = f"""
-			Вася сделал {N} выстрелов (на рисунке ниже мишень с результатом), записывая, сколько
-			очков он выбивал в процессе. Оказалось, что количество очков для соседних выстрелов
-			отличается не более, чем на 1. Например, если бы Вася сделал 8 выстрелов, то корректная
-			последовательность очков могла бы быть такой: 9 9 8 9 9 9 10 9. Сколькими способами
-			Вася мог добиться итогового результата, соответствующего картинке ниже? Две
-			последовательности выстрелов считаются одинаковыми, если соответствующие им
-			последовательности полученных очков совпадают.
+		        Вася сделал {N} выстрелов (на рисунке ниже мишень с результатом), записывая, сколько
+		        очков он выбивал в процессе. Оказалось, что количество очков для соседних выстрелов
+		        отличается не более, чем на 1. Например, если бы Вася сделал 8 выстрелов, то корректная
+		        последовательность очков могла бы быть такой: 9 9 8 9 9 9 10 9. Сколькими способами
+		        Вася мог добиться итогового результата, соответствующего картинке ниже? Две
+		        последовательности выстрелов считаются одинаковыми, если соответствующие им
+		        последовательности полученных очков совпадают.
 			{img}
-			"""
+		        """
 		cont = {
-			'correct': A,
+		        'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "В тире", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "В тире", desc, json.dumps(cont))
 
-	список_задач = add_problem_to_list(список_задач, cur, "Республика Комби", 3, 'integer', "Король и пешки", make_chess_board([['<i>a</i>', '?'], ['<i>b</i>', '<i>c</i>']]) + "Если число способов попасть на три клетки равно <i>a</i>, <i>b</i> и <i>c</i> соответственно, то число способов попасть в правую верхнюю клетку равно <nobr><i>a</i> + <i>b</i> + <i>c</i></nobr>.")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'integer', "Король и пешки", make_chess_board([['<i>a</i>', '?'], ['<i>b</i>', '<i>c</i>']]) + "Если число способов попасть на три клетки равно <i>a</i>, <i>b</i> и <i>c</i> соответственно, то число способов попасть в правую верхнюю клетку равно <nobr><i>a</i> + <i>b</i> + <i>c</i></nobr>.")
 	_ = ' '
 	K = '♔'
 	p = '♙'
@@ -558,9 +559,9 @@ def РеспубликаКомби(cur):
 		cont = {
 			'correct': A,
 		}
-		список_вариантов = add_variant_to_list(список_вариантов, "Король и пешки", desc, json.dumps(cont))
+		variants_list = add_variant_to_list(variants_list, "Король и пешки", desc, json.dumps(cont))
 
-	add_list(список_задач, список_вариантов)
+	add_list(problems_list, variants_list)
 
 
 def update_positions_town(cur, town, problem_count):
@@ -590,10 +591,10 @@ if len(sys.argv) > 1:
 with psycopg.connect(db) as con:
 	with con.transaction():
 		with con.cursor() as cur:
-			ОстровЛжецов(cur)
-			Чиселбург(cur)
-			Геома(cur)
-			Головоломск(cur)
-			РеспубликаКомби(cur)
+			IslandOfLiars(cur)
+			Chiselburg(cur)
+			Geom(cur)
+			Golovolomsk(cur)
+			CombiRepublic(cur)
 
 			update_positions(cur)
