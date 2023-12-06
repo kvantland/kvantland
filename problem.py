@@ -97,7 +97,7 @@ def show_question(db, variant, hint_mode):
 		yield '</form>'
 	elif hybrid:
 		yield '</div>'
-  if show_default_buttons:
+	if show_default_buttons:
 		yield from show_answer_area(content, 'without_input', kwargs)
 	else:
 		yield from show_answer_area(content, 'with_input', kwargs)
