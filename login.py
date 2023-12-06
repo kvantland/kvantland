@@ -17,8 +17,8 @@ auth_url = config['vk']['auth_url']
 params = {'client_id': 	client_id, 'redirect_uri': redirect_uri, 'response_type': 'code'}
 
 @route('/login')
-def login_form():
-	if current_user() != None:
+def login_form(db):
+	if current_user(db) != None:
 		do_redirect()
 	yield from display_login_form()
 
@@ -59,12 +59,15 @@ def check_login(db, user_name, password):
 		return user
 	return None
 
-def current_user():
+def current_user(db):
 	user = request.get_cookie('user', secret=_key)
+	db.execute('select ученик from Ученик where ученик = %s', (user, ))
 	try:
-		return int(user)
-	except Exception:
+		(user_check, ), = db.fetchall()
+	except ValueError:
+		do_logout()
 		return None
+	return int(user)
 		
 def do_login(user):
 	response.set_cookie('user', str(user), path='/', httponly=True, samesite='lax', secret=_key)

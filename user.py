@@ -7,7 +7,7 @@ from login import current_user
 
 def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
-	user = current_user()
+	user = current_user(db)
 	yield '<nav class="user_nav">'
 	yield '<ul class="flex_ul">'
 	if user != None:
