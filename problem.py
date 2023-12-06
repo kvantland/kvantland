@@ -37,11 +37,11 @@ def try_read_file(path):
 def show_submit_button(**kwargs):
 	yield '<button id="send" type="submit" form="problem_form">Отправить</button>'
 
-def show_hint_button(*, hint_mode: HintMode, стоимость_подсказки: int, **kwargs):
+def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
-		yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {стоимость_подсказки})">Подсказка</button></form>'
+		yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {hint_cost})">Подсказка</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
-		yield f'<button type="button" disabled title="Недостаточно квантиков (стоимость: {стоимость_подсказки})">Подсказка</button>'
+		yield f'<button type="button" disabled title="Недостаточно квантиков (стоимость: {hint_cost})">Подсказка</button>'
 
 def show_buttons(**kwargs):
 	yield from show_submit_button(**kwargs)
@@ -50,27 +50,27 @@ def show_buttons(**kwargs):
 def show_question(db, variant, hint_mode):
 	user_id = require_user()
 	db.execute('select город, Город.название, Тип.код, Задача.название, описание, изображение, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
-	(город, название_города, тип, название, описание, изображение, содержание, подсказка, стоимость_подсказки), = db.fetchall()
-	kwargs = {'hint_mode': hint_mode, 'стоимость_подсказки': стоимость_подсказки}
-	typedesc = import_module(f'problem-types.{тип}')
-	script = try_read_file(f'problem-types/{тип}.js')
-	style = try_read_file(f'problem-types/{тип}.css')
+	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
+	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost}
+	typedesc = import_module(f'problem-types.{type_}')
+	script = try_read_file(f'problem-types/{type_}.js')
+	style = try_read_file(f'problem-types/{type_}.css')
 	yield '<!DOCTYPE html>'
-	yield f'<title>{название}</title>'
+	yield f'<title>{name}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<script type="module" src="/static/master.js"></script>'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
 	yield '<main>'
-	yield f'<h1>{название}</h1>'
-	yield f'<p class="description">{описание}</p>'
+	yield f'<h1>{name}</h1>'
+	yield f'<p class="description">{description}</p>'
 	if hint_mode == HintMode.SHOW:
 		yield '<section class="hint">'
 		yield '<h2>Подсказка</h2>'
-		yield f'<p>{подсказка}</p>'
+		yield f'<p>{hint}</p>'
 		yield '</section>'
 	try:
 		save_progress = typedesc.SAVE_PROGRESS
@@ -91,19 +91,19 @@ def show_question(db, variant, hint_mode):
 		if hybrid:
 			yield f'<div id="interactive_problem_form">'
 		else:
-			yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{тип}">'
-	yield from typedesc.entry_form(содержание, kwargs)
+			yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{type_}">'
+	yield from typedesc.entry_form(content, kwargs)
 	if save_progress and not hybrid:
 		yield '</form>'
 	elif hybrid:
 		yield '</div>'
-	if show_default_buttons:
-		yield from show_answer_area(содержание, 'without_input', kwargs)
+  if show_default_buttons:
+		yield from show_answer_area(content, 'without_input', kwargs)
 	else:
-		yield from show_answer_area(содержание, 'with_input', kwargs)
+		yield from show_answer_area(content, 'with_input', kwargs)
 
-	if изображение:
-		yield f'<img class="picture" src="/static/problem/{изображение}">'
+	if image:
+		yield f'<img class="picture" src="/static/problem/{image}">'
 	yield '</main>'
 	yield '</div>'
 	if script:
@@ -111,18 +111,18 @@ def show_question(db, variant, hint_mode):
 
 def check_answer(db, var_id, answer):
 	db.execute('select Тип.код, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
-	(тип, содержание), = db.fetchall()
-	typedesc = import_module(f'problem-types.{тип}')
-	return typedesc.validate(содержание, answer)
+	(type_, content), = db.fetchall()
+	typedesc = import_module(f'problem-types.{type_}')
+	return typedesc.validate(content, answer)
 
 def _display_result(db, var_id, ok, answer=None, solution=None):
 	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
-	(тип, ), = db.fetchall()
+	(type_, ), = db.fetchall()
 	db.execute('select город, Город.название, Задача.название, описание, изображение from Задача join Вариант using (задача) join Город using (город) where вариант = %s', (var_id,))
-	(город, название_города, название, описание, изображение), = db.fetchall()
+	(town, town_name, name, description, image), = db.fetchall()
 	
-	typedesc = import_module(f'problem-types.{тип}')
-	style = try_read_file(f'problem-types/{тип}.css')
+	typedesc = import_module(f'problem-types.{type_}')
+	style = try_read_file(f'problem-types/{type_}.css')
 
 	try:
 		show_default_buttons = not typedesc.CUSTOM_BUTTONS
@@ -135,16 +135,16 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 		save_progress = True
 
 	yield '<!DOCTYPE html>'
-	yield f'<title>{название}</title>'
+	yield f'<title>{name}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{город}/', название_города))
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
 	yield '<main>'
-	yield f'<h1>{название}</h1>'
-	yield f'<p class="description">{описание}</p>'
+	yield f'<h1>{name}</h1>'
+	yield f'<p class="description">{description}</p>'
 	yield '<div class="save_zone_wrapper" style="z-index: -1">'
 	if save_progress:
 		yield solution
@@ -157,8 +157,8 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield f'<div class="result_area result_{ok}">'
 	yield result_text[ok]
 	yield '</div>'
-	if изображение:
-		yield f'<img class="picture" src="/static/problem/{изображение}">'
+	if image:
+		yield f'<img class="picture" src="/static/problem/{image}">'
 	yield '</main>'
 	yield '</div>'
 
@@ -206,7 +206,7 @@ def problem_show(db, var_id):
 @route('/problem/<var_id:int>/', method='POST')
 def problem_answer(db, var_id):
 	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
-	тип = db.fetchall()[0][0]
+	type_ = db.fetchall()[0][0]
 	
 	user_id = require_user()
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
@@ -216,7 +216,7 @@ def problem_answer(db, var_id):
 	answer = request.forms.answer
 	solution = request.forms.progress
 
-	typedesc = import_module(f'problem-types.{тип}')
+	typedesc = import_module(f'problem-types.{type_}')
 
 	try:
 		save_progress = typedesc.SAVE_PROGRESS

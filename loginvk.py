@@ -75,8 +75,8 @@ def convert(info):
 def get_user():
 	return convert(get_info(get_token()))
 
-def add_user(логин, имя, фамилия, город, школа, пароль, db):
-	db.execute("insert into Ученик (логин, имя, фамилия, город, школа, пароль) values (%s, %s, %s, %s, %s, %s) returning ученик", (логин, имя, фамилия, город, школа, пароль))
+def add_user(login, name, surname, city, school, password, db):
+	db.execute("insert into Ученик (логин, имя, фамилия, город, школа, пароль) values (%s, %s, %s, %s, %s, %s) returning ученик", (login, name, surname, city, school, password))
 	(user, ), = db.fetchall()
 	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
 	return user
