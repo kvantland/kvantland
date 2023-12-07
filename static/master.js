@@ -15,10 +15,10 @@ function confirm_hint(ev) {
 }
 
 for (let form of document.querySelectorAll("form.problem"))
-	form.addEventListener('submit', confirm_answer)
+	form.onsubmit = function(e){confirm_answer(e)}
 
 for (let form of document.querySelectorAll("form.hint"))
-	form.addEventListener('submit', confirm_hint)
+	form.onsubmit = function(e){confirm_hint(e)}
 
 var progress = document.createElement('input');
 progress.type = 'hidden';
