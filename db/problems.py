@@ -173,10 +173,25 @@ def make_chess_board(data):
 			'<td>{0}</td>'.format(format_cell(cell))
 			for cell in row)) for row in data))
 
-
 def Golovolomsk2(cur):
 	problems_list = []
 	variants_list = dict()
+  
+  problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'tic-tac-toe', "Крестики-нолики")
+	for mask, correct in [
+				[[['-', 0, 1], ['-', 0, '-'], ['-', 1, '-']], [(2, 2)]],
+				[[['-', 0, '-'], [0, 1, '-'], ['-', 1, '-']], [(2, 0), (2, 2)]],
+				[[['-', '-', '-'], [1, 0, 0], ['-', '-', 1]], [(2, 0)]],
+				[[['-', 0, '-'], [1, 1, 0], ['-', '-', '-']], [(0, 0), (2, 0)]]
+				]:
+				desc = """
+				Петя и Вася играют в крестики-нолики. Петя ходит крестиками и сейчас его ход. 
+				Помогите Пете сделать ход, который выигрывает партию."""
+				cont = {
+					'mask': mask,
+					'correct': correct,
+				}
+				variants_list = add_variant_to_list(variants_list, "Крестики-нолики", desc, json.dumps(cont))
 
 	add_list(problems_list, variants_list)
 
