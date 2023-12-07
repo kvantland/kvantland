@@ -193,7 +193,7 @@ def Golovolomsk2(cur):
 				}
 				variants_list = add_variant_to_list(variants_list, "Крестики-нолики", desc, json.dumps(cont))
     
-  problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'garden_trees', "Деревья в саду")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'garden_trees', "Деревья в саду")
 	for T, A in [([3, 6], [
 				[[0, 1, 1, 0, 1, 1], [1, 2, 2, 1, 2, 2], [1, 2, 2, 1, 2, 2]],
 				[[0, 1, 1, 2, 2, 0], [2, 2, 0, 2, 2, 1], [2, 2, 1, 1, 0, 1]],
