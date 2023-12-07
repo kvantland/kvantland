@@ -5,7 +5,8 @@ const base = document.querySelector('.grid');
 const sender = document.createElement('input');
 sender.type = 'hidden';
 sender.name = 'answer';
-base.parentNode.appendChild(sender);
+if (!document.querySelector("input[name='answer']"))
+	base.parentNode.appendChild(sender)
 
 base.addEventListener('click', function(e) {
 	let tile = e.target.closest('.tile');
@@ -25,6 +26,6 @@ base.addEventListener('click', function(e) {
 		}
 		answer.push(answer_row.join(''))
 	}
-	sender.value = answer.join('\n')
+	document.querySelector("input[name='answer']").value = answer.join('\n')
 });
 
