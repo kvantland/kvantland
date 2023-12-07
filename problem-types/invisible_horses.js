@@ -35,7 +35,7 @@ function check_if_empty(square){
 }
 
 function moveAt(x, y){
-	a = document.querySelector('.targeted');
+	var a = document.querySelector('.targeted');
 	a.setAttribute('x', x);
 	a.setAttribute('y', y);
 }
@@ -57,13 +57,17 @@ function move(event){
 
 function back_to_drag(){
 	document.removeEventListener('mousemove', move);
-	a = document.querySelector('.targeted');
+	var a = document.querySelector('.targeted');
+	if (!a)
+		return;
 	a.parentNode.removeChild(a);
 }
 
 function drop(square){
 	document.removeEventListener('mousemove', move);
-	a = document.querySelector('.targeted');
+	var a = document.querySelector('.targeted');
+	if (!a)
+		return;
 	a.classList.remove('targeted');
 	a.classList.add('choiced');	
 	a.setAttribute('y', square.getAttribute('y'));
@@ -71,7 +75,7 @@ function drop(square){
 }
 
 function add_horse(type)	{
-	svgNS = "http://www.w3.org/2000/svg"
+	var svgNS = "http://www.w3.org/2000/svg"
 	var new_horse = document.createElementNS(svgNS, 'image');
 	if (type == 'rejected'){
 		new_horse.classList.add('rejected');
@@ -135,7 +139,7 @@ function update_horse()
 	}
 }
 
-rel = document.querySelector('.reload');
+var rel = document.querySelector('.reload');
 rel.onclick = function(){
 	var drag_horses = document.querySelectorAll('.active.choiced');
 	for (var horse of drag_horses){

@@ -57,8 +57,8 @@ for field in all_info:
 		option_info[field_name] = options
 
 @route('/reg')
-def reg_from():
-	if current_user() != None:
+def reg_from(db):
+	if current_user(db) != None:
 		redirect('/')
 	yield from display_registration_form(empty_user_info())
 
@@ -114,8 +114,8 @@ def add_user(db, info):
 	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
 	return int(user)
 
-def check_login(db, логин):
-	db.execute("select ученик from Ученик where логин = %s", (логин,))
+def check_login(db, login):
+	db.execute("select ученик from Ученик where логин = %s", (login,))
 	try:
 		(user,) = db.fetchall()
 	except ValueError:
@@ -161,7 +161,7 @@ def check_format(user_info):
 				if s in num:
 					tmp_number = 1
 			if not(tmp_lower and tmp_upper and tmp_number):
-				return "Пароль должен содержать заглавные и строчные буквы, а так же цифры", field
+				return "Пароль должен содержать заглавные и строчные буквы, а также цифры", field
 
 		if len(user_info[field]) < min_size:
 			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size),  field
