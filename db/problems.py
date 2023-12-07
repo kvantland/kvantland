@@ -150,7 +150,16 @@ def Chiselburg2(cur):
 def Geom2(cur):
 	problems_list = []
 	variants_list = dict()
-
+	
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Найдите угол", hint="Постройте правильный треугольник ADC так, что B лежит внутри, и найдите два равных треугольника.")
+	for X, Y, A in [(104, 22, 0), (108, 24, 0), (112, 26, 0), (116, 28, 0)]:
+		desc = f"Внутри равнобедренного треугольника ABC с основанием AC и углом {X}°  при вершине B  взяли точку M так, что угол MAC равен {Y}°, а угол MCA равен 30°. Найдите угол BMC."
+		desc += read_file('geoma3_2.svg').decode('utf-8')
+		cont = {
+			'correct': A,
+		}
+		variants_list = add_variant_to_list(variants_list, "Найдите угол", desc, json.dumps(cont))
+	
 	add_list(problems_list, variants_list)
 
 
@@ -188,7 +197,8 @@ def CombiRepublic2(cur):
 			'correct': A,
 			}
 		variants_list = add_variant_to_list(variants_list, "Тузы на руках", desc, json.dumps(cont))	
-
+	
+	
 	add_list(problems_list, variants_list)
 
 
