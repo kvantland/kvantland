@@ -33,9 +33,14 @@ min_name_size = 4
 max_name_size = 1000
 min_surname_size = 4
 max_surname_size = 1000
+min_email_size = 3
+max_email_size = 254
 min_school_size = 4
 max_school_size = 1000
 min_city_size = 4
 max_city_size = 1000
 min_clas_size = 1
 max_clas_size = 100
+
+[contacts]
+support_email = 'test@test.com'
