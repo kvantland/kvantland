@@ -48,7 +48,7 @@ def show_buttons(**kwargs):
 	yield from show_hint_button(**kwargs)
 
 def show_question(db, variant, hint_mode):
-	user_id = require_user()
+	user_id = require_user(db)
 	db.execute('select город, Город.название, Тип.код, Задача.название, описание, изображение, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
 	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost}
@@ -106,6 +106,7 @@ def show_question(db, variant, hint_mode):
 		yield f'<img class="picture" src="/static/problem/{image}">'
 	yield '</main>'
 	yield '</div>'
+	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
 	if script:
 		yield f'<script type="text/ecmascript">{script}</script>'
 
@@ -162,8 +163,8 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</main>'
 	yield '</div>'
 
-def require_user():
-	if (user_id := user.current_user()) == None:
+def require_user(db):
+	if (user_id := user.current_user(db)) == None:
 		raise HTTPError(403, 'Требуется вход')
 	return user_id
 
@@ -182,7 +183,7 @@ def get_past_answer_correctness(db, user_id, var_id):
 
 @route('/problem/<var_id:int>/')
 def problem_show(db, var_id):
-	user_id = require_user()
+	user_id = require_user(db)
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
@@ -208,7 +209,7 @@ def problem_answer(db, var_id):
 	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
 	type_ = db.fetchall()[0][0]
 	
-	user_id = require_user()
+	user_id = require_user(db)
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		redirect('')
@@ -235,7 +236,7 @@ def problem_answer(db, var_id):
 
 
 def _request_hint(db, var_id):
-	user_id = require_user()
+	user_id = require_user(db)
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		return

@@ -57,8 +57,8 @@ for field in all_info:
 		option_info[field_name] = options
 
 @route('/reg')
-def reg_from():
-	if current_user() != None:
+def reg_from(db):
+	if current_user(db) != None:
 		redirect('/')
 	yield from display_registration_form(empty_user_info())
 

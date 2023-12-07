@@ -37,7 +37,7 @@ def finished(db, user_id):
 
 @route('/')
 def show_land(db):
-	user_id = user.current_user()
+	user_id = user.current_user(db)
 	if finished(db, user_id):
 		redirect("/final_page")
 	yield '<!DOCTYPE html>'
@@ -75,7 +75,7 @@ def show_land(db):
 
 @route('/rules')
 def show_land(db):
-	user_id = user.current_user()
+	user_id = user.current_user(db)
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
@@ -95,7 +95,7 @@ def show_land(db):
 
 @route('/final_page')
 def show_result(db):
-	user_id = user.current_user()
+	user_id = user.current_user(db)
 	db.execute('update Ученик set закончил=true where ученик=%s', (user_id, ))
 	db.execute('select счёт from Ученик where ученик= %s', (user_id, ))
 	(score, ), = db.fetchall()

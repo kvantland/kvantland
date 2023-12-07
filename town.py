@@ -8,7 +8,7 @@ import user
 
 @route('/town/<town:int>/')
 def show_town(db, town):
-	user_id = user.current_user()
+	user_id = user.current_user(db)
 
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
