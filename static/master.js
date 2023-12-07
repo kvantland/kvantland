@@ -1,39 +1,48 @@
-window.confirm_answer = confirm_answer // HACK make it available to non-modules, for a reason you’d better not think of
+window.confirm_answer = confirm_answer// HACK make it available to non-modules, for a reason you’d better not think of
 
 function confirm_answer(ev) {
 	if (!confirm('Готовы отправить ответ? Передумать будет нельзя!'))
 		ev.preventDefault()
+	else
+		save_progress()
 }
 
 function confirm_hint(ev) {
-	if (!confirm('Точно запросить подсказку?'))
+	if (!confirm('Вы точно хотите получить подсказку? Её стоимость 1 квантик.'))
 		ev.preventDefault()
+	else
+		hint_save()
 }
 
-for (let form of document.querySelectorAll("form.problem")) {
-	form.addEventListener('submit', confirm_answer)
-}
+for (let form of document.querySelectorAll("form.problem"))
+	form.onsubmit = function(e){confirm_answer(e)}
 
-for (let form of document.querySelectorAll("form.hint")) {
-	form.addEventListener('submit', confirm_hint)
-}
+for (let form of document.querySelectorAll("form.hint"))
+	form.onsubmit = function(e){confirm_hint(e)}
 
 var progress = document.createElement('input');
 progress.type = 'hidden';
 progress.name = 'progress';
 
-var send_button = document.querySelector('#send');
-var interactive = document.querySelector('#interactive_problem_form');
-var form = document.querySelector('#problem_form');
+if (document.querySelector('#problem_form') && !document.querySelector("input[name='progress']"))
+	document.querySelector('#problem_form').appendChild(progress);
 
-form.appendChild(progress);
-
-function save_progress(){
+function hint_save(){
+	var interactive = document.querySelector('#interactive_problem_form');
+	var form = document.querySelector('#problem_form');
 	if (interactive)
-		progress.value = interactive.outerHTML;
+		localStorage.setItem("solution", interactive.outerHTML);
 	else
-		progress.value = form.outerHTML;
+		localStorage.setItem("solution", form.outerHTML);
+	localStorage.setItem("answer", document.querySelector("input[name='answer']").value);
 }
 
-send_button.addEventListener('click', save_progress);
+function save_progress(){
+	var progress = document.querySelector("input[name='progress']");
+	var interactive = document.querySelector('#interactive_problem_form');
+	if (interactive)
+		progress.value = document.querySelector('#interactive_problem_form').outerHTML;
+	else
+		progress.value = document.querySelector('#problem_form').outerHTML;
+}
 
