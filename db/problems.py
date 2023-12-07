@@ -177,7 +177,7 @@ def Golovolomsk2(cur):
 	problems_list = []
 	variants_list = dict()
   
-  problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'tic-tac-toe', "Крестики-нолики")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'tic-tac-toe', "Крестики-нолики")
 	for mask, correct in [
 				[[['-', 0, 1], ['-', 0, '-'], ['-', 1, '-']], [(2, 2)]],
 				[[['-', 0, '-'], [0, 1, '-'], ['-', 1, '-']], [(2, 0), (2, 2)]],
