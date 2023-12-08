@@ -197,6 +197,7 @@ function recalc_answer() {
 }
 
 let dragger, chairs, is_valid
+chairs = []
 
 
 dragger = new Dragger()
@@ -205,30 +206,37 @@ new PersonSource({x: x_persons, y: y_persons}, {type: "liar", title: "Лжец"}
 new PersonSource({x: x_persons, y: y_persons + D_persons}, {type: "truthful", title: "Рыцарь"})
 new PersonSource({x: x_persons, y: y_persons + 2 * D_persons}, {type: "sly", title: "Хитрец"})
 
-for (let person of document.querySelector('#layer_persons').querySelectorAll('.grabbable'))
-{
-	let pos = person.getAttribute('transform')
-	let [x_pos_row, y_pos_row] = pos.split(' ')
-	let [x_extra, x_pos] = x_pos_row.split('(')
-	let [y_pos, y_extra] = y_pos_row.split(')')
-	if (person.classList.contains('liar'))
-		new Person({x: x_pos, y: y_pos}, {type: "liar", title: "Лжец"})
-	if (person.classList.contains('truthful'))
-		new Person({x: x_pos, y: y_pos}, {type: "truthful", title: "Рыцарь"})
-	if (person.classList.contains('sly'))
-		new Person({x: x_pos, y: y_pos}, {type: "sly", title: "Хитрец"})
-	person.parentNode.removeChild(person)
-}
-
-document.addEventListener("DOMContentLoaded", chairs_build)
+chairs_build();
 
 function chairs_build()
 {
-	chairs = []
 	for (let k = 0; k < N; k++) {
 		let phi = 2 * Math.PI * k / N
 		chairs[k] = new Chair(layer_table, table_x + R * Math.cos(phi), table_y + R * Math.sin(phi))
 	}
+}
+
+for (var person of document.querySelector('#layer_persons').querySelectorAll('.grabbable'))
+{
+	var pos = person.getAttribute('transform')
+	var [x_pos_row, y_pos_row] = pos.split(', ')
+	var [x_extra, x_pos] = x_pos_row.split('(')
+	var [y_pos, y_extra] = y_pos_row.split(')')
+	if (person.classList.contains('liar'))
+		var update_person = new Person({x: x_pos, y: y_pos}, {type: "liar", title: "Лжец"})
+	if (person.classList.contains('truthful'))
+		var update_person = new Person({x: x_pos, y: y_pos}, {type: "truthful", title: "Рыцарь"})
+	if (person.classList.contains('sly'))
+		var update_person = new Person({x: x_pos, y: y_pos}, {type: "sly", title: "Хитрец"})
+	for (var find_chair of chairs)
+	{
+		if (Math.abs(parseFloat(find_chair.pos.x) - parseFloat(x_pos)) < 0.001 && Math.abs(parseFloat(find_chair.pos.y) - parseFloat(y_pos)) < 0.001)
+		{
+			update_person.chair = find_chair;
+			find_chair.person = update_person;
+		}
+	}
+	person.parentNode.removeChild(person)
 }
 
 problem_form.addEventListener("submit", (e) => {
