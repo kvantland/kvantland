@@ -22,12 +22,23 @@ def login_attempt(db):
 	user = get_user()
 	login = 'vk#' + str(user['id'])
 	password, name, surname, city, school = (None, None, None, None, None)
-	name = user['first_name']
-	surname = user['last_name']
-	city = user['city']['title']
-	if user['schools']:
+	try:
+		name = user['first_name']
+	except KeyError:
+		pass
+	try:
+		surname = user['last_name']
+	except KeyError:
+		pass
+	try:
+		city = user['city']['title']
+	except KeyError:
+		pass
+	try:
 		school = user['schools'][0]['name']
-	if (user := vk_check_login(db, login)) != None:
+	except KeyError:
+		pass
+	if (user := vk_check_login(db, login)) != None:	
 		do_login(user)
 	else:
 		user = add_user(login, name, surname, city, school, password, db)
