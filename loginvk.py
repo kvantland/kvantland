@@ -34,10 +34,11 @@ def login_attempt(db):
 		city = user['city']['title']
 	except KeyError:
 		pass
-	try:
-		school = user['schools'][0]['name']
-	except KeyError:
-		pass
+	if user['schools']:
+		try:
+			school = user['schools'][0]['name']
+		except KeyError:
+			pass
 	if (user := vk_check_login(db, login)) != None:	
 		do_login(user)
 	else:
