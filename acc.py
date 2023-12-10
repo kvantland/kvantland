@@ -70,7 +70,7 @@ def display_pers_acc(db, err='', user_info=empty_user_info()):
 	yield '<div class="acc_header"> Личный кабинет </div>'
 	yield '<div class="acc_form">'
 	yield f'<form method="post" class="acc" style="height: {form_size}px">'
-	start_user_info = get_user(db, current_user())
+	start_user_info = get_user(db, current_user(db))
 	for i in range(len(all_info)):
 		field = all_info[i]
 		if user_info[field[0]]:
