@@ -127,6 +127,8 @@ function update_figures()
 			update_figures();
 		}
 		figure.onmouseup = function(event){
+			if (!document.querySelector('.targeted'))
+				return;
 			var min_diff = 10 ** 9;
 			var best_square = '';
 			for (const square of board){
