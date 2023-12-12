@@ -37,7 +37,7 @@ function check_if_empty(square){
 	for (const figure of all_figures){
 		if (figure.classList.contains('choiced')){
 			if (figure.getAttribute('y') == square.getAttribute('y') && figure.getAttribute('x') == square.getAttribute('x'))
-				return false;
+				figure.parentNode.removeChild(figure);
 		}
 	}
 	return true;
