@@ -463,7 +463,19 @@ def CombiRepublic2(cur):
 			}
 		variants_list = add_variant_to_list(variants_list, "Тузы на руках", desc, json.dumps(cont))	
 	
-	
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'rook_and_pawns', "Игра ладья и пешки")
+	for N, A in [
+		([[3,4], [6, 5], [4, 1]], 15),
+		
+			]:
+		desc = f"""Черная ладья стоит в левом нижнем углу шахматной доски, на которой также стоят несколько черных пешек.
+				Двое по очереди перемещают ладью на любое количество клеток вправо или вверх. Запрещено перепрыгивать через пешку или ставить ладью на клетку, где стоит пешка.
+				Выигрывает тот, кто поставит ладью в правую верхнюю клетку. Какой ход вы должны сделать вначале, чтобы выиграть при любых действиях вашего соперника?"""
+		cont = {
+			'cur': N,
+			'correct': A,
+			}
+		variants_list = add_variant_to_list(variants_list, "Игра ладья и пешки", desc, json.dumps(cont))	
 	add_list(problems_list, variants_list)
 
 
