@@ -67,6 +67,7 @@ def show_land(db):
 		yield f'<circle class="town-icon" r="30px" fill="rgba(0, 0, 0, 0)" stroke="currentColor" stroke-width="0.2em" />'
 		yield f'<rect fill="#FF6A44" class="town-name" height="30px" width="{max(len(name) * 16, 90)}px" y="-69px" x="{-len(name) * (8 + (90 > len(name) * 16))}"/>'
 		yield f'<text class="town-name" text-anchor="middle" y="-45px">{name}</text>'
+		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{название}</text>'
 		yield f'</a>'
 	yield '</svg>'
 	yield '<div class="contacts_block">'
