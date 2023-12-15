@@ -22,7 +22,7 @@ def show_town(db, town):
 	yield f'<h1>{name}</h1>'
 	yield '</div>'
 	yield '<svg class="map" viewBox="0 0 1280 720">'
-	yield f'<image href="/static/map/town-{town}.jpg" width="1280" height="720" preserveAspectRatio="xMidYMid meet" />'
+	yield f'<image href="/static/map/town-{town}.png" width="1280" height="720" preserveAspectRatio="xMidYMid meet" />'
 
 	if user_id is not None:
 		db.execute('select вариант, положение, баллы, название, ответ_верен from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = %s and ученик = %s', (town, user_id))
