@@ -11,7 +11,7 @@ def entry_form(data, kwargs):
 	plot_width = pad + board_side + inner_side 
 	plot_height = board_side
 	yield '<input name="answer" type="hidden" />'
-	yield f'<svg class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible">'
+	yield f'<svg version="1.1" class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	for y in range(0, size + 1):
 		yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + size * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
 	for x in range(0, size + 1):
