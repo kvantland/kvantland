@@ -19,7 +19,7 @@ def entry_form(data, kwargs):
     for x in range(0, size):
         for y in range(0, size):
             if (x + y) % 2 == 1:
-                if (x == 0 and y != 7) or (y == 7 and x != 0):
+                if (x == 0 and y != size - 1) or (y == size - 1 and x != 0):
                     yield f'<rect class="free brown" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
                 elif [x, y] in data['cur']:
                     yield f'<rect class="occupied brown" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
@@ -27,15 +27,15 @@ def entry_form(data, kwargs):
                 else:
                     yield f'<rect class="brown" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
             else:
-                if (x == 0 and y != 7) or (y == 7 and x != 0):
+                if (x == 0 and y != size - 1) or (y == size - 1 and x != 0):
                     yield f'<rect class="free white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
                 elif [x, y] in data['cur']:
                     yield f'<rect class="occupied white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
                     yield f'<image class="pawn passive choiced" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/pawn.png" />'
                 else:
                     yield f'<rect class="white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
-    yield f'<image class="rook passive choiced" x="{0 * side + line_width}" y ="{7 * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/rook.png" />'
-    yield f'<image class="finish passive choiced" x="{7 * side + line_width}" y ="{0 * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/question.png" />'
+    yield f'<image class="rook passive choiced" x="{0 * side + line_width}" y ="{(size - 1) * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/rook.png" />'
+    yield f'<image class="finish passive choiced" x="{(size - 1) * side + line_width}" y ="{0 * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/question.png" />'
     yield '</svg>'
 
 def validate(data, answer):
