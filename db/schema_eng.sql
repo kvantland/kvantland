@@ -38,8 +38,8 @@ create table Variant (
 	, content jsonb not null
 );
 
-create table User (
-	user int primary key generated always as identity
+create table Student (
+	student int primary key generated always as identity
 	, login text not null unique
 	, password text
 	, name text
@@ -53,13 +53,13 @@ create table User (
 );
 
 create table AvailableProblem (
-	user int not null references User on delete cascade,
+	student int not null references Student on delete cascade,
 	variant int not null references Variant on delete restrict,
-	is_true bool null,
-	answer_given bool generated always as (answer_given is not null) stored,
+	answer_true bool null,
+	answer_given bool generated always as (answer_true is not null) stored,
 	hint_taken bool not null default false,
 	answer text,
 	solution text,
-	primary key (user, variant)
+	primary key (student, variant)
 );
 
