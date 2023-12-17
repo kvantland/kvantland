@@ -108,7 +108,7 @@ def IslandOfLiars2(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'radio', "Выборы мэра острова", hint="Вначале правдолюбов не может быть больше, чем лжецов, так как иначе каждый из них солгал. Но и лжецов не может быть гораздо больше, чем правдолюбов, иначе каждый из них сказал правду.")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'radio', "Выборы мэра острова", image="Einstein.png",hint="Вначале правдолюбов не может быть больше, чем лжецов, так как иначе каждый из них солгал. Но и лжецов не может быть гораздо больше, чем правдолюбов, иначе каждый из них сказал правду.")
 	for N, A in [
 			(15, 1),
 			(17, 1),
@@ -2320,7 +2320,7 @@ def CombiRepublic2(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках", image="Kvantik.png")
 	for N, A in [
 			("у игрока оказался хотя бы один туз?", 896),
 		  ("у игрока оказался ровно один туз?", 224),
