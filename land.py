@@ -49,7 +49,7 @@ def show_land(db):
 	yield f'<h1 class="title">Квантландия</h1>'
 	yield '</div>'
 	yield '<svg class="map" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-	yield f'<image href="/static/map/land.jpg" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
+	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
 	if tournament_completed(db, user_id):
 		yield '<a transform="translate(640 0)" href="/final_page">' 
 		yield '<text class="town-name to_results" font-size="2em" text-anchor="middle" y="2em"> Завершить турнир </text>'
