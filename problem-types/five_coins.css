@@ -9,47 +9,55 @@
 }
 
 .outside{
+	filter: grayscale(100%);
 	fill: url(#cupShadowOutside);
 	stroke: #A89800;
 	stroke-width: 2;
 }
 
 .inside{
+	filter: grayscale(100%);
 	fill: url(#cupShadowInside);
 	stroke: #9E8E00;
 	stroke-width: 2;
 }
 
 line{
+	filter: grayscale(100%);
 	stroke: #544C01;
 	stroke-width: 2;
 }
 
 .hinge{
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
 	fill: #B0A000;
 	stroke: #887A01;
 	stroke-width: 4;
 }
 
 .plank{
+	filter: hue-rotate(-24.74deg) saturate(60.78%) brightness(115.49%);;
 	fill: url(#blankShadow);
 	stroke: #9E8E00;
 	stroke-width: 2;
 }
 
 .base_plank{
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
 	fill: url(#baseBlankShadow);
 	stroke: #9E8E00;
 	stroke-width: 2;
 }
 
 .base_inside{
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
 	fill: #C9B700;
 	stroke: #9E8E00;
 	stroke-width: 2;
 }
 
 .base_outside{
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
 	stroke: #7b7b3b;
 	stroke-width: 2;
 }
@@ -68,15 +76,15 @@ path.base_outside{
 	stroke-width: 4;
 }
 
-text {
-	font-weight: 1000;
+text{
 	font-family: inherit;
-	font-size: 2em;
 	text-anchor: middle;
 	dominant-baseline: central;
 }
 
 text.coin_text{
+	font-weight: 1000;
+	font-size: 2.3em;
 	fill: #705e00;
 }
 
@@ -104,4 +112,20 @@ text.coin_text{
 	text-align: center;
 	border-radius: 0.5em;
 	border: #9a9aa7 1px solid;
+}
+
+.coin_container_drag{
+	fill: #e9e9ed;
+	stroke:  #9a9aa7;
+	stroke-width: 2;
+}
+
+rect.coin_container_name{
+	fill: #e9e9ed;
+	stroke:  #9a9aa7;
+	stroke-width: 2;
+}
+
+text.coin_container_name{
+	font-size: 0.8em;
 }
