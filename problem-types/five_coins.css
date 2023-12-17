@@ -1,0 +1,107 @@
+.plot_area {
+	margin: 40px auto 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;	
+	z-index: 1;
+	position: relative;
+	user-select: none
+}
+
+.outside{
+	fill: url(#cupShadowOutside);
+	stroke: #A89800;
+	stroke-width: 2;
+}
+
+.inside{
+	fill: url(#cupShadowInside);
+	stroke: #9E8E00;
+	stroke-width: 2;
+}
+
+line{
+	stroke: #544C01;
+	stroke-width: 2;
+}
+
+.hinge{
+	fill: #B0A000;
+	stroke: #887A01;
+	stroke-width: 4;
+}
+
+.plank{
+	fill: url(#blankShadow);
+	stroke: #9E8E00;
+	stroke-width: 2;
+}
+
+.base_plank{
+	fill: url(#baseBlankShadow);
+	stroke: #9E8E00;
+	stroke-width: 2;
+}
+
+.base_inside{
+	fill: #C9B700;
+	stroke: #9E8E00;
+	stroke-width: 2;
+}
+
+.base_outside{
+	stroke: #7b7b3b;
+	stroke-width: 2;
+}
+
+ellipse.base_outside{
+	fill: url(#cupShadowOutside);
+}
+
+path.base_outside{
+	fill: url(#cupShadowOutside);
+}
+
+.coin{
+	fill: url(#coinShadow);
+	stroke: #cbab00;
+	stroke-width: 4;
+}
+
+text {
+	font-weight: 1000;
+	font-family: inherit;
+	font-size: 2em;
+	text-anchor: middle;
+	dominant-baseline: central;
+}
+
+text.coin_text{
+	fill: #705e00;
+}
+
+.interface_zone{
+	display: flex;
+	padding: 0 auto 0 auto;
+	flex-direction: column;
+}
+
+.interface_zone *{
+	margin-bottom: 20px;
+	width: 8em;
+}
+
+.interface_zone button{
+	padding: 0.3em 1.0em;
+}
+
+.remaining_weightings *{
+	margin-bottom: 0;
+}
+
+.remaining_weightings{
+	background-color: #e9e9ed;
+	text-align: center;
+	border-radius: 0.5em;
+	border: #9a9aa7 1px solid;
+}

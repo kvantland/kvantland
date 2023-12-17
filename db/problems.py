@@ -2349,6 +2349,29 @@ def CombiRepublic2(cur):
 			'correct': A,
 			}
 		variants_list = add_variant_to_list(variants_list, "Игра ладья и пешки", desc, json.dumps(cont))	
+
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 1, 'five_coins', "Пять монет")
+	for perm in [
+			[0, 1, 2, 3, 4],
+			[0, 1, 3, 2, 4],
+			[0, 2, 1, 3, 4],
+			[0, 2, 3, 1, 4],
+			[0, 3, 1, 2, 4],
+			[0, 3, 2, 1, 4],
+			[4, 1, 2, 3, 0],
+			[4, 1, 3, 2, 0],
+			[4, 2, 1, 3, 0],
+			[4, 2, 3, 1, 0],
+			[4, 3, 1, 2, 0],
+			[4, 3, 2, 1, 0]]:
+		desc = """У эксперта есть пять золотых монет. Известно, что их массы равны 10, 20, 20, 30 и 60 граммов,
+				но эксперт не знает, где какая монета. Он выбрал три монеты и сравнил их с двумя оставшимися на чашечных весах без гирь.
+				Весы показали равенство. Определите массу каждой монеты ещё за два взвешивания."""
+		cont = {
+			'perm': perm,
+			}
+		variants_list = add_variant_to_list(variants_list, "Пять монет", desc, json.dumps(cont))
+
 	add_list(problems_list, variants_list)
 
 
