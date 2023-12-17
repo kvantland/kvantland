@@ -17,7 +17,7 @@ def entry_form(data, kwargs):
 	y_persons = 0.5 * D_persons
 
 	yield f"""
-		<svg version="1.1" id="playground" height="{2 * r_outer}px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<svg id="playground" height="{2 * r_outer}px">
 			<g id="layer_table">
 				<circle class="table" r="{r_table}" cx="{r_outer}" cy="{r_outer}">
 			</g>

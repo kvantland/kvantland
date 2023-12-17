@@ -1,4 +1,4 @@
-<svg version="1.1" class="picture geometry" height="16em" viewBox="-16 -20 432 192" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg class="picture geometry" height="16em" viewBox="-16 -20 432 192">
 	<path d="M 0,150 l 200,-150 200,150 z  M 200,0 l -100,150" />
 	<text x="0" y="145" text-anchor="end">A</text>
 	<text x="400" y="145">C</text>
