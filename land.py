@@ -48,7 +48,7 @@ def show_land(db):
 	yield from user.display_banner(db)
 	yield f'<h1 class="title">Квантландия</h1>'
 	yield '</div>'
-	yield '<svg class="map" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield '<svg class="map" viewBox="0 0 1280 720">'
 	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
 	if tournament_completed(db, user_id):
 		yield '<a transform="translate(640 0)" href="/final_page">' 
@@ -62,7 +62,7 @@ def show_land(db):
 		clazz = "town"
 		if not открыт:
 			clazz += " town_completed"
-		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{город}/">'
+		yield f'<a class="{clazz}" transform="translate({x} {y})" href="/town/{город}/">'
 		yield f'<circle class="town-icon" r="0.3em" fill="rgba(0, 0, 0, 0)" stroke="currentColor" stroke-width="0.2em" />'
 		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{название}</text>'
 		yield f'</a>'
@@ -106,7 +106,7 @@ def show_result(db):
 	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield '</div>'
-	yield '<svg class="map final_result_area" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield '<svg class="map final_result_area" viewBox="0 0 1280 720">'
 	yield f'<image href="/static/map/land.jpg" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
 	yield '<text text-anchor="middle" x="640" y="4em"> Поздравляем! </text>'
 	yield '<text text-anchor="middle" x="640" y="6em"> Вы успешно завершили турнир. </text>'
