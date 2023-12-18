@@ -29,35 +29,35 @@ line{
 }
 
 .hinge{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
 	fill: #B0A000;
 	stroke: #887A01;
 	stroke-width: 4;
 }
 
 .plank{
-	filter: hue-rotate(-24.74deg) saturate(60.78%) brightness(115.49%);;
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
 	fill: url(#blankShadow);
 	stroke: #9E8E00;
 	stroke-width: 2;
 }
 
 .base_plank{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
 	fill: url(#baseBlankShadow);
 	stroke: #9E8E00;
 	stroke-width: 2;
 }
 
 .base_inside{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
 	fill: #C9B700;
 	stroke: #9E8E00;
 	stroke-width: 2;
 }
 
 .base_outside{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(102.16%);
+	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
 	stroke: #7b7b3b;
 	stroke-width: 2;
 }
@@ -89,6 +89,7 @@ text.coin_text{
 }
 
 .interface_zone{
+	z-index: 1;
 	display: flex;
 	padding: 0 auto 0 auto;
 	flex-direction: column;
@@ -128,4 +129,16 @@ rect.coin_container_name{
 
 text.coin_container_name{
 	font-size: 0.8em;
+}
+
+.coin{
+	cursor: grab;
+}
+
+.targeted{
+	cursor: grabbing;
+}
+
+svg{
+	z-index: 2;
 }
