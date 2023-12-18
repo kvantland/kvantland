@@ -3,7 +3,7 @@ def entry_form(data, kwargs):
 	points = data['points']
 	yield '<input name="answer" type="hidden" />'
 	yield '<div class="plot_area" style="margin-top: 30px">'
-	yield'<svg class="full_window" overflow="visible">'
+	yield'<svg version="1.1" class="full_window" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	for i in range(9):
 		x = i * 40 + 6
 		yield f'<line class="grid_line" x1="{x}" y1="{7}" x2="{x}" y2="{8 * 40 + 6}" />'
