@@ -22,10 +22,10 @@ def entry_form(data, kwargs):
 				yield f'<rect class="orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 			else:
 				yield f'<rect class="white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
-	yield f'<image class="horse passive" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/horse.png" />'
-	yield f'<image class="horse active" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/horse.png" />'
-	yield f'<image class="bishop passive" x="{pad + board_width}" y="{inner_side + line_width * 2}" width="{inner_side}" height="{inner_side}" href="/static/bishop.png" />'
-	yield f'<image class="bishop active" x="{pad + board_width}" y="{inner_side + line_width * 2}" width="{inner_side}" height="{inner_side}" href="/static/bishop.png" />'
+	yield f'<image class="horse passive" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/horse_b.png" />'
+	yield f'<image class="horse active" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/horse_b.png" />'
+	yield f'<image class="bishop passive" x="{pad + board_width}" y="{inner_side + line_width * 2}" width="{inner_side}" height="{inner_side}" href="/static/chess/bishop_w.png" />'
+	yield f'<image class="bishop active" x="{pad + board_width}" y="{inner_side + line_width * 2}" width="{inner_side}" height="{inner_side}" href="/static/chess/bishop_w.png" />'
 	yield f'<image class="reload" x = "{pad + board_width}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
 	yield '</svg>'
 
