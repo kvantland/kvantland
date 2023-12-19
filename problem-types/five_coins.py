@@ -1,8 +1,8 @@
 def entry_form(data, kwargs):
 	scale_1 = 0.7
-	cup_yr = 100 * 0.4
+	ellipse_a = 0.45
 	cup_xr = 300 * 0.4
-	ellipse_a = cup_yr / cup_xr
+	cup_yr = cup_xr * ellipse_a
 	cup_under_xr = cup_xr
 	cup_under_yr = cup_yr * 1.5
 	rope_length = 400 * 0.4
@@ -94,7 +94,7 @@ def entry_form(data, kwargs):
 	 			A {base_plank_width / 2} {base_plank_width / 2 * ellipse_a} 0 0 0 {base_plank_width} {base_plank_height}
 	 			V 0
 	 			A {base_plank_width / 2} {base_plank_width / 2 * ellipse_a} 0 0 0 0 0"
-	 			Z" />"""
+	 			/>"""
 	yield f"""<circle class="hinge center" transform="translate(0 {plank_width / 2})"
 			cx="0"
 			cy="0"
@@ -103,7 +103,7 @@ def entry_form(data, kwargs):
 	yield f'<g class="cup_with_rope left" transform="translate({-cup_xr} {plank_width / 2})">'
 	yield f'<g class="cup left" transform="translate(0 {rope_length})">'
 	yield f'<path transform="translate(0 {cup_yr})" class="outside" d="M  0 0 A {cup_under_xr} {cup_under_yr} 0 0 0 {cup_under_xr * 2} 0 Z" />'
-	yield f"""<ellipse class="inside" 
+	yield f"""<ellipse class="inside left" 
 				cx="{cup_xr}"
 				cy="{cup_yr}"
 				rx="{cup_xr}"
@@ -131,8 +131,8 @@ def entry_form(data, kwargs):
 	yield '</g>'
 	yield f'<g class="cup_with_rope right" transform="translate({plank_length - cup_xr} {plank_width / 2})">'
 	yield f'<g class="cup right" transform="translate(0 {rope_length})">'
-	yield f'<path transform="translate(0 {cup_yr})" class="outside" d="M  0 0 A {cup_under_xr} {cup_under_yr} 0 0 0 {cup_under_xr * 2} 0 Z" />'
-	yield f"""<ellipse class="inside" 
+	yield f'<path transform="translate(0 {cup_yr})" class="outside" d="M  0 0 A {cup_under_xr} {cup_under_yr} 0 0 0 {cup_under_xr * 2} 0" />'
+	yield f"""<ellipse class="inside right" 
 				cx="{cup_xr}"
 				cy="{cup_yr}"
 				rx="{cup_xr}"
@@ -161,18 +161,19 @@ def entry_form(data, kwargs):
 	yield '</g>'
 	yield f'<g class="drag_zone" transform="translate({(container_width - coin_size) / 2} {svg_height - coin_size - answer_zone_height - answer_zone_pad})">'
 	for i in range(1, 6):
-		yield f'<g class="coin num_{i}" transform="translate({(coin_size + coin_pad) * (i - 1)} 0)">'
+		yield f'<g class="coin num_{i}" transform="translate({(coin_size + coin_pad) * (i - 1) + coin_size / 2} {coin_size / 2})">'
 		yield f'<title> {i} </title>'
-		yield f'<circle cx="{coin_size / 2}" cy="{coin_size / 2}" r="{coin_size / 2}" />'
-		yield f'<text class="coin_text" x="{coin_size / 2}" y="{coin_size / 2}"> {i} </text>'
+		yield f'<circle cx="0" cy="0" r="{coin_size / 2}" />'
+		yield f'<text class="coin_text" x="0" y="0"> {i} </text>'
 		yield '</g>'
 	yield '</g>'
 	yield f'<g class="answer_zone" transform="translate(0 {svg_height - answer_zone_height})">'
+	yield f'<rect class="answer_zone" x="0" y="0" width="{(container_width + container_pad) * 5 - container_pad}" height="{container_height}" />'
 	for i in range(1, 6):
 		yield f'<g class="coin_container" transform="translate({(container_width + container_pad) * (i - 1)} 0)">'
 		yield f'<rect class="coin_container_name" x="0" y="0" width="{container_width}" height="{container_height * cont_a}"/>'
 		yield f'<text class="coin_container_name" x="{container_width / 2}" y="{container_height * cont_a / 2}"> {weight[i - 1]} граммов </text>'
-		yield f'<rect class="coin_container_drag" x=0 y="{container_height * cont_a}" width="{container_width}" height="{container_height * (1 - cont_a)}">'
+		yield f'<rect class="coin_container_drag num_{i}" x=0 y="{container_height * cont_a}" width="{container_width}" height="{container_height * (1 - cont_a)}">'
 		yield '</g>'
 	yield '</g>'
 	yield '</svg>'

@@ -74,6 +74,7 @@ path.base_outside{
 	fill: url(#coinShadow);
 	stroke: #cbab00;
 	stroke-width: 4;
+	cursor: grab;
 }
 
 text{
@@ -131,14 +132,14 @@ text.coin_container_name{
 	font-size: 0.8em;
 }
 
-.coin{
-	cursor: grab;
-}
-
 .targeted{
 	cursor: grabbing;
 }
 
 svg{
 	z-index: 2;
+}
+
+rect.answer_zone{
+	fill:none;
 }
