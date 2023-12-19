@@ -1,5 +1,5 @@
-insert into AvailableProblem (user, variant)
-	select distinct on (user, problem)
-		user, variant
-		from User, Variant
-		order by user, problem, random();
+insert into AvailableProblem (student, variant)
+	select distinct on (student, problem)
+		student, variant
+		from Student, Variant
+		order by student, problem, random();
