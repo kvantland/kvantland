@@ -1,6 +1,5 @@
 drop schema if exists Kvantland cascade;
-create schema Kvantland;
-
+alter schema Квантландия rename to Kvantland;
 set search_path to Kvantland, public;
 
 create table Type_ (
