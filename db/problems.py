@@ -16,16 +16,16 @@ def read_file(name):
 		return f.read()
 
 def get_type_id(cur, type_):
-	cur.execute("select type_ from Type_ where code = %s", (type_, ))
+	cur.execute("select type_ from Kvantland.Type_ where code = %s", (type_, ))
 	if rows := cur.fetchall():
 		return rows[0][0]
-	cur.execute("insert into Type_ (code) values (%s) returning type_", (type_, ))
+	cur.execute("insert into Kvantland.Type_ (code) values (%s) returning type_", (type_, ))
 	if rows := cur.fetchall():
 		return rows[0][0]
 	raise Exception(f"Couldnt add type_ {type_}")
 
 def get_town_id(cur, name):
-	cur.execute("select town from Town where name = %s", (name, ))
+	cur.execute("select town from Kvantland.Town where name = %s", (name, ))
 	(town,), = cur.fetchall()
 	return town
 
@@ -89,17 +89,17 @@ def add_problem(cur, town, points, type_, name, hint=None, hint_cost=None, image
 	type_ = get_type_id(cur, type_)
 	town = get_town_id(cur, town)
 	name = f"{name} ({points} {lang_form(points)})"
-	cur.execute("insert into Problem (town, points, name, type_, image) values (%s, %s, %s, %s, %s) returning problem", (town, points, name, type_, image))
+	cur.execute("insert into Kvantland.Problem (town, points, name, type_, image) values (%s, %s, %s, %s, %s) returning problem", (town, points, name, type_, image))
 	(problem,), = cur.fetchall()
 	if hint:
 		if not hint_cost:
 			hint_cost = 1
-		cur.execute("insert into Hint (problem, content, cost) values (%s, %s, %s)", (problem, hint, hint_cost))
+		cur.execute("insert into Kvantland.Hint (problem, content, cost) values (%s, %s, %s)", (problem, hint, hint_cost))
 	return problem
 
 
 def add_variant(cur, problem, description, content):
-	cur.execute("insert into Variant (problem, description, content) values (%s, %s, %s) returning variant", (problem, description, content))
+	cur.execute("insert into Kvantland.Variant (problem, description, content) values (%s, %s, %s) returning variant", (problem, description, content))
 	(variant,), = cur.fetchall()
 	return variant
 
@@ -2358,17 +2358,17 @@ def update_positions_town(cur, town, problem_count):
 	R = 250
 	base = 0.25
 	y0 += 0.5 * R * (1 - math.cos(math.pi / problem_count))
-	cur.execute("select problem from Problem where town = %s", (town,))
+	cur.execute("select problem from Kvantland.Problem where town = %s", (town,))
 	for k, (problem, ) in enumerate(cur.fetchall()):
 		phi = 2 * math.pi * ((k // 2 + k % 2) / problem_count + base)
 		if k % 2 == 1:
 			x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
 		else:
 			x, y = x0 - R * math.cos(phi), y0 - R * math.sin(phi)
-		cur.execute("update Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
+		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
 
 def update_positions(cur):
-	cur.execute("select town, count(*) from Problem join Town using (town) group by town")
+	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) group by town")
 	for town, problem_count in cur.fetchall():
 		update_positions_town(cur, town, problem_count)
 
