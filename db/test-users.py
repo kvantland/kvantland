@@ -9,7 +9,7 @@ import psycopg
 
 def add_test_accounts(cur):
 	accounts = [(f'tester{k}', base64.b64encode(random.randbytes(6)).decode('ascii')) for k in range(1, 100)]
-	cur.executemany('insert into Ученик (логин, пароль) values (%s, %s)', [(login,  pwhash.hash(password)) for login, password in accounts])
+	cur.executemany('insert into Kvantland.Student (login, password) values (%s, %s)', [(login,  pwhash.hash(password)) for login, password in accounts])
 	with open('testers.txt', 'w') as f:
 		for login, password in accounts:
 			f.write(f'{login}\t{password}\n')

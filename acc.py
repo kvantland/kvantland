@@ -105,7 +105,7 @@ def display_pers_acc(db, err='', user_info=empty_user_info()):
 	yield '</main>'
 
 def get_user(db, user):
-	db.execute('select имя, фамилия, школа, город, класс, счёт, почта from Ученик where ученик= %s', (user, ))
+	db.execute('select name, surname, school, town, clas, score, email from Kvantland.Student where student= %s', (user, ))
 	user_list = list(db.fetchall()[0])
 	user_info = {'name': user_list[0],
 				'surname': user_list[1],
@@ -180,4 +180,4 @@ def set_new_params(db, user_info):
 	new_city = user_info['city']
 	new_class = user_info['clas']
 	new_email = user_info['email']
-	db.execute('update Ученик set имя=%s, фамилия=%s, школа=%s, город=%s, класс=%s, почта=%s where ученик=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(), ))
+	db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, town=%s, clas=%s, email=%s where student=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(), ))

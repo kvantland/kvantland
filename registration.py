@@ -109,13 +109,13 @@ def display_registration_form(user_info, err=None):
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def add_user(db, info):
-	db.execute("insert into Ученик (логин, пароль, имя, фамилия, школа, класс, город, почта) values (%s, %s, %s, %s, %s, %s, %s, %s) returning ученик", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['city'], info['email']))
+	db.execute("insert into Kvantland.Student (login, password, name, surname, school, clas, town, email) values (%s, %s, %s, %s, %s, %s, %s, %s) returning student", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['city'], info['email']))
 	(user, ), = db.fetchall()
-	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
+	db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
 	return int(user)
 
 def check_login(db, login):
-	db.execute("select ученик from Ученик where логин = %s", (login,))
+	db.execute("select student from Kvantland.Student where login = %s", (login,))
 	try:
 		(user,) = db.fetchall()
 	except ValueError:
@@ -144,7 +144,7 @@ def check_format(user_info):
 			tmp_alph = 0
 			for s in user_info[field]:
 				if s != '_' and s != '-' and s not in alph and s not in num:
-					return "Логин должен состоять из английских букв, цифр и символов - и _ <br /> Ваш логин содержит недопустимые символы", field
+					return "Логин должен состоять из английских букв, цифр и символов - и _ <br /> Ваш login содержит недопустимые символы", field
 				if s in alph:
 					tmp_alph = 1
 			if not tmp_alph:
@@ -192,7 +192,7 @@ def login_attempt(db):
 		if not_robot:
 			if check_login(db, user_info['login']):
 				user_info['login'] = ''
-				yield from display_registration_form(user_info, 'К сожалению, пользователь с таким логином уже существует, <br /> попробуйте другой логин')
+				yield from display_registration_form(user_info, 'К сожалению, пользователь с таким loginом уже существует, <br /> попробуйте другой login')
 			else:
 				mes, param_to_change = check_format(user_info)
 				if not mes:

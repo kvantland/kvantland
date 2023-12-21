@@ -12,7 +12,7 @@ def show_town(db, town):
 
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
-	db.execute('select название from Город where город = %s', (town,))
+	db.execute('select name from Kvantland.Town where town = %s', (town,))
 	(name, ), = db.fetchall()
 	yield f'<title>{name}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
@@ -25,9 +25,9 @@ def show_town(db, town):
 	yield f'<image href="/static/map/town-{town}.png" width="1280" height="720" preserveAspectRatio="xMidYMid meet" />'
 
 	if user_id is not None:
-		db.execute('select вариант, положение, баллы, название, ответ_верен from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = %s and ученик = %s', (town, user_id))
+		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and student = %s', (town, user_id))
 	else:
-		db.execute('select null, положение, баллы, название, null from Задача where город = %s', (town,))
+		db.execute('select null, position, points, name, null from Kvantland.Problem where town = %s', (town,))
 	for variant, position, points, name, ans_true in db.fetchall():
 		try:
 			x, y = position

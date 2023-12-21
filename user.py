@@ -11,7 +11,7 @@ def display_banner(db):
 	yield '<nav class="user_nav">'
 	yield '<ul class="flex_ul">'
 	if user != None:
-		db.execute('select coalesce(имя, логин), счёт from Ученик where ученик = %s', (user,))
+		db.execute('select coalesce(name, login), score from Kvantland.Student where student = %s', (user,))
 		(login, money), = db.fetchall()
 		yield f'<li>{escape(login)}'
 		yield f'<li>Счёт: {money}'
