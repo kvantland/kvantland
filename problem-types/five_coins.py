@@ -1,3 +1,5 @@
+import sys
+
 def entry_form(data, kwargs):
 	scale_1 = 0.7
 	ellipse_a = 0.45
@@ -18,7 +20,7 @@ def entry_form(data, kwargs):
 	base_inside_xr = cup_xr * 0.7
 	coin_size = 70
 	drag_pad = 30
-	weight = [10, 20, 20, 30, 60]
+	weight = data['weight']
 	answer_zone_height = 120
 	container_height = answer_zone_height
 	container_width = 100
@@ -63,7 +65,7 @@ def entry_form(data, kwargs):
 	yield '</linearGradient>'
 
 	yield '</defs>'
-	yield f'<g class="scales" transform="scale({scale_1}) translate({cup_xr} {base_plank_up + base_plank_width / 4})">'
+	yield f'<g class="scales start" transform="scale({scale_1}) translate({cup_xr} {base_plank_up + base_plank_width / 4})">'
 	yield f"""<rect class="plank" 
 				x="0"
 				y="0"
@@ -75,8 +77,7 @@ def entry_form(data, kwargs):
 				V {basement_hight}
 				A {basement_width / 2} {basement_width / 2 * ellipse_a} 0 0 0 {basement_width} {basement_hight}
 				V 0
-				H 0
-				Z" />"""
+				H 0" />"""
 	yield f"""<ellipse class="base_outside"
 	 			cx="0"
 	 			cy="{base_plank_height - base_plank_up}"
@@ -93,21 +94,24 @@ def entry_form(data, kwargs):
 	 			V {base_plank_height}
 	 			A {base_plank_width / 2} {base_plank_width / 2 * ellipse_a} 0 0 0 {base_plank_width} {base_plank_height}
 	 			V 0
-	 			A {base_plank_width / 2} {base_plank_width / 2 * ellipse_a} 0 0 0 0 0"
-	 			/>"""
+	 			A {base_plank_width / 2} {base_plank_width / 2 * ellipse_a} 0 0 0 0 0"/>"""
 	yield f"""<circle class="hinge center" transform="translate(0 {plank_width / 2})"
 			cx="0"
 			cy="0"
 			r="{hinge_r * 2}" />"""
 	yield '</g>'
+	yield f'<g class="movement left">'
 	yield f'<g class="cup_with_rope left" transform="translate({-cup_xr} {plank_width / 2})">'
 	yield f'<g class="cup left" transform="translate(0 {rope_length})">'
-	yield f'<path transform="translate(0 {cup_yr})" class="outside" d="M  0 0 A {cup_under_xr} {cup_under_yr} 0 0 0 {cup_under_xr * 2} 0 Z" />'
 	yield f"""<ellipse class="inside left" 
 				cx="{cup_xr}"
 				cy="{cup_yr}"
 				rx="{cup_xr}"
 				ry="{cup_yr}" />"""
+	yield f"""<path transform="translate(0 {cup_yr})" class="outside" d="
+				M  0 0 
+				A {cup_under_xr} {cup_under_yr} 0 0 0 {cup_under_xr * 2} 0
+				A {cup_xr} {cup_yr} 0 0 1 0 0" />"""
 	yield '</g>'
 	yield f"""<line 
 				x1="{cup_xr}"
@@ -129,14 +133,19 @@ def entry_form(data, kwargs):
 				cy="0"
 				r="{hinge_r}"/>"""
 	yield '</g>'
+	yield '</g>'
+	yield '<g class="movement right">'
 	yield f'<g class="cup_with_rope right" transform="translate({plank_length - cup_xr} {plank_width / 2})">'
 	yield f'<g class="cup right" transform="translate(0 {rope_length})">'
-	yield f'<path transform="translate(0 {cup_yr})" class="outside" d="M  0 0 A {cup_under_xr} {cup_under_yr} 0 0 0 {cup_under_xr * 2} 0" />'
 	yield f"""<ellipse class="inside right" 
 				cx="{cup_xr}"
 				cy="{cup_yr}"
 				rx="{cup_xr}"
 				ry="{cup_yr}" />"""
+	yield f"""<path transform="translate(0 {cup_yr})" class="outside" d="
+				M  0 0 
+				A {cup_under_xr} {cup_under_yr} 0 0 0 {cup_under_xr * 2} 0
+				A {cup_xr} {cup_yr} 0 0 1 0 0" />"""
 	yield '</g>'
 	yield f"""<line 
 				x1="{cup_xr}"
@@ -159,6 +168,7 @@ def entry_form(data, kwargs):
 				r="{hinge_r}"/>"""
 	yield '</g>'
 	yield '</g>'
+	yield '</g>'
 	yield f'<g class="drag_zone" transform="translate({(container_width - coin_size) / 2} {svg_height - coin_size - answer_zone_height - answer_zone_pad})">'
 	for i in range(1, 6):
 		yield f'<g class="coin num_{i}" transform="translate({(coin_size + coin_pad) * (i - 1) + coin_size / 2} {coin_size / 2})">'
@@ -178,13 +188,38 @@ def entry_form(data, kwargs):
 	yield '</g>'
 	yield '</svg>'
 	yield '<div class="interface_zone">'
-	yield '<button type="submit"> Взвесить! </button>'
-	yield '<button> Очистить весы </button>'
+	yield '<button type="button" class="weight"> Взвесить! </button>'
+	yield '<button type="button" class="clean"> Очистить весы </button>'
 	yield '<div class="remaining_weightings">'
-	yield '<p> Осталось </br> взвешиваний: 2<p>'
+	yield f"<p> Осталось </br> взвешиваний: {max(0, data['weightings_amount'] - kwargs['step'])}<p>"
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
 
+
+def steps(step_num, params, data):
+	if step_num > 2:
+		return 'no_tries'
+	weight = data['weight']
+	left, right = 0, 0
+	conf = params['conf']
+	for i in range(len(conf)):
+		if conf[i] == '1':
+			left += weight[data['perm'].index(i + 1)]
+		elif conf[i] == '2':
+			right += weight[data['perm'].index(i + 1)]
+	if left > right:
+		return 'left'
+	elif right > left:
+		return 'right'
+	return 'equal'
+
+
 def validate(data, answer):
-	return True
+	weight = data['weight']
+	ans = list(map(int, answer.split(' ')))
+	ans_transform = [-1] * len(weight)
+	for i in range(len(ans)):
+		ans_transform[i] = weight[data['perm'].index(ans[i])]
+	print(ans_transform, file=sys.stderr)
+	return ans_transform == weight
