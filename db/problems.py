@@ -108,7 +108,7 @@ def IslandOfLiars2(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'radio', "Выборы мэра острова", hint="Вначале правдолюбов не может быть больше, чем лжецов, так как иначе каждый из них солгал. Но и лжецов не может быть гораздо больше, чем правдолюбов, иначе каждый из них сказал правду.")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'radio', "Выборы мэра острова", image="Einstein.png",hint="Вначале правдолюбов не может быть больше, чем лжецов, так как иначе каждый из них солгал. Но и лжецов не может быть гораздо больше, чем правдолюбов, иначе каждый из них сказал правду.")
 	for N, A in [
 			(15, 1),
 			(17, 1),
@@ -127,6 +127,19 @@ def IslandOfLiars2(cur):
 				'correct': A,
 			}
 			variants_list = add_variant_to_list(variants_list, "Выборы мэра острова", desc, json.dumps(cont))	
+			
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Король и два придворных мудреца", image="Mudrez.png")
+	for S, M, N, A in [(60, 5, 3, 18), 
+			   (72, 6, 4, 21), 
+			   (73, 6, 3, 16), 
+			   (72, 7, 3, 15)
+			   ]:
+		desc = f"""Король решил проверить своих мудрецов: первый должен в тайне от второго записать {M} различных натуральных чисел с суммой {S} и сообщить второму мудрецу лишь {N}-ое по величине из загаданных чисел. 
+					После чего второй мудрец должен назвать все записанные числа. У мудрецов не было возможности сговориться, но тем не менее они справились с заданием. Какое число сообщил первый?"""
+		cont = {
+			'correct': A,
+			}
+		variants_list = add_variant_to_list(variants_list, "Король и два придворных мудреца", desc, json.dumps(cont))
 	
 	add_list(problems_list, variants_list)
 
@@ -135,15 +148,14 @@ def Chiselburg2(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'integer', "Хороший стимул")
-	for N, M, A in [(5, 6, 7), (6, 5, 8), (6, 7, 9), (8, 6, 10)]:
-		desc = f"""Вовочка получил {N} двоек и {M} троек по математике (других оценок не было). Папа пообещал купить ему новый ноутбук, если он сможет закончить год с итоговой оценкой 4.
-				Какое наименьшее количество пятерок необходимо получить Вовочке для этого, если учительница выводит оценку за год, округляя среднее значение до ближайшего целого числа
-				(среднее 4,5 она округляет до оценки 5, а среднее 3,5 до оценки 4)."""
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'integer', "Шарик, Бобик и Барсик", image="Dog.png")
+	for X, A in [(80, 8), (120, 32), (140, 44), (160, 56)]:
+		desc = f"""Шарик весит на {X}% больше Бобика, а Бобик на 50% больше Барсика. 
+		На сколько процентов Шарик тяжелее Бобика и Барсика вместе взятых?"""
 		cont = {
 			'correct': A,
 			}
-		variants_list = add_variant_to_list(variants_list, "Хороший стимул", desc, json.dumps(cont))	
+		variants_list = add_variant_to_list(variants_list, "Шарик, Бобик и Барсик", desc, json.dumps(cont))
 	
 	add_list(problems_list, variants_list)
 
@@ -152,8 +164,8 @@ def Geom2(cur):
 	variants_list = dict()
 	
 	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Найдите угол", hint="Постройте правильный треугольник ADC так, что B лежит внутри, и найдите два равных треугольника.")
-	for X, Y, A in [(104, 22, 0), (108, 24, 0), (112, 26, 0), (116, 28, 0)]:
-		desc = f"Внутри равнобедренного треугольника ABC с основанием AC и углом {X}°  при вершине B  взяли точку M так, что угол MAC равен {Y}°, а угол MCA равен 30°. Найдите угол BMC."
+	for X, Y, A in [(104, 22, 82), (108, 24, 84), (112, 26, 86), (116, 28, 88)]:
+		desc = f"Внутри равнобедренного треугольника ABC с основанием AC и углом {X}⁰  при вершине B  взяли точку M так, что угол MAC равен {Y}⁰, а угол MCA равен 30⁰. Найдите угол ABM."
 		desc += read_file('geoma3_2.svg').decode('utf-8')
 		cont = {
 			'correct': A,
@@ -2320,7 +2332,7 @@ def CombiRepublic2(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках", image="Kvantik.png")
 	for N, A in [
 			("у игрока оказался хотя бы один туз?", 896),
 		  ("у игрока оказался ровно один туз?", 224),

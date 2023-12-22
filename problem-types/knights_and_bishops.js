@@ -90,13 +90,13 @@ function add_figure(type)	{
 		new_figure.classList.add('bishop');
 		new_figure.setAttribute('x', def_X_bishop);
 		new_figure.setAttribute('y', def_Y_bishop);
-		new_figure.setAttribute('href', '/static/bishop.png');
+		new_figure.setAttribute('href', '/static/chess/bishop_w.png');
 	}
 	else{
 		new_figure.classList.add('horse');
 		new_figure.setAttribute('x', def_X_horse);
 		new_figure.setAttribute('y', def_y_horse);
-		new_figure.setAttribute('href', '/static/horse.png');
+		new_figure.setAttribute('href', '/static/chess/horse_b.png');
 	}
 	new_figure.setAttribute('width', width);
 	new_figure.setAttribute('height', height);
