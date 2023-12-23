@@ -47,7 +47,7 @@ def login_attempt(db):
 	redirect('/')
 
 def vk_check_login(db, user_name):
-	db.execute('select ученик from Ученик where логин = %s', (user_name, ))
+	db.execute('select student from Kvantland.Student where login = %s', (user_name, ))
 	try:
 		(user, ), = db.fetchall()
 	except ValueError:
@@ -88,7 +88,7 @@ def get_user():
 	return convert(get_info(get_token()))
 
 def add_user(login, name, surname, city, school, password, db):
-	db.execute("insert into Ученик (логин, имя, фамилия, город, школа, пароль) values (%s, %s, %s, %s, %s, %s) returning ученик", (login, name, surname, city, school, password))
+	db.execute("insert into Kvantland.Student (login, name, surname, town, school, password) values (%s, %s, %s, %s, %s, %s) returning student", (login, name, surname, city, school, password))
 	(user, ), = db.fetchall()
-	db.execute("insert into ДоступнаяЗадача (ученик, вариант) select distinct on (задача) %s, вариант from Вариант order by задача, random();", (user, ))
+	db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
 	return user

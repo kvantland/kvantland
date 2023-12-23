@@ -50,7 +50,7 @@ def display_login_form(err: str=None):
     yield f'<p class="error">{err}</p>'
 
 def check_login(db, user_name, password):
-	db.execute('select ученик, пароль from Ученик where логин = %s', (user_name, ))
+	db.execute('select student, password from Kvantland.Student where login = %s', (user_name, ))
 	try:
 		(user, password_hash), = db.fetchall()
 	except ValueError:
@@ -61,7 +61,7 @@ def check_login(db, user_name, password):
 
 def current_user(db):
 	user = request.get_cookie('user', secret=_key)
-	db.execute('select ученик from Ученик where ученик = %s', (user, ))
+	db.execute('select student from Kvantland.Student where student = %s', (user, ))
 	try:
 		(user_check, ), = db.fetchall()
 	except ValueError:

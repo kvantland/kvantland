@@ -20,18 +20,18 @@ def lang_form(score):
 def tournament_completed(db, user_id):
 	not_completed = False
 	if user_id is not None:
-		db.execute('select город, exists(select 1 from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = Город.город and ученик = %s and ответ_дан = false) from Город', (user_id, ))
+		db.execute('select town, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false) from Kvantland.Town', (user_id, ))
 	else:
-		db.execute('select город, true from Город')
-	for город, открыт in db.fetchall():
-		if открыт:
+		db.execute('select town, true from Kvantland.Town')
+	for town, opened in db.fetchall():
+		if opened:
 			not_completed = True
 	return not not_completed
 
 def finished(db, user_id):
 	if user_id == None:
 		return False
-	db.execute('select закончил from Ученик where ученик=%s', (user_id, ))
+	db.execute('select is_finished from Kvantland.Student where student=%s', (user_id, ))
 	(finish, ), = db.fetchall()
 	return finish
 
@@ -55,16 +55,16 @@ def show_land(db):
 		yield '<text class="town-name to_results" font-size="2em" text-anchor="middle" y="2em"> Завершить турнир </text>'
 		yield '</a>'
 	if user_id is not None:
-		db.execute('select город, название, положение, exists(select 1 from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = Город.город and ученик = %s and ответ_дан = false) from Город', (user_id, ))
+		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false) from Kvantland.Town', (user_id, ))
 	else:
-		db.execute('select город, название, положение, true from Город')
-	for город, название, (x, y), открыт in db.fetchall():
+		db.execute('select town, name, position, true from Kvantland.Town')
+	for town, name, (x, y), opened in db.fetchall():
 		clazz = "town"
-		if not открыт:
+		if not opened:
 			clazz += " town_completed"
-		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{город}/">'
+		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{town}/">'
 		yield f'<circle class="town-icon" r="0.3em" fill="rgba(0, 0, 0, 0)" stroke="currentColor" stroke-width="0.2em" />'
-		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{название}</text>'
+		yield f'<text class="town-name" text-anchor="middle" y="1.2em">{name}</text>'
 		yield f'</a>'
 	yield '</svg>'
 	yield '<div class="contacts_block">'
@@ -86,7 +86,7 @@ def show_land(db):
 	yield '<main class="rules">'
 	yield '<h1>Правила</h1>'
 	yield '<p>Игрок путешествует по стране Квантландия, оказываясь в разных городах и областях (Головоломск, Остров Лжецов, Республика Комби, Чиселбург, Геома) и зарабатывает виртуальную валюту «квантик» за решение задач соответствующей темы: Головоломки, Логика, Комбинаторика, Арифметика, Геометрия. Цель игры — получить как можно больше квантиков.'
-	yield '<p>В начале игры каждому дается 10 квантиков, которые можно тратить на подсказки к задачам (стоимость каждой подсказки 1 квантик). Для того, чтобы получить задачу, нужно выбрать одну из монет в соответствующем городе или области (кликнуть на монету). На монете указывается количество квантиков, которые даются за её правильное решение. Есть задачи проще (1 или 2 квантика за решение) и сложнее (3 или 4 квантика за решение).'
+	yield '<p>В начале игры каждому дается 10 квантиков, которые можно тратить на подсказки к задачам (стоимость каждой подсказки 1 квантик). Для того, чтобы получить задачу, нужно выбрать одну из монет в соответствующем townе или области (кликнуть на монету). На монете указывается количество квантиков, которые даются за её правильное решение. Есть задачи проще (1 или 2 квантика за решение) и сложнее (3 или 4 квантика за решение).'
 	yield '<p>Можно свободно возвращаться к карте города или страны. Но если вы уже давали ответ на задачу, то задача становится неактивной и пройти её повторно нельзя. Поэтому не торопитесь и внимательно проверяйте, прежде чем отправить ответ.'
 	yield f'<p>Обратите внимание, что некоторые задачи интерактивны. В них требуется произвести действия, которые описаны в условии, чтобы получить нужный результат. Читайте условия внимательно! Для решения задач вам понадобится компьютер и компьютерная мышь или ноутбук с тачпадом (не планшет), чтобы перетаскивать и выделять объекты. Если возникла техническая проблема, то можно написать в техподдержку <a href="mailto:{config["contacts"]["support_email"]}">{config["contacts"]["support_email"]}</a> с описанием проблемы и скриншотом компьютера.'
 	yield '<p>Выберите время в течение месяца, чтобы вас ничего не отвлекало. Итоги соревнования подводятся по числу квантиков, которые у вас на счету к концу игры. Это число всегда отображается в правом верхнем углу экрана. Удачи!'
@@ -96,8 +96,8 @@ def show_land(db):
 @route('/final_page')
 def show_result(db):
 	user_id = user.current_user(db)
-	db.execute('update Ученик set закончил=true where ученик=%s', (user_id, ))
-	db.execute('select счёт from Ученик where ученик= %s', (user_id, ))
+	db.execute('update Kvantland.Student set is_finished=true where student=%s', (user_id, ))
+	db.execute('select score from Kvantland.Student where student= %s', (user_id, ))
 	(score, ), = db.fetchall()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'

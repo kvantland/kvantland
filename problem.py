@@ -49,7 +49,7 @@ def show_buttons(**kwargs):
 
 def show_question(db, variant, hint_mode):
 	user_id = require_user(db)
-	db.execute('select город, Город.название, Тип.код, Задача.название, описание, изображение, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
+	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost}
 	typedesc = import_module(f'problem-types.{type_}')
@@ -111,15 +111,15 @@ def show_question(db, variant, hint_mode):
 		yield f'<script type="text/ecmascript">{script}</script>'
 
 def check_answer(db, var_id, answer):
-	db.execute('select Тип.код, содержание from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, content), = db.fetchall()
 	typedesc = import_module(f'problem-types.{type_}')
 	return typedesc.validate(content, answer)
 
 def _display_result(db, var_id, ok, answer=None, solution=None):
-	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()
-	db.execute('select город, Город.название, Задача.название, описание, изображение from Задача join Вариант using (задача) join Город using (город) where вариант = %s', (var_id,))
+	db.execute('select town, Kvantland.Town.name, Kvantland.Problem.name, description, image from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Town using (town) where variant = %s', (var_id,))
 	(town, town_name, name, description, image), = db.fetchall()
 	
 	typedesc = import_module(f'problem-types.{type_}')
@@ -169,12 +169,12 @@ def require_user(db):
 	return user_id
 
 def has_current_problem(db, user):
-	db.execute('select exists(select 1 from ТекущаяЗадача where ученик = %s)', (user, ))
+	db.execute('select exists(select 1 from Kvantland.CurrentProblem where student = %s)', (user, ))
 	(has, ), = db.fetchall()
 	return has
 
 def get_past_answer_correctness(db, user_id, var_id):
-	db.execute('select ответ_верен from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	db.execute('select answer_true from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
 	try:
 		(is_answer_correct, ), = db.fetchall()
 	except ValueError:
@@ -186,17 +186,17 @@ def problem_show(db, var_id):
 	user_id = require_user(db)
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
-		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
 		(answer, solution, ), = db.fetchall()
 		print(answer, solution, file=sys.stderr)
 		return _display_result(db, var_id, is_answer_correct, answer, solution)
 
-	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
 	(hinted, ), = db.fetchall()
 	if hinted:
 		hint_mode = HintMode.SHOW
 	else:
-		db.execute('select счёт >= стоимость from Подсказка join Вариант using (задача), Ученик where вариант = %s and ученик = %s', (var_id, user_id))
+		db.execute('select score >= cost from Kvantland.Hint join Kvantland.Variant using (problem), Kvantland.Student where variant = %s and student = %s', (var_id, user_id))
 		try:
 			(can_afford_hint, ), =db.fetchall()
 			hint_mode = HintMode.AFFORDABLE if can_afford_hint else HintMode.TOO_EXPENSIVE
@@ -206,7 +206,7 @@ def problem_show(db, var_id):
 
 @route('/problem/<var_id:int>/', method='POST')
 def problem_answer(db, var_id):
-	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	type_ = db.fetchall()[0][0]
 	
 	user_id = require_user(db)
@@ -226,11 +226,11 @@ def problem_answer(db, var_id):
 
 	is_answer_correct = check_answer(db, var_id, answer)
 	if save_progress:
-		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s, ответ=%s where вариант = %s and ученик = %s', (is_answer_correct, solution, answer, var_id, user_id))
+		db.execute('update Kvantland.AvailableProblem set answer_true=%s, solution=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, solution, answer, var_id, user_id))
 	else:
-		db.execute('update ДоступнаяЗадача set ответ_верен=%s, ответ=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
+		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, answer, var_id, user_id))
 	if is_answer_correct:
-		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
+		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (var_id, user_id))
 	
 	yield from _display_result(db, var_id, is_answer_correct, answer, solution)
 
@@ -241,14 +241,14 @@ def _request_hint(db, var_id):
 	if is_answer_correct is not None:
 		return
 
-	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
+	db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
 	(hinted, ), = db.fetchall()
 	if hinted:
 		return
 
-	db.execute('update ДоступнаяЗадача set подсказка_взята=true where вариант = %s and ученик = %s', (var_id, user_id))
+	db.execute('update Kvantland.AvailableProblem set hint_taken=true where variant = %s and student = %s', (var_id, user_id))
 	try:
-		db.execute('update Ученик set счёт=счёт - (select стоимость from Подсказка join Вариант using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
+		db.execute('update Kvantland.Student set score=score - (select cost from Kvantland.Hint join Kvantland.Variant using (problem) where variant = %s) where student = %s', (var_id, user_id))
 	except psycopg.errors.CheckViolation:
 		pass
 
