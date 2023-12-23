@@ -283,7 +283,7 @@ svg.map a:hover {
 	color: #ffd200;
 }
 
-svg.map a:hover circle {
+svg.map a:hover circle.town-icon {
 	fill: rgba(0, 0, 0, 0.15);
 }
 
