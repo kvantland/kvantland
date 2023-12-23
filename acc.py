@@ -180,4 +180,4 @@ def set_new_params(db, user_info):
 	new_city = user_info['city']
 	new_class = user_info['clas']
 	new_email = user_info['email']
-	db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, town=%s, clas=%s, email=%s where student=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(), ))
+	db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, town=%s, clas=%s, email=%s where student=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(db), ))
