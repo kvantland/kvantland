@@ -291,11 +291,11 @@ document.querySelector('.weight').onclick = function(){
 	xhr.send();
 	xhr.onload = function() {
 		if (xhr.status != 200)
-			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
+			alert(`РћС€РёР±РєР° ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
 			if (xhr.response == 'no_tries')
-				alert('Больше нельзя делать взвешивания!')
+				alert('Р‘РѕР»СЊС€Рµ РЅРµР»СЊР·СЏ РґРµР»Р°С‚СЊ РІР·РІРµС€РёРІР°РЅРёСЏ!')
 			else
 			{
 				let [text, amount] = document.querySelector('.remaining_weightings p').innerHTML.split(':')
