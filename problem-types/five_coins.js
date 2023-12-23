@@ -3,7 +3,7 @@ var coin_height = document.querySelector('.coin circle').getAttribute('r') * 2
 
 function def_pos()
 {
-	if (document.querySelector('.scales').classList.contains('start'))
+	if (document.querySelector('.remaining_weightings p').innerHTML.split(':')[1] == 2)
 	{
 		let left = document.querySelector('.cup.left').querySelector('.inside')
 		let right = document.querySelector('.cup.right').querySelector('.inside')
@@ -14,7 +14,6 @@ function def_pos()
 			else
 				cup_drop(right, coin)
 		}
-		document.querySelector('.scales').classList.remove('start')
 	}
 }
 
@@ -203,16 +202,40 @@ for (coin of document.querySelectorAll('.coin')){
 	}
 }
 
-var movement = ''
+var [movement, movement_tmp] = ['', 0]
 
 function move_scales(side)
 {
-	let down_cup = document.querySelector(`.movement.${side}`)
-	let up_cup, angle
+	let up_cup, down_cup, angle
 	if (side == 'left')
+	{
 		up_cup = document.querySelector('.movement.right')
-	else
+		down_cup = document.querySelector('.movement.left')
+	}
+	if (side == 'right')
+	{
 		up_cup = document.querySelector('.movement.left')
+		down_cup = document.querySelector('.movement.right')
+	}
+	if (side == 'equal')
+	{
+		if (document.querySelector('.plank').hasAttribute('transform'))
+		{
+			let cur_ang = document.querySelector('.plank').getAttribute('transform').split('(')[1].split(')')[0].split(' ')[0]
+			if (cur_ang < 0)
+			{
+				up_cup = document.querySelector('.movement.left')
+				down_cup = document.querySelector('.movement.right')
+			}
+			else
+			{
+				up_cup = document.querySelector('.movement.right')
+				down_cup = document.querySelector('.movement.left')
+			}
+		}
+		up_cup = document.querySelector('.movement.right')
+		down_cup = document.querySelector('.movement.left')
+	}
 
 	let plank = document.querySelector('.plank')
 	let plank_len = plank.getAttribute('width') / 2
@@ -223,12 +246,15 @@ function move_scales(side)
 	else
 		angle = 0
 
-	if (side == 'left' && angle <= -10 || side == 'right' && angle >= 10)
+	if (side == 'left' && angle <= -10 || side == 'right' && angle >= 10 || side == 'equal' && angle == 0)
+	{
 		clearInterval(movement)
+		movement_tmp = 0
+	}
 	else
 	{
 		let rad_ = Math.PI / 180 * angle
-		if (side == 'left')
+		if (down_cup == document.querySelector('.movement.left'))
 		{
 			up_cup.setAttribute('transform', `translate(${-(1 - Math.cos(rad_)) * plank_len - -plank_height * Math.sin(rad_)} ${Math.sin(rad_) * plank_len - plank_height * Math.cos(rad_)})`)
 			down_cup.setAttribute('transform', `translate(${(1 - Math.cos(rad_)) * plank_len -plank_height * Math.sin(rad_)} ${-Math.sin(rad_) * plank_len + plank_height * Math.cos(rad_)})`)
@@ -269,32 +295,34 @@ document.querySelector('.weight').onclick = function(){
 		else
 		{
 			if (xhr.response == 'no_tries')
-				alert('Больше нельзя делать взвешивания!')
+				alert('Р‘РѕР»СЊС€Рµ РЅРµР»СЊР·СЏ РґРµР»Р°С‚СЊ РІР·РІРµС€РёРІР°РЅРёСЏ!')
 			else
 			{
 				let [text, amount] = document.querySelector('.remaining_weightings p').innerHTML.split(':')
 				document.querySelector('.remaining_weightings p').innerHTML = text + ': ' + (amount - 1)
 				let side = xhr.response
-				if (side == 'equal')
-					return;
 				movement = setInterval(function(){move_scales(side)}, 20)
+				movement_tmp = 1
 			}
 		}
 	}
 }
 
 document.querySelector('.clean').onclick = function(){
-	for (let coin of document.querySelectorAll('.coin'))
-		if (coin.classList.contains('onscale'))
-		{
-			coin.classList.remove('onscale')
-			coin.removeAttribute('cup')
-			coin.removeAttribute('scale_num')
-			back_to_drag(coin)
-		}
-	document.querySelector('.plank').removeAttribute('transform')
-	for (let cup of document.querySelectorAll('.movement'))
-		cup.removeAttribute('transform')
+	if (!movement_tmp)
+	{
+		for (let coin of document.querySelectorAll('.coin'))
+			if (coin.classList.contains('onscale'))
+			{
+				coin.classList.remove('onscale')
+				coin.removeAttribute('cup')
+				coin.removeAttribute('scale_num')
+				back_to_drag(coin)
+			}
+		document.querySelector('.plank').removeAttribute('transform')
+		for (let cup of document.querySelectorAll('.movement'))
+			cup.removeAttribute('transform')
+	}
 }
 
 document.querySelector('#send').onclick = function(){
