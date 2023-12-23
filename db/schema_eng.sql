@@ -57,6 +57,7 @@ create table AvailableProblem (
 	answer_true bool null,
 	answer_given bool generated always as (answer_true is not null) stored,
 	hint_taken bool not null default false,
+	xhr_amount int not null default 0,
 	answer text,
 	solution text,
 	primary key (student, variant)

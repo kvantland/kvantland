@@ -51,7 +51,7 @@ def show_question(db, variant, hint_mode):
 	user_id = require_user(db)
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
-	db.execute('select xhr_amount from ДоступнаяЗадача where вариант = %s and ученик = %s', (variant, user_id))
+	db.execute('select xhr_amount from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 	(step, ), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
 	typedesc = import_module(f'problem-types.{type_}')
@@ -262,11 +262,11 @@ def problem_request_hint(db, var_id):
 @route('/problem/<var_id:int>/xhr', method='GET')
 def xhr_req(db, var_id):
 	user_id = require_user(db)
-	db.execute('update ДоступнаяЗадача set xhr_amount = xhr_amount + 1 where вариант = %s and ученик = %s returning xhr_amount', (var_id, user_id))
+	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
 	(xhr_amount, ), = db.fetchall()
-	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
+	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()
-	db.execute('select содержание from Вариант where вариант = %s', (var_id,))
+	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
 	(cont, ), = db.fetchall()
 	#print(xhr_amount, type_, file=sys.stderr)
 	params = request.query
