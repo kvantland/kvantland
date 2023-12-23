@@ -283,13 +283,22 @@ svg.map a:hover {
 	color: #ffd200;
 }
 
+svg.map a:hover circle {
+	fill: rgba(0, 0, 0, 0.15);
+}
+
+svg.map a:hover .town-name {
+	stroke: rgba(95, 96, 2, 0.8);
+}
+
 svg.map .town {
 	font-size: 24px;
 	font-variant: small-caps;
 }
 
 svg.map .town-name {
-	stroke: none;
+	stroke: rgba(0, 0, 0, 0.5);
+	stroke-width: 0.04em;
 	font-weight: bold;
 }
 
