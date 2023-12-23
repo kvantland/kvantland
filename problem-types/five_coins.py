@@ -65,7 +65,7 @@ def entry_form(data, kwargs):
 	yield '</linearGradient>'
 
 	yield '</defs>'
-	yield f'<g class="scales start" transform="scale({scale_1}) translate({cup_xr} {base_plank_up + base_plank_width / 4})">'
+	yield f'<g class="scales" transform="scale({scale_1}) translate({cup_xr} {base_plank_up + base_plank_width / 4})">'
 	yield f"""<rect class="plank" 
 				x="0"
 				y="0"
