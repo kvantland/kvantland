@@ -2396,15 +2396,18 @@ def update_positions_town(cur, town, problem_count):
 	y0 = 720 / 2
 	R = 250
 	base = 0.25
-	y0 += 0.5 * R * (1 - math.cos(math.pi / problem_count))
 	cur.execute("select problem from Kvantland.Problem where town = %s", (town,))
-	for k, (problem, ) in enumerate(cur.fetchall()):
-		phi = 2 * math.pi * ((k // 2 + k % 2) / problem_count + base)
-		if k % 2 == 1:
-			x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
-		else:
-			x, y = x0 - R * math.cos(phi), y0 - R * math.sin(phi)
-		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
+	if (problem_count == 1):
+		(problem, ), = cur.fetchall()
+		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x0, y0, problem))
+	else:
+		for k, (problem, ) in enumerate(cur.fetchall()):
+			phi = 2 * math.pi * ((k // 2 + k % 2) / problem_count + base)
+			if k % 2 == 1:
+				x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
+			else:
+				x, y = x0 - R * math.cos(phi), y0 - R * math.sin(phi)
+			cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
 
 def update_positions(cur):
 	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) group by town")
