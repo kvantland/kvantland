@@ -64,6 +64,7 @@ def show_land(db):
 			clazz += " town_completed"
 		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{town}/">'
 		yield f'<circle class="town-icon" r="30px" fill="rgba(0, 0, 0, 0)" stroke="currentColor" stroke-width="0.2em" />'
+		yield f'<rect fill="#FF6A44" class="town-name" height="30px" width="{max(len(name) * 16, 90)}px" y="-69px" x="{-len(name) * (8 + (90 > len(name) * 16))}"/>'
 		yield f'<text class="town-name" text-anchor="middle" y="-45px">{name}</text>'
 		yield f'</a>'
 	yield '</svg>'
