@@ -2,6 +2,7 @@ import sys
 
 def entry_form(data, kwargs):
 	scale_1 = 0.7
+	coin_amount = 5
 	ellipse_a = 0.45
 	cup_xr = 300 * 0.4
 	cup_yr = cup_xr * ellipse_a
@@ -28,7 +29,7 @@ def entry_form(data, kwargs):
 	coin_pad = container_width - coin_size + container_pad
 	cont_a = 0.25
 	answer_zone_pad = 20
-	svg_width = (plank_length + cup_xr * 2) * scale_1
+	svg_width = max((plank_length + cup_xr * 2) * scale_1, (container_width + container_pad) * coin_amount - container_pad)
 	svg_height = (base_plank_width / 2 * ellipse_a + base_plank_height + basement_hight + basement_width / 2 * ellipse_a) * scale_1 + drag_pad + coin_size + answer_zone_height + answer_zone_pad
 	yield '<input name="answer" type="hidden" />'
 	yield '<div class="plot_area">'
@@ -179,7 +180,7 @@ def entry_form(data, kwargs):
 	yield '</g>'
 	yield f'<g class="answer_zone" transform="translate(0 {svg_height - answer_zone_height})">'
 	yield f'<rect class="answer_zone" x="0" y="0" width="{(container_width + container_pad) * 5 - container_pad}" height="{container_height}" />'
-	for i in range(1, 6):
+	for i in range(1, coin_amount + 1):
 		yield f'<g class="coin_container" transform="translate({(container_width + container_pad) * (i - 1)} 0)">'
 		yield f'<rect class="coin_container_name" x="0" y="0" width="{container_width}" height="{container_height * cont_a}"/>'
 		yield f'<text class="coin_container_name" x="{container_width / 2}" y="{container_height * cont_a / 2}"> {weight[i - 1]} граммов </text>'
