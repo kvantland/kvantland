@@ -128,7 +128,7 @@ def IslandOfLiars2(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Выборы мэра острова", desc, json.dumps(cont))	
 			
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Король и два придворных мудреца", image="Mudrez.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Король и два придворных мудреца", image="Mudrez.png", hint="Первый мудрец должен сообщить такое число N, чтобы только наименьшие возможные из остальных загаданных чисел давали вместе с N заданную сумму.")
 	for S, M, N, A in [(60, 5, 3, 18), 
 			   (72, 6, 4, 21), 
 			   (73, 6, 3, 16), 
@@ -205,7 +205,7 @@ def Golovolomsk2(cur):
 				}
 				variants_list = add_variant_to_list(variants_list, "Крестики-нолики", desc, json.dumps(cont))
     
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'garden_trees', "Деревья в саду")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'garden_trees', "Деревья в саду", hint="На каждом участке должно расти не более двух деревьев.")
 	for T, A in [([3, 6], [
 				[[0, 1, 1, 0, 1, 1], [1, 2, 2, 1, 2, 2], [1, 2, 2, 1, 2, 2]],
 				[[0, 1, 1, 2, 2, 0], [2, 2, 0, 2, 2, 1], [2, 2, 1, 1, 0, 1]],
@@ -455,7 +455,7 @@ def Golovolomsk2(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Деревья в саду", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'knights_and_bishops', "Кони и слоны")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'knights_and_bishops', "Кони и слоны",hint="Попробуйте сначала поставить коней. Несколько коней не бьют друг друга, если они стоят на полях одного цвета или стоят в ряд.")
 	for N, height, width, correct in [
 				[12, 4, 4, [
 				[[1, '-', '-', 1], [1, 2, 2, 1], [1, '-', '-', 1], [1, 2, 2, 1]],
@@ -2332,7 +2332,7 @@ def CombiRepublic2(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках", image="Kvantik.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках", image="Kvantik.png", hint="Число способов выбрать 6 карт из 12 равно (12*11*10*9*8*7)/6*5*4*3*2. Однако не все эти способы нам подходят и нужно исключить лишние.")
 	for N, A in [
 			("у игрока оказался хотя бы один туз?", 896),
 		  ("у игрока оказался ровно один туз?", 224),
@@ -2346,7 +2346,7 @@ def CombiRepublic2(cur):
 			}
 		variants_list = add_variant_to_list(variants_list, "Тузы на руках", desc, json.dumps(cont))	
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'rook_and_pawns', "Игра ладья и пешки")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'rook_and_pawns', "Игра ладья и пешки", hint="Начиная с клеток первой строки и последнего столбца, определите является ли выигрышной позиция, если ладья оказалась в этой клетке, для игрока, который должен делать очередной ход.")
 	for N, A in [
 		([[3,4], [6, 5], [4, 1]], 15),
 		([[2,4], [4, 3], [6, 2]], 6),
