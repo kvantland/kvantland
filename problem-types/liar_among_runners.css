@@ -21,6 +21,21 @@ body{
 	position: absolute;
 }
 
+.blue{
+	fill: blue;
+	stroke:black;
+}
+
+.green{
+	fill: green;
+	stroke:black;
+}
+
+.yellow{
+	fill: yellow;
+	stroke:black;
+}
+
 .active{
 	cursor: grab;
 }
