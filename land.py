@@ -97,6 +97,8 @@ def show_land(db):
 @route('/final_page')
 def show_result(db):
 	user_id = user.current_user(db)
+	if user_id == None:
+		redirect('/')
 	db.execute('update Kvantland.Student set is_finished=true where student=%s', (user_id, ))
 	db.execute('select score from Kvantland.Student where student= %s', (user_id, ))
 	(score, ), = db.fetchall()

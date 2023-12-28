@@ -49,6 +49,8 @@ def show_buttons(**kwargs):
 
 def show_question(db, variant, hint_mode):
 	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
 	db.execute('select xhr_amount from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
@@ -166,8 +168,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</div>'
 
 def require_user(db):
-	if (user_id := user.current_user(db)) == None:
-		raise HTTPError(403, 'Требуется вход')
+	user_id = user.current_user(db)
 	return user_id
 
 def has_current_problem(db, user):
@@ -180,12 +181,14 @@ def get_past_answer_correctness(db, user_id, var_id):
 	try:
 		(is_answer_correct, ), = db.fetchall()
 	except ValueError:
-		raise HTTPError(403, 'Задача недоступна')
+		return None
 	return is_answer_correct
 
 @route('/problem/<var_id:int>/')
 def problem_show(db, var_id):
 	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
@@ -212,6 +215,8 @@ def problem_answer(db, var_id):
 	type_ = db.fetchall()[0][0]
 	
 	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		redirect('')
@@ -239,6 +244,8 @@ def problem_answer(db, var_id):
 
 def _request_hint(db, var_id):
 	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
 		return
@@ -262,6 +269,8 @@ def problem_request_hint(db, var_id):
 @route('/problem/<var_id:int>/xhr', method='GET')
 def xhr_req(db, var_id):
 	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
 	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
 	(xhr_amount, ), = db.fetchall()
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
