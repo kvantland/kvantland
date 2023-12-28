@@ -171,6 +171,20 @@ def Geom2(cur):
 			'correct': A,
 		}
 		variants_list = add_variant_to_list(variants_list, "Найдите угол", desc, json.dumps(cont))
+
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'labyrinth', "Лабиринт")
+	for N, A in [
+		([[4,0], [5, 1], [2, 2], [0, 5], [1, 5], [6, 5], [5, 6], [3, 7]], 15),
+		([[4,0], [5, 1], [2, 2], [0, 5], [1, 5], [6, 5], [5, 6], [3, 7]], 15),
+		([[4,0], [5, 1], [2, 2], [0, 5], [1, 5], [6, 5], [5, 6], [3, 7]], 15),
+		([[4,0], [5, 1], [2, 2], [0, 5], [1, 5], [6, 5], [5, 6], [3, 7]], 15)
+			]:
+		desc = f"""Некоторые золотые монеты в лабиринте недоступны. Отметьте те и только те монеты, которые можно собрать, двигаясь по этому лабиринту."""
+		cont = {
+			'cur': N,
+			'correct': A,
+		}
+		variants_list = add_variant_to_list(variants_list, "Лабиринт", desc, json.dumps(cont))
 	
 	add_list(problems_list, variants_list)
 
