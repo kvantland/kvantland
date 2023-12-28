@@ -63,6 +63,7 @@ def show_land(db):
 		if not opened:
 			clazz += " town_completed"
 		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{town}/">'
+		yield f'<image href="/static/icon/icon-{town}.png" x="-40px" y ="-40px" width="80px"/>'
 		yield f'<circle class="town-icon" r="30px" fill="rgba(0, 0, 0, 0)" stroke="currentColor" stroke-width="0.2em" />'
 		yield f'<rect fill="#FF6A44" class="town-name" height="30px" width="{max(len(name) * 16, 90)}px" y="-69px" x="{-len(name) * (8 + (90 > len(name) * 16))}"/>'
 		yield f'<text class="town-name" text-anchor="middle" y="-45px">{name}</text>'
@@ -110,7 +111,7 @@ def show_result(db):
 	yield from user.display_banner(db)
 	yield '</div>'
 	yield '<svg class="map final_result_area" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-	yield f'<image href="/static/map/land.jpg" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
+	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
 	yield '<text text-anchor="middle" x="640" y="4em"> Поздравляем! </text>'
 	yield '<text text-anchor="middle" x="640" y="6em"> Вы успешно завершили турнир. </text>'
 	yield f'<text text-anchor="middle" x="640" y="8em"> Ваш результат составляет {score} {lang_form(score)}. </text>'
