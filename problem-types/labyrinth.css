@@ -21,13 +21,24 @@ body{
 	position: absolute;
 }
 
-.white{
+.square{
 	fill: white;
+}
+
+.choiced{
+	fill: blue;
 }
 
 .grid_line{
 	stroke: lightgray;
 	stroke-linecap: square;
+	stroke-width: 2;
+}
+
+.border_line{
+	stroke:black;
+	stroke-linecap: square;
+	stroke-width: 4;
 }
 
 .free:hover{
