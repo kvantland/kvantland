@@ -101,13 +101,15 @@ def show_question(db, variant, hint_mode):
 		yield '</form>'
 	elif hybrid:
 		yield '</div>'
+
+	if image:
+		yield f'<img class="picture" src="/static/problem/{image}">'
+	
 	if show_default_buttons:
 		yield from show_answer_area(content, 'without_input', kwargs)
 	else:
 		yield from show_answer_area(content, 'with_input', kwargs)
-
-	if image:
-		yield f'<img class="picture" src="/static/problem/{image}">'
+	
 	yield '</main>'
 	yield '</div>'
 	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
