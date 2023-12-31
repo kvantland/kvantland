@@ -18,3 +18,15 @@
 	position: relative;
 	user-select: none
 }
+
+.point{
+	fill: grey;
+}
+
+.point:hover{
+	cursor: pointer;
+}
+
+.selected{
+	fill: red;
+}
