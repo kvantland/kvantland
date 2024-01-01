@@ -12,21 +12,12 @@ body{
 	position: relative;
 }
 
-.drag_zone{
-	display: flex;
-	flex-direction: column;
-}
-
-.full_window{
-	position: absolute;
-}
-
 .square{
-	fill: white;
+	fill:transparent;
 }
 
 .choiced{
-	fill: blue;
+	fill: rgba(0, 0, 0, 0.15);
 }
 
 .grid_line{
@@ -44,12 +35,4 @@ body{
 .free:hover{
 	cursor: pointer;
 	fill: rgba(0, 0, 0, 0.15);
-}
-
-text{
-	font-size: 30px;
-	text-anchor: middle;
-	dominant-baseline: central;
-	font-family: inherit;
-	font-weight: 1000
 }
