@@ -30,3 +30,19 @@ text {
 	-webkit-filter: drop-shadow(0 0 0.5rem crimson);
   	filter: drop-shadow(0 0 0.5rem crimson);
 }
+
+.exchange_bar {
+	dominant-baseline: middle
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.icon:hover {
+	cursor: pointer;
+}
+
+.reload:hover {
+	cursor: pointer;
+}
