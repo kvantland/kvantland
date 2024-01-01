@@ -23,33 +23,6 @@ def entry_form(data, kwargs):
     for a, b, c, d in data['board']:
         yield f'<line class="border_line" x1="{ind + a * side}" y1 = "{ind + b * side}" x2="{ind + c * side}" y2="{ind + d * side}" stroke-width="{line_width}"/>'
 
-    """yield f'<line class="border_line" x1="{ind + 2 * side}" y1 = "{ind + 0 * side}" x2="{ind + 2 * side}" y2="{ind + 1 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 5 * side}" y1 = "{ind + 0 * side}" x2="{ind + 5 * side}" y2="{ind + 2 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 3 * side}" y1 = "{ind + 1 * side}" x2="{ind + 3 * side}" y2="{ind + 3 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 6 * side}" y1 = "{ind + 1 * side}" x2="{ind + 6 * side}" y2="{ind + 2 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 4 * side}" y1 = "{ind + 2 * side}" x2="{ind + 4 * side}" y2="{ind + 3 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 1 * side}" y1 = "{ind + 3 * side}" x2="{ind + 1 * side}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 2 * side}" y1 = "{ind + 4 * side}" x2="{ind + 2 * side}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 4 * side}" y1 = "{ind + 4 * side}" x2="{ind + 4 * side}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 5 * side}" y1 = "{ind + 4 * side}" x2="{ind + 5 * side}" y2="{ind + 5 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 3 * side}" y1 = "{ind + 5 * side}" x2="{ind + 3 * side}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 5 * side}" y1 = "{ind + 6 * side}" x2="{ind + 5 * side}" y2="{ind + 7 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 4 * side}" y1 = "{ind + 7 * side}" x2="{ind + 4 * side}" y2="{ind + 8 * side}" stroke-width="{line_width}"/>'
-    
-    yield f'<line class="border_line" x1="{ind + 3 * side}" y1 = "{ind + 1 * side}" x2="{ind + 5 * side}" y2="{ind + 1 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 1 * side}" y1 = "{ind + 2 * side}" x2="{ind + 3 * side}" y2="{ind + 2 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 5 * side}" y1 = "{ind + 2 * side}" x2="{ind + 6 * side}" y2="{ind + 2 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 1 * side}" y1 = "{ind + 3 * side}" x2="{ind + 3 * side}" y2="{ind + 3 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 4 * side}" y1 = "{ind + 3 * side}" x2="{ind + 7 * side}" y2="{ind + 3 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 2 * side}" y1 = "{ind + 4 * side}" x2="{ind + 3 * side}" y2="{ind + 4 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 6 * side}" y1 = "{ind + 4 * side}" x2="{ind + 7 * side}" y2="{ind + 4 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 3 * side}" y1 = "{ind + 5 * side}" x2="{ind + 4 * side}" y2="{ind + 5 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 5 * side}" y1 = "{ind + 5 * side}" x2="{ind + 7 * side}" y2="{ind + 5 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 0 * side}" y1 = "{ind + 6 * side}" x2="{ind + 2 * side}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 4 * side}" y1 = "{ind + 6 * side}" x2="{ind + 7 * side}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 1 * side}" y1 = "{ind + 7 * side}" x2="{ind + 4 * side}" y2="{ind + 7 * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + 5 * side}" y1 = "{ind + 7 * side}" x2="{ind + 6 * side}" y2="{ind + 7 * side}" stroke-width="{line_width}"/>'
-    """
     for x in range(0, width):
         for y in range(0, height):
             if [x, y] in data['cur']:
