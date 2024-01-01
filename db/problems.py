@@ -156,6 +156,23 @@ def Chiselburg2(cur):
 			'correct': A,
 			}
 		variants_list = add_variant_to_list(variants_list, "Шарик, Бобик и Барсик", desc, json.dumps(cont))
+
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'square_sums', "Квадратные суммы")
+	for start, end in [
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]],
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9, 0, 1, 2, 3, 4, 5, 6, 7, 8]],
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]],
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 0, 3, 2, 5, 4, 7, 6, 9, 8]]
+			]:
+		desc = f"""
+				В ряд лежат 10 карточек с цифрами 0, 1, 2, …, 9. 
+				Разрешается менять местами две карточки (не обязательно соседних), если их сумма – точный квадрат.
+				Переставьте карточки в порядке: {', '.join(list(map(str, end)))}"""
+		cont = {
+			'start': start,
+			'end': end,
+			}
+		variants_list = add_variant_to_list(variants_list, "Квадратные суммы", desc, json.dumps(cont))
 	
 	add_list(problems_list, variants_list)
 

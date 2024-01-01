@@ -1,0 +1,32 @@
+.card {
+	fill: white;
+	stroke: brown;
+	stroke-width: 3;
+}
+
+.card:hover {
+	cursor: pointer;
+}
+
+.plot_area {
+	margin: 80px auto 80px auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;	
+	z-index: 1;
+	position: relative;
+	user-select: none
+}
+
+text {
+	font-weight: 1000;
+	font-family: inherit;
+	font-size: 30px;
+	text-anchor: middle;
+	dominant-baseline: middle;
+}
+
+.selected {
+	-webkit-filter: drop-shadow(0 0 0.5rem crimson);
+  	filter: drop-shadow(0 0 0.5rem crimson);
+}
