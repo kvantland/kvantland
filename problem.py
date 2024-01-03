@@ -2,6 +2,7 @@
 import sys 
 
 from bottle import route, request, redirect, HTTPError, response
+import json
 from enum import Enum, auto
 from importlib import import_module
 from pathlib import Path
@@ -279,7 +280,11 @@ def xhr_req(db, var_id):
 	(type_, ), = db.fetchall()
 	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
 	(cont, ), = db.fetchall()
-	#print(xhr_amount, type_, file=sys.stderr)
 	params = request.query
 	typedesc = import_module(f'problem-types.{type_}')
-	return typedesc.steps(xhr_amount, params, cont)
+	resp = typedesc.steps(xhr_amount, params, cont)
+	try: 
+		db.execute('update Kvantland.Variant set content = %s where variant = %s', (json.dumps(resp['data_update']), var_id,))
+	except KeyError:
+		pass
+	return resp['answer']
