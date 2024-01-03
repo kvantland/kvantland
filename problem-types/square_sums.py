@@ -15,7 +15,7 @@ def entry_form(data, kwargs):
 	yield f'<image class="icon exchange" width="{icon_side}" height="{icon_side}" href="/static/exchange_icon.png"/>'
 	yield f'<image class="icon cross" x="{icon_side * 1.5}" width="{icon_side}" height="{icon_side}" href="/static/cross_icon.png">'
 	yield '</g>'
-	for card in range(len(data['cur'])):
+	for card in range(len(data['curr'])):
 		yield f'<g class="card" num="{card}" card_width="{card_width + 2 * r}" transform="translate({card * (card_width + 2 * r + pad)} {icon_side * 1.5})">'
 		yield f"""<path d="
 					M 0 {r}
@@ -28,7 +28,7 @@ def entry_form(data, kwargs):
 					h {-card_width}
 					a {r} {r} 0 0 0 {-r} {r}"
 					/>"""
-		yield f'<text x="{card_width / 2 + r}" y="{card_height / 2 + r}"> {data["cur"][card]} </text>'
+		yield f'<text x="{card_width / 2 + r}" y="{card_height / 2 + r}"> {data["curr"][card]} </text>'
 		yield '</g>'
 	yield f'<image class="reload" width="{reload_side}" height="{reload_side}" transform="translate({svg_width - reload_side} {icon_side * 1.5})" href="/static/reload.png">'
 	yield '</svg>'
@@ -39,20 +39,20 @@ def steps(step_num, params, data):
 	try:
 		selected = list(map(int, params['selected'].split()))
 		if sum(selected) in squares:
-			ind_1 = data['cur'].index(selected[0])
-			ind_2 = data['cur'].index(selected[1])
-			data['cur'][ind_1] = selected[1]
-			data['cur'][ind_2] = selected[0]
+			ind_1 = data['curr'].index(selected[0])
+			ind_2 = data['curr'].index(selected[1])
+			data['curr'][ind_1] = selected[1]
+			data['curr'][ind_2] = selected[0]
 			resp['answer'] = 'accepted'
 			resp['data_update'] = data
 		else:
 			resp['answer'] = 'rejected'
 	except KeyError:
 		resp['answer'] = "OK"
-		data['cur'] = data['start']
+		data['curr'] = data['start']
 		resp['data_update'] = data
 	return resp
 
 
 def validate(data, answer):
-	return data['cur'] == data['end']
+	return data['curr'] == data['end']
