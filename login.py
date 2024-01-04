@@ -61,7 +61,8 @@ def check_login(db, user_name, password):
 
 def current_user(db):
 	user = request.get_cookie('user', secret=_key)
-	db.execute('select student from Kvantland.Student where student = %s', (user, ))
+	login = request.get_cookie('login', secret=_key)
+	db.execute('select student from Kvantland.Student where student = %s and login = %s', (user, login, ))
 	try:
 		(user_check, ), = db.fetchall()
 	except ValueError:
@@ -69,11 +70,13 @@ def current_user(db):
 		return None
 	return int(user)
 		
-def do_login(user):
+def do_login(user, login):
 	response.set_cookie('user', str(user), path='/', httponly=True, samesite='lax', secret=_key)
+	response.set_cookie('login', str(login), path='/', httponly=True, samesite='lax', secret=_key)
 
 def do_logout():
 	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='lax')
+	response.set_cookie('login', '', path='/', max_age=0, httponly=True, samesite='lax')
 
 def do_redirect():
 	path = request.query.path
@@ -87,7 +90,7 @@ def do_redirect_to_root():
 @route('/login', method='POST')
 def login_attempt(db):
 	if (user := check_login(db, request.forms.login, request.forms.password)) != None:
-		do_login(user)
+		do_login(user, request.forms.login)
 		do_redirect()
 	else:
 		response.status = 403
