@@ -1,7 +1,7 @@
 def entry_form(data, kwargs):
     width = 7 # число клеточек в строке
     height = 8
-    line_width = 4 # ширина линий 
+    line_width = 2 # ширина линий 
     ind = line_width / 2 # отступ
     side = 40 # длина стороны квадрата с границами
     inner_side = side - line_width # длина стороны квадрата без границ 
