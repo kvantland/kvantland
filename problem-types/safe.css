@@ -22,11 +22,13 @@ body{
 }
 
 .active{
-	fill:green;
+	fill:transparent;
 }
-
-.passive{
+.colored{
 	fill:red;
+}
+.passive{
+	fill:green;
 }
 
 .gray{
@@ -45,7 +47,7 @@ body{
 
 .active:hover {
 	cursor:pointer;
-	fill:dimgray;
+	fill:rgba(0, 0, 0, 0.15);
 }
 
 text{

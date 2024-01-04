@@ -14,8 +14,12 @@ def entry_form(data, kwargs):
     yield f'<svg version="1.1" class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
     for card in range(len(data["start"])):
         if data["start"][card] == '*':
+            yield f'<rect class="colored top" x="{card * side + line_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
+            yield f'<text class="arrow" transform ="translate({card * side + side / 2}, {ind + side / 2}) rotate(270)">-></text>'
             yield f'<rect class="active top" x="{card * side + line_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
             yield f'<rect class="passive gray" x="{card * side + line_width}" y="{1 * side + line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
+            yield f'<rect class="colored bottom" x="{card * side + line_width}" y="{2 * side + line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
+            yield f'<text class="arrow" transform ="translate({card * side + side / 2}, {2 * side + ind + side / 2}) rotate(270)"><-</text>'
             yield f'<rect class="active bottom" x="{card * side + line_width}" y="{2 * side + line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
             yield f'<text class="number_value unknown" x="{card * side + ind + side / 2}" y="{1 * side + ind + side / 2}" column="{card}">{data["start"][card]}</text>'
         else:
