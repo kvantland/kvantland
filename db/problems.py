@@ -174,7 +174,7 @@ def Geom2(cur):
 
 	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'planet_cubium', "Планета Кубиум", hint="Таких точек ровно две.")
 	for vert, vert_name, correct in [
-				[[5, 7, 4], ['A', 'B', 'C'], [0, 11]],
+				[[3, 4, 6], ['A', 'B', 'C'], [0, 11]],
 				[[4, 2, 5], ['A', 'B', 'C'], [1, 10]],
 				[[2, 6, 7], ['A', 'B', 'C'], [2, 7]],
 				[[3, 6, 5], ['A', 'B', 'C'], [0, 11]],
