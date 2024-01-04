@@ -189,6 +189,24 @@ def Geom2(cur):
 			'correct': A,
 		}
 		variants_list = add_variant_to_list(variants_list, "Найдите угол", desc, json.dumps(cont))
+
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'planet_cubium', "Планета Кубиум", hint="Таких точек ровно две.")
+	for vert, vert_name, correct in [
+				[[3, 4, 6], ['A', 'B', 'C'], [0, 11]],
+				[[4, 2, 5], ['A', 'B', 'C'], [1, 10]],
+				[[2, 6, 7], ['A', 'B', 'C'], [2, 7]],
+				[[3, 6, 5], ['A', 'B', 'C'], [0, 11]],
+				]:
+				desc = """
+				Планета Кубиум имеет форму куба, в трёх вершинах которого находятся города A, B и C (см. рисунок).
+				Где нужно построить космодром так, чтобы расстояние от космодрома по поверхности планеты до городов было одинаковым?
+				Отметьте все подходящие варианты на картинке. """
+				cont = {
+					'vert': vert,
+					'vert_name': vert_name,
+					'correct': correct,
+				}
+				variants_list = add_variant_to_list(variants_list, "Планета Кубиум", desc, json.dumps(cont))
 	
 	add_list(problems_list, variants_list)
 
