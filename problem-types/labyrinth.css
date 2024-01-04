@@ -1,0 +1,38 @@
+body{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.plot_area{
+	margin: 0 auto 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;	
+	z-index: 1;
+	position: relative;
+}
+
+.square{
+	fill:transparent;
+}
+
+.choiced{
+	fill: rgba(0, 0, 0, 0.15);
+}
+
+.grid_line{
+	stroke: lightgray;
+	stroke-linecap: square;
+	stroke-width: 2;
+}
+
+.border_line{
+	stroke:black;
+	stroke-linecap: square;
+	stroke-width: 4;
+}
+
+.square:hover{
+	cursor: pointer;
+	fill: rgba(0, 0, 0, 0.15);
+}
