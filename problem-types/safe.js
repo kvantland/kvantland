@@ -1,37 +1,46 @@
-var free_squares = document.querySelectorAll('.free');
+var buttons = document.querySelectorAll('.active');
 var svg_box = document.querySelector('svg');
-var rook = document.querySelector('.rook');
-var side = document.querySelector('rect').getAttribute('width');
 var all_square = document.querySelectorAll('rect');
-var def_X = rook.getAttribute('x');
-var def_Y = rook.getAttribute('y');
-var def_column = rook.getAttribute('column');
-var def_row = rook.getAttribute('row');
+var unknowns = document.querySelectorAll('.unknown');
 var sender = document.getElementsByName('answer')[0];
 
 document.querySelector('button').onclick = function(e){
-	sender.value = [rook.getAttribute('column'), rook.getAttribute('row')]
+	var curr = "";
+	for (const u of unknowns) {
+		curr += u.innerHTML;
+	}
+	sender.value = curr;
 }
 
-for (const square of free_squares){
-	square.onclick = function(){
-		if (rook.classList.contains('free')){
-			this.classList.remove('free')
-			this.classList.add('choiced')
+for (const button of buttons){
+	button.onclick = function(){
+		if (button.classList.contains('top')) {
+			for (const u of unknowns) {
+				if (button.getAttribute('column') == u.getAttribute('column')) {
+					if (u.innerHTML == '*')
+						u.innerHTML = '0';
+					else {
+						u.innerHTML = String(((parseInt(u.innerHTML) + 1) % 10 + 10) % 10);
+					}
+				}
+			}
+		} else {
+			for (const u of unknowns) {
+				if (button.getAttribute('column') == u.getAttribute('column')) {
+					if (u.innerHTML == '*')
+						u.innerHTML = '0';
+					else {
+						u.innerHTML = String(((parseInt(u.innerHTML) - 1) % 10 + 10) % 10);
+					}
+				}
+			}
 		}
-		rook.setAttribute('x', this.getAttribute('x'));
-		rook.setAttribute('y', this.getAttribute('y'));
-		rook.setAttribute('column', this.getAttribute('column'));
-		rook.setAttribute('row', this.getAttribute('row'));
 	}
 }
 
 var rel = document.querySelector('.reload');
 rel.onclick = function(){
-	rook.classList.remove('choiced');
-	rook.classList.add('free');
-	rook.setAttribute('x', def_X);
-	rook.setAttribute('y', def_Y);
-	rook.setAttribute('column', def_column);
-	rook.setAttribute('row', def_row);
+	for (const u of unknowns){
+		u.innerHTML = '*';
+	}
 }

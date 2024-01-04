@@ -21,19 +21,31 @@ body{
 	position: absolute;
 }
 
-.gray{
-	fill:gray;
+.active{
+	fill:green;
 }
 
+.passive{
+	fill:red;
+}
+
+.gray{
+	fill:lightgray;
+}
 
 .grid_line{
 	stroke: black;
 	stroke-linecap: square;
 }
 
-.free:hover{
+
+.reload:hover {
 	cursor: pointer;
-	fill: rgba(0, 0, 0, 0.15);
+}
+
+.active:hover {
+	cursor:pointer;
+	fill:dimgray;
 }
 
 text{
