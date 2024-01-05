@@ -21,19 +21,8 @@ body{
 	position: absolute;
 }
 
-.blue{
-	fill: blue;
-	stroke:black;
-}
-
-.green{
-	fill: green;
-	stroke:black;
-}
-
-.yellow{
-	fill: yellow;
-	stroke:black;
+.pedestal{
+	fill: saddlebrown;
 }
 
 .active{
@@ -49,6 +38,14 @@ body{
 	stroke-linecap: square;
 }
 
+.top{
+	fill:transparent;
+}
+
+.top:hover{
+	cursor: pointer;
+	fill:rgba(0, 0, 0, 0.15);
+}
 .reload:hover{
 	cursor: pointer;
 }

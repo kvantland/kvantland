@@ -1,9 +1,8 @@
 var drag_boys = document.querySelectorAll('.active');
 var sender = document.getElementsByName('answer')[0];
-var def_boys = document.querySelectorAll('.passive');
 var all_boys = document.querySelectorAll('.boy');
 var cur_amount_text = document.querySelector('.amount');
-var board = document.querySelectorAll('rect');
+var board = document.querySelectorAll('.top');
 var side = document.querySelector('rect').getAttribute('width');
 var cp = [];
 for (const boy of drag_boys){
