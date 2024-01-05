@@ -161,7 +161,7 @@ def entry_form(data, kwargs):
 			yield f'<line class="dotted_line" x1="{plain.coord(edge[0]).x}" y1="{plain.coord(edge[0]).y}" x2="{plain.coord(edge[1]).x}" y2="{plain.coord(edge[1]).y}" />'
 		else:
 			yield f'<line class="line" x1="{plain.coord(edge[0]).x}" y1="{plain.coord(edge[0]).y}" x2="{plain.coord(edge[1]).x}" y2="{plain.coord(edge[1]).y}" />'
-		yield f'<circle class="point" num="{edge_list.index(edge)}" cx="{(plain.coord(edge[0]).x + plain.coord(edge[1]).x) / 2}" cy="{(plain.coord(edge[0]).y + plain.coord(edge[1]).y) / 2}" r="4" />'
+		yield f'<circle class="point" num="{edge_list.index(edge)}" cx="{(plain.coord(edge[0]).x + plain.coord(edge[1]).x) / 2}" cy="{(plain.coord(edge[0]).y + plain.coord(edge[1]).y) / 2}" r="5" />'
 
 	for num in data['vert']:
 		yield f'<text x="{cub_vert[num - 1].x}" y="{cub_vert[num - 1].y}"> {data["vert_name"][data["vert"].index(num)]} </text>'
