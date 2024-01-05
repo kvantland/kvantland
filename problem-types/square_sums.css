@@ -1,5 +1,5 @@
 .card {
-	fill: white;
+	fill: none;
 	stroke: brown;
 	stroke-width: 3;
 }
@@ -23,7 +23,8 @@ text {
 	font-family: inherit;
 	font-size: 30px;
 	text-anchor: middle;
-	dominant-baseline: middle;
+	dominant-baseline: central;
+	color: 	#2D3070;
 }
 
 .selected {

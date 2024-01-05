@@ -1,15 +1,39 @@
-function exchange(obj_1, obj_2){
-	let pos_1 = obj_1.getAttribute('transform')
-	let pos_2 = obj_2.getAttribute('transform')
-	obj_1.setAttribute('transform', pos_2)
-	obj_2.setAttribute('transform', pos_1)
-}
-
 function get_cur_coord(obj){
 	let [first_part, pre_second_part] = obj.getAttribute('transform').split('translate(')
 	let [second_part, third_part] = pre_second_part.split(')')
 	let coord = second_part.split(' ')
 	return coord
+}
+
+function exchange(obj_1, obj_2, pos_1, pos_2){
+	let cur_pos_1 = get_cur_coord(obj_1)[0]
+	let cur_pos_2 = get_cur_coord(obj_2)[0]
+	let sgn = (pos_2 - pos_1) / Math.abs(pos_2 - pos_1)
+	let step = sgn * 36
+
+	if (cur_pos_1 != pos_2 || cur_pos_2 != pos_1)
+	{
+		if (Math.abs(cur_pos_1 - pos_2) >= Math.abs(step))
+			move(obj_1, step, 0)
+		else
+			move(obj_1, pos_2 - cur_pos_1, 0)
+		if (Math.abs(cur_pos_1 - pos_2) >= Math.abs(step))
+			move(obj_2, -step, 0)
+		else
+			move(obj_2, pos_1 - cur_pos_2, 0)
+	}
+	else
+	{
+		clearInterval(movement)
+		movement_tmp = 0
+		for (card of document.querySelectorAll('.selected'))
+		{
+			card.classList.remove('selected')
+			move(card, 0, 10)
+		}
+		document.querySelector('.exchange_bar').classList.remove('active')
+		document.querySelector('.exchange_bar').classList.add('hidden')
+	}
 }
 
 function move(obj, x, y){
@@ -32,10 +56,13 @@ function show_interface(){
 	}
 }
 
+
 for (card of document.querySelectorAll('.card'))
 {
 
 	card.onclick = function(){
+		if (movement_tmp)
+			return;
 		if (!document.querySelector('.exchange_bar.active'))
 		{
 			if (this.classList.contains('selected'))
@@ -47,13 +74,19 @@ for (card of document.querySelectorAll('.card'))
 			{
 				this.classList.add('selected')
 				move(this, 0, -10)
+				this.parentNode.appendChild(this)
 			}
 		}
 	}
 }
 
 
+var [pos_1, pos_2] = [0, 0]
+var [movement, movement_tmp] = ['', 0]
+
 document.querySelector('.icon.exchange').onclick = function(){
+	if (movement_tmp)
+		return;
 	let [card_1, card_2] = document.querySelectorAll('.selected')
 	let url = new URL(window.location.href + 'xhr')
 	let selected = card_1.getAttribute('num') + ' ' + card_2.getAttribute('num')
@@ -73,19 +106,18 @@ document.querySelector('.icon.exchange').onclick = function(){
 			if (xhr.response == 'rejected')
 				alert('Сумма номеров не явялется полным квадратом!')
 			else
-				exchange(card_1, card_2)
+			{
+				[pos_1, pos_2] = [get_cur_coord(card_1)[0], get_cur_coord(card_2)[0]]
+				movement = setInterval(function(){exchange(card_1, card_2, pos_1, pos_2)}, 20)
+				movement_tmp = 1
+			}
 		}
 	}
-	for (card of document.querySelectorAll('.selected'))
-	{
-		card.classList.remove('selected')
-		move(card, 0, 10)
-	}
-	document.querySelector('.exchange_bar').classList.remove('active')
-	document.querySelector('.exchange_bar').classList.add('hidden')
 }
 
 document.querySelector('.icon.cross').onclick = function(){
+	if (movement_tmp)
+		return;
 	for (card of document.querySelectorAll('.selected'))
 	{
 		card.classList.remove('selected')
@@ -98,6 +130,8 @@ document.querySelector('.icon.cross').onclick = function(){
 document.addEventListener('click', show_interface)
 
 document.querySelector('.reload').onclick = function(){
+	if (movement_tmp)
+		return;
 	let url = new URL(window.location.href + 'xhr')
 	url.searchParams.set('reload', 'true')
 
@@ -110,6 +144,6 @@ document.querySelector('.reload').onclick = function(){
 		if (xhr.status != 200)
 			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
-			location.reload()
+			window.location.reload('true')
 	}
 }
