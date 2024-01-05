@@ -10,6 +10,7 @@ def entry_form(data, kwargs):
 
     yield '<input name="answer" type="hidden" />'
     yield f'<svg version="1.1" class="plot_area" width="{board_width}" height="{board_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield f'<g transform="translate({board_width} 0 )rotate(90)">'
     for y in range(0, height + 1):
         yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
     for x in range(0, width + 1):
@@ -30,6 +31,7 @@ def entry_form(data, kwargs):
                 yield f'<circle cx="{side / 2}" cy="{side / 2}" r="{15}" fill="yellow" stroke="orange" stroke-width="{5}"/>'
                 yield '</g>'
             yield f'<rect class="free square" row="{y}" column="{x}" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
+    yield f'</g>'
     yield '</svg>'
 
 def validate(data, answer):
