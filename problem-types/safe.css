@@ -4,7 +4,7 @@ body{
 }
 
 .plot_area{
-	margin: 0 auto 0 auto;
+	margin: 40px auto 0 auto;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;	
@@ -40,6 +40,21 @@ body{
 	stroke-linecap: square;
 }
 
+.interface_zone{
+	z-index: 1;
+	display: flex;
+	padding: 0 auto 0 auto;
+	flex-direction: column;
+}
+
+.interface_zone *{
+	margin-bottom: 20px;
+	width: 8em;
+}
+
+.interface_zone button{
+	padding: 0.3em 1.0em;
+}
 
 .reload:hover {
 	cursor: pointer;
@@ -48,6 +63,10 @@ body{
 .active:hover {
 	cursor:pointer;
 	fill:rgba(0, 0, 0, 0.15);
+}
+
+svg{
+	z-index: 2;
 }
 
 text{
