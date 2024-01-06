@@ -35,12 +35,22 @@ def entry_form(data, kwargs):
     yield '<button type="button" class="check"> Проверить </button>'
     yield '<button type="button" class="reload"> Сбросить </button>'
     yield '<div class="remaining_checks">'
-    yield f"<p> Осталось проверок: {max(0, data['left'] - 0)}<p>"
+    yield f"<p> Осталось проверок: {max(0, data['left'] - kwargs['step'])}<p>"
     yield '</div>'
     yield '</div>'
     yield '</div>'
 
-
+def steps(step_num, params, data):
+    if step_num > 2:
+        return {'answer': 'no_tries'}
+    weight = data['weight']
+    left, right = 0, 0
+    conf = params['conf']
+    if left > right:
+        return {'answer': 'left'}
+    elif right > left:
+        return {'answer': 'right'}
+    return {'answer': 'equal'}
 
 def validate(data, answer):
     return answer in data['correct']

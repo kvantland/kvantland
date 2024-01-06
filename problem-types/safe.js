@@ -38,9 +38,47 @@ for (const button of buttons){
 	}
 }
 
-var rel = document.querySelector('.reload');
-rel.onclick = function(){
+document.querySelector('.reload').onclick = function(){
 	for (const u of unknowns){
 		u.innerHTML = '*';
+	}
+}
+
+document.querySelector('.check').onclick = function(){
+	let url = new URL(window.location.href + 'xhr')
+	var conf = ''
+	for (let num = 1; num <= document.querySelectorAll('.coin').length; num++)
+	{
+		if (document.querySelector(`.coin.num_${num}`).hasAttribute('cup'))
+		{
+			if (document.querySelector(`.coin.num_${num}`).getAttribute('cup') == 'left')
+				conf += '1'
+			else
+				conf += '2'
+		}
+		else
+			conf += '0'
+	}
+	url.searchParams.set('conf', [conf])
+	let xhr = new XMLHttpRequest()
+	xhr.open('GET', url)
+	xhr.responseType = 'text'
+	xhr.send();
+	xhr.onload = function() {
+		if (xhr.status != 200)
+			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
+		else
+		{
+			if (xhr.response == 'no_tries')
+				alert('Больше нельзя делать взвешивания!')
+			else
+			{
+				let [text, amount] = document.querySelector('.remaining_weightings p').innerHTML.split(':')
+				document.querySelector('.remaining_weightings p').innerHTML = text + ': ' + (amount - 1)
+				let side = xhr.response
+				movement = setInterval(function(){move_scales(side)}, 20)
+				movement_tmp = 1
+			}
+		}
 	}
 }
