@@ -28,8 +28,6 @@ def entry_form(data, kwargs):
             yield f'<rect class="passive gray" x="{card * side + line_width}" y="{1 * side + line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
             yield f'<rect class="passive bottom" x="{card * side + line_width}" y="{2 * side + line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
             yield f'<text class="number_value known" x="{card * side + ind + side / 2}" y="{1 * side + ind + side / 2}" column="{card}">{data["start"][card]}</text>'
-    #yield f'<text style="font-size: {inner_side * 0.4}px" x="{ + board_side + 2 * inner_side}" y="{inner_side * 1.2}">Попыток осталось: {data["left"]}</text>'
-    #yield f'<image class="reload" x = "{pad + board_side}" y="{line_width}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
     yield '</svg>'
     yield '<div class="interface_zone">'
     yield '<button type="button" class="check"> Проверить </button>'
@@ -41,16 +39,12 @@ def entry_form(data, kwargs):
     yield '</div>'
 
 def steps(step_num, params, data):
-    if step_num > 2:
+    if step_num > data['left']:
         return {'answer': 'no_tries'}
-    weight = data['weight']
-    left, right = 0, 0
     conf = params['conf']
-    if left > right:
-        return {'answer': 'left'}
-    elif right > left:
-        return {'answer': 'right'}
-    return {'answer': 'equal'}
+    if params['conf'] in data['correct']:
+        return {'answer': 'true'}
+    return {'answer': 'false'}
 
 def validate(data, answer):
     return answer in data['correct']

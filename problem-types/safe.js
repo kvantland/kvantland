@@ -44,20 +44,11 @@ document.querySelector('.reload').onclick = function(){
 	}
 }
 
-document.querySelector('.check').onclick = function(){
+document.querySelector('.check ').onclick = function(){
 	let url = new URL(window.location.href + 'xhr')
 	var conf = ''
-	for (let num = 1; num <= document.querySelectorAll('.coin').length; num++)
-	{
-		if (document.querySelector(`.coin.num_${num}`).hasAttribute('cup'))
-		{
-			if (document.querySelector(`.coin.num_${num}`).getAttribute('cup') == 'left')
-				conf += '1'
-			else
-				conf += '2'
-		}
-		else
-			conf += '0'
+	for (const u of unknowns) {
+		conf += u.innerHTML;
 	}
 	url.searchParams.set('conf', [conf])
 	let xhr = new XMLHttpRequest()
@@ -70,14 +61,12 @@ document.querySelector('.check').onclick = function(){
 		else
 		{
 			if (xhr.response == 'no_tries')
-				alert('Больше нельзя делать взвешивания!')
+				alert('Больше нельзя делать проверок!')
 			else
 			{
-				let [text, amount] = document.querySelector('.remaining_weightings p').innerHTML.split(':')
-				document.querySelector('.remaining_weightings p').innerHTML = text + ': ' + (amount - 1)
-				let side = xhr.response
-				movement = setInterval(function(){move_scales(side)}, 20)
-				movement_tmp = 1
+				let [text, amount] = document.querySelector('.remaining_checks p').innerHTML.split(':')
+				document.querySelector('.remaining_checks p').innerHTML = text + ': ' + (amount - 1)
+				sender.value = conf
 			}
 		}
 	}
