@@ -93,7 +93,7 @@ def show_question(db, variant, hint_mode):
 		hybrid = False
 
 	try:
-		without_buttons = typedesc.without_buttons
+		without_buttons = typedesc.WITHOUT_BUTTONS
 	except AttributeError:
 		without_buttons = False
 		
