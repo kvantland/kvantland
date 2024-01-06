@@ -1,7 +1,7 @@
 def entry_form(data, kwargs):
-	icon_side = 40 # сторона иконок интерфейса
-	card_height = 60 # высота карт без учета уголков
-	card_width = 40 # ширина карт без учета уголков
+	icon_side = 50 # сторона иконок интерфейса
+	card_height = 90 # высота карт без учета уголков
+	card_width = 60 # ширина карт без учета уголков
 	pad = 10 # отступы между картами
 	r = 5 # радиус скругления углов карт
 	reload_side = 60 # размер кнопки сброса
@@ -16,7 +16,8 @@ def entry_form(data, kwargs):
 	yield f'<image class="icon cross" x="{icon_side * 1.5}" width="{icon_side}" height="{icon_side}" href="/static/cross_icon.png">'
 	yield '</g>'
 	for card in range(len(data['curr'])):
-		yield f'<g class="card" num="{card}" card_width="{card_width + 2 * r}" transform="translate({card * (card_width + 2 * r + pad)} {icon_side * 1.5})">'
+		yield f'<g class="card" num="{data["curr"][card]}" card_width="{card_width + 2 * r}" transform="translate({card * (card_width + 2 * r + pad)} {icon_side * 1.5})">'
+		yield f'<image height="{card_height + 2 * r}" width="{card_width + 2 * r}" href="/static/card_back.png" />'
 		yield f"""<path d="
 					M 0 {r}
 					v {card_height}

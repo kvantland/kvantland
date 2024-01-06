@@ -225,7 +225,7 @@ def Geom2(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Лабиринт", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'planet_cubium', "Планета Кубиум", hint="Таких точек ровно две.")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'planet_cubium', "Планета Кубиум", hint="Таких точек ровно две.")
 	for vert, vert_name, correct in [
 				[[3, 4, 6], ['A', 'B', 'C'], [0, 11]],
 				[[4, 2, 5], ['A', 'B', 'C'], [1, 10]],

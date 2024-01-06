@@ -200,7 +200,7 @@ def entry_form(data, kwargs):
 
 def steps(step_num, params, data):
 	if step_num > 2:
-		return 'no_tries'
+		return {'answer': 'no_tries'}
 	weight = data['weight']
 	left, right = 0, 0
 	conf = params['conf']
@@ -210,10 +210,10 @@ def steps(step_num, params, data):
 		elif conf[i] == '2':
 			right += weight[data['perm'].index(i + 1)]
 	if left > right:
-		return 'left'
+		return {'answer': 'left'}
 	elif right > left:
-		return 'right'
-	return 'equal'
+		return {'answer': 'right'}
+	return {'answer': 'equal'}
 
 
 def validate(data, answer):
