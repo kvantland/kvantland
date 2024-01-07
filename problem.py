@@ -30,7 +30,7 @@ class HintMode(Enum):
 def try_read_file(path):
 	path = Path(__file__).parent / path
 	try:
-		with open(path, 'r') as f:
+		with open(path, 'r',encoding="utf-8") as f:
 			return f.read()
 	except OSError:
 		return None
