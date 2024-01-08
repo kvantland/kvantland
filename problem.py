@@ -295,7 +295,7 @@ def xhr_req(db, var_id):
 		pass
 	try: 
 		if resp['answer_given']:
-			db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (resp['answer_correct'], resp['solution'], var_id, user_id))
+			db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (resp['answer_correct'], resp['ans'], var_id, user_id))
 			if resp['answer_correct']:
 				db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (var_id, user_id))
 	except KeyError:

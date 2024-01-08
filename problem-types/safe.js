@@ -50,7 +50,9 @@ document.querySelector('.check ').onclick = function(){
 	for (const u of unknowns) {
 		conf += u.innerHTML;
 	}
+	var sol = conf;
 	url.searchParams.set('conf', [conf])
+	url.searchParams.set('sol', [sol])
 	let xhr = new XMLHttpRequest()
 	xhr.open('GET', url)
 	xhr.responseType = 'text'
@@ -60,8 +62,8 @@ document.querySelector('.check ').onclick = function(){
 			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
-			if (xhr.response == 'no_tries')
-				alert('Больше нельзя делать проверок!')
+			if (xhr.response == 'no_tries' || xhr.response == 'true')
+				window.location.reload("true")
 			else
 			{
 				let [text, amount] = document.querySelector('.remaining_checks p').innerHTML.split(':')
