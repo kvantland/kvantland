@@ -39,15 +39,16 @@ def entry_form(data, kwargs):
     yield '</div>'
 
 def steps(step_num, params, data):
-    conf = params['conf']
+    ans = params['answer']
+    solution = params['solution']
     if step_num > data['left']:
-        return {'answer': 'no_tries', 'answer_given': True, 'answer_correct': False, 'solution': conf}
-    if params['conf'] in data['correct']:
-        return {'answer': 'true', 'answer_given': True, 'answer_correct': True, 'solution': conf}
+        return {'answer': 'no_tries', 'answer_correct': False, 'user_answer': ans, 'solution': solution}
+    if ans in data['correct']:
+        return {'answer': 'true', 'answer_correct': True, 'user_answer': ans, 'solution': solution}
     return {'answer': 'false'}
 
 def validate(data, answer):
     return answer in data['correct']
 
-SAVE_PROGRESS = False
 WITHOUT_BUTTONS = True
+HYBRID = True
