@@ -43,12 +43,12 @@ def steps(step_num, params, data):
     solution = params['solution']
     if step_num > data['left']:
         return {'answer': 'no_tries', 'answer_correct': False, 'user_answer': ans, 'solution': solution}
-    if ans in data['correct']:
+    if ans == data['correct']:
         return {'answer': 'true', 'answer_correct': True, 'user_answer': ans, 'solution': solution}
     return {'answer': 'false'}
 
 def validate(data, answer):
-    return answer in data['correct']
+    return answer == data['correct']
 
 WITHOUT_BUTTONS = True
 HYBRID = True
