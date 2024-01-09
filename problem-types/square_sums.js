@@ -26,13 +26,7 @@ function exchange(obj_1, obj_2, pos_1, pos_2){
 	{
 		clearInterval(movement)
 		movement_tmp = 0
-		for (card of document.querySelectorAll('.selected'))
-		{
-			card.classList.remove('selected')
-			move(card, 0, 10)
-		}
-		document.querySelector('.exchange_bar').classList.remove('active')
-		document.querySelector('.exchange_bar').classList.add('hidden')
+		hide_interface()
 	}
 }
 
@@ -54,6 +48,16 @@ function show_interface(){
 		document.querySelector('.exchange_bar').classList.remove('hidden')
 		document.querySelector('.exchange_bar').classList.add('active')
 	}
+}
+
+function hide_interface(){
+	for (card of document.querySelectorAll('.selected'))
+		{
+			card.classList.remove('selected')
+			move(card, 0, 10)
+		}
+	document.querySelector('.exchange_bar').classList.remove('active')
+	document.querySelector('.exchange_bar').classList.add('hidden')
 }
 
 
@@ -103,8 +107,10 @@ document.querySelector('.icon.exchange').onclick = function(){
 			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
-			if (xhr.response == 'rejected')
+			if (xhr.response == 'rejected'){
 				alert('Сумма номеров не явялется полным квадратом!')
+				hide_interface()
+			}
 			else
 			{
 				[pos_1, pos_2] = [get_cur_coord(card_1)[0], get_cur_coord(card_2)[0]]
@@ -118,13 +124,7 @@ document.querySelector('.icon.exchange').onclick = function(){
 document.querySelector('.icon.cross').onclick = function(){
 	if (movement_tmp)
 		return;
-	for (card of document.querySelectorAll('.selected'))
-	{
-		card.classList.remove('selected')
-		move(card, 0, 10)
-	}
-	document.querySelector('.exchange_bar').classList.remove('active')
-	document.querySelector('.exchange_bar').classList.add('hidden')
+	hide_interface()
 }
 
 document.addEventListener('click', show_interface)
