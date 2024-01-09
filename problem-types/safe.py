@@ -50,5 +50,5 @@ def steps(step_num, params, data):
 def validate(data, answer):
     return answer == data['correct']
 
-WITHOUT_BUTTONS = True
+HINT_ONLY = True
 HYBRID = True

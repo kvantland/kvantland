@@ -22,6 +22,10 @@ def show_answer_area(data, clas, kwargs, value='',):
 		yield '</form>'
 		yield from problem.show_buttons(**kwargs)
 		yield '</div>'
+	if clas == 'hint_only':
+		yield '<div class="answer_bar hint_only">'
+		yield from problem.show_hint_button(**kwargs)
+		yield '</div>'
 	if clas == 'without_input':
 		yield '<div class="answer_bar without_input">'
 		yield from problem.show_buttons(**kwargs)

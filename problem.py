@@ -96,6 +96,11 @@ def show_question(db, variant, hint_mode):
 		without_buttons = typedesc.WITHOUT_BUTTONS
 	except AttributeError:
 		without_buttons = False
+
+	try:
+		hint_only = typedesc.HINT_ONLY
+	except AttributeError:
+		hint_only = False
 		
 	if save_progress:
 		if hybrid:
@@ -112,7 +117,9 @@ def show_question(db, variant, hint_mode):
 		yield f'<img class="picture" src="/static/problem/{image}">'
 	
 	if not without_buttons:
-		if show_default_buttons:
+		if hint_only:
+			yield from show_answer_area(content, 'hint_only', kwargs)
+		elif show_default_buttons:
 			yield from show_answer_area(content, 'without_input', kwargs)
 		else:
 			yield from show_answer_area(content, 'with_input', kwargs)
