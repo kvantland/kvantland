@@ -9,7 +9,7 @@ def entry_form(data, kwargs):
     board_height = line_width + height * side
 
     yield '<input name="answer" type="hidden" />'
-    yield f'<svg version="1.1" class="plot_area" width="{board_width}" height="{board_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield f'<svg version="1.1" class="plot_area" width="{board_height}" height="{board_width}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
     yield f'<g transform="translate({board_width} 0 )rotate(90)">'
     for y in range(0, height + 1):
         yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
