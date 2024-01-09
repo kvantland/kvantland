@@ -46,30 +46,34 @@ document.querySelector('.reload').onclick = function(){
 
 document.querySelector('.check ').onclick = function(){
 	let url = new URL(window.location.href + 'xhr')
-	var conf = ''
+	let ans = ''
 	for (const u of unknowns) {
-		conf += u.innerHTML;
+		ans += u.innerHTML;
 	}
-	var sol = conf;
-	url.searchParams.set('conf', [conf])
-	url.searchParams.set('sol', [sol])
+	let solution = document.querySelector('#interactive_problem_form').outerHTML
 	let xhr = new XMLHttpRequest()
-	xhr.open('GET', url)
+	xhr.open('POST', url)
 	xhr.responseType = 'text'
-	xhr.send();
+	xhr.send(JSON.stringify({'answer': ans, 'solution': solution}));
 	xhr.onload = function() {
 		if (xhr.status != 200)
 			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
-			if (xhr.response == 'no_tries' || xhr.response == 'true')
-				window.location.reload("true")
+			if (xhr.response == 'no_tries')
+				alert('Больше нельзя делать проверок!')
 			else
-			{
-				let [text, amount] = document.querySelector('.remaining_checks p').innerHTML.split(':')
-				document.querySelector('.remaining_checks p').innerHTML = text + ': ' + (amount - 1)
-				sender.value = conf
-			}
+				{
+					if (xhr.response == 'false')
+						alert('Неверная комбинация!')
+					else
+						alert('Верная комбинация!')
+					let text = document.querySelector('.remaining_checks p').innerHTML.split(': ')[0]
+					let cur_amount = document.querySelector('.remaining_checks p').innerHTML.split(': ')[1]
+					document.querySelector('.remaining_checks p').innerHTML = text + ': ' + (cur_amount - 1)
+					if (xhr.response == 'true' || !cur_amount)
+						window.location.reload('true')
+				}
 		}
 	}
 }
