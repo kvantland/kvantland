@@ -39,6 +39,10 @@ body{
 	fill: rgba(0, 0, 0, 0.15);
 }
 
+.reload:hover{
+	cursor: pointer;
+}
+
 text{
 	font-size: 30px;
 	text-anchor: middle;
