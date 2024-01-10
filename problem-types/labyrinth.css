@@ -14,6 +14,12 @@ body{
 
 .square{
 	fill:transparent;
+	&:hover{
+		cursor: pointer;
+	}
+	&:not(.choiced):hover{
+		fill: rgba(0, 0, 0, 0.15);
+	}   
 }
 
 .choiced{
@@ -32,7 +38,3 @@ body{
 	stroke-width: 4;
 }
 
-.square:hover{
-	cursor: pointer;
-	fill: rgba(0, 0, 0, 0.15);
-}

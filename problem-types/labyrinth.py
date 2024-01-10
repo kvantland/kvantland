@@ -5,12 +5,12 @@ def entry_form(data, kwargs):
     ind = line_width / 2 # отступ
     side = 40 # длина стороны квадрата с границами
     inner_side = side - line_width # длина стороны квадрата без границ 
-    board_width = line_width + width * side # длина стороны доски
-    board_height = line_width + height * side
+    board_width = line_width + width * side + ind # длина стороны доски
+    board_height = line_width + height * side + ind
 
     yield '<input name="answer" type="hidden" />'
     yield f'<svg version="1.1" class="plot_area" width="{board_height}" height="{board_width}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-    yield f'<g transform="translate({board_width} 0 )rotate(90)">'
+    yield f'<g transform="translate({board_width + side} 0 )rotate(90)">'
     for y in range(0, height + 1):
         yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
     for x in range(0, width + 1):
