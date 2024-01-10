@@ -12,11 +12,6 @@ body{
 	position: relative;
 }
 
-.drag_zone{
-	display: flex;
-	flex-direction: column;
-}
-
 .full_window{
 	position: absolute;
 }

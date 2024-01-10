@@ -7,12 +7,10 @@ def entry_form(data, kwargs):
     side = 60 # длина стороны квадрата с границами
     inner_side = side - line_width # длина стороны квадрата без границ 
     board_side = line_width + size * side # длина стороны доски
-    pad = 6 # расстояние между доской и зоной перетаскивания
-    plot_width = board_side
     plot_height = line_width + 3 * side
     yield '<input name="answer" type="hidden" />'
     yield '<div class="plot_area">'
-    yield f'<svg version="1.1" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield f'<svg version="1.1" width="{board_side}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
     for card in range(len(data["start"])):
         if data["start"][card] == '*':
             yield f'<rect class="colored top" x="{card * side + line_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'

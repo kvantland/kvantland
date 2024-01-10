@@ -20,7 +20,7 @@ for (const button of buttons){
 					if (u.innerHTML == '*')
 						u.innerHTML = '0';
 					else {
-						u.innerHTML = String(((parseInt(u.innerHTML) + 1) % 10 + 10) % 10);
+						u.innerHTML = (u.innerHTML - -1) % 10;
 					}
 				}
 			}
@@ -30,7 +30,7 @@ for (const button of buttons){
 					if (u.innerHTML == '*')
 						u.innerHTML = '0';
 					else {
-						u.innerHTML = String(((parseInt(u.innerHTML) - 1) % 10 + 10) % 10);
+						u.innerHTML = (u.innerHTML - -9) % 10;
 					}
 				}
 			}
