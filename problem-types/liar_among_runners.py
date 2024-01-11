@@ -5,7 +5,8 @@ def entry_form(data, kwargs):
     line_width = 0 # ширина линий 
     ind = line_width // 2 # отступ
     side = 120 # длина стороны квадрата с границами
-    inner_side = side - line_width # длина стороны квадрата без границ 
+    inner_side = side - line_width # длина стороны квадрата без границ
+    inner_height = inner_side / 2
     board_side = line_width + size * side # длина стороны доски
     pad = 6 # расстояние между доской и зоной перетаскивания
     plot_width = pad + board_side + inner_side 
@@ -13,14 +14,14 @@ def entry_form(data, kwargs):
     yield '<input name="answer" type="hidden" />'
     yield f'<svg version="1.1" class="plot_area" width="{board_side}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
     yield f'<rect class="top" x="{1 * side + line_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" />'
-    yield f'<rect class="pedestal gold" x="{1 * side + line_width}" y="{line_width + inner_side * 1}" width="{inner_side}" height="{inner_side * 3}" />'
-    yield f'<text class="bottom" transform ="translate({1 * side + line_width + side / 2}, {inner_side * 3 + side / 2})">1</text>'
-    yield f'<rect class="top" x="{0 * side + line_width}" y="{line_width + inner_side * 1}" width="{inner_side}" height="{inner_side}" />'
-    yield f'<rect class="pedestal silver" x="{0 * side + line_width}" y="{line_width + inner_side * 2}" width="{inner_side}" height="{inner_side * 2}" />'
-    yield f'<text class="bottom" transform ="translate({0 * side + line_width + side / 2}, {inner_side * 3 + side / 2})">2</text>'
-    yield f'<rect class="top" x="{2 * side + line_width}" y="{line_width + inner_side * 2}" width="{inner_side}" height="{inner_side}" />'
-    yield f'<rect class="pedestal wood" x="{2 * side + line_width}" y="{line_width + inner_side * 3}" width="{inner_side}" height="{inner_side}" />'
-    yield f'<text class="bottom" transform ="translate({2 * side + line_width + side / 2}, {inner_side * 3 + side / 2})">3</text>'
+    yield f'<rect class="pedestal" x="{1 * side + line_width}" y="{line_width + inner_side}" width="{inner_side}" height="{inner_height * 3}" />'
+    yield f'<text class="bottom" transform ="translate({1 * side + line_width + side / 2}, {inner_height * 2 + inner_side + inner_height / 2})">1</text>'
+    yield f'<rect class="top" x="{0 * side + line_width}" y="{line_width + inner_height * 1}" width="{inner_side}" height="{inner_side}" />'
+    yield f'<rect class="pedestal" x="{0 * side + line_width}" y="{line_width + inner_side + inner_height}" width="{inner_side}" height="{inner_height * 2}" />'
+    yield f'<text class="bottom" transform ="translate({0 * side + line_width + side / 2}, {inner_height * 2 + inner_side + inner_height / 2})">2</text>'
+    yield f'<rect class="top" x="{2 * side + line_width}" y="{line_width + inner_height * 2}" width="{inner_side}" height="{inner_side}" />'
+    yield f'<rect class="pedestal" x="{2 * side + line_width}" y="{line_width + inner_height * 2 + inner_side}" width="{inner_side}" height="{inner_height}" />'
+    yield f'<text class="bottom" transform ="translate({2 * side + line_width + side / 2}, {inner_height * 2 + inner_side + inner_height / 2})">3</text>'
     
 
     for i in range(0, 4):

@@ -22,19 +22,7 @@ body{
 }
 
 .pedestal{
-	stroke: black;
-}
-
-.gold{
-	fill: gold;
-}
-
-.silver{
-	fill: silver;
-}
-
-.wood{
-	fill:saddlebrown;
+	fill:beige;
 }
 
 .active{
