@@ -21,7 +21,7 @@ def entry_form(data, kwargs):
 	base_inside_xr = cup_xr * 0.7
 	coin_size = 70
 	drag_pad = 30
-	weight = data['weight']
+	weight = sorted(data['weight'])
 	answer_zone_height = 120
 	container_height = answer_zone_height
 	container_width = 100
@@ -30,7 +30,7 @@ def entry_form(data, kwargs):
 	cont_a = 0.25
 	answer_zone_pad = 20
 	svg_width = max((plank_length + cup_xr * 2) * scale_1, (container_width + container_pad) * coin_amount - container_pad)
-	svg_height = (base_plank_width / 2 * ellipse_a + base_plank_height + basement_hight + basement_width / 2 * ellipse_a) * scale_1 + drag_pad + coin_size + answer_zone_height + answer_zone_pad
+	svg_height = (base_plank_width / 2 * ellipse_a + base_plank_height + basement_hight + basement_width / 2 * ellipse_a) * scale_1 + drag_pad + coin_size * 2 + answer_zone_height + answer_zone_pad
 	yield '<input name="answer" type="hidden" />'
 	yield '<div class="plot_area">'
 	yield f'<svg version="1.1" width="{svg_width}" height="{svg_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
@@ -170,9 +170,11 @@ def entry_form(data, kwargs):
 	yield '</g>'
 	yield '</g>'
 	yield '</g>'
-	yield f'<g class="drag_zone" transform="translate({(container_width - coin_size) / 2} {svg_height - coin_size - answer_zone_height - answer_zone_pad})">'
+	yield f'<g class="drag_zone" transform="translate({(container_width - coin_size) / 2} {svg_height - coin_size * 2 - answer_zone_height - answer_zone_pad})">'
+	yield f'<rect x="{-(container_width - coin_size) / 2}" y="0" width="{svg_width}" height="{coin_size * 2}" />'
+	yield f'<text x="{svg_width / 2 - (container_width - coin_size) / 2}" y="20"> Зона для монет </text>'
 	for i in range(1, 6):
-		yield f'<g class="coin num_{i}" transform="translate({(coin_size + coin_pad) * (i - 1) + coin_size / 2} {coin_size / 2})">'
+		yield f'<g class="coin num_{i}" transform="translate({(coin_size + coin_pad) * (i - 1) + coin_size / 2} {coin_size * 1.3})">'
 		yield f'<title> {i} </title>'
 		yield f'<circle cx="0" cy="0" r="{coin_size / 2}" />'
 		yield f'<text class="coin_text" x="0" y="0"> {i} </text>'
@@ -223,4 +225,4 @@ def validate(data, answer):
 	for i in range(len(ans)):
 		ans_transform[i] = weight[data['perm'].index(ans[i])]
 	print(ans_transform, file=sys.stderr)
-	return ans_transform == weight
+	return ans_transform == sorted(weight)

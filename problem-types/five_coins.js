@@ -126,7 +126,7 @@ function back_to_drag(coin){
 		coin.removeAttribute('occupied')
 	var num = coin.classList[1].split('_')[1]
 	var pad = document.querySelectorAll('.coin_container')[1].getAttribute('transform').split(' ')[0].split('(')[1]
-	coin.setAttribute('transform', `translate(${(num - 1) * pad - -coin_width / 2} ${coin_height / 2})`)
+	coin.setAttribute('transform', `translate(${(num - 1) * pad - -coin_width / 2} ${coin_height * 1.3})`)
 	if (coin.classList.contains('targeted'))
 		coin.classList.remove('targeted')
 	if (coin.classList.contains('choiced'))
