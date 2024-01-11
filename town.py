@@ -24,13 +24,15 @@ def show_town(db, town):
 	yield '<svg version="1.1" class="map" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	yield f'<image href="/static/map/town-{town}.jpg" width="1280" height="720" preserveAspectRatio="xMidYMid meet" />'
 
-	if user_id is not None:
-		db.execute('select вариант, положение, баллы, название, ответ_верен from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = %s and ученик = %s', (town, user_id))
-	else:
-		db.execute('select null, положение, баллы, название, null from Задача where город = %s', (town,))
+	db.execute('select вариант, положение, баллы, название, ответ_верен from ДоступнаяЗадача join Вариант using (вариант) join Задача using (задача) where город = %s', (town, ))
+	
+	cur_position = []
 	for variant, position, points, name, ans_true in db.fetchall():
 		try:
 			x, y = position
+			if cur_position == position:
+				continue
+			cur_position = position
 		except TypeError:
 			μ, σ = 50.0, 15.0
 			x = random.normalvariate(μ, σ)
@@ -40,7 +42,7 @@ def show_town(db, town):
 			True: 'solved',
 			False: 'failed',
 		}[ans_true]
-		link = f'/problem/{variant}/' if user_id is not None else f'/login?path=/town/{town}/'
+		link = f'/problem/{variant}/0/' 
 		yield f'<a xlink:href="{link}" class="level level_{status}" transform="translate({x} {y})"><title>{name}</title>'
 		yield f'<circle class="level-icon" r="0.65em" />'
 		yield f'<text class="level-value">{points}</text>'

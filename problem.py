@@ -48,7 +48,6 @@ def show_buttons(**kwargs):
 	yield from show_hint_button(**kwargs)
 
 def show_question(db, variant, hint_mode):
-	user_id = require_user(db)
 	db.execute('select город, Город.название, Тип.код, Задача.название, описание, изображение, содержание, Подсказка.текст, Подсказка.стоимость from Задача join Вариант using (задача) join Тип using (тип) join Город using (город) left join Подсказка using (задача) where вариант = %s', (variant,))
 	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost}
@@ -163,56 +162,27 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</main>'
 	yield '</div>'
 
-def require_user(db):
-	if (user_id := user.current_user(db)) == None:
-		raise HTTPError(403, 'Требуется вход')
-	return user_id
-
 def has_current_problem(db, user):
 	db.execute('select exists(select 1 from ТекущаяЗадача where ученик = %s)', (user, ))
 	(has, ), = db.fetchall()
 	return has
 
-def get_past_answer_correctness(db, user_id, var_id):
-	db.execute('select ответ_верен from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
-	try:
-		(is_answer_correct, ), = db.fetchall()
+@route('/problem/<var_id:int>/<hint_mode:int>/')
+def problem_show(db, var_id, hint_mode):
+	if hint_mode:
+		return show_question(db, var_id, HintMode.SHOW)
+	db.execute('select текст from Подсказка join Вариант using (задача) where вариант = %s', (var_id, )) 
+	try: 
+		(hint_affordable, ) = db.fetchall() 
 	except ValueError:
-		raise HTTPError(403, 'Задача недоступна')
-	return is_answer_correct
+		return show_question(db, var_id, HintMode.NONE)
+	return show_question(db, var_id, HintMode.AFFORDABLE)
 
-@route('/problem/<var_id:int>/')
-def problem_show(db, var_id):
-	user_id = require_user(db)
-	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
-	if is_answer_correct is not None:
-		db.execute('select ответ, решение from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
-		(answer, solution, ), = db.fetchall()
-		print(answer, solution, file=sys.stderr)
-		return _display_result(db, var_id, is_answer_correct, answer, solution)
 
-	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
-	(hinted, ), = db.fetchall()
-	if hinted:
-		hint_mode = HintMode.SHOW
-	else:
-		db.execute('select счёт >= стоимость from Подсказка join Вариант using (задача), Ученик where вариант = %s and ученик = %s', (var_id, user_id))
-		try:
-			(can_afford_hint, ), =db.fetchall()
-			hint_mode = HintMode.AFFORDABLE if can_afford_hint else HintMode.TOO_EXPENSIVE
-		except ValueError:
-			hint_mode = HintMode.NONE
-	return show_question(db, var_id, hint_mode)
-
-@route('/problem/<var_id:int>/', method='POST')
-def problem_answer(db, var_id):
+@route('/problem/<var_id:int>/<hint_mode:int>/', method='POST')
+def problem_answer(db, var_id, hint_mode):
 	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
 	type_ = db.fetchall()[0][0]
-	
-	user_id = require_user(db)
-	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
-	if is_answer_correct is not None:
-		redirect('')
 
 	answer = request.forms.answer
 	solution = request.forms.progress
@@ -225,34 +195,9 @@ def problem_answer(db, var_id):
 		save_progress = True
 
 	is_answer_correct = check_answer(db, var_id, answer)
-	if save_progress:
-		db.execute('update ДоступнаяЗадача set ответ_верен=%s, решение=%s, ответ=%s where вариант = %s and ученик = %s', (is_answer_correct, solution, answer, var_id, user_id))
-	else:
-		db.execute('update ДоступнаяЗадача set ответ_верен=%s, ответ=%s where вариант = %s and ученик = %s', (is_answer_correct, answer, var_id, user_id))
-	if is_answer_correct:
-		db.execute('update Ученик set счёт=счёт + (select баллы from Вариант join Задача using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	
 	yield from _display_result(db, var_id, is_answer_correct, answer, solution)
 
 
-def _request_hint(db, var_id):
-	user_id = require_user(db)
-	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
-	if is_answer_correct is not None:
-		return
-
-	db.execute('select подсказка_взята from ДоступнаяЗадача where вариант = %s and ученик = %s', (var_id, user_id))
-	(hinted, ), = db.fetchall()
-	if hinted:
-		return
-
-	db.execute('update ДоступнаяЗадача set подсказка_взята=true where вариант = %s and ученик = %s', (var_id, user_id))
-	try:
-		db.execute('update Ученик set счёт=счёт - (select стоимость from Подсказка join Вариант using (задача) where вариант = %s) where ученик = %s', (var_id, user_id))
-	except psycopg.errors.CheckViolation:
-		pass
-
-@route('/problem/<var_id:int>/hint', method='POST')
-def problem_request_hint(db, var_id):
-	_request_hint(db, var_id)
-	redirect('.')
+@route('/problem/<var_id:int>/<hint_mode:int>/hint', method='POST')
+def problem_request_hint(db, var_id,hint_mode):
+	redirect(f'/problem/{var_id}/1/')
