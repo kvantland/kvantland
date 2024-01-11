@@ -23,6 +23,7 @@ def show_town(db, town):
 	yield '</div>'
 	yield '<svg version="1.1" class="map" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	yield f'<image href="/static/map/town-{town}.png" width="1280" height="720" preserveAspectRatio="xMidYMid meet" />'
+
 	if user_id is not None:
 		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and student = %s', (town, user_id))
 	else:
