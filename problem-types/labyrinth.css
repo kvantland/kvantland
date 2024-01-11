@@ -22,6 +22,18 @@ body{
 	}   
 }
 
+.tick{
+	fill:green;
+	pointer-events: none;
+}
+
+.coin{
+	fill: url(#coinShadow);
+	stroke: #cbab00;
+	stroke-width: 4;
+	cursor: grab;
+}
+
 .choiced{
 	fill: rgba(250, 250, 0, 0.7);
 }
@@ -35,6 +47,6 @@ body{
 .border_line{
 	stroke:black;
 	stroke-linecap: square;
-	stroke-width: 4;
+	stroke-width: 2;
 }
 
