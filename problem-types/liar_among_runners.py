@@ -26,7 +26,7 @@ def entry_form(data, kwargs):
     yield f'<line class="filler_line" x1="{line_width + 2 * side}" y1 = "{line_width + inner_side + inner_height * 2 + 1.5}" x2="{line_width + 2 * side}" y2="{line_width + inner_side + inner_height * 3 - 1.5}" stroke-width="{line_width}"/>'
 
     for i in range(0, 4):
-        yield f'<image class="boy active num_{i + 1}" x="{pad + board_side + inner_side * (i % 2)}" y="{inner_height + inner_side * (i // 2)}" width="{inner_side}" height="{inner_side}" href="/static/runner/boy-{i + 1}.svg">'
+        yield f'<image class="boy active" num = "{i + 1}" x="{pad + board_side + inner_side * (i % 2)}" y="{inner_height + inner_side * (i // 2)}" width="{inner_side}" height="{inner_side}" href="/static/runner/boy-{i + 1}.svg">'
         yield f'<title>{name[i]}</title>'
         yield f'</image>'
     yield f'<image class="reload" x = "{pad + board_side}" y="{0}" height="{inner_height}" width="{inner_height}" href="/static/reload.png" />'

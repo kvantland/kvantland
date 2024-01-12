@@ -12,15 +12,12 @@ var def_X = drag_boys[0].getAttribute('x');
 var def_Y = drag_boys[0].getAttribute('y');
 var svg_box = document.querySelector('.plot_area');
 
-const row_set = new Set();
 const column_set = new Set()
 
 for (square of board){
-	row_set.add(square.getAttribute('x'))
 	column_set.add(square.getAttribute('y'))
 }
 
-var in_row = row_set.size;
 var in_column = column_set.size;
 
 document.querySelector('button').onclick = function(e){
@@ -29,14 +26,7 @@ document.querySelector('button').onclick = function(e){
 	for (const square of board){
 		for (const boy of drag_boys){
 			if (boy.classList.contains('choiced') && boy.getAttribute('x') == square.getAttribute('x')){
-				if(boy.classList.contains('num_1'))
-					curr.push(1);
-				if(boy.classList.contains('num_2'))
-					curr.push(2);
-				if(boy.classList.contains('num_3'))
-					curr.push(3);
-				if(boy.classList.contains('num_4'))
-					curr.push(4);
+				curr.push(boy.getAttribute('num'));
 			}
 		}	
 	}
@@ -84,22 +74,9 @@ function back_to_drag(){
 		return;
 	a.classList.remove('targeted');
 	a.classList.remove('choiced');
-	if(a.classList.contains('num_1')) {
-		a.setAttribute('x', cp[0][0]);
-		a.setAttribute('y', cp[0][1]);
-	}
-	if(a.classList.contains('num_2')) {
-		a.setAttribute('x', cp[1][0]);
-		a.setAttribute('y', cp[1][1]);
-	}
-	if(a.classList.contains('num_3')) {
-		a.setAttribute('x', cp[2][0]);
-		a.setAttribute('y', cp[2][1]);
-	}
-	if(a.classList.contains('num_4')) {
-		a.setAttribute('x', cp[3][0]);
-		a.setAttribute('y', cp[3][1]);
-	}
+	var num = parseInt(a.getAttribute('num')) - 1
+	a.setAttribute('x', cp[num][0]);
+	a.setAttribute('y', cp[num][1]);
 }
 
 function drop(square){
@@ -158,22 +135,9 @@ for (const boy of drag_boys){
 
 var rel = document.querySelector('.reload');
 rel.onclick = function(){
-	for (const boy of drag_boys){
-		if(boy.classList.contains('num_1')) {
-			boy.setAttribute('x', cp[0][0]);
-			boy.setAttribute('y', cp[0][1]);
-		}
-		if(boy.classList.contains('num_2')) {
-			boy.setAttribute('x', cp[1][0]);
-			boy.setAttribute('y', cp[1][1]);
-		}
-		if(boy.classList.contains('num_3')) {
-			boy.setAttribute('x', cp[2][0]);
-			boy.setAttribute('y', cp[2][1]);
-		}
-		if(boy.classList.contains('num_4')) {
-			boy.setAttribute('x', cp[3][0]);
-			boy.setAttribute('y', cp[3][1]);
-		}
+	for (const a of drag_boys){
+		var num = parseInt(a.getAttribute('num')) - 1
+		a.setAttribute('x', cp[num][0]);
+		a.setAttribute('y', cp[num][1]);
 	}
 }
