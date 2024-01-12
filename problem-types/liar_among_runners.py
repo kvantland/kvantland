@@ -9,26 +9,27 @@ def entry_form(data, kwargs):
     inner_height = inner_side / 2
     board_side = line_width + size * side # длина стороны доски
     pad = 6 # расстояние между доской и зоной перетаскивания
-    plot_width = pad + board_side + inner_side 
-    plot_height = line_width + 5 * side
+    plot_width = pad + board_side + inner_side * 2 
+    plot_height = line_width + side + inner_height * 3
     yield '<input name="answer" type="hidden" />'
-    yield f'<svg version="1.1" class="plot_area" width="{board_side}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield f'<svg version="1.1" class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
     yield f'<rect class="top" x="{1 * side + line_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" />'
     yield f'<rect class="pedestal" x="{1 * side + line_width}" y="{line_width + inner_side}" width="{inner_side}" height="{inner_height * 3}" />'
-    yield f'<text class="bottom" transform ="translate({1 * side + line_width + side / 2}, {inner_height * 2 + inner_side + inner_height / 2})">1</text>'
+    yield f'<text class="bottom" transform ="translate({1 * side + line_width + side / 2}, {inner_height * 0 + inner_side + inner_height / 2})">1</text>'
     yield f'<rect class="top" x="{0 * side + line_width}" y="{line_width + inner_height * 1}" width="{inner_side}" height="{inner_side}" />'
     yield f'<rect class="pedestal" x="{0 * side + line_width}" y="{line_width + inner_side + inner_height}" width="{inner_side}" height="{inner_height * 2}" />'
-    yield f'<text class="bottom" transform ="translate({0 * side + line_width + side / 2}, {inner_height * 2 + inner_side + inner_height / 2})">2</text>'
+    yield f'<text class="bottom" transform ="translate({0 * side + line_width + side / 2}, {inner_height * 1 + inner_side + inner_height / 2})">2</text>'
     yield f'<rect class="top" x="{2 * side + line_width}" y="{line_width + inner_height * 2}" width="{inner_side}" height="{inner_side}" />'
     yield f'<rect class="pedestal" x="{2 * side + line_width}" y="{line_width + inner_height * 2 + inner_side}" width="{inner_side}" height="{inner_height}" />'
     yield f'<text class="bottom" transform ="translate({2 * side + line_width + side / 2}, {inner_height * 2 + inner_side + inner_height / 2})">3</text>'
-    
+    yield f'<line class="filler_line" x1="{line_width + side}" y1 = "{line_width + inner_side + inner_height + 1.5}" x2="{line_width + side}" y2="{line_width + inner_side + inner_height * 3 - 1.5}" stroke-width="{line_width}"/>'
+    yield f'<line class="filler_line" x1="{line_width + 2 * side}" y1 = "{line_width + inner_side + inner_height * 2 + 1.5}" x2="{line_width + 2 * side}" y2="{line_width + inner_side + inner_height * 3 - 1.5}" stroke-width="{line_width}"/>'
 
     for i in range(0, 4):
-        yield f'<image class="boy active num_{i + 1}" x="{pad + board_side}" y="{inner_side * i}" width="{inner_side}" height="{inner_side}" href="/static/runner/boy-{i + 1}.svg">'
+        yield f'<image class="boy active num_{i + 1}" x="{pad + board_side + inner_side * (i // 2)}" y="{inner_height + inner_side * (i % 2)}" width="{inner_side}" height="{inner_side}" href="/static/runner/boy-{i + 1}.svg">'
         yield f'<title>{name[i]}</title>'
         yield f'</image>'
-    yield f'<image class="reload" x = "{pad + board_side}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
+    yield f'<image class="reload" x = "{pad + board_side}" y="{0}" height="{inner_height}" width="{inner_height}" href="/static/reload.png" />'
     yield '</svg>'
 
 def validate(data, answer):

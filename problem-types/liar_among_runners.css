@@ -22,7 +22,14 @@ body{
 }
 
 .pedestal{
-	fill:beige;
+	fill:lightyellow;
+	stroke: black;
+}
+
+.filler_line{
+	stroke: lightyellow;
+	stroke-linecap: square;
+	stroke-width: 2;
 }
 
 .active{
