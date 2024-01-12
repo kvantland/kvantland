@@ -22,8 +22,17 @@ def entry_form(data, kwargs):
     yield f'<rect class="top" x="{2 * side + line_width}" y="{line_width + inner_height * 2}" width="{inner_side}" height="{inner_side}" />'
     yield f'<rect class="pedestal" x="{2 * side + line_width}" y="{line_width + inner_height * 2 + inner_side}" width="{inner_side}" height="{inner_height}" />'
     yield f'<text class="bottom" transform ="translate({2 * side + line_width + side / 2}, {inner_height * 2 + inner_side + inner_height / 2})">3</text>'
-    yield f'<line class="filler_line" x1="{line_width + side}" y1 = "{line_width + inner_side + inner_height + 1.5}" x2="{line_width + side}" y2="{line_width + inner_side + inner_height * 3 - 1.5}" stroke-width="{line_width}"/>'
-    yield f'<line class="filler_line" x1="{line_width + 2 * side}" y1 = "{line_width + inner_side + inner_height * 2 + 1.5}" x2="{line_width + 2 * side}" y2="{line_width + inner_side + inner_height * 3 - 1.5}" stroke-width="{line_width}"/>'
+    #yield f'<line class="filler_line" x1="{line_width + side}" y1 = "{line_width + inner_side + inner_height + 1.5}" x2="{line_width + side}" y2="{line_width + inner_side + inner_height * 3 - 1.5}" stroke-width="{line_width}"/>'
+    #yield f'<line class="filler_line" x1="{line_width + 2 * side}" y1 = "{line_width + inner_side + inner_height * 2 + 1.5}" x2="{line_width + 2 * side}" y2="{line_width + inner_side + inner_height * 3 - 1.5}" stroke-width="{line_width}"/>'
+    yield f"""<path class="border_line" d=" M {0 + line_width}, {line_width + inner_side + inner_height * 3}
+                        v {-(line_width + 2 * inner_height)}
+                        h {line_width + 1 * inner_side} 
+                        v {-(line_width + 1 * inner_height)}
+                        h {line_width + 1 * inner_side} 
+                        v {line_width + 2 * inner_height}
+                        h {line_width + 1 * inner_side} 
+                        v {line_width + 1 * inner_height}
+                        z"/>"""
 
     for i in range(0, 4):
         yield f'<image class="boy active" num = "{i + 1}" x="{pad + board_side + inner_side * (i % 2)}" y="{inner_height + inner_side * (i // 2)}" width="{inner_side}" height="{inner_side}" href="/static/runner/boy-{i + 1}.svg">'

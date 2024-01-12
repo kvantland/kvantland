@@ -23,13 +23,12 @@ body{
 
 .pedestal{
 	fill:lightyellow;
-	stroke: black;
+	
 }
 
-.filler_line{
-	stroke: lightyellow;
-	stroke-linecap: square;
-	stroke-width: 2;
+.border_line {
+    stroke: black;
+    fill:transparent;
 }
 
 .active{
@@ -38,11 +37,6 @@ body{
 
 .targeted{
 	cursor: grabbing;
-}
-
-.grid_line{
-	stroke: black;
-	stroke-linecap: square;
 }
 
 .top{
