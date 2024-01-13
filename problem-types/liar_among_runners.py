@@ -9,7 +9,7 @@ def entry_form(data, kwargs):
     inner_side = side - line_width # длина стороны квадрата без границ
     inner_height = inner_side / 2
     board_side = line_width + size * side # длина стороны доски
-    pad = 160 # расстояние между доской и зоной перетаскивания
+    pad = 80 # расстояние между доской и зоной перетаскивания
     plot_width = pad + board_side + inner_side * 2 + bord
     plot_height = line_width + side + inner_height * 3 + bord + bord / 2
     yield '<input name="answer" type="hidden" />'
@@ -31,8 +31,8 @@ def entry_form(data, kwargs):
     yield f'<rect class="border_line" x="{line_width + inner_side + bord / 2}" y="{line_width + inner_side}" width="{line_width + bord + inner_side}" height="{bord / 2}"/>'
     yield f'<rect class="border_line" x="{line_width + inner_side * 2 + bord}" y="{line_width + inner_side + inner_height * 2}" width="{line_width + bord / 2 + inner_side}" height="{bord / 2}"/>'
 
-    yield f'<text class="bottom first" transform ="translate({1 * side + line_width + side / 2 + bord}, {inner_height * 3 / 2 + inner_side})" textLength ="30px">1</text>'
-    yield f'<text class="bottom second" transform ="translate({0 * side + line_width + side / 2 + bord}, {inner_height + inner_side + inner_height})">2</text>'
+    yield f'<text class="bottom first" transform ="translate({1 * side + line_width + side / 2 + bord}, {inner_height / 2 + inner_side})">1</text>'
+    yield f'<text class="bottom second" transform ="translate({0 * side + line_width + side / 2 + bord}, {inner_height + inner_side + inner_height / 2})">2</text>'
     yield f'<text class="bottom third" transform ="translate({2 * side + line_width + side / 2 + bord}, {inner_height * 2 + inner_side + inner_height / 2})">3</text>'
 
 

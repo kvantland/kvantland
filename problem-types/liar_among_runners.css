@@ -40,20 +40,20 @@ body{
 
 text.bottom{
 	stroke: black;
-	fill: white;
+	fill: brown;
 	font-family: georgia;
 }
 
-text.first{
-	font-size: 150px;
+.first{
+	font-size: 60px;
 }
 
-text.second{
-	font-size: 100px;
-}
-
-text.third{
+.second{
 	font-size: 50px;
+}
+
+.third{
+	font-size: 45px;
 }
 
 .top:hover{
