@@ -14,9 +14,9 @@ def entry_form(data, kwargs):
     plot_height = line_width + side + inner_height * 3 + bord + bord / 2
     yield '<input name="answer" type="hidden" />'
     yield f'<svg version="1.1" class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-    yield f'<rect class="top" x="{1 * side + line_width + bord}" y="{line_width}" width="{inner_side}" height="{inner_side}" />'
-    yield f'<rect class="top" x="{0 * side + line_width + bord}" y="{line_width + inner_height * 1}" width="{inner_side}" height="{inner_side}" />'
-    yield f'<rect class="top" x="{2 * side + line_width + bord}" y="{line_width + inner_height * 2}" width="{inner_side}" height="{inner_side}" />'
+    yield f'<rect class="top" x="{1 * side + line_width + bord}" y="{line_width}" num="*" width="{inner_side}" height="{inner_side}" />'
+    yield f'<rect class="top" x="{0 * side + line_width + bord}" y="{line_width + inner_height * 1}" num="*" width="{inner_side}" height="{inner_side}" />'
+    yield f'<rect class="top" x="{2 * side + line_width + bord}" y="{line_width + inner_height * 2}" num="*" width="{inner_side}" height="{inner_side}" />'
     yield f"""<path class="border_line" d=" M {0 + line_width + bord}, {line_width + inner_side + inner_height * 3 + bord / 2}
                         v {-(line_width + 2 * inner_height)}
                         h {line_width + 1 * inner_side} 

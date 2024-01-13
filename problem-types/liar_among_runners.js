@@ -85,15 +85,28 @@ function drop(square){
 	if (!a)
 		return;
 	a.classList.remove('targeted');
-	a.classList.add('choiced');	
+	a.classList.add('choiced');
+	if (square.getAttribute('num') != "*") {
+		var num = parseInt(square.getAttribute('num')) - 1
+		var b = drag_boys[num]
+		b.setAttribute('x', cp[num][0]);
+		b.setAttribute('y', cp[num][1]);
+		b.classList.remove('choiced')
+	}
 	a.setAttribute('y', square.getAttribute('y'));
 	a.setAttribute('x', square.getAttribute('x'));
+	square.setAttribute('num', a.getAttribute('num'))
 }
 
 for (const boy of drag_boys){
 	boy.onmousedown = function(event){
 		this.classList.add('targeted');
 		this.classList.remove('choiced');
+		for (const square of board) {
+			if (square.getAttribute('num') == this.getAttribute('num')){
+				square.setAttribute('num', "*")
+			}
+		}
 		svg_box.appendChild(this);
 		var svg_box_X = svg_box.getBoundingClientRect().left;
 		var svg_box_Y = svg_box.getBoundingClientRect().top;
@@ -122,7 +135,7 @@ for (const boy of drag_boys){
 					column += 1;
 				}
 			};
-			if (min_diff < side ** 2 && check_if_empty(best_square)){
+			if (min_diff < side ** 2){
 				this.setAttribute('column', best_square_column);
 				this.setAttribute('row', best_square_row);
 				drop(best_square);
@@ -139,5 +152,8 @@ rel.onclick = function(){
 		var num = parseInt(a.getAttribute('num')) - 1
 		a.setAttribute('x', cp[num][0]);
 		a.setAttribute('y', cp[num][1]);
+	}
+	for (const b of board){
+		b.setAttribute('num', '*');
 	}
 }
