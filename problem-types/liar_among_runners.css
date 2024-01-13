@@ -38,6 +38,24 @@ body{
 	fill:transparent;
 }
 
+text.bottom{
+	stroke: black;
+	fill: white;
+	font-family: georgia;
+}
+
+text.first{
+	font-size: 150px;
+}
+
+text.second{
+	font-size: 100px;
+}
+
+text.third{
+	font-size: 50px;
+}
+
 .top:hover{
 	cursor: pointer;
 	fill:rgba(0, 0, 0, 0.15);
