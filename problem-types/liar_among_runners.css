@@ -21,14 +21,9 @@ body{
 	position: absolute;
 }
 
-.pedestal{
-	fill:lightyellow;
-	
-}
-
 .border_line {
     stroke: black;
-    fill:transparent;
+    fill:#f4d06f;
 }
 
 .active{
