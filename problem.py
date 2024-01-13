@@ -96,6 +96,11 @@ def show_question(db, variant, hint_mode):
 		without_buttons = typedesc.WITHOUT_BUTTONS
 	except AttributeError:
 		without_buttons = False
+
+	try:
+		hint_only = typedesc.HINT_ONLY
+	except AttributeError:
+		hint_only = False
 		
 	if save_progress:
 		if hybrid:
@@ -112,7 +117,9 @@ def show_question(db, variant, hint_mode):
 		yield f'<img class="picture" src="/static/problem/{image}">'
 	
 	if not without_buttons:
-		if show_default_buttons:
+		if hint_only:
+			yield from show_answer_area(content, 'hint_only', kwargs)
+		elif show_default_buttons:
 			yield from show_answer_area(content, 'without_input', kwargs)
 		else:
 			yield from show_answer_area(content, 'with_input', kwargs)
@@ -275,22 +282,43 @@ def problem_request_hint(db, var_id):
 	_request_hint(db, var_id)
 	redirect('.')
 
-@route('/problem/<var_id:int>/xhr', method='GET')
-def xhr_req(db, var_id):
-	user_id = require_user(db)
-	if user_id == None:
-		redirect('/')
+def xhr_request(db, user_id, var_id, params):
 	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
 	(xhr_amount, ), = db.fetchall()
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()
 	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
 	(cont, ), = db.fetchall()
-	params = request.query
 	typedesc = import_module(f'problem-types.{type_}')
 	resp = typedesc.steps(xhr_amount, params, cont)
 	try: 
 		db.execute('update Kvantland.Variant set content = %s where variant = %s', (json.dumps(resp['data_update']), var_id,))
 	except KeyError:
 		pass
+	try: 
+		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (resp['answer_correct'], resp['user_answer'], var_id, user_id))
+		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) * %s where student = %s', (var_id, int(resp['answer_correct']), user_id))
+	except KeyError:
+		pass
+	try:
+		db.execute('update Kvantland.AvailableProblem set solution=%s where variant = %s and student = %s', (resp['solution'], var_id, user_id))
+	except KeyError:
+		pass
 	return resp['answer']
+
+
+@route('/problem/<var_id:int>/xhr', method='GET')
+def xhr_short(db, var_id):
+	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
+	params = request.query
+	return xhr_request(db, user_id, var_id, params)
+
+@route('/problem/<var_id:int>/xhr', method='POST')
+def xhr_long(db, var_id):
+	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
+	params = json.loads(request.body.read())
+	return xhr_request(db, user_id, var_id, params)

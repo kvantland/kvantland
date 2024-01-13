@@ -1,0 +1,74 @@
+body{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.plot_area{
+	margin: 40px auto 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;	
+	z-index: 1;
+	position: relative;
+}
+
+.full_window{
+	position: absolute;
+}
+
+.active{
+	fill:transparent;
+}
+.colored{
+	fill:red;
+}
+.passive{
+	fill:green;
+}
+
+.gray{
+	fill:lightgray;
+}
+
+.grid_line{
+	stroke: black;
+	stroke-linecap: square;
+}
+
+.interface_zone{
+	z-index: 1;
+	display: flex;
+	padding: 0 auto 0 auto;
+	padding-top: 2px;
+	flex-direction: column;
+}
+
+.interface_zone *{
+	margin-bottom: 10px;
+	width: 8em;
+}
+
+.interface_zone button{
+	padding: 0.3em 1.0em;
+}
+
+.reload:hover {
+	cursor: pointer;
+}
+
+.active:hover {
+	cursor:pointer;
+	fill:rgba(0, 0, 0, 0.15);
+}
+
+svg{
+	z-index: 2;
+}
+
+text{
+	font-size: 30px;
+	text-anchor: middle;
+	dominant-baseline: central;
+	font-family: inherit;
+	font-weight: 1000
+}
