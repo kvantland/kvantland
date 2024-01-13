@@ -54,6 +54,8 @@ def empty_user_info():
 
 @route('/acc')
 def display_pers_acc(db, err='', user_info=empty_user_info()):
+	if current_user(db) == None:
+		redirect('/')
 	yield '<!DOCTYPE html>'
 	yield '<title>Личный кабинет</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'

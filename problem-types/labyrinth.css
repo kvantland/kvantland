@@ -1,0 +1,52 @@
+body{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.plot_area{
+	margin: 0 auto 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;	
+	z-index: 1;
+	position: relative;
+}
+
+.square{
+	fill:transparent;
+	&:hover{
+		cursor: pointer;
+	}
+	&:not(.choiced):hover{
+		fill: rgba(0, 0, 0, 0.15);
+	}   
+}
+
+.tick{
+	fill:green;
+	pointer-events: none;
+}
+
+.coin{
+	fill: url(#coinShadow);
+	stroke: #cbab00;
+	stroke-width: 4;
+	cursor: grab;
+}
+
+.choiced{
+	fill: rgba(250, 250, 0, 0.7);
+}
+
+.grid_line{
+	stroke: lightgray;
+	stroke-linecap: square;
+	stroke-width: 2;
+}
+
+.border_line{
+	stroke:black;
+	stroke-linecap: square;
+	stroke-width: 2;
+}
+

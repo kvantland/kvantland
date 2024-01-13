@@ -40,10 +40,10 @@ def login_attempt(db):
 		except KeyError:
 			pass
 	if (user := vk_check_login(db, login)) != None:	
-		do_login(user)
+		do_login(user, login)
 	else:
 		user = add_user(login, name, surname, city, school, password, db)
-		do_login(user)
+		do_login(user, login)
 	redirect('/')
 
 def vk_check_login(db, user_name):

@@ -143,3 +143,7 @@ svg{
 rect.answer_zone{
 	fill:none;
 }
+
+.drag_zone rect{
+	fill: #e9e9ed;
+}

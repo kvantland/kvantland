@@ -289,7 +289,6 @@ svg.map .town {
 }
 
 svg.map .town-name {
-	stroke: none;
 	font-weight: bold;
 }
 

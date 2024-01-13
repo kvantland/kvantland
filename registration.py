@@ -197,7 +197,7 @@ def login_attempt(db):
 				mes, param_to_change = check_format(user_info)
 				if not mes:
 					user = add_user(db, user_info)
-					do_login(user)
+					do_login(user, user_info['login'])
 					redirect('/')
 				else:
 					user_info[param_to_change] = ''

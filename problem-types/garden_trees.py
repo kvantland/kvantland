@@ -2,7 +2,7 @@ def entry_form(data, kwargs):
 	width = data['n'] # число клеточек в строке
 	height = data['m'] # число строк в таблице
 	line_width = 3 # ширина линий 
-	ind = line_width // 2 # отступ
+	ind = line_width / 2 # отступ
 	side = 70 # длина стороны квадрата с границами
 	inner_side = side - line_width # длина стороны квадрата без границ 
 	board_width = line_width + side * width # ширина доски

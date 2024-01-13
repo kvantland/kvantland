@@ -34,9 +34,17 @@ body{
 	stroke-linecap: square;
 }
 
+.star{
+	fill:yellow;
+}
+
 .free:hover{
 	cursor: pointer;
 	fill: rgba(0, 0, 0, 0.15);
+}
+
+.reload:hover{
+	cursor: pointer;
 }
 
 text{

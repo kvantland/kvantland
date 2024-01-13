@@ -139,15 +139,15 @@ def IslandOfLiars2(cur):
 					После того как подошёл опоздавший {N+1}-й кандидат, каждый из кандидатов повторил своё заявление. Кто опоздавший: лжец или правдолюб?"""
 			cont = {
 				'answers': [
-					"Лжец",
-					"Правдолюб",
-					"Нельзя однозначно определить",
+					" Лжец",
+					" Правдолюб",
+					" Нельзя однозначно определить",
 				],
 				'correct': A,
 			}
 			variants_list = add_variant_to_list(variants_list, "Выборы мэра острова", desc, json.dumps(cont))	
 			
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Король и два придворных мудреца", image="Mudrez.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Король и два придворных мудреца", image="Mudrez.png", hint="Первый мудрец должен сообщить такое число N, чтобы только наименьшие возможные из остальных загаданных чисел давали вместе с N заданную сумму.")
 	for S, M, N, A in [(60, 5, 3, 18), 
 			   (72, 6, 4, 21), 
 			   (73, 6, 3, 16), 
@@ -175,6 +175,24 @@ def Chiselburg2(cur):
 			'correct': A,
 			}
 		variants_list = add_variant_to_list(variants_list, "Шарик, Бобик и Барсик", desc, json.dumps(cont))
+
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'square_sums', "Квадратные суммы")
+	for start, curr, end in [
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]],
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9, 0, 1, 2, 3, 4, 5, 6, 7, 8]],
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 3, 5, 7, 9, 0, 2, 4, 6, 8]],
+			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 0, 3, 2, 5, 4, 7, 6, 9, 8]]
+			]:
+		desc = f"""
+				В ряд лежат 10 карточек с цифрами 0, 1, 2, …, 9. 
+				Разрешается менять местами две карточки (не обязательно соседних), если их сумма – точный квадрат.
+				Переставьте карточки в порядке: {', '.join(list(map(str, end)))}"""
+		cont = {
+			'start': start,
+			'curr': curr,
+			'end': end,
+			}
+		variants_list = add_variant_to_list(variants_list, "Квадратные суммы", desc, json.dumps(cont))
 	
 	add_list(problems_list, variants_list)
 
@@ -190,6 +208,43 @@ def Geom2(cur):
 			'correct': A,
 		}
 		variants_list = add_variant_to_list(variants_list, "Найдите угол", desc, json.dumps(cont))
+
+
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 1, 'labyrinth', "Лабиринт")
+	field = [[2,0,2,1],[5,0,5,2],[3,1,3,3],[6,1,6,2],[4,2,4,3],[1,3,1,6],[2,4,2,6],[4,4,4,6],[5,4,5,5],[3,5,3,6],[5,6,5,7],[4,7,4,8],
+			[3,1,5,1],[1,2,3,2],[5,2,6,2],[1,3,3,3],[4,3,7,3],[2,4,3,4],[6,4,7,4],[3,5,4,5],[5,5,7,5],[0,6,2,6],[4,6,7,6],[1,7,4,7],[5,7,6,7]]
+	for N, A in [
+		([[4,0], [5, 1], [2, 2], [0, 5], [1, 5], [6, 5], [5, 6], [3, 7]], "1,5,3,7,5,1,5,6,6,5"),
+		([[2,0], [4, 0], [5, 0], [1, 5], [3, 5], [6, 5], [5, 6], [3, 7]], "1,5,3,5,3,7,5,0,5,6,6,5"),
+		([[4,0], [6, 0], [0, 5], [1, 5], [3, 5], [6, 5], [5, 6], [3, 7]], "1,5,3,5,3,7,5,6,6,0,6,5"),
+		([[1,0], [5, 1], [2, 2], [1, 5], [3, 5], [6, 5], [5, 6], [2, 7]], "1,5,2,7,3,5,5,1,5,6,6,5")
+			]:
+		desc = f"""Некоторые золотые монеты в лабиринте недоступны. Отметьте те и только те монеты, которые можно собрать, двигаясь по этому лабиринту."""
+		cont = {
+			'cur': N,
+			'correct': A,
+			'board': field
+		}
+		variants_list = add_variant_to_list(variants_list, "Лабиринт", desc, json.dumps(cont))
+
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'planet_cubium', "Планета Кубиум", hint="Таких точек ровно две.")
+	for vert, vert_name, correct in [
+				[[3, 4, 6], ['A', 'B', 'C'], [0, 11]],
+				[[4, 2, 5], ['A', 'B', 'C'], [1, 10]],
+				[[2, 6, 7], ['A', 'B', 'C'], [2, 7]],
+				[[3, 6, 5], ['A', 'B', 'C'], [0, 11]],
+				]:
+				desc = """
+				Планета Кубиум имеет форму куба, в трёх вершинах которого находятся города A, B и C (см. рисунок).
+				Где нужно построить космодром так, чтобы расстояние от космодрома по поверхности планеты до городов было одинаковым?
+				Отметьте все подходящие варианты на картинке. """
+				cont = {
+					'vert': vert,
+					'vert_name': vert_name,
+					'correct': correct,
+				}
+				variants_list = add_variant_to_list(variants_list, "Планета Кубиум", desc, json.dumps(cont))
+
 	
 	add_list(problems_list, variants_list)
 
@@ -224,7 +279,7 @@ def Golovolomsk2(cur):
 				}
 				variants_list = add_variant_to_list(variants_list, "Крестики-нолики", desc, json.dumps(cont))
     
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'garden_trees', "Деревья в саду")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'garden_trees', "Деревья в саду", hint="На каждом участке должно расти не более двух деревьев.")
 	for T, A in [([3, 6], [
 				[[0, 1, 1, 0, 1, 1], [1, 2, 2, 1, 2, 2], [1, 2, 2, 1, 2, 2]],
 				[[0, 1, 1, 2, 2, 0], [2, 2, 0, 2, 2, 1], [2, 2, 1, 1, 0, 1]],
@@ -474,7 +529,7 @@ def Golovolomsk2(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Деревья в саду", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'knights_and_bishops', "Кони и слоны")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'knights_and_bishops', "Кони и слоны",hint="Попробуйте сначала поставить коней. Несколько коней не бьют друг друга, если они стоят на полях одного цвета или стоят в ряд.")
 	for N, height, width, correct in [
 				[12, 4, 4, [
 				[[1, '-', '-', 1], [1, 2, 2, 1], [1, '-', '-', 1], [1, 2, 2, 1]],
@@ -2351,7 +2406,7 @@ def CombiRepublic2(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках", image="Kvantik.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках", image="Kvantik.png", hint="Число способов выбрать 6 карт из 12 равно (12*11*10*9*8*7)/6*5*4*3*2. Однако не все эти способы нам подходят и нужно исключить лишние.")
 	for N, A in [
 			("у игрока оказался хотя бы один туз?", 896),
 		  ("у игрока оказался ровно один туз?", 224),
@@ -2365,16 +2420,16 @@ def CombiRepublic2(cur):
 			}
 		variants_list = add_variant_to_list(variants_list, "Тузы на руках", desc, json.dumps(cont))	
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'rook_and_pawns', "Игра ладья и пешки")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'rook_and_pawns', "Игра ладья и пешки", hint="Начиная с клеток первой строки и последнего столбца, определите является ли выигрышной позиция, если ладья оказалась в этой клетке, для игрока, который должен делать очередной ход.")
 	for N, A in [
-		([[3,4], [6, 5], [4, 1]], 15),
-		([[2,4], [4, 3], [6, 2]], 6),
-		([[2,3], [3, 1], [5, 5], [6, 2]], 23),
-		([[2,2], [4, 5], [5, 1], [6, 4]], 5)
+		([[3,4], [6, 5], [4, 1]], '1,7'),
+		([[2,4], [4, 3], [6, 2]], '0,6'),
+		([[2,3], [3, 1], [5, 5], [6, 2]], '2,7'),
+		([[2,2], [4, 5], [5, 1], [6, 4]], '0,5')
 			]:
 		desc = f"""Черная ладья стоит в левом нижнем углу шахматной доски, на которой также стоят несколько черных пешек.
 				Двое по очереди перемещают ладью на любое количество клеток вправо или вверх. Запрещено перепрыгивать через пешку или ставить ладью на клетку, где стоит пешка.
-				Выигрывает тот, кто поставит ладью в правую верхнюю клетку. Какой ход вы должны сделать вначале, чтобы выиграть при любых действиях вашего соперника?"""
+				Выигрывает тот, кто поставит ладью в правую верхнюю клетку(Помечена кругом). Какой ход вы должны сделать вначале, чтобы выиграть при любых действиях вашего соперника?"""
 		cont = {
 			'cur': N,
 			'correct': A,
@@ -2397,9 +2452,9 @@ def CombiRepublic2(cur):
 			[2, [20, 20, 30, 10, 60], [3, 2, 1, 5, 4]]]:
 		desc = """У эксперта есть пять золотых монет. Известно, что их массы равны 10, 20, 20, 30 и 60 граммов,
 				но эксперт не знает, где какая монета. Он выбрал три монеты и сравнил их с двумя оставшимися на чашечных весах без гирь.
-				Весы показали равенство. Определите массу каждой монеты ещё за два взвешивания. Монеты можно передаскивать на чаши, для совершения взвешиваний,
+				Весы показали равенство. Определите массу каждой монеты ещё за два взвешивания. Монеты можно перетаскивать на чаши, для совершения взвешиваний,
 				а также в зону под весами для удобства.
-				Когда вы будете знать массы монет, перетащите их в боксы с названиями, соответствующим этим весам, и нажмите кнопку 'Отправить'"""
+				Когда вы будете знать массы монет, перетащите их в боксы с названиями, соответствующим этим массам, и нажмите кнопку 'Отправить'"""
 		cont = {
 			'weight': weight,
 			'weightings_amount': weightings_amount,
@@ -2415,15 +2470,18 @@ def update_positions_town(cur, town, problem_count):
 	y0 = 720 / 2
 	R = 250
 	base = 0.25
-	y0 += 0.5 * R * (1 - math.cos(math.pi / problem_count))
 	cur.execute("select problem from Kvantland.Problem where town = %s", (town,))
-	for k, (problem, ) in enumerate(cur.fetchall()):
-		phi = 2 * math.pi * ((k // 2 + k % 2) / problem_count + base)
-		if k % 2 == 1:
-			x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
-		else:
-			x, y = x0 - R * math.cos(phi), y0 - R * math.sin(phi)
-		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
+	if (problem_count == 1):
+		(problem, ), = cur.fetchall()
+		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x0, y0, problem))
+	else:
+		for k, (problem, ) in enumerate(cur.fetchall()):
+			phi = 2 * math.pi * ((k // 2 + k % 2) / problem_count + base)
+			if k % 2 == 1:
+				x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
+			else:
+				x, y = x0 - R * math.cos(phi), y0 - R * math.sin(phi)
+			cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
 
 def update_positions(cur):
 	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) group by town")
