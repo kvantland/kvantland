@@ -41,19 +41,8 @@ body{
 text.bottom{
 	stroke: black;
 	fill: brown;
-	font-family: georgia;
-}
-
-.first{
-	font-size: 60px;
-}
-
-.second{
+	font-family: gotham;
 	font-size: 50px;
-}
-
-.third{
-	font-size: 45px;
 }
 
 .top:hover{

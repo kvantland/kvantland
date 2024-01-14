@@ -31,9 +31,9 @@ def entry_form(data, kwargs):
     yield f'<rect class="border_line" x="{line_width + inner_side + bord / 2}" y="{line_width + inner_side}" width="{line_width + bord + inner_side}" height="{bord / 2}"/>'
     yield f'<rect class="border_line" x="{line_width + inner_side * 2 + bord}" y="{line_width + inner_side + inner_height * 2}" width="{line_width + bord / 2 + inner_side}" height="{bord / 2}"/>'
 
-    yield f'<text class="bottom first" transform ="translate({1 * side + line_width + side / 2 + bord}, {inner_height / 2 + inner_side})">1</text>'
-    yield f'<text class="bottom second" transform ="translate({0 * side + line_width + side / 2 + bord}, {inner_height + inner_side + inner_height / 2})">2</text>'
-    yield f'<text class="bottom third" transform ="translate({2 * side + line_width + side / 2 + bord}, {inner_height * 2 + inner_side + inner_height / 2})">3</text>'
+    yield f'<text class="bottom" transform ="translate({1 * side + line_width + side / 2 + bord}, {inner_height / 2 + inner_side})">1</text>'
+    yield f'<text class="bottom" transform ="translate({0 * side + line_width + side / 2 + bord}, {inner_height + inner_side + inner_height / 2})">2</text>'
+    yield f'<text class="bottom" transform ="translate({2 * side + line_width + side / 2 + bord}, {inner_height * 2 + inner_side + inner_height / 2})">3</text>'
 
 
     for i in range(0, 4):
