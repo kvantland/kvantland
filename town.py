@@ -5,9 +5,11 @@ from bottle import route, HTTPError
 
 import nav
 import user
+from land import do_logout
 
 @route('/town/<town:int>/')
 def show_town(db, town):
+	do_logout()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	db.execute('select название from Город where город = %s', (town,))

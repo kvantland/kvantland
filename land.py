@@ -1,10 +1,13 @@
 #!/usr/bin/python3
 
 from config import config
-from bottle import route, redirect
+from bottle import route, redirect, response
 
 import nav
 import user
+
+def do_logout():
+	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='lax')
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -19,6 +22,7 @@ def lang_form(score):
 
 @route('/')
 def show_land(db):
+	do_logout()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -46,6 +50,7 @@ def show_land(db):
 
 @route('/rules')
 def show_land():
+	do_logout()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'

@@ -7,6 +7,7 @@ from importlib import import_module
 from pathlib import Path
 import psycopg
 from answer_area import show_answer_area
+from land import do_logout
 
 import nav
 import user
@@ -169,6 +170,7 @@ def has_current_problem(db, user):
 
 @route('/problem/<var_id:int>/<hint_mode:int>/')
 def problem_show(db, var_id, hint_mode):
+	do_logout()
 	if hint_mode:
 		return show_question(db, var_id, HintMode.SHOW)
 	db.execute('select текст from Подсказка join Вариант using (задача) where вариант = %s', (var_id, )) 
@@ -181,6 +183,7 @@ def problem_show(db, var_id, hint_mode):
 
 @route('/problem/<var_id:int>/<hint_mode:int>/', method='POST')
 def problem_answer(db, var_id, hint_mode):
+	do_logout()
 	db.execute('select Тип.код from Задача join Вариант using (задача) join Тип using (тип) where вариант = %s', (var_id,))
 	type_ = db.fetchall()[0][0]
 
@@ -189,15 +192,11 @@ def problem_answer(db, var_id, hint_mode):
 
 	typedesc = import_module(f'problem-types.{type_}')
 
-	try:
-		save_progress = typedesc.SAVE_PROGRESS
-	except AttributeError:
-		save_progress = True
-
 	is_answer_correct = check_answer(db, var_id, answer)
 	yield from _display_result(db, var_id, is_answer_correct, answer, solution)
 
 
 @route('/problem/<var_id:int>/<hint_mode:int>/hint', method='POST')
 def problem_request_hint(db, var_id,hint_mode):
+	do_logout()
 	redirect(f'/problem/{var_id}/1/')
