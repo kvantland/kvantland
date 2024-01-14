@@ -8,8 +8,6 @@ import user
 
 @route('/town/<town:int>/')
 def show_town(db, town):
-	user_id = user.current_user(db)
-
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	db.execute('select название from Город where город = %s', (town,))
@@ -17,7 +15,7 @@ def show_town(db, town):
 	yield f'<title>{name}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<div class="content_wrapper">'
-	yield from user.display_banner(db)
+	yield from user.display_banner()
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield f'<h1>{name}</h1>'
 	yield '</div>'

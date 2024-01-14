@@ -61,7 +61,7 @@ def show_question(db, variant, hint_mode):
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
-	yield from user.display_banner(db)
+	yield from user.display_banner()
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
 	yield '<main>'
 	yield f'<h1>{name}</h1>'
@@ -140,7 +140,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
-	yield from user.display_banner(db)
+	yield from user.display_banner()
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
 	yield '<main>'
 	yield f'<h1>{name}</h1>'

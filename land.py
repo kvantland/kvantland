@@ -19,13 +19,12 @@ def lang_form(score):
 
 @route('/')
 def show_land(db):
-	user_id = user.current_user(db)
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<div class="content_wrapper">'
-	yield from user.display_banner(db)
+	yield from user.display_banner()
 	yield f'<h1 class="title">Квантландия</h1>'
 	yield '</div>'
 	yield '<svg class="map" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
@@ -46,13 +45,13 @@ def show_land(db):
 	yield '<script type="module" src="/static/results.js"></script>'
 
 @route('/rules')
-def show_land(db):
+def show_land():
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<div class="content_wrapper">'
-	yield from user.display_banner(db)
+	yield from user.display_banner()
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<main class="rules">'
 	yield '<h1>Правила</h1>'
