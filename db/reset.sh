@@ -10,8 +10,9 @@ if [ -z "$postgres" ]; then
 	postgres="$(PYTHONPATH="$dir/.." python3 -c "from config import config; print(config['db']['url'])")"
 fi
 
-psql "$postgres" -1 -f "$dir/schema.sql"
-psql "$postgres" -1 -f "$dir/base-data.sql"
-psql "$postgres" -1 -f "$dir/users.sql"
+psql "$postgres" -1 -f "$dir/schema_eng.sql"
+psql "$postgres" -1 -f "$dir/base-data_eng.sql"
+psql "$postgres" -1 -f "$dir/users_eng.sql"
 python "$dir/problems.py" "$postgres"
-psql "$postgres" -1 -f "$dir/assign-problems.sql"
+psql "$postgres" -1 -f "$dir/assign-problems_eng.sql"
+
