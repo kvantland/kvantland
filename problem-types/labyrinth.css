@@ -29,8 +29,8 @@ body{
 
 .coin{
 	fill: url(#coinShadow);
-	stroke: #cbab00;
-	stroke-width: 4;
+	stroke: gray;
+	stroke-width: 1;
 	cursor: grab;
 }
 
