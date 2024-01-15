@@ -1,6 +1,4 @@
 var buttons = document.querySelectorAll('.active');
-var svg_box = document.querySelector('svg');
-var all_square = document.querySelectorAll('rect');
 var unknowns = document.querySelectorAll('.unknown');
 var sender = document.getElementsByName('answer')[0];
 

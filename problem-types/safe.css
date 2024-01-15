@@ -17,7 +17,8 @@ body{
 }
 
 .active{
-	fill:transparent;
+	fill:red;
+	stroke: darkred;
 }
 .colored{
 	fill:red;
@@ -26,10 +27,19 @@ body{
 	fill:green;
 }
 
-.gray{
-	fill:lightgray;
+.border{
+	fill:darkgray;
 }
 
+.gray{
+	fill:white;
+	fill: url(#slotShadow);
+}
+
+text.number_value{
+	font-family:Agency FB;
+	font-size: 50px;
+}
 .grid_line{
 	stroke: black;
 	stroke-linecap: square;
@@ -58,7 +68,7 @@ body{
 
 .active:hover {
 	cursor:pointer;
-	fill:rgba(0, 0, 0, 0.15);
+	fill:rgb(139, 0, 0);
 }
 
 svg{
