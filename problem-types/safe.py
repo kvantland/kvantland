@@ -18,16 +18,12 @@ def entry_form(data, kwargs):
     yield '<stop offset="100%" stop-color="gray" />'
     yield '</linearGradient>'
     yield '</defs>'
-    #yield f'<rect class="border" y={side / 2} width="{board_side}" height="{plot_height / 2}"/>'
     yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + 0 * side + side}" x2="{ind + size * side}" y2="{ind + 0 * side + side}" stroke-width="{line_width}"/>'
     yield f'<line class="grid_line" x1="{ind}" y1 = "{2 * side + side - ind}" x2="{ind + size * side}" y2="{ 2 * side + side - ind}" stroke-width="{line_width}"/>'
     for x in range(0, size + 1):
         yield f'<line class="grid_line" x1="{ind + x * side}" y1 = "{ind + side}" x2="{ind + x * side}" y2="{side * 3 - ind}" stroke-width="{line_width}"/>'
     for card in range(len(data["start"])):
         if data["start"][card] == '*':
-            #yield f'<rect class="colored top" x="{card * side + line_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
-            #yield f'<text class="arrow" transform ="translate({card * side + side / 2}, {ind + side / 2}) rotate(270)">-></text>'
-            #yield f'<rect class="active top" x="{card * side + line_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
             yield f"""<path class="active top" column="{card}" d=" M {card * side + line_width},{side - ind}
                         l {side / 2},{-side / 3}
                         l {side / 2},{side / 3}
@@ -37,9 +33,6 @@ def entry_form(data, kwargs):
                         l {side / 2},{side / 3}
                         l {side / 2},{-side / 3}
                         z"/>"""
-            #yield f'<rect class="colored bottom" x="{card * side + line_width}" y="{2 * side + line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
-            #yield f'<text class="arrow" transform ="translate({card * side + side / 2}, {2 * side + ind + side / 2}) rotate(270)"><-</text>'
-            #yield f'<rect class="active bottom" x="{card * side + line_width}" y="{2 * side + line_width}" width="{inner_side}" height="{inner_side}" column="{card}"/>'
             yield f'<text class="number_value unknown" x="{card * side + ind + side / 2}" y="{2 * side + ind}" column="{card}">{data["start"][card]}</text>'
         else:
             yield f'<rect class="passive gray" x="{card * side + line_width}" y="{1 * side + line_width}" width="{inner_side}" height="{inner_side * 2}" column="{card}"/>'
