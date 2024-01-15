@@ -34,6 +34,11 @@ body{
 	stroke-linecap: square;
 }
 
+text.finish{
+	font-size: 60px;
+	fill:white;
+}
+
 .star{
 	fill:yellow;
 }
