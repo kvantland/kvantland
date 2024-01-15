@@ -35,7 +35,7 @@ def entry_form(data, kwargs):
                 else:
                     yield f'<rect class="white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
     yield f'<image class="rook free" x="{0 * side + line_width}" y ="{(size - 1) * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/rook_b.png" column="{0}" row="{size - 1}"/>'
-    yield f'<g class="finish passive choiced" transform="translate({(size - 1) * side + ind + side / 2} {0 * side + 3 * side / 4})">'
+    yield f'<g class="finish passive choiced" transform="translate({(size - 1) * side + ind + side / 2} {0 * side + 7 * side / 8})">'
     yield f'<text class="finish">*</text>'
     yield '</g>'
     yield f'<image class="reload" x = "{pad + board_side}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
