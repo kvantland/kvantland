@@ -20,12 +20,12 @@ def entry_form(data, kwargs):
         for y in range(0, size):
             if (x + y) % 2 == 1:
                 if x == 0 or y == size - 1:
-                    yield f'<rect class="free brown" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}" />'
+                    yield f'<rect class="free orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}" />'
                 elif [x, y] in data['cur']:
-                    yield f'<rect class="occupied brown" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
+                    yield f'<rect class="occupied orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
                     yield f'<image class="pawn passive choiced" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/pawn_b.png" />'
                 else:
-                    yield f'<rect class="brown" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
+                    yield f'<rect class="orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
             else:
                 if x == 0 or y == size - 1:
                     yield f'<rect class="free white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
