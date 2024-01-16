@@ -32,7 +32,6 @@ body{
 }
 
 .slot{
-	fill:white;
 	fill: url(#slotShadow);
 }
 

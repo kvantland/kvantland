@@ -1,4 +1,5 @@
 import sys
+import math
 
 def entry_form(data, kwargs):
     size = 10 # число клеточек в строке
@@ -16,30 +17,35 @@ def entry_form(data, kwargs):
     yield '<defs>'
     yield '<linearGradient id="slotShadow" x1="0" x2="0" y1="0" y2="1">'
     yield '<stop offset="0%" stop-color="gray" />'
-    yield '<stop offset="25%" stop-color="white" />'
+    yield '<stop offset="25%" stop-color="rgba(230, 230, 230, 1)" />'
     yield '<stop offset="100%" stop-color="gray" />'
     yield '</linearGradient>'
     yield '</defs>'
     yield f'<rect class="border" x="{damp / 2}" y="{side / 2}" width="{damp + line_width + size * side}" height="{line_width + 3 * side}"/>'
-    yield f'<line class="grid_line" x1="{ind + damp}" y1 = "{ind + 0 * side + side}" x2="{ind + size * side + damp}" y2="{ind + 0 * side + side}" stroke-width="{line_width}"/>'
-    yield f'<line class="grid_line" x1="{ind + damp}" y1 = "{2 * side + side - ind}" x2="{ind + size * side + damp}" y2="{ 2 * side + side - ind}" stroke-width="{line_width}"/>'
-    for x in range(0, size + 1):
-        yield f'<line class="grid_line" x1="{ind + x * side + damp}" y1 = "{ind + side}" x2="{ind + x * side + damp}" y2="{side * 3 - ind}" stroke-width="{line_width}"/>'
+    yield f'<rect class="base" x="{damp}" y="{side}" width="{size * side + 2 * ind}" height="{2 * side}" />'
+    cur_column = 0
     for card in range(len(data["start"])):
         if data["start"][card] == '*':
-            yield f"""<path class="active top" column="{card}" d=" M {card * side + line_width + damp},{side / 2 - side / 6}
+            yield f"""<path class="active top" column="{card}" num="{cur_column}" d=" M {card * side + line_width + damp},{side / 2 - side / 6}
                         l {side / 2},{-side / 3}
                         l {side / 2},{side / 3}
                         z"/>"""
-            yield f'<rect class="passive slot" x="{card * side + line_width + damp}" y="{1 * side + line_width}" width="{inner_side}" height="{inner_side * 2}" column="{card}"/>'
-            yield f"""<path class="active bottom" column="{card}" d=" M {card * side + line_width + damp},{3 * side + side / 2 + side / 6}
+            yield f"""<path class="active bottom" column="{card}" num="{cur_column}" d=" M {card * side + line_width + damp},{3 * side + side / 2 + side / 6}
                         l {side / 2},{side / 3}
                         l {side / 2},{-side / 3}
                         z"/>"""
-            yield f'<text class="number_value unknown" x="{card * side + ind + side / 2 + damp}" y="{2 * side + ind}" column="{card}">{data["start"][card]}</text>'
+            yield f'<svg x="{card * side + line_width + damp}" y="{side + line_width}" width="{inner_side}" height="{inner_side * 2}">'
+            yield f'<rect class="passive slot" x="0" y="0" width="{inner_side}" height="{inner_side * 2}" column="{card}"/>'
+            yield f'<text class="number_value up_number" column="{card}" x="{inner_side / 2}" y="{-inner_side}" angle="{2 * math.pi / 10}" num="{cur_column}" sgn="1"> 0 </text>'
+            yield f'<text class="number_value unknown" unset="1" x="{inner_side / 2}" y="{inner_side}" column="{card}" angle="0" num="{cur_column}" sgn="0">{data["start"][card]}</text>'
+            yield f'<text class="number_value bottom_number" column="{card}" x="{inner_side / 2}" y="{3 * inner_side}" angle="{2 * math.pi / 10}" num="{cur_column}" sgn="-1"> 9 </text>'
+            yield '</svg>'
+            cur_column += 1
         else:
-            yield f'<rect class="passive slot" x="{card * side + line_width + damp}" y="{1 * side + line_width}" width="{inner_side}" height="{inner_side * 2}" column="{card}"/>'
-            yield f'<text class="number_value known" x="{card * side + ind + side / 2 + damp}" y="{2 * side + ind}" column="{card}">{data["start"][card]}</text>'
+            yield f'<svg x="{card * side + line_width + damp}" y="{side + line_width}" width="{inner_side}" height="{inner_side * 2}">'
+            yield f'<rect class="passive slot" x="0" y="0" width="{inner_side}" height="{inner_side * 2}" column="{card}"/>'
+            yield f'<text class="number_value known" x="{inner_side / 2}" y="{inner_side}" column="{card}">{data["start"][card]}</text>'
+            yield '</svg>'
     yield '</svg>'
     yield '<div class="interface_zone">'
     yield '<button type="button" class="check"> Проверить </button>'
