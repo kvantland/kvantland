@@ -28,10 +28,10 @@ body{
 }
 
 .border{
-	fill:darkgray;
+	fill:rgb(96,96,96);
 }
 
-.gray{
+.slot{
 	fill:white;
 	fill: url(#slotShadow);
 }
@@ -53,6 +53,16 @@ text.number_value{
 	flex-direction: column;
 }
 
+.remaining_checks *{
+	margin-bottom: 0;
+}
+
+.remaining_checks{
+	background-color: transparent;
+	text-align: center;
+	border-radius: 0.5em;
+	border: #9a9aa7 1px solid;
+}
 .interface_zone *{
 	margin-bottom: 10px;
 	width: 8em;
