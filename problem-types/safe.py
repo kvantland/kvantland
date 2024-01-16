@@ -9,7 +9,7 @@ def entry_form(data, kwargs):
     pad = 50
     damp = pad / 2
     inner_side = side - line_width # длина стороны квадрата без границ 
-    board_side = line_width + size * side + line_width # длина стороны доски
+    board_side = line_width + size * side + line_width + 2 * damp # длина стороны доски
     plot_height = line_width + 4 * side
     yield '<input name="answer" type="hidden" />'
     yield '<div class="plot_area">'
