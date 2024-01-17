@@ -159,9 +159,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="4"
-     inkscape:cx="199"
-     inkscape:cy="59.75"
+     inkscape:zoom="64"
+     inkscape:cx="202.84375"
+     inkscape:cy="34.796875"
      inkscape:window-width="1536"
      inkscape:window-height="802"
      inkscape:window-x="2297"
@@ -203,11 +203,11 @@
      sodipodi:cy="0.42645156"
      sodipodi:rx="19.75"
      sodipodi:ry="19.75"
-     sodipodi:start="1.3749852"
-     sodipodi:end="2.5084704"
+     sodipodi:start="1.3951429"
+     sodipodi:end="2.482423"
      sodipodi:open="true"
      sodipodi:arc-type="arc"
-     d="M 204.16102,19.799033 A 19.75,19.75 0 0 1 184.39628,12.11183" />
+     d="m 203.76976,19.87255 a 19.75,19.75 0 0 1 -19.06374,-7.35" />
   <path
      style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-dasharray:none;paint-order:normal"
      d="M 213.08124,62.635155 200.31905,0.419498 Z"
