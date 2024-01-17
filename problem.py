@@ -289,7 +289,7 @@ def problem_request_hint(db, var_id):
 def xhr_request(db, user_id, var_id, params):
 	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
 	(xhr_amount, ), = db.fetchall()
-	if (xhr_amount >= config['dead_step']):
+	if (xhr_amount >= config['xhr']['dead_step']):
 		raise Exception("Слишком много запросов!")
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()

@@ -63,7 +63,6 @@ function hide_interface(){
 
 for (card of document.querySelectorAll('.card'))
 {
-
 	card.onclick = function(){
 		if (movement_tmp)
 			return;
@@ -84,7 +83,6 @@ for (card of document.querySelectorAll('.card'))
 	}
 }
 
-
 var [pos_1, pos_2] = [0, 0]
 var [movement, movement_tmp] = ['', 0]
 
@@ -95,12 +93,10 @@ document.querySelector('.icon.exchange').onclick = function(){
 	let url = new URL(window.location.href + 'xhr')
 	let selected = card_1.getAttribute('num') + ' ' + card_2.getAttribute('num')
 
-	url.searchParams.set('selected', selected)
-
 	let xhr = new XMLHttpRequest()
-	xhr.open('GET', url)
+	xhr.open('POST', url)
 	xhr.responseType = 'text'
-	xhr.send();
+	xhr.send(JSON.stringify({'selected': selected}));
 
 	xhr.onload = function() {
 		if (xhr.status != 200)
@@ -136,9 +132,9 @@ document.querySelector('.reload').onclick = function(){
 	url.searchParams.set('reload', 'true')
 
 	let xhr = new XMLHttpRequest()
-	xhr.open('GET', url)
+	xhr.open('POST', url)
 	xhr.responseType = 'text'
-	xhr.send()
+	xhr.send(JSON.stringify({'reload': 'true'}))
 
 	xhr.onload = function(){
 		if (xhr.status != 200)
