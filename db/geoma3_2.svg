@@ -159,13 +159,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="5.6568543"
-     inkscape:cx="225.3019"
-     inkscape:cy="59.485358"
-     inkscape:window-width="1920"
-     inkscape:window-height="1001"
-     inkscape:window-x="-9"
-     inkscape:window-y="-9"
+     inkscape:zoom="4"
+     inkscape:cx="199"
+     inkscape:cy="59.75"
+     inkscape:window-width="1536"
+     inkscape:window-height="802"
+     inkscape:window-x="2297"
+     inkscape:window-y="282"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg5" />
   <text
@@ -189,25 +189,25 @@
      dominant-baseline="hanging"
      id="text4">M</text>
   <path
-     style="opacity:1;fill:none;fill-opacity:1;stroke:#ff0000;stroke-width:1;stroke-dasharray:none;paint-order:normal"
-     id="path20"
-     sodipodi:type="arc"
-     sodipodi:cx="198.32497"
-     sodipodi:cy="12.370361"
-     sodipodi:rx="12"
-     sodipodi:ry="12"
-     sodipodi:start="1.0007097"
-     sodipodi:end="3.2966748"
-     sodipodi:arc-type="arc"
-     d="m 204.80143,22.472612 a 12,12 0 0 1 -13.03162,-0.05088 12,12 0 0 1 -5.30083,-11.904902"
-     sodipodi:open="true" />
-  <path
      style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-dasharray:none;paint-order:normal"
      d="M -1.642541,148.77991 213.71935,62.635155 Z"
      id="path10"
      inkscape:path-effect="#path-effect11"
      inkscape:original-d="M -1.642541,148.77991 213.71935,62.635155 Z"
      transform="matrix(0.99211819,0,0,1.0000425,0.98656215,-0.304104)" />
+  <path
+     style="fill:none;stroke:#ff0000"
+     id="path1"
+     sodipodi:type="arc"
+     sodipodi:cx="200.31842"
+     sodipodi:cy="0.42645156"
+     sodipodi:rx="19.75"
+     sodipodi:ry="19.75"
+     sodipodi:start="1.3749852"
+     sodipodi:end="2.5084704"
+     sodipodi:open="true"
+     sodipodi:arc-type="arc"
+     d="M 204.16102,19.799033 A 19.75,19.75 0 0 1 184.39628,12.11183" />
   <path
      style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:1;stroke-dasharray:none;paint-order:normal"
      d="M 213.08124,62.635155 200.31905,0.419498 Z"
