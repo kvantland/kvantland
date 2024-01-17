@@ -203,6 +203,7 @@ def get_past_answer_correctness(db, user_id, var_id):
 @route('/problem/<var_id:int>/')
 def problem_show(db, var_id):
 	user_id = require_user(db)
+	print(user_id, file=sys.stderr)
 	if user_id == None:
 		redirect('/')
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
@@ -212,8 +213,11 @@ def problem_show(db, var_id):
 		print(answer, solution, file=sys.stderr)
 		return _display_result(db, var_id, is_answer_correct, answer, solution)
 
-	db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
-	(hinted, ), = db.fetchall()
+	try:
+		db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
+		(hinted, ), = db.fetchall()
+	except ValueError:
+		redirect('/')
 	if hinted:
 		hint_mode = HintMode.SHOW
 	else:
@@ -285,6 +289,8 @@ def problem_request_hint(db, var_id):
 def xhr_request(db, user_id, var_id, params):
 	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
 	(xhr_amount, ), = db.fetchall()
+	if (xhr_amount >= config['dead_step']):
+		raise Exception("Слишком много запросов!")
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()
 	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
