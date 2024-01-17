@@ -176,7 +176,7 @@ def Chiselburg2(cur):
 			}
 		variants_list = add_variant_to_list(variants_list, "Шарик, Бобик и Барсик", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 4, 'square_sums', "Квадратные суммы")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 4, 'square_sums', "Квадратные суммы", hint=f"""Карточки с 0 и 1 проще всего передвигать, используйте их для перемещения других карт. Сложнее всего передвигать карточки с 2, 6 и 8, постарайтесь разместить их в нужную позицию в первую очередь.""")
 	for start, curr, end in [
 			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]],
 			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9, 0, 1, 2, 3, 4, 5, 6, 7, 8]],
