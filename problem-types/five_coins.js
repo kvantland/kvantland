@@ -284,11 +284,10 @@ document.querySelector('.weight').onclick = function(){
 		else
 			conf += '0'
 	}
-	url.searchParams.set('conf', [conf])
 	let xhr = new XMLHttpRequest()
-	xhr.open('GET', url)
+	xhr.open('POST', url)
 	xhr.responseType = 'text'
-	xhr.send();
+	xhr.send(JSON.stringify({'conf': conf}));
 	xhr.onload = function() {
 		if (xhr.status != 200)
 			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
