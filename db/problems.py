@@ -109,7 +109,7 @@ def IslandOfLiars2(cur):
 	variants_list = dict()
 	
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 1, 'liar_among_runners', "Лжец среди бегунов")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'liar_among_runners', "Лжец среди бегунов")
 	for a, b, c, d, ans in [
 			("Алик: Я обогнал Гену.", "Боря: Я обогнал Алика.", "Ваня: Я финишировал сразу после Алика и обогнал Борю.", "Гена: Я обогнал Борю.", "1,3,4"),
 			("Алик: Я обогнал Ваню.", "Боря: Я обогнал Алика.", "Ваня: Я обогнал Борю.", "Гена: Я финишировал сразу после Бори и обогнал Ваню.", "2,4,1"),
@@ -127,7 +127,7 @@ def IslandOfLiars2(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Лжец среди бегунов", desc, json.dumps(cont))
 			
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'radio', "Выборы мэра острова", image="Einstein.png",hint="Вначале правдолюбов не может быть больше, чем лжецов, так как иначе каждый из них солгал. Но и лжецов не может быть гораздо больше, чем правдолюбов, иначе каждый из них сказал правду.")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'radio', "Выборы мэра острова", image="Einstein.png",hint="Вначале правдолюбов не может быть больше, чем лжецов, так как иначе каждый из них солгал. Но и лжецов не может быть гораздо больше, чем правдолюбов, иначе каждый из них сказал правду.")
 	for N, A in [
 			(15, 1),
 			(17, 1),
@@ -147,7 +147,7 @@ def IslandOfLiars2(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Выборы мэра острова", desc, json.dumps(cont))	
 			
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Король и два придворных мудреца", image="Mudrez.png", hint="Первый мудрец должен сообщить такое число N, чтобы только наименьшие возможные из остальных загаданных чисел давали вместе с N заданную сумму.")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'integer', "Король и два придворных мудреца", image="Mudrez.png", hint="Первый мудрец должен сообщить такое число N, чтобы только наименьшие возможные из остальных загаданных чисел давали вместе с N заданную сумму.")
 	for S, M, N, A in [(60, 5, 3, 18), 
 			   (72, 6, 4, 21), 
 			   (73, 6, 3, 16), 
@@ -167,7 +167,7 @@ def Chiselburg2(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'integer', "Шарик, Бобик и Барсик", image="Dog.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Шарик, Бобик и Барсик", image="Dog.png")
 	for X, A in [(80, 8), (120, 32), (140, 44), (160, 56)]:
 		desc = f"""Шарик весит на {X}% больше Бобика, а Бобик на 50% больше Барсика. 
 		На сколько процентов Шарик тяжелее Бобика и Барсика вместе взятых?"""
@@ -176,7 +176,7 @@ def Chiselburg2(cur):
 			}
 		variants_list = add_variant_to_list(variants_list, "Шарик, Бобик и Барсик", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'square_sums', "Квадратные суммы")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 4, 'square_sums', "Квадратные суммы")
 	for start, curr, end in [
 			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]],
 			[[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [9, 0, 1, 2, 3, 4, 5, 6, 7, 8]],
@@ -221,7 +221,7 @@ def Geom2(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Найдите угол", hint="Постройте правильный треугольник ADC так, что B лежит внутри, и найдите два равных треугольника.")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Найдите угол", hint="Постройте правильный треугольник ADC так, что B лежит внутри, и найдите два равных треугольника.")
 	for X, Y, A in [(104, 22, 82), (108, 24, 84), (112, 26, 86), (116, 28, 88)]:
 		desc = f"Внутри равнобедренного треугольника ABC с основанием AC и углом {X}⁰  при вершине B  взяли точку M так, что угол MAC равен {Y}⁰, а угол MCA равен 30⁰. Найдите угол ABM."
 		desc += read_file('geoma3_2.svg').decode('utf-8')
@@ -231,7 +231,7 @@ def Geom2(cur):
 		variants_list = add_variant_to_list(variants_list, "Найдите угол", desc, json.dumps(cont))
 
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 1, 'labyrinth', "Лабиринт")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'labyrinth', "Лабиринт")
 	field = [[2,0,2,1],[5,0,5,2],[3,1,3,3],[6,1,6,2],[4,2,4,3],[1,3,1,6],[2,4,2,6],[4,4,4,6],[5,4,5,5],[3,5,3,6],[5,6,5,7],[4,7,4,8],
 			[3,1,5,1],[1,2,3,2],[5,2,6,2],[1,3,3,3],[4,3,7,3],[2,4,3,4],[6,4,7,4],[3,5,4,5],[5,5,7,5],[0,6,2,6],[4,6,7,6],[1,7,4,7],[5,7,6,7]]
 	for N, A in [
@@ -284,7 +284,7 @@ def Golovolomsk2(cur):
 	problems_list = []
 	variants_list = dict()
   
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'tic-tac-toe', "Крестики-нолики")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'tic-tac-toe', "Крестики-нолики")
 	for mask, correct in [
 				[[['-', 0, 1], ['-', 0, '-'], ['-', 1, '-']], [(2, 2)]],
 				[[['-', 0, '-'], [0, 1, '-'], ['-', 1, '-']], [(2, 0), (2, 2)]],
@@ -300,7 +300,7 @@ def Golovolomsk2(cur):
 				}
 				variants_list = add_variant_to_list(variants_list, "Крестики-нолики", desc, json.dumps(cont))
     
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'garden_trees', "Деревья в саду", hint="На каждом участке должно расти не более двух деревьев.")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 4, 'garden_trees', "Деревья в саду", hint="На каждом участке должно расти не более двух деревьев.")
 	for T, A in [([3, 6], [
 				[[0, 1, 1, 0, 1, 1], [1, 2, 2, 1, 2, 2], [1, 2, 2, 1, 2, 2]],
 				[[0, 1, 1, 2, 2, 0], [2, 2, 0, 2, 2, 1], [2, 2, 1, 1, 0, 1]],
@@ -550,7 +550,7 @@ def Golovolomsk2(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Деревья в саду", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'knights_and_bishops', "Кони и слоны",hint="Попробуйте сначала поставить коней. Несколько коней не бьют друг друга, если они стоят на полях одного цвета или стоят в ряд.")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'knights_and_bishops', "Кони и слоны",hint="Попробуйте сначала поставить коней. Несколько коней не бьют друг друга, если они стоят на полях одного цвета или стоят в ряд.")
 	for N, height, width, correct in [
 				[12, 4, 4, [
 				[[1, '-', '-', 1], [1, 2, 2, 1], [1, '-', '-', 1], [1, 2, 2, 1]],
@@ -2427,7 +2427,7 @@ def CombiRepublic2(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Тузы на руках", image="Kvantik.png", hint="Число способов выбрать 6 карт из 12 равно (12*11*10*9*8*7)/6*5*4*3*2. Однако не все эти способы нам подходят и нужно исключить лишние.")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'integer', "Тузы на руках", image="Kvantik.png", hint="Число способов выбрать 6 карт из 12 равно (12*11*10*9*8*7)/6*5*4*3*2. Однако не все эти способы нам подходят и нужно исключить лишние.")
 	for N, A in [
 			("у игрока оказался хотя бы один туз?", 896),
 		  ("у игрока оказался ровно один туз?", 224),
@@ -2441,7 +2441,7 @@ def CombiRepublic2(cur):
 			}
 		variants_list = add_variant_to_list(variants_list, "Тузы на руках", desc, json.dumps(cont))	
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'rook_and_pawns', "Игра ладья и пешки", hint="Начиная с клеток первой строки и последнего столбца, определите является ли выигрышной позиция, если ладья оказалась в этой клетке, для игрока, который должен делать очередной ход.")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'rook_and_pawns', "Игра ладья и пешки", hint="Начиная с клеток первой строки и последнего столбца, определите является ли выигрышной позиция, если ладья оказалась в этой клетке, для игрока, который должен делать очередной ход.")
 	for N, A in [
 		([[3,4], [6, 5], [4, 1]], '1,7'),
 		([[2,4], [4, 3], [6, 2]], '0,6'),
@@ -2457,7 +2457,7 @@ def CombiRepublic2(cur):
 			}
 		variants_list = add_variant_to_list(variants_list, "Игра ладья и пешки", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 1, 'five_coins', "Пять монет")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'five_coins', "Пять монет")
 	for weightings_amount, weight, perm in [
 			[2, [20, 20, 30, 10, 60], [1, 2, 3, 4, 5]],
 			[2, [20, 20, 30, 10, 60], [1, 3, 2, 4, 5]],
