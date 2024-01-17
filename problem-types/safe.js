@@ -46,10 +46,7 @@ function move(tmp, column) {
 	let down = document.querySelectorAll('.bottom_number')[column]
 	let cur = document.querySelectorAll('.unknown')[column]
 	if (tmp == 1)
-	{
-		console.log('here')
 		down.setAttribute('angle', down.getAttribute('angle') - add)
-	}
 	else
 		up.setAttribute('angle', up.getAttribute('angle') - add)
 	cur.setAttribute('sgn', tmp)
@@ -88,25 +85,19 @@ for (const button of buttons){
 }
 
 document.querySelector('.reload').onclick = function(){
-	for (const u of unknowns){
-		u.innerHTML = '*';
-		u.setAttribute('unset', 1)
+	for (let column = 0; column < unknowns.length; column++){
+		let up = document.querySelectorAll('.up_number')[column]
+		let down = document.querySelectorAll('.bottom_number')[column]
+		let cur = document.querySelectorAll('.unknown')[column]
+		cur.innerHTML = '*';
+		cur.setAttribute('unset', 1)
+		up.innerHTML = '0'
+		down.innerHTML = '9'
 	}
 }
 
-document.querySelector('.check ').onclick = function(){
-	let url = new URL(window.location.href + 'xhr')
-	let ans = ''
-	for (const u of unknowns) {
-		ans += u.innerHTML;
-	}
-	let solution = document.querySelector('#interactive_problem_form').outerHTML
-	let xhr = new XMLHttpRequest()
-	xhr.open('POST', url)
-	xhr.responseType = 'text'
-	xhr.send(JSON.stringify({'answer': ans, 'solution': solution}));
-	xhr.onload = function() {
-		if (xhr.status != 200)
+function xhr_request(xhr) {
+	if (xhr.status != 200)
 			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
@@ -118,12 +109,33 @@ document.querySelector('.check ').onclick = function(){
 						alert('Неверная комбинация!')
 					else
 						alert('Верная комбинация!')
-					let text = document.querySelector('.remaining_checks p').innerHTML.split(': ')[0]
-					let cur_amount = document.querySelector('.remaining_checks p').innerHTML.split(': ')[1]
-					document.querySelector('.remaining_checks p').innerHTML = text + ': ' + (cur_amount - 1)
-					if (xhr.response == 'true' || !cur_amount)
+					let [text, cur_amount] = document.querySelector('.remaining_checks p').innerHTML.split(': ')
+					if (xhr.response == 'true' || cur_amount == '0')
 						window.location.reload('true')
 				}
 		}
+}
+
+document.querySelector('.check ').onclick = function(){
+	for (let i = 0; i < animation_arr.length; i++)
+	{
+		clearInterval(animation_arr[i])
+		animation_arr[i] = ''
+		movement_tmp[i] = 0
 	}
+
+	let [text, cur_amount] = document.querySelector('.remaining_checks p').innerHTML.split(': ')
+	document.querySelector('.remaining_checks p').innerHTML = text + ': ' + (cur_amount - 1)
+
+	let url = new URL(window.location.href + 'xhr')
+	let ans = ''
+	for (const u of unknowns) {
+		ans += u.innerHTML;
+	}
+	let solution = document.querySelector('#interactive_problem_form').outerHTML
+	let xhr = new XMLHttpRequest()
+	xhr.open('POST', url)
+	xhr.responseType = 'text'
+	xhr.send(JSON.stringify({'answer': ans, 'solution': solution}));
+	xhr.onload = function() {xhr_request(xhr)}
 }
