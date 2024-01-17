@@ -44,3 +44,6 @@ max_clas_size = 100
 
 [contacts]
 support_email = 'test@test.com'
+
+[xhr]
+dead_step = 1000
