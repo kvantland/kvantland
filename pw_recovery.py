@@ -48,7 +48,7 @@ def recovery_attempt(db):
 		response.set_cookie('email', str(email), path='/', httponly=True, samesite='lax', secret=_key)
 		redirect(f'/pw_recovery/new_password')
 	except ValueError:
-		display_recovery_form(err="Неверный адрес электронной почты")
+		return display_recovery_form(err="Неверный адрес электронной почты")
 
 
 @route('/pw_recovery/new_password')
