@@ -1,15 +1,18 @@
 #!/usr/bin/python3
 
-from bottle import route, redirect, request
+from bottle import route, redirect, request, response
 from passlib.hash import pbkdf2_sha256 as pwhash
-from login import do_login
+import json
 
+from login import do_login
 from config import config
 import nav
 
 alph_lower = 'abcdefghijklmnopqrstuvwxyz'
 alph_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 num = '0123456789'
+
+_key = config['keys']['cookie']
 
 @route('/pw_recovery')
 def display_recovery_form(err=None):
@@ -42,13 +45,14 @@ def recovery_attempt(db):
 	try:
 		db.execute('select student from Kvantland.Student where email=%s', (email, ))
 		(user, ), = db.fetchall()	
-		redirect(f'/pw_recovery/new_password/{email}')
+		response.set_cookie('email', str(email), path='/', httponly=True, samesite='lax', secret=_key)
+		redirect(f'/pw_recovery/new_password')
 	except ValueError:
 		display_recovery_form(err="Неверный адрес электронной почты")
 
 
-@route('/pw_recovery/new_password/<email>')
-def display_new_password_form(email, err=None):
+@route('/pw_recovery/new_password')
+def display_new_password_form(err=None):
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
@@ -77,14 +81,15 @@ def display_new_password_form(email, err=None):
 	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 
 
-@route('/pw_recovery/new_password/<email>', method="POST")
-def new_password_attempt(db, email):
+@route('/pw_recovery/new_password', method="POST")
+def new_password_attempt(db):
+	email = request.get_cookie('email', secret=_key)
 	password = request.forms.password
 	password_confirm = request.forms.password_confirm
 	if (not password or not password_confirm):
-		return display_new_password_form(email, err="Заполните форму!")
+		return display_new_password_form(err="Заполните форму!")
 	if password != password_confirm:
-		return display_new_password_form(email, err="Пароли не совпадают")
+		return display_new_password_form(err="Пароли не совпадают")
 
 	min_size = config['reg']['min_password_size']
 	max_size = config['reg']['max_password_size']
@@ -98,12 +103,12 @@ def new_password_attempt(db, email):
 		if s in num:
 			tmp_number = 1
 	if not(tmp_lower and tmp_upper and tmp_number):
-		return display_new_password_form(email, err="Пароль должен содержать заглавные и строчные буквы, а также цифры")
+		return display_new_password_form(err="Пароль должен содержать заглавные и строчные буквы, а также цифры")
 
 	if len(password) < min_size:
-		return display_new_password_form(email, err=f"Слишком мало символов в поле Пароль, <br /> должно быть минимум  {min_size}")
+		return display_new_password_form(err=f"Слишком мало символов в поле Пароль, <br /> должно быть минимум  {min_size}")
 	if len(password) > max_size:
-		return display_new_password_form(email, err=f"Слишком много символов в поле Пароль")
+		return display_new_password_form(err=f"Слишком много символов в поле Пароль")
 
 	update_user(db, email, password)
 	redirect('/')
