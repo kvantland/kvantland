@@ -105,7 +105,7 @@ def display_registration_form(user_info, err=None):
 	yield '</div>'
 	yield '</div>'
 	yield '</main>'
-	yield '<script type="text/javascript" src ="/static/registration.js"></script>'
+	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def add_user(db, info):

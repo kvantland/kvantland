@@ -356,7 +356,7 @@ form.login{
 	flex-direction: column;
 	justify-content: space-between;
 	width: 60vh;
-	height: 45vh;
+	height: 50vh;
 	margin: 20vh auto auto auto;
 	background-color: #EDECEF;
 	border: 3px solid #D5D5D7;
@@ -442,9 +442,10 @@ form.login{
 	padding: 0.2em 0.5em;
 }
 
-.anon_reg{
+.form_bottom{
+	display: flex;
+	flex-direction: column;
 	text-align: center;
-	vertical-align: middle;
 	font-size: 3vh;
 	padding: 0.5vh 0.5vh;
 }
@@ -661,4 +662,42 @@ form.acc{
 	flex-direction: column;
 	padding-left: 5em;
 	font-size: 1.2em;
+}
+
+.form_desc {
+	text-align: center;
+	display: block;
+	margin: auto 0 auto 0;
+}
+
+.recovery_form {
+	-webkit-user-select: none;
+	user-select: none;
+	display: flex;
+	flex-direction: column;
+	height: 45vh;
+	width: 60vh;
+	margin: 20vh auto auto auto;
+	background-color: #EDECEF;
+	border: 3px solid #D5D5D7;
+	border-radius: 10px;
+	text-align: center;
+	color: #494949;
+}
+
+form.recovery {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 5% 5% 5% 5%;
+	height: 90%;
+}
+
+form.recovery input {
+	font-size: 1em;
+	border: 2px solid #D5D5D7;
+	border-radius: 5px;
+	padding: 0 0 0 2%;
+	background-color: #F5F5F5;
+	height: 20%;
 }
