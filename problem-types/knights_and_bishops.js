@@ -65,7 +65,8 @@ function move(event){
 }
 
 function back_to_drag(){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -73,7 +74,8 @@ function back_to_drag(){
 }
 
 function drop(square){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -106,46 +108,53 @@ function add_figure(type)	{
 
 document.addEventListener('DOMContentLoaded', update_figures());
 
+function start(event, obj) {
+	if (!obj.classList.contains('choiced')){
+		if (obj.classList.contains('horse') )
+			add_figure('horse');
+		else
+			add_figure('bishop');
+	}
+	obj.classList.add('targeted');
+	obj.classList.remove('choiced');
+	svg_box.appendChild(obj);
+	var svg_box_X = svg_box.getBoundingClientRect().left;
+	var svg_box_Y = svg_box.getBoundingClientRect().top;
+	moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
+	document.addEventListener("mousemove", move);
+	document.addEventListener("touchmove", move);
+	update_figures();
+}
+
+function end(event, obj) {
+	if (!document.querySelector('.targeted'))
+		return;
+	let min_diff = 10 ** 9;
+	let best_square = '';
+	for (const square of board){
+		let x_diff = square.getAttribute('x') - obj.getAttribute('x');
+		let y_diff = square.getAttribute('y') - obj.getAttribute('y');
+		let tot_diff = x_diff ** 2 + y_diff ** 2;
+		if (tot_diff < min_diff){
+			best_square = square;
+			min_diff = tot_diff;
+		}
+	};
+	if (min_diff < side ** 2 && check_if_empty(best_square))
+		drop(best_square);
+	else
+		back_to_drag();
+	update_figures();
+}
+
 function update_figures()
 {
 	var drag_figures = document.querySelectorAll('.active');
 	for (const figure of drag_figures){
-		figure.onmousedown = function(event){
-			if (!this.classList.contains('choiced')){
-				if (this.classList.contains('horse') )
-					add_figure('horse');
-				else
-					add_figure('bishop');
-			}
-			this.classList.add('targeted');
-			this.classList.remove('choiced');
-			svg_box.appendChild(this);
-			var svg_box_X = svg_box.getBoundingClientRect().left;
-			var svg_box_Y = svg_box.getBoundingClientRect().top;
-			moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
-			document.addEventListener('mousemove', move)
-			update_figures();
-		}
-		figure.onmouseup = function(event){
-			if (!document.querySelector('.targeted'))
-				return;
-			var min_diff = 10 ** 9;
-			var best_square = '';
-			for (const square of board){
-				let x_diff = square.getAttribute('x') - this.getAttribute('x');
-				let y_diff = square.getAttribute('y') - this.getAttribute('y');
-				let tot_diff = x_diff ** 2 + y_diff ** 2;
-				if (tot_diff < min_diff){
-					best_square = square;
-					min_diff = tot_diff;
-				}
-			};
-			if (min_diff < side ** 2 && check_if_empty(best_square))
-				drop(best_square);
-			else
-				back_to_drag();
-			update_figures();
-		}
+		figure.addEventListener("mousedown", (e) => {start(e, figure)})
+		figure.addEventListener("touchstart", (e) => {start(e, figure)})
+		figure.addEventListener("mouseup", (e) => {end(e, figure)}) 
+		figure.addEventListener("touchend", (e) => {end(e, figure)})
 	}
 }
 

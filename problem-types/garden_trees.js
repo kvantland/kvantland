@@ -91,13 +91,15 @@ function move(event){
 }
 
 function back_to_drag(){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	a = document.querySelector('.targeted');
 	a.parentNode.removeChild(a);
 }
 
 function drop(square){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	a = document.querySelector('.targeted');
 	a.classList.remove('targeted');
 	a.classList.add('choiced');	
@@ -126,61 +128,68 @@ function add_tree(x, y, amount=false, choiced=false){
 
 document.addEventListener('DOMContentLoaded', update_tree());
 
+function start(event, obj) {
+	if (!obj.classList.contains('choiced'))
+		add_tree(def_X, def_Y)
+	else
+	{
+		if (obj.getAttribute('amount') > 1)
+			reduce_tree_amount(get_square(obj), 1)
+		obj.setAttribute('amount', '1')
+		obj.setAttribute('href', '/static/tree.png')
+	}
+	obj.classList.add('targeted');
+	obj.classList.remove('choiced');
+	svg_box.appendChild(obj);
+	var svg_box_X = svg_box.getBoundingClientRect().left;
+	var svg_box_Y = svg_box.getBoundingClientRect().top;
+	moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
+	document.addEventListener("mousemove", move)
+	document.addEventListener("touchmove", move)
+	update_tree();
+}
+
+function end(event, obj) {
+	if (!document.querySelector('.targeted'))
+		return 
+	var min_diff = 10 ** 9;
+	var best_square = '';
+	for (const square of board){
+		let x_diff = square.getAttribute('x') - obj.getAttribute('x');
+		let y_diff = square.getAttribute('y') - obj.getAttribute('y');
+		let tot_diff = x_diff ** 2 + y_diff ** 2;
+		if (tot_diff < min_diff){
+			best_square = square;
+			min_diff = tot_diff;
+		}
+	};
+	if (min_diff < side ** 2)
+	{
+		if (get_amount(best_square) == '0')
+		{
+			if (obj.getAttribute('href') == '/static/tree.png')
+				obj.setAttribute('href', '/static/1_tree.png');
+			drop(best_square);
+		}
+		else
+		{
+			increase_tree_amount(best_square, obj.getAttribute('amount'));
+			back_to_drag();
+		}
+	}
+	else
+		back_to_drag();
+	update_tree();
+}
+
 function update_tree()
 {
 	var drag_trees = document.querySelectorAll('.active');
 	for (const tree of drag_trees){
-		tree.onmousedown = function(event){
-			if (!this.classList.contains('choiced'))
-				add_tree(def_X, def_Y)
-			else
-			{
-				if (this.getAttribute('amount') > 1)
-					reduce_tree_amount(get_square(this), 1)
-				this.setAttribute('amount', '1')
-				this.setAttribute('href', '/static/tree.png')
-			}
-			this.classList.add('targeted');
-			this.classList.remove('choiced');
-			svg_box.appendChild(this);
-			var svg_box_X = svg_box.getBoundingClientRect().left;
-			var svg_box_Y = svg_box.getBoundingClientRect().top;
-			moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
-			document.addEventListener('mousemove', move)
-			update_tree();
-		}
-		tree.onmouseup = function(event){
-			if (!document.querySelector('.targeted'))
-				return 
-			var min_diff = 10 ** 9;
-			var best_square = '';
-			for (const square of board){
-				let x_diff = square.getAttribute('x') - this.getAttribute('x');
-				let y_diff = square.getAttribute('y') - this.getAttribute('y');
-				let tot_diff = x_diff ** 2 + y_diff ** 2;
-				if (tot_diff < min_diff){
-					best_square = square;
-					min_diff = tot_diff;
-				}
-			};
-			if (min_diff < side ** 2)
-			{
-				if (get_amount(best_square) == '0')
-				{
-					if (this.getAttribute('href') == '/static/tree.png')
-						this.setAttribute('href', '/static/1_tree.png');
-					drop(best_square);
-				}
-				else
-				{
-					increase_tree_amount(best_square, this.getAttribute('amount'));
-					back_to_drag();
-				}
-			}
-			else
-				back_to_drag();
-			update_tree();
-		}
+		tree.addEventListener("mousedown", (e) => start(e, tree))
+		tree.addEventListener("touchstart", (e) => start(e, tree))
+		tree.addEventListener("mouseup", (e) => end(e, tree))
+		tree.addEventListener("touchend", (e) => end(e, tree))
 	}
 }
 

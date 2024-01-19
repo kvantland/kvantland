@@ -68,7 +68,8 @@ function move(event){
 
 
 function back_to_drag(){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -80,7 +81,8 @@ function back_to_drag(){
 }
 
 function drop(square){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -98,52 +100,59 @@ function drop(square){
 	square.setAttribute('num', a.getAttribute('num'))
 }
 
-for (const boy of drag_boys){
-	boy.onmousedown = function(event){
-		this.classList.add('targeted');
-		this.classList.remove('choiced');
-		for (const square of board) {
-			if (square.getAttribute('num') == this.getAttribute('num')){
-				square.setAttribute('num', "*")
-			}
-		}
-		svg_box.appendChild(this);
-		var svg_box_X = svg_box.getBoundingClientRect().left;
-		var svg_box_Y = svg_box.getBoundingClientRect().top;
-		moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
-		document.addEventListener('mousemove', move)
-		this.onmouseup = function(event){
-			var min_diff = 10 ** 9;
-			var best_square = '';
-			var best_square_row = 0;
-			var best_square_column = 0;
-			let row = 0;
-			let column = 0;
-			for (const square of board){
-				let x_diff = square.getAttribute('x') - this.getAttribute('x');
-				let y_diff = square.getAttribute('y') - this.getAttribute('y');
-				let tot_diff = x_diff ** 2 + y_diff ** 2;
-				if (tot_diff < min_diff){
-					best_square = square;
-					min_diff = tot_diff;
-					best_square_row = row;
-					best_square_column = column;
-				}
-				row += 1;
-				if (row == in_column){
-					row = 0;
-					column += 1;
-				}
-			};
-			if (min_diff < side ** 2){
-				this.setAttribute('column', best_square_column);
-				this.setAttribute('row', best_square_row);
-				drop(best_square);
-			}
-			else
-				back_to_drag();
+function start(event, obj) {
+	obj.classList.add('targeted');
+	obj.classList.remove('choiced');
+	for (const square of board) {
+		if (square.getAttribute('num') == obj.getAttribute('num')){
+			square.setAttribute('num', "*")
 		}
 	}
+	svg_box.appendChild(obj);
+	var svg_box_X = svg_box.getBoundingClientRect().left;
+	var svg_box_Y = svg_box.getBoundingClientRect().top;
+	moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
+	document.addEventListener("mousemove", move)
+	document.addEventListener("touchmove", move)
+}
+
+function end(event, obj) {
+	var min_diff = 10 ** 9;
+	var best_square = '';
+	var best_square_row = 0;
+	var best_square_column = 0;
+	let row = 0;
+	let column = 0;
+	for (const square of board){
+		let x_diff = square.getAttribute('x') - obj.getAttribute('x');
+		let y_diff = square.getAttribute('y') - obj.getAttribute('y');
+		let tot_diff = x_diff ** 2 + y_diff ** 2;
+		if (tot_diff < min_diff){
+			best_square = square;
+			min_diff = tot_diff;
+			best_square_row = row;
+			best_square_column = column;
+		}
+		row += 1;
+		if (row == in_column){
+			row = 0;
+			column += 1;
+		}
+	};
+	if (min_diff < side ** 2){
+		obj.setAttribute('column', best_square_column);
+		obj.setAttribute('row', best_square_row);
+		drop(best_square);
+	}
+	else
+		back_to_drag();
+}
+
+for (const boy of drag_boys){
+	boy.addEventListener("mousedown", (e) => start(e, boy))
+	boy.addEventListener("touchstart",  (e) => start(e, boy))
+	boy.addEventListener("mouseup", (e) => end(e, boy))
+	boy.addEventListener("touchend", (e) => end(e, boy))
 }
 
 var rel = document.querySelector('.reload');
