@@ -74,7 +74,7 @@ def recovery_attempt(db):
 			params = {
 			'email': email,
 			'redirect_uri': config['recovery']['redirect_uri'],
-			'token': hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256') 
+			'token': hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest()
 			}
 			send_recovery_request(params)
 			return show_send_message()
@@ -94,7 +94,10 @@ def get_response():
 @route('/pw_recovery/new_password')
 def display_new_password_form(err=None):
 	email = request.query['email']
-	if not email:
+	token = request.query['token']
+	if not email or not token:
+		redirect('/')
+	if hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
 		redirect('/')
 	response.set_cookie('email', str(email), path='/', httponly=True, samesite='lax', secret=_key)
 	yield '<!DOCTYPE html>'
