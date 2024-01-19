@@ -3,8 +3,11 @@
 from bottle import route, redirect, request, response
 from passlib.hash import pbkdf2_sha256 as pwhash
 import json
+import hmac
+import urllib.parse
+import sys
 
-from login import do_login
+from login import do_login, current_user
 from config import config
 import nav
 
@@ -12,13 +15,22 @@ alph_lower = 'abcdefghijklmnopqrstuvwxyz'
 alph_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 num = '0123456789'
 
-_key = config['keys']['cookie']
+_key = config['keys']['recovery']
+
+
 
 @route('/pw_recovery')
 def display_recovery_form(err=None):
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	if err:
+		yield '<dialog open="open" class="reg_dialog">'
+		yield f'<p> {err} </p>'
+		yield '<form method="dialog">'
+		yield '<button type="submit" class="dialog_button">Закрыть</button>'
+		yield '</form>'
+		yield '</dialog>'
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
 	yield '<main>'
 	yield '<div class="recovery_form">'
@@ -32,10 +44,19 @@ def display_recovery_form(err=None):
 	yield '</form>'
 	yield '</div>'
 	yield '</div>'
-	if err:
-		yield f'<p style="color:red"> {err} </p>'
 	yield '</main>'
+	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 
+def show_send_message():
+	yield '<!DOCTYPE html>'
+	yield '<title>Восстановление пароля</title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
+	yield '<main>'
+	yield '<div style="text-align:center">'
+	yield '<p> На вашу почту отправлено письмо с подтверждением! </p>'
+	yield '</div>'
+	yield '</main>'
 
 @route('/pw_recovery', method="POST")
 def recovery_attempt(db):
@@ -44,15 +65,38 @@ def recovery_attempt(db):
 		return display_recovery_form(err="Не указан адрес электронной почты")
 	try:
 		db.execute('select student from Kvantland.Student where email=%s', (email, ))
-		(user, ), = db.fetchall()	
-		response.set_cookie('email', str(email), path='/', httponly=True, samesite='lax', secret=_key)
-		redirect(f'/pw_recovery/new_password')
+		(user, ), = db.fetchall()
+
+		check_user = current_user(db)
+		if check_user:
+			redirect('/')
+		else:
+			params = {
+			'email': email,
+			'redirect_uri': config['recovery']['redirect_uri'],
+			'token': hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256') 
+			}
+			send_recovery_request(params)
+			return show_send_message()
 	except ValueError:
 		return display_recovery_form(err="Неверный адрес электронной почты")
 
 
+def send_recovery_request(params):
+	pass
+
+@route('/pw_recovery/response', method="POST")
+def get_response():
+	params = request.query
+	redirect(f'/pw_recovery/new_password?{escape(urllib.parse.urlencode(params))}')
+
+
 @route('/pw_recovery/new_password')
 def display_new_password_form(err=None):
+	email = request.query['email']
+	if not email:
+		redirect('/')
+	response.set_cookie('email', str(email), path='/', httponly=True, samesite='lax', secret=_key)
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
@@ -63,7 +107,7 @@ def display_new_password_form(err=None):
 		yield '<button type="submit" class="dialog_button">Закрыть</button>'
 		yield '</form>'
 		yield '</dialog>'
-	yield from nav.display_breadcrumbs(('/', 'Квантлаemндия'), ('/login', 'Войти'))
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
 	yield '<main>'
 	yield '<div class="recovery_form">'
 	yield '<div class="login_form_header"> Восстановление пароля </div>'
