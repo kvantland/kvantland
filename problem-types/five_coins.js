@@ -1,5 +1,6 @@
 var coin_width = document.querySelector('.coin circle').getAttribute('r') * 2
 var coin_height = document.querySelector('.coin circle').getAttribute('r') * 2
+var x, y
 
 function def_pos()
 {
@@ -140,10 +141,27 @@ function back_to_drag(coin){
 }
 
 function move(event){
-	let [cur_X, cur_Y] = [event.clientX, event.clientY]
+	let posX, posY
+	if ((event.clientX) && (event.clientY))
+	{
+		posX = event.clientX
+		posY = event.clientY
+	}
+	else if (event.targetTouches) {
+		posX = event.targetTouches[0].clientX
+		posY = event.targetTouches[0].clientY
+		event.preventDefault()
+	}
+	let [cur_X, cur_Y] = [posX, posY]
 	let [left, top, right, bottom] = [0, 0, document.documentElement.clientWidth, document.documentElement.clientHeight]
-	if (cur_X < right && cur_X > left && cur_Y > top && cur_Y < bottom)
-		moveAt(cur_X, cur_Y);
+	if ((cur_X < right || window.scrollX < document.documentElement.scrollWidth - right) && (cur_X > left || window.scrollX > 0) && (cur_Y > top || window.scrollY > 0) && (cur_Y < bottom || window.scrollY < document.documentElement.scrollHeight - bottom))
+	{
+		if (cur_Y > document.documentElement.clientHeight)
+			window.scrollBy(0, cur_Y - document.documentElement.clientHeight)
+		if (cur_Y < top)
+			window.scrollBy(0, cur_Y)
+		moveAt(cur_X, cur_Y)
+	}
 	else
 		back_to_drag(document.querySelector('.targeted'));
 }
@@ -172,7 +190,18 @@ function start(event, obj) {
 		obj.removeAttribute('occupied')
 	}
 	document.querySelector('svg').appendChild(obj)
-	moveAt(event.clientX, event.clientY)
+	let posX, posY
+	if ((event.clientX) && (event.clientY))
+	{
+		posX = event.clientX
+		posY = event.clientY
+	}
+	else if (event.targetTouches) {
+		posX = event.targetTouches[0].clientX
+		posY = event.targetTouches[0].clientY
+		event.preventDefault()
+	}
+	moveAt(posX, posY)
 	document.addEventListener("mousemove", move)
 	document.addEventListener("touchmove", move)
 }

@@ -52,10 +52,21 @@ function moveAt(x, y){
 function move(event){
 	var svg_box_X = svg_box.getBoundingClientRect().left;
 	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	var cur_X = event.clientX - svg_box_X;
-	var cur_Y = event.clientY - svg_box_Y;
-	var right = document.documentElement.clientWidth - svg_box_X;
-	var bottom = document.documentElement.clientHeight - svg_box_Y;
+	let posX, posY
+	if ((event.clientX) && (event.clientY))
+	{
+		posX = event.clientX
+		posY = event.clientY
+	}
+	else if (event.targetTouches) {
+		posX = event.targetTouches[0].clientX
+		posY = event.targetTouches[0].clientY
+		event.preventDefault()
+	}
+	var cur_X = posX - svg_box_X;
+	var cur_Y = posY - svg_box_Y;
+	var right = document.documentElement.scrollWidth - svg_box_X;
+	var bottom = document.documentElement.scrollHeight - svg_box_Y;
 	var left = -svg_box_X;
 	var top = -svg_box_Y;
 	if (cur_X + side / 2 < right && cur_X - side / 2 > left && cur_Y - side / 2 > top && cur_Y + side / 2 < bottom)
@@ -111,7 +122,18 @@ function start(event, obj) {
 	svg_box.appendChild(obj);
 	var svg_box_X = svg_box.getBoundingClientRect().left;
 	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
+	let posX, posY
+	if ((event.clientX) && (event.clientY))
+	{
+		posX = event.clientX
+		posY = event.clientY
+	}
+	else if (event.targetTouches) {
+		posX = event.targetTouches[0].clientX
+		posY = event.targetTouches[0].clientY
+		event.preventDefault()
+	}
+	moveAt(posX - svg_box_X - side / 2, posY - svg_box_Y - side / 2);
 	document.addEventListener("mousemove", move)
 	document.addEventListener("touchmove", move)
 }
