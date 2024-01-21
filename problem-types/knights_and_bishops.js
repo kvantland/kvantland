@@ -64,16 +64,17 @@ function screen_border_check(x, y) {
 }
 
 function autoscroll(x, y) {
+	let add = 40
 	let [x_diff, y_diff] = [0, 0]
 	let [bott, right] = [document.documentElement.clientHeight, document.documentElement.clientWidth]
-	if (x < 0)
-		x_diff = x
-	if (y < 0)
-		y_diff = y
-	if (y > bott)
-		y_diff = y - bott
-	if (x > right)
-		x_diff = x - right
+	if (x < add)
+		x_diff = x - add
+	if (y < add)
+		y_diff = y - add
+	if (y > bott - add)
+		y_diff = y - bott + add
+	if (x > right - add)
+		x_diff = x - right + add
 	scrollBy(x_diff, y_diff)
 }
 
