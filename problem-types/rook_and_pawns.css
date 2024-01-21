@@ -43,13 +43,17 @@ text.finish{
 	fill:yellow;
 }
 
-.free:hover{
-	cursor: pointer;
-	fill: rgba(0, 0, 0, 0.15);
+@media(hover:hover) and (pointer:fine) {
+	.free:hover{
+		cursor: pointer;
+		fill: rgba(0, 0, 0, 0.15);
+	}
 }
 
-.reload:hover{
-	cursor: pointer;
+@media(hover:hover) and (pointer:fine) {
+	.reload:hover{
+		cursor: pointer;
+	}
 }
 
 text{

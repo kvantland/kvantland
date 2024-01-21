@@ -71,13 +71,17 @@ text.number_value{
 	padding: 0.3em 1.0em;
 }
 
-.reload:hover {
-	cursor: pointer;
+@media(hover:hover) and (pointer:fine) {
+	.reload:hover {
+		cursor: pointer;
+	}
 }
 
-.active:hover {
-	cursor:pointer;
-	fill:rgb(139, 0, 0);
+@media(hover:hover) and (pointer:fine) {
+	.active:hover {
+		cursor:pointer;
+		fill:rgb(139, 0, 0);
+	}
 }
 
 svg{

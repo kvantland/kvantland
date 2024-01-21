@@ -25,7 +25,9 @@ text {
 	user-select: none
 }
 
-.free:hover{
-	cursor: pointer;
-	fill: rgba(0, 0, 0, 0.15);
+@media(hover:hover) and (pointer:fine) {
+	.free:hover{
+		cursor: pointer;
+		fill: rgba(0, 0, 0, 0.15);
+	}
 }

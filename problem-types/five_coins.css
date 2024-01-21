@@ -118,8 +118,10 @@ text.coin_text{
 	margin-bottom: 0;
 }
 
-.button:hover{
-	background-color: #D0D0D7;
+@media(hover:hover) and (pointer:fine) {
+	.button:hover{
+		background-color: #D0D0D7;
+	}
 }
 
 .coin_container_drag{
