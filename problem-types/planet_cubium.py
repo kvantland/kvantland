@@ -154,7 +154,8 @@ def entry_form(data, kwargs):
 				]
 
 	yield '<input name="answer" type="hidden" />'
-	yield f'<svg version="1.1" class="plot_area" width="{max_x - min_x}" height="{max_y - min_y}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield '<div class="plot_area">'
+	yield f'<svg version="1.1" width="{max_x - min_x}" height="{max_y - min_y}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	yield f'<g class="cube" transform="translate({-min_x} {-min_y})">'
 	for edge in edge_list:
 		if edge[0] == plain.O:
@@ -168,6 +169,7 @@ def entry_form(data, kwargs):
 
 	yield '</g>'
 	yield '</svg>'
+	yield '</div>'
 
 def validate(data, answer):
 	return ' '.join(list(map(str, data['correct']))) == answer
