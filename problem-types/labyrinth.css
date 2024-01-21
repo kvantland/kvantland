@@ -41,7 +41,7 @@ body{
 .grid_line{
 	stroke: lightgray;
 	stroke-linecap: square;
-	stroke-width: 2;
+	stroke-width: 1;
 }
 
 .border_line{
