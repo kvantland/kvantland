@@ -12,14 +12,17 @@ body{
 	position: relative;
 }
 
-.square{
-	fill:transparent;
-	&:hover{
+.square {
+	fill: transparent;
+}
+
+@media(hover:hover) and (pointer:fine) {
+	.square:hover{
 		cursor: pointer;
 	}
-	&:not(.choiced):hover{
-		fill: rgba(0, 0, 0, 0.15);
-	}   
+	.square:not(.choiced):hover{
+		fill: rgba(0, 0, 0, 0.15);  
+	}
 }
 
 .tick{
