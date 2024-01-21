@@ -6,7 +6,7 @@ var def_X_horse = def_horse.getAttribute('x');
 var def_y_horse = def_horse.getAttribute('y');
 var def_X_bishop = def_bishop.getAttribute('x');
 var def_Y_bishop = def_bishop.getAttribute('y');
-var svg_box = document.querySelector('.plot_area');
+var svg_box = document.querySelector('svg');
 var width = def_horse.getAttribute('width');
 var height = def_horse.getAttribute('height');
 
@@ -48,13 +48,15 @@ function check_if_empty(square){
 
 function moveAt(x, y){
 	var a = document.querySelector('.targeted');
+	console.log(a.getAttribute('x'))
+	console.log(a.classList[0])
 	a.setAttribute('x', x);
 	a.setAttribute('y', y);
 }
 
 function screen_border_check(x, y) {
-	let [right, f_right] = [document.documentElement.clientWidth, document.documentElement.scrollWidth]
-	let [bott, f_bott] = [document.documentElement.clientHeight, document.documentElement.scrollHeight]
+	let [right, f_right] = [window.innerWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [window.innerHeight, document.documentElement.scrollHeight]
 	if (x >= right && window.scrollX >= f_right - right)
 		return false
 	if (x <= 0 && window.scrollX <= 0)
@@ -69,7 +71,7 @@ function screen_border_check(x, y) {
 function autoscroll(x, y) {
 	let add = 40
 	let [x_diff, y_diff] = [0, 0]
-	let [bott, right] = [document.documentElement.clientHeight, document.documentElement.clientWidth]
+	let [bott, right] = [window.innerHeight, window.innerWidth]
 	if (x < add)
 		x_diff = x - add
 	if (y < add)
@@ -166,7 +168,6 @@ function start(event, obj) {
 	else if (event.targetTouches) {
 		posX = event.targetTouches[0].clientX
 		posY = event.targetTouches[0].clientY
-		event.preventDefault()
 	}
 	moveAt(posX - svg_box_X - side / 2, posY - svg_box_Y - side / 2);
 	document.addEventListener("mousemove", move);
@@ -197,8 +198,8 @@ function end(event, obj) {
 
 function update_figures()
 {
-	var drag_figures = document.querySelectorAll('.active');
-	for (const figure of drag_figures){
+	let drag_figures = document.querySelectorAll('.active')
+	for (let figure of drag_figures){
 		figure.addEventListener("mousedown", (e) => {start(e, figure)})
 		figure.addEventListener("touchstart", (e) => {start(e, figure)})
 		figure.addEventListener("mouseup", (e) => {end(e, figure)}) 

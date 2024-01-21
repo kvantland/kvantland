@@ -10,7 +10,7 @@ for (const boy of drag_boys){
 }
 var def_X = drag_boys[0].getAttribute('x');
 var def_Y = drag_boys[0].getAttribute('y');
-var svg_box = document.querySelector('.plot_area');
+var svg_box = document.querySelector('svg');
 
 const column_set = new Set()
 
