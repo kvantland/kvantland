@@ -49,33 +49,54 @@ function moveAt(x, y){
 	a.setAttribute('y', y);
 }
 
-function move(event){
-	var svg_box_X = svg_box.getBoundingClientRect().left;
-	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	let posX, posY
-	if ((event.clientX) && (event.clientY))
-	{
-		posX = event.clientX
-		posY = event.clientY
-	}
-	else if (event.targetTouches) {
-		posX = event.targetTouches[0].clientX
-		posY = event.targetTouches[0].clientY
-		event.preventDefault()
-	}
-	var cur_X = posX - svg_box_X;
-	var cur_Y = posY - svg_box_Y;
-	var right = document.documentElement.scrollWidth - svg_box_X;
-	var bottom = document.documentElement.scrollHeight - svg_box_Y;
-	var left = -svg_box_X;
-	var top = -svg_box_Y;
-	if (cur_X + side / 2 < right && cur_X - side / 2 > left && cur_Y - side / 2 > top && cur_Y + side / 2 < bottom)
-		moveAt(cur_X - side / 2, cur_Y - side / 2);
-	else
-		back_to_drag();
-
+function screen_border_check(x, y) {
+	let [right, f_right] = [document.documentElement.clientWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [document.documentElement.clientHeight, document.documentElement.scrollHeight]
+	if (x >= right && window.scrollX >= f_right - right)
+		return false
+	if (x <= 0 && window.scrollX <= 0)
+		return false
+	if (y <= 0 && window.scrollY <= 0)
+		return false
+	if (y >= bott && window.scrollY >= f_bott - bott)
+		return false
+	return true
 }
 
+function autoscroll(x, y) {
+	let [x_diff, y_diff] = [0, 0]
+	let [bott, right] = [document.documentElement.clientHeight, document.documentElement.clientWidth]
+	if (x < 0)
+		x_diff = x
+	if (y < 0)
+		y_diff = y
+	if (y > bott)
+		y_diff = y - bott
+	if (x > right)
+		x_diff = x - right
+	scrollBy(x_diff, y_diff)
+}
+
+function move(event) {
+	let svg_box_X = svg_box.getBoundingClientRect().left;
+	let svg_box_Y = svg_box.getBoundingClientRect().top;
+	let cur_X, cur_Y
+	if (event.targetTouches) {
+		cur_X = event.targetTouches[0].clientX
+		cur_Y = event.targetTouches[0].clientY
+		event.preventDefault()
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	if (screen_border_check(cur_X, cur_Y)) {
+		autoscroll(cur_X, cur_Y)
+		moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2)
+	}
+	else
+		back_to_drag()
+}
 
 
 function back_to_drag(){

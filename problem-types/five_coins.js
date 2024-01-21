@@ -123,7 +123,7 @@ function check_if_close(obj){
 function back_to_drag(coin){
 	if (!coin)
 		return;
-	if (coin.classList.contains('.targeted'))
+	if (coin.classList.contains('targeted'))
 	{
 		document.removeEventListener("mousemove", move)
 		document.removeEventListener("touchmove", move)
@@ -140,30 +140,51 @@ function back_to_drag(coin){
 	document.querySelector('.drag_zone').appendChild(coin)
 }
 
-function move(event){
-	let posX, posY
-	if ((event.clientX) && (event.clientY))
-	{
-		posX = event.clientX
-		posY = event.clientY
-	}
-	else if (event.targetTouches) {
-		posX = event.targetTouches[0].clientX
-		posY = event.targetTouches[0].clientY
+function screen_border_check(x, y) {
+	let [right, f_right] = [document.documentElement.clientWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [document.documentElement.clientHeight, document.documentElement.scrollHeight]
+	if (x >= right && window.scrollX >= f_right - right)
+		return false
+	if (x <= 0 && window.scrollX <= 0)
+		return false
+	if (y <= 0 && window.scrollY <= 0)
+		return false
+	if (y >= bott && window.scrollY >= f_bott - bott)
+		return false
+	return true
+}
+
+function autoscroll(x, y) {
+	let [x_diff, y_diff] = [0, 0]
+	let [bott, right] = [document.documentElement.clientHeight, document.documentElement.clientWidth]
+	if (x < 0)
+		x_diff = x
+	if (y < 0)
+		y_diff = y
+	if (y > bott)
+		y_diff = y - bott
+	if (x > right)
+		x_diff = x - right
+	scrollBy(x_diff, y_diff)
+}
+
+function move(event) {
+	let cur_X, cur_Y
+	if (event.targetTouches) {
+		cur_X = event.targetTouches[0].clientX
+		cur_Y = event.targetTouches[0].clientY
 		event.preventDefault()
 	}
-	let [cur_X, cur_Y] = [posX, posY]
-	let [left, top, right, bottom] = [0, 0, document.documentElement.clientWidth, document.documentElement.clientHeight]
-	if ((cur_X < right || window.scrollX < document.documentElement.scrollWidth - right) && (cur_X > left || window.scrollX > 0) && (cur_Y > top || window.scrollY > 0) && (cur_Y < bottom || window.scrollY < document.documentElement.scrollHeight - bottom))
-	{
-		if (cur_Y > document.documentElement.clientHeight)
-			window.scrollBy(0, cur_Y - document.documentElement.clientHeight)
-		if (cur_Y < top)
-			window.scrollBy(0, cur_Y)
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	if (screen_border_check(cur_X, cur_Y)) {
+		autoscroll(cur_X, cur_Y)
 		moveAt(cur_X, cur_Y)
 	}
 	else
-		back_to_drag(document.querySelector('.targeted'));
+		back_to_drag(document.querySelector('.targeted'))
 }
 
 function moveAt(x, y){
