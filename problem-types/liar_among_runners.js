@@ -20,7 +20,7 @@ for (square of board){
 
 var in_column = column_set.size;
 
-document.querySelector('button').onclick = function(e){
+function send(e) {
 	var curr = [];
 
 	for (const square of board){
@@ -32,6 +32,9 @@ document.querySelector('button').onclick = function(e){
 	}
 	sender.value = curr;
 }
+
+document.querySelector('button').addEventListener("click", (e) => send(e))
+document.querySelector('button').addEventListener("touchstart", (e) => send(e))
 
 function check_if_empty(square){
 	for (const boy of all_boys){
@@ -198,8 +201,9 @@ for (const boy of drag_boys){
 	boy.addEventListener("touchend", (e) => end(e, boy))
 }
 
-var rel = document.querySelector('.reload');
-rel.onclick = function(){
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	for (const a of drag_boys){
 		var num = parseInt(a.getAttribute('num')) - 1
 		a.setAttribute('x', cp[num][0]);
@@ -209,3 +213,7 @@ rel.onclick = function(){
 		b.setAttribute('num', '*');
 	}
 }
+
+var rel = document.querySelector('.reload');
+rel.addEventListener("click", (e) => reload(e))
+rel.addEventListener("touchstart", (e) => reload(e))

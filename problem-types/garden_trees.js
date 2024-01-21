@@ -19,13 +19,16 @@ for (square of board){
 var in_row = row_set.size;
 var in_column = column_set.size;
 
-document.querySelector('button').onclick = function(e){
-	var ans = '';
+function send(e) {
+	let ans = '';
 	for (const square of board){
 		ans += get_amount(square) + ','
 	}
 	sender.value = ans;
 }
+
+document.querySelector('button').addEventListener("click", (e) => send(e))
+document.querySelector('button').addEventListener("touchstart", (e) => send(e))
 
 function get_amount(square){
 	var all_trees = document.querySelectorAll('.tree');
@@ -239,7 +242,10 @@ function update_tree()
 }
 
 rel = document.querySelector('.reload');
-rel.onclick = function(){
+
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	var drag_trees = document.querySelectorAll('.active.choiced');
 	for (var tree of drag_trees){
 		tree.classList.remove('choiced');
@@ -247,3 +253,6 @@ rel.onclick = function(){
 	}
 	update_tree();
 }
+
+rel.addEventListener("click", (e) => reload(e))
+rel.addEventListener("touchstart", (e) => reload(e))

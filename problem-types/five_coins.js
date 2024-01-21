@@ -331,7 +331,12 @@ function move_scales(side)
 	}
 }
 
-document.querySelector('.weight').onclick = function(){
+document.querySelector('.weight').addEventListener("click", (e) => weight(e))
+document.querySelector('.weight').addEventListener("touchstart", (e) => weight(e))
+
+function weight(e){
+	if (e.targetTouches)
+		e.preventDefault()
 	let url = new URL(window.location.href + 'xhr')
 	var conf = ''
 	for (let num = 1; num <= document.querySelectorAll('.coin').length; num++)
@@ -369,7 +374,9 @@ document.querySelector('.weight').onclick = function(){
 	}
 }
 
-document.querySelector('.clean').onclick = function(){
+function clean(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	if (!movement_tmp)
 	{
 		for (let coin of document.querySelectorAll('.coin'))
@@ -386,9 +393,15 @@ document.querySelector('.clean').onclick = function(){
 	}
 }
 
-document.querySelector('#send').onclick = function(){
+document.querySelector('.clean').addEventListener("click", (e) => clean(e))
+document.querySelector('.clean').addEventListener("touchstart", (e) => clean(e))
+
+function send(e) {
 	let ans = new Array(document.querySelectorAll('.coin').length).fill(0)
 	for (let coin of document.querySelectorAll('.coin.choiced'))
 		ans[coin.getAttribute('occupied') - 1] = coin.classList[1].split('_')[1]
 	document.querySelector('input').value = ans.join(' ')
 }
+
+document.querySelector('#send').addEventListener("click", (e) => send(e))
+document.querySelector('#send').addEventListener("touchstart", (e) => send(e))

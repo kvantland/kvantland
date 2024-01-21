@@ -10,12 +10,15 @@ var svg_box = document.querySelector('.plot_area');
 var width = def_horse.getAttribute('width');
 var height = def_horse.getAttribute('height');
 
-document.querySelector('button').onclick = function(e){
+function send(e){
 	var ans = '';
 	for (square of document.querySelectorAll('rect'))
 		ans += nearest_figure_type(square);
 	document.querySelector("input[name='answer']").value = ans;
 }
+
+document.querySelector('button').addEventListener("click", (e) => send(e))
+document.querySelector('button').addEventListener("touchstart", (e) => send(e))
 
 function nearest_figure_type(square){
 	var all_figures = document.querySelectorAll('.active');
@@ -91,10 +94,9 @@ function move(event) {
 		cur_X = event.clientX
 		cur_Y = event.clientY
 	}
-	if (screen_border_check(cur_X, cur_Y)) {
-		autoscroll(cur_X, cur_Y)
+	autoscroll(cur_X, cur_Y)
+	if (screen_border_check(cur_X, cur_Y))
 		moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2)
-	}
 	else
 		back_to_drag()
 }
@@ -205,11 +207,17 @@ function update_figures()
 }
 
 var rel = document.querySelector('.reload');
-rel.onclick = function(){
-	var drag_horses = document.querySelectorAll('.active.choiced');
-	for (var horse of drag_horses){
+
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
+	let drag_horses = document.querySelectorAll('.active.choiced');
+	for (let horse of drag_horses){
 		horse.classList.remove('choiced');
 		horse.parentNode.removeChild(horse);
 	}
 	update_figures();
 }
+
+rel.addEventListener("click", (e) => reload(e))
+rel.addEventListener("touchstart", (e) => reload(e))

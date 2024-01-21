@@ -71,30 +71,41 @@ for (let i of document.querySelectorAll('.slot')){
 	movement_tmp.push(0)
 }
 
+function change(e, obj) {
+	if (e.targetTouches)
+		e.preventDefault()
+	let column = obj.getAttribute('num')
+	if (movement_tmp[column])
+		return;
+	let tmp = -1	
+	if (obj.classList.contains('top'))
+		tmp = 1
+	animation_arr[column] = setInterval(function(){move(tmp, column)}, 20)
+	movement_tmp[column] = 1
+}
+
+
 for (const button of buttons){
-	button.onclick = function(){
-		let column = this.getAttribute('num')
-		if (movement_tmp[column])
-			return;
-		let tmp = -1	
-		if (this.classList.contains('top'))
-			tmp = 1
-		animation_arr[column] = setInterval(function(){move(tmp, column)}, 20)
-		movement_tmp[column] = 1
+	button.addEventListener("click", (e) => change(e, button))
+	button.addEventListener("touchstart", (e) => change(e, button))
+}
+
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
+	for (let column = 0; column < unknowns.length; column++){
+	let up = document.querySelectorAll('.up_number')[column]
+	let down = document.querySelectorAll('.bottom_number')[column]
+	let cur = document.querySelectorAll('.unknown')[column]
+	cur.innerHTML = '*';
+	cur.setAttribute('unset', 1)
+	up.innerHTML = '0'
+	down.innerHTML = '9'
 	}
 }
 
-document.querySelector('.reload').onclick = function(){
-	for (let column = 0; column < unknowns.length; column++){
-		let up = document.querySelectorAll('.up_number')[column]
-		let down = document.querySelectorAll('.bottom_number')[column]
-		let cur = document.querySelectorAll('.unknown')[column]
-		cur.innerHTML = '*';
-		cur.setAttribute('unset', 1)
-		up.innerHTML = '0'
-		down.innerHTML = '9'
-	}
-}
+document.querySelector('.reload').addEventListener("click", (e) => reload(e))
+document.querySelector('.reload').addEventListener("touchstart", (e) => reload(e))
 
 function xhr_request(xhr) {
 	if (xhr.status != 200)
@@ -116,7 +127,9 @@ function xhr_request(xhr) {
 		}
 }
 
-document.querySelector('.check ').onclick = function(){
+function check(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	for (let i = 0; i < animation_arr.length; i++)
 	{
 		clearInterval(animation_arr[i])
@@ -139,3 +152,6 @@ document.querySelector('.check ').onclick = function(){
 	xhr.send(JSON.stringify({'answer': ans, 'solution': solution}));
 	xhr.onload = function() {xhr_request(xhr)}
 }
+
+document.querySelector('.check ').addEventListener("click", (e) => check(e))
+document.querySelector('.check ').addEventListener("touchstart", (e) => check(e))
