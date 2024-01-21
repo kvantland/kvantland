@@ -124,6 +124,10 @@ text.coin_text{
 	}
 }
 
+.button:active {
+	background-color: #B1B1B9
+}
+
 .coin_container_drag{
 	fill: #e9e9ed;
 	stroke:  #9a9aa7;
