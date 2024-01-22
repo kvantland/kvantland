@@ -87,9 +87,9 @@ function move(event) {
 	let svg_box_X = svg_box.getBoundingClientRect().left;
 	let svg_box_Y = svg_box.getBoundingClientRect().top;
 	let cur_X, cur_Y
-	if (event.targetTouches) {
-		cur_X = event.targetTouches[0].clientX
-		cur_Y = event.targetTouches[0].clientY
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
 		event.preventDefault()
 	}
 	else {
@@ -159,17 +159,17 @@ function start(event, obj) {
 	svg_box.appendChild(obj);
 	var svg_box_X = svg_box.getBoundingClientRect().left;
 	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	let posX, posY
-	if ((event.clientX) && (event.clientY))
-	{
-		posX = event.clientX
-		posY = event.clientY
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
+		event.preventDefault()
 	}
-	else if (event.targetTouches) {
-		posX = event.targetTouches[0].clientX
-		posY = event.targetTouches[0].clientY
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
 	}
-	moveAt(posX - svg_box_X - side / 2, posY - svg_box_Y - side / 2);
+	moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2);
 	document.addEventListener("mousemove", move);
 	document.addEventListener("touchmove", move);
 	update_figures();

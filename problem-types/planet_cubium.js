@@ -9,21 +9,21 @@ for (let point of document.querySelectorAll('.point'))
 }
 
 function compress(e, obj) {
-	if ('ontouchstart' in window)
+	if (e.touches)
 		e.preventDefault()
 	else
 		obj.setAttribute('r', def_r)
 }
 
 function expanse(e, obj) {
-	if ('ontouchstart' in window)
+	if (e.touches)
 		e.preventDefault()
 	else
 		obj.setAttribute('r', def_r - -2)
 }
 
 function select(e, obj) {
-	if ('ontouchstart' in window)
+	if (e.touches)
 		e.preventDefault()
 	if (obj.classList.contains('selected'))
 		obj.classList.remove('selected')

@@ -111,9 +111,9 @@ function move(event) {
 	let svg_box_X = svg_box.getBoundingClientRect().left;
 	let svg_box_Y = svg_box.getBoundingClientRect().top;
 	let cur_X, cur_Y
-	if (event.targetTouches) {
-		cur_X = event.targetTouches[0].clientX
-		cur_Y = event.targetTouches[0].clientY
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
 		event.preventDefault()
 	}
 	else {
@@ -178,20 +178,19 @@ function start(event, obj) {
 	obj.classList.add('targeted');
 	obj.classList.remove('choiced');
 	svg_box.appendChild(obj);
-	let posX, posY
-	if ((event.clientX) && (event.clientY))
-	{
-		posX = event.clientX
-		posY = event.clientY
-	}
-	else if (event.targetTouches) {
-		posX = event.targetTouches[0].clientX
-		posY = event.targetTouches[0].clientY
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
 		event.preventDefault()
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
 	}
 	var svg_box_X = svg_box.getBoundingClientRect().left;
 	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	moveAt(posX - svg_box_X - side / 2, posY - svg_box_Y - side / 2);
+	moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2);
 	document.addEventListener("mousemove", move)
 	document.addEventListener("touchmove", move)
 	update_tree();

@@ -171,9 +171,9 @@ function autoscroll(x, y) {
 
 function move(event) {
 	let cur_X, cur_Y
-	if (event.targetTouches) {
-		cur_X = event.targetTouches[0].clientX
-		cur_Y = event.targetTouches[0].clientY
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
 		event.preventDefault()
 	}
 	else {
@@ -211,18 +211,17 @@ function start(event, obj) {
 		obj.removeAttribute('occupied')
 	}
 	document.querySelector('svg').appendChild(obj)
-	let posX, posY
-	if ((event.clientX) && (event.clientY))
-	{
-		posX = event.clientX
-		posY = event.clientY
-	}
-	else if (event.targetTouches) {
-		posX = event.targetTouches[0].clientX
-		posY = event.targetTouches[0].clientY
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
 		event.preventDefault()
 	}
-	moveAt(posX, posY)
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	moveAt(cur_X, cur_Y)
 	document.addEventListener("mousemove", move)
 	document.addEventListener("touchmove", move)
 }
