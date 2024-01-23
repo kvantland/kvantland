@@ -42,7 +42,7 @@ def display_start_page(db):
 	yield '<img class="icon" src="/static/design/icons/clock.svg" />'
 	yield '<div>'
 	yield '<span class="bold_text"> В турнире встречаются задачи разной сложности <br/> </span>'
-	yield '<span class="text">  <br/>В любое время до закрытия турнира можно войти/зарегистрироваться и поучаствовать </span>'
+	yield '<span class="text"> Но в среднем для решения задач нужно выделить примерно 60 минут </span>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
