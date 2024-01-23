@@ -48,8 +48,6 @@ function check_if_empty(square){
 
 function moveAt(x, y){
 	var a = document.querySelector('.targeted');
-	console.log(a.getAttribute('x'))
-	console.log(a.classList[0])
 	a.setAttribute('x', x);
 	a.setAttribute('y', y);
 }
