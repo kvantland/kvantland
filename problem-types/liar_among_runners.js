@@ -53,8 +53,8 @@ function moveAt(x, y){
 }
 
 function screen_border_check(x, y) {
-	let [right, f_right] = [document.documentElement.clientWidth, document.documentElement.scrollWidth]
-	let [bott, f_bott] = [document.documentElement.clientHeight, document.documentElement.scrollHeight]
+	let [right, f_right] = [window.innerWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [window.innerHeight, document.documentElement.scrollHeight]
 	if (x >= right && window.scrollX >= f_right - right)
 		return false
 	if (x <= 0 && window.scrollX <= 0)
@@ -69,7 +69,7 @@ function screen_border_check(x, y) {
 function autoscroll(x, y) {
 	let add = 40
 	let [x_diff, y_diff] = [0, 0]
-	let [bott, right] = [document.documentElement.clientHeight, document.documentElement.clientWidth]
+	let [bott, right] = [window.innerHeight, window.innerWidth]
 	if (x < add)
 		x_diff = x - add
 	if (y < add)
@@ -135,7 +135,8 @@ function drop(square){
 	square.setAttribute('num', a.getAttribute('num'))
 }
 
-function start(event, obj) {
+function start(event) {
+	let obj = event.target
 	obj.classList.add('targeted');
 	obj.classList.remove('choiced');
 	for (const square of board) {
@@ -161,7 +162,8 @@ function start(event, obj) {
 	document.addEventListener("touchmove", move)
 }
 
-function end(event, obj) {
+function end(event) {
+	let obj = event.target
 	var min_diff = 10 ** 9;
 	var best_square = '';
 	var best_square_row = 0;
@@ -194,10 +196,10 @@ function end(event, obj) {
 }
 
 for (const boy of drag_boys){
-	boy.addEventListener("mousedown", (e) => start(e, boy))
-	boy.addEventListener("touchstart",  (e) => start(e, boy))
-	boy.addEventListener("mouseup", (e) => end(e, boy))
-	boy.addEventListener("touchend", (e) => end(e, boy))
+	boy.addEventListener("mousedown", start)
+	boy.addEventListener("touchstart",  start)
+	boy.addEventListener("mouseup", end)
+	boy.addEventListener("touchend", end)
 }
 
 function reload(e) {

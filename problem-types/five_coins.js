@@ -141,8 +141,8 @@ function back_to_drag(coin){
 }
 
 function screen_border_check(x, y) {
-	let [right, f_right] = [document.documentElement.clientWidth, document.documentElement.scrollWidth]
-	let [bott, f_bott] = [document.documentElement.clientHeight, document.documentElement.scrollHeight]
+	let [right, f_right] = [window.innerWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [window.innerHeight, document.documentElement.scrollHeight]
 	if (x >= right && window.scrollX >= f_right - right)
 		return false
 	if (x <= 0 && window.scrollX <= 0)
@@ -157,7 +157,7 @@ function screen_border_check(x, y) {
 function autoscroll(x, y) {
 	let add = 40
 	let [x_diff, y_diff] = [0, 0]
-	let [bott, right] = [document.documentElement.clientHeight, document.documentElement.clientWidth]
+	let [bott, right] = [window.innerHeight, window.innerWidth]
 	if (x < add)
 		x_diff = x - add
 	if (y < add)

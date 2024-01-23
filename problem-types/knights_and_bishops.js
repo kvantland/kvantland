@@ -145,7 +145,8 @@ function add_figure(type)	{
 
 document.addEventListener('DOMContentLoaded', update_figures());
 
-function start(event, obj) {
+function start(event) {
+	let obj = event.target
 	if (!obj.classList.contains('choiced')){
 		if (obj.classList.contains('horse') )
 			add_figure('horse');
@@ -173,7 +174,8 @@ function start(event, obj) {
 	update_figures();
 }
 
-function end(event, obj) {
+function end(event) {
+	let obj = event.target
 	if (!document.querySelector('.targeted'))
 		return;
 	let min_diff = 10 ** 9;
@@ -198,10 +200,10 @@ function update_figures()
 {
 	let drag_figures = document.querySelectorAll('.active')
 	for (let figure of drag_figures){
-		figure.addEventListener("mousedown", (e) => {start(e, figure)})
-		figure.addEventListener("touchstart", (e) => {start(e, figure)})
-		figure.addEventListener("mouseup", (e) => {end(e, figure)}) 
-		figure.addEventListener("touchend", (e) => {end(e, figure)})
+		figure.addEventListener("mousedown", start)
+		figure.addEventListener("touchstart", start)
+		figure.addEventListener("mouseup", end) 
+		figure.addEventListener("touchend", end)
 	}
 }
 

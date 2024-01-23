@@ -79,8 +79,8 @@ function moveAt(x, y){
 }
 
 function screen_border_check(x, y) {
-	let [right, f_right] = [document.documentElement.clientWidth, document.documentElement.scrollWidth]
-	let [bott, f_bott] = [document.documentElement.clientHeight, document.documentElement.scrollHeight]
+	let [right, f_right] = [window.innerWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [window.innerHeight, document.documentElement.scrollHeight]
 	if (x >= right && window.scrollX >= f_right - right)
 		return false
 	if (x <= 0 && window.scrollX <= 0)
@@ -95,7 +95,7 @@ function screen_border_check(x, y) {
 function autoscroll(x, y) {
 	let add = 40
 	let [x_diff, y_diff] = [0, 0]
-	let [bott, right] = [document.documentElement.clientHeight, document.documentElement.clientWidth]
+	let [bott, right] = [window.innerHeight, window.innerWidth]
 	if (x < add)
 		x_diff = x - add
 	if (y < add)
@@ -165,7 +165,8 @@ function add_tree(x, y, amount=false, choiced=false){
 
 document.addEventListener('DOMContentLoaded', update_tree());
 
-function start(event, obj) {
+function start(event) {
+	let obj = event.target
 	if (!obj.classList.contains('choiced'))
 		add_tree(def_X, def_Y)
 	else
@@ -182,7 +183,6 @@ function start(event, obj) {
 	if (event.touches) {
 		cur_X = event.touches[0].clientX
 		cur_Y = event.touches[0].clientY
-		event.preventDefault()
 	}
 	else {
 		cur_X = event.clientX
@@ -193,10 +193,11 @@ function start(event, obj) {
 	moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2);
 	document.addEventListener("mousemove", move)
 	document.addEventListener("touchmove", move)
-	update_tree();
+	update_tree()
 }
 
-function end(event, obj) {
+function end(event) {
+	let obj = event.target
 	if (!document.querySelector('.targeted'))
 		return 
 	var min_diff = 10 ** 9;
@@ -231,12 +232,12 @@ function end(event, obj) {
 
 function update_tree()
 {
-	var drag_trees = document.querySelectorAll('.active');
-	for (const tree of drag_trees){
-		tree.addEventListener("mousedown", (e) => start(e, tree))
-		tree.addEventListener("touchstart", (e) => start(e, tree))
-		tree.addEventListener("mouseup", (e) => end(e, tree))
-		tree.addEventListener("touchend", (e) => end(e, tree))
+	let drag_trees = document.querySelectorAll('.active');
+	for (let tree of drag_trees){
+		tree.addEventListener("mousedown", start)
+		tree.addEventListener("touchstart", start)
+		tree.addEventListener("mouseup", end)
+		tree.addEventListener("touchend", end)
 	}
 }
 
