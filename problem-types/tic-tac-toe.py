@@ -12,7 +12,8 @@ def entry_form(data, kwargs):
 	plot_width = pad + board_width + inner_side 
 	plot_height = board_heigth
 	yield '<input name="answer" type="hidden" />'
-	yield f'<svg version="1.1" class="plot_area" width="{board_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield '<div class="plot_area">'
+	yield f'<svg version="1.1" width="{board_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	for y in range(0, height + 1):
 		yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
 	for x in range(0, width + 1):
@@ -28,6 +29,7 @@ def entry_form(data, kwargs):
 			else:
 				yield f'<rect class="free white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 	yield '</svg>'
+	yield '</div>'
 
 def validate(data, answer):
 	for variant in data['correct']:

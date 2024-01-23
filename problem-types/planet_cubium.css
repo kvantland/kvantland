@@ -13,7 +13,7 @@
 	margin: 40px auto 0 auto;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;	
+	justify-content: center;	
 	z-index: 1;
 	position: relative;
 	user-select: none
@@ -23,8 +23,10 @@
 	fill: grey;
 }
 
-.point:hover{
-	cursor: pointer;
+@media(hover:hover) and (pointer:fine) {
+	.point:hover{
+		cursor: pointer;
+	}
 }
 
 .selected{

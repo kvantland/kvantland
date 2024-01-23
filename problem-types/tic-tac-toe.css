@@ -19,13 +19,15 @@ text {
 	margin: 40px auto 0 auto;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;	
+	justify-content: center;	
 	z-index: 1;
 	position: relative;
 	user-select: none
 }
 
-.free:hover{
-	cursor: pointer;
-	fill: rgba(0, 0, 0, 0.15);
+@media(hover:hover) and (pointer:fine) {
+	.free:hover{
+		cursor: pointer;
+		fill: rgba(0, 0, 0, 0.15);
+	}
 }

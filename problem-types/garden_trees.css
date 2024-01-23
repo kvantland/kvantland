@@ -33,6 +33,8 @@ text {
 	cursor: grabbing;
 }
 
-.reload:hover {
-	cursor: pointer;
+@media(hover:hover) and (pointer:fine) {
+	.reload:hover {
+		cursor: pointer;
+	}
 }

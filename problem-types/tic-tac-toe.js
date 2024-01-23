@@ -4,7 +4,7 @@ var side = document.querySelector('rect').getAttribute('width');
 var all_square = document.querySelectorAll('rect');
 var sender = document.getElementsByName('answer')[0];
 
-document.querySelector('button').onclick = function(e){
+function send(e) {
 	var i = 0;
 	for (const square of all_square){
 		if (square.classList.contains('choiced'))
@@ -15,6 +15,9 @@ document.querySelector('button').onclick = function(e){
 		i += 1
 	}
 }
+
+document.querySelector('button').addEventListener("click", (e) => send(e))
+document.querySelector('button').addEventListener("touchstart", (e) => send(e))
 
 function free_board(){
 	for (var square of all_square)
@@ -27,20 +30,25 @@ function free_board(){
 	}
 }
 
+function choose(e, obj) {
+	if (e.targetTouches)
+		e.preventDefault()
+	free_board()
+	obj.classList.remove('free')
+	obj.classList.add('occupied', 'choiced')
+	var curr_cross = document.querySelector('.ans')
+	if (curr_cross)
+		curr_cross.parentNode.removeChild(curr_cross);
+	svgNS = "http://www.w3.org/2000/svg"
+	var cross = document.createElementNS(svgNS, 'text');
+	cross.innerHTML = '&#x274C;';
+	cross.setAttribute('x', obj.getAttribute('x') - -(side / 2));
+	cross.setAttribute('y', obj.getAttribute('y') - -(side / 2));
+	cross.classList.add('ans');
+	svg_box.appendChild(cross);
+}
+
 for (const square of free_squares){
-	square.onclick = function(){
-		free_board()
-		this.classList.remove('free')
-		this.classList.add('occupied', 'choiced')
-		var curr_cross = document.querySelector('.ans')
-		if (curr_cross)
-			curr_cross.parentNode.removeChild(curr_cross);
-		svgNS = "http://www.w3.org/2000/svg"
-		var cross = document.createElementNS(svgNS, 'text');
-		cross.innerHTML = '&#x274C;';
-		cross.setAttribute('x', this.getAttribute('x') - -(side / 2));
-		cross.setAttribute('y', this.getAttribute('y') - -(side / 2));
-		cross.classList.add('ans');
-		svg_box.appendChild(cross);
-	}
+	square.addEventListener("click", (e) => choose(e, square))
+	square.addEventListener("touchstart", (e) => choose(e, square))
 }

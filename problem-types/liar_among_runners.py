@@ -13,7 +13,8 @@ def entry_form(data, kwargs):
     plot_width = pad + board_side + inner_side * 2 + bord
     plot_height = line_width + side + inner_height * 3 + bord + bord / 2
     yield '<input name="answer" type="hidden" />'
-    yield f'<svg version="1.1" class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield '<div class="plot_area">'
+    yield f'<svg version="1.1" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
     yield f'<rect class="top" x="{1 * side + line_width + bord}" y="{line_width}" num="*" width="{inner_side}" height="{inner_side}" />'
     yield f'<rect class="top" x="{0 * side + line_width + bord}" y="{line_width + inner_height * 1}" num="*" width="{inner_side}" height="{inner_side}" />'
     yield f'<rect class="top" x="{2 * side + line_width + bord}" y="{line_width + inner_height * 2}" num="*" width="{inner_side}" height="{inner_side}" />'
@@ -42,6 +43,7 @@ def entry_form(data, kwargs):
         yield f'</image>'
     yield f'<image class="reload" x = "{pad + board_side}" y="{0}" height="{inner_height}" width="{inner_height}" href="/static/reload.png" />'
     yield '</svg>'
+    yield '</div>'
 
 def validate(data, answer):
     x = data['correct']

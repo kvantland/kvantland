@@ -12,7 +12,7 @@
 	margin: 80px auto 80px auto;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;	
+	justify-content: center;	
 	z-index: 1;
 	position: relative;
 	user-select: none

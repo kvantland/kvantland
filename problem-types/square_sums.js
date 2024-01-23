@@ -38,7 +38,9 @@ function move(obj, x, y){
 	obj.setAttribute('transform', first_part + 'translate(' + new_x + ' ' + new_y + ')' + third_part)
 }
 
-function show_interface(){
+function show_interface(e){
+	if ('ontouchstart' in window)
+		e.preventDefault()
 	let sel_list = document.querySelectorAll('.selected')
 	let bar_width = document.querySelector('.exchange_bar').getAttribute('bar_width')
 	if (sel_list.length == 2)
@@ -60,33 +62,39 @@ function hide_interface(){
 	document.querySelector('.exchange_bar').classList.add('hidden')
 }
 
-
-for (card of document.querySelectorAll('.card'))
-{
-	card.onclick = function(){
-		if (movement_tmp)
-			return;
-		if (!document.querySelector('.exchange_bar.active'))
+function choose(e, obj) {
+	if (e.targetTouches)
+		e.preventDefault()
+	if (movement_tmp)
+		return;
+	if (!document.querySelector('.exchange_bar.active'))
+	{
+		if (obj.classList.contains('selected'))
 		{
-			if (this.classList.contains('selected'))
-			{
-				this.classList.remove('selected')
-				move(this, 0, 10)
-			}
-			else
-			{
-				this.classList.add('selected')
-				move(this, 0, -10)
-				this.parentNode.appendChild(this)
-			}
+			obj.classList.remove('selected')
+			move(obj, 0, 10)
+		}
+		else
+		{
+			obj.classList.add('selected')
+			move(obj, 0, -10)
+			obj.parentNode.appendChild(obj)
 		}
 	}
+}
+
+for (let card of document.querySelectorAll('.card'))
+{
+	card.addEventListener("click", (e) => choose(e, card))
+	card.addEventListener("touchstart", (e) => choose(e, card))
 }
 
 var [pos_1, pos_2] = [0, 0]
 var [movement, movement_tmp] = ['', 0]
 
-document.querySelector('.icon.exchange').onclick = function(){
+function start_exchange(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	if (movement_tmp)
 		return;
 	let [card_1, card_2] = document.querySelectorAll('.selected')
@@ -117,15 +125,26 @@ document.querySelector('.icon.exchange').onclick = function(){
 	}
 }
 
-document.querySelector('.icon.cross').onclick = function(){
+document.querySelector('.icon.exchange').addEventListener("click", (e) => start_exchange(e))
+document.querySelector('.icon.exchange').addEventListener("touchstart", (e) => start_exchange(e))
+
+function hide(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	if (movement_tmp)
 		return;
 	hide_interface()
 }
 
-document.addEventListener('click', show_interface)
+document.querySelector('.icon.cross').addEventListener("click", (e) => hide(e))
+document.querySelector('.icon.cross').addEventListener("touchstart", (e) => hide(e))
 
-document.querySelector('.reload').onclick = function(){
+document.addEventListener('click', (e) => show_interface(e))
+document.addEventListener('touchstart', (e) => show_interface(e))
+
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	if (movement_tmp)
 		return;
 	let url = new URL(window.location.href + 'xhr')
@@ -143,3 +162,6 @@ document.querySelector('.reload').onclick = function(){
 			window.location.reload('true')
 	}
 }
+
+document.querySelector('.reload').addEventListener("click", (e) => reload(e))
+document.querySelector('.reload').addEventListener("touchstart", (e) => reload(e))

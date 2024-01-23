@@ -298,10 +298,8 @@ svg.map .town_completed {
 
 svg.map .level {
 	text-anchor: middle;
-	dominant-baseline: central;
 	font-size: 60px;
 	font-weight: bold;
-
 	fill: currentColor;
 	stroke-width: 2px;
 }

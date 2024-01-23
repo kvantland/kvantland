@@ -3,7 +3,7 @@ var board = document.querySelectorAll('rect');
 var side = document.querySelector('rect').getAttribute('width');
 var def_X = drag_tree.getAttribute('x');
 var def_Y = drag_tree.getAttribute('y');
-var svg_box = document.querySelector('.plot_area');
+var svg_box = document.querySelector('svg');
 var width = drag_tree.getAttribute('width');
 var height = drag_tree.getAttribute('height');
 var sender = document.getElementsByName('answer')[0];
@@ -19,13 +19,16 @@ for (square of board){
 var in_row = row_set.size;
 var in_column = column_set.size;
 
-document.querySelector('button').onclick = function(e){
-	var ans = '';
+function send(e) {
+	let ans = '';
 	for (const square of board){
 		ans += get_amount(square) + ','
 	}
 	sender.value = ans;
 }
+
+document.querySelector('button').addEventListener("click", (e) => send(e))
+document.querySelector('button').addEventListener("touchstart", (e) => send(e))
 
 function get_amount(square){
 	var all_trees = document.querySelectorAll('.tree');
@@ -75,29 +78,65 @@ function moveAt(x, y){
 	a.setAttribute('y', y);
 }
 
-function move(event){
-	var svg_box_X = svg_box.getBoundingClientRect().left;
-	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	var cur_X = event.clientX - svg_box_X;
-	var cur_Y = event.clientY - svg_box_Y;
-	var right = document.documentElement.clientWidth - svg_box_X;
-	var bottom = document.documentElement.clientHeight - svg_box_Y;
-	var left = -svg_box_X;
-	var top = -svg_box_Y;
-	if (cur_X + side / 2 < right && cur_X - side / 2 > left && cur_Y - side / 2 > top && cur_Y + side / 2 < bottom)
-		moveAt(cur_X - side / 2, cur_Y - side / 2);
+function screen_border_check(x, y) {
+	let [right, f_right] = [window.innerWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [window.innerHeight, document.documentElement.scrollHeight]
+	if (x >= right && window.scrollX >= f_right - right)
+		return false
+	if (x <= 0 && window.scrollX <= 0)
+		return false
+	if (y <= 0 && window.scrollY <= 0)
+		return false
+	if (y >= bott && window.scrollY >= f_bott - bott)
+		return false
+	return true
+}
+
+function autoscroll(x, y) {
+	let add = 40
+	let [x_diff, y_diff] = [0, 0]
+	let [bott, right] = [window.innerHeight, window.innerWidth]
+	if (x < add)
+		x_diff = x - add
+	if (y < add)
+		y_diff = y - add
+	if (y > bott - add)
+		y_diff = y - bott + add
+	if (x > right - add)
+		x_diff = x - right + add
+	scrollBy(x_diff, y_diff)
+}
+
+function move(event) {
+	let svg_box_X = svg_box.getBoundingClientRect().left;
+	let svg_box_Y = svg_box.getBoundingClientRect().top;
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
+		event.preventDefault()
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	autoscroll(cur_X, cur_Y)
+	if (screen_border_check(cur_X, cur_Y))
+		moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2)
 	else
-		back_to_drag();
+		back_to_drag()
 }
 
 function back_to_drag(){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	a = document.querySelector('.targeted');
 	a.parentNode.removeChild(a);
 }
 
 function drop(square){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	a = document.querySelector('.targeted');
 	a.classList.remove('targeted');
 	a.classList.add('choiced');	
@@ -126,66 +165,87 @@ function add_tree(x, y, amount=false, choiced=false){
 
 document.addEventListener('DOMContentLoaded', update_tree());
 
+function start(event) {
+	let obj = event.target
+	if (!obj.classList.contains('choiced'))
+		add_tree(def_X, def_Y)
+	else
+	{
+		if (obj.getAttribute('amount') > 1)
+			reduce_tree_amount(get_square(obj), 1)
+		obj.setAttribute('amount', '1')
+		obj.setAttribute('href', '/static/tree.png')
+	}
+	obj.classList.add('targeted');
+	obj.classList.remove('choiced');
+	svg_box.appendChild(obj);
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	var svg_box_X = svg_box.getBoundingClientRect().left;
+	var svg_box_Y = svg_box.getBoundingClientRect().top;
+	moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2);
+	document.addEventListener("mousemove", move)
+	document.addEventListener("touchmove", move)
+	update_tree()
+}
+
+function end(event) {
+	let obj = event.target
+	if (!document.querySelector('.targeted'))
+		return 
+	var min_diff = 10 ** 9;
+	var best_square = '';
+	for (const square of board){
+		let x_diff = square.getAttribute('x') - obj.getAttribute('x');
+		let y_diff = square.getAttribute('y') - obj.getAttribute('y');
+		let tot_diff = x_diff ** 2 + y_diff ** 2;
+		if (tot_diff < min_diff){
+			best_square = square;
+			min_diff = tot_diff;
+		}
+	};
+	if (min_diff < side ** 2)
+	{
+		if (get_amount(best_square) == '0')
+		{
+			if (obj.getAttribute('href') == '/static/tree.png')
+				obj.setAttribute('href', '/static/1_tree.png');
+			drop(best_square);
+		}
+		else
+		{
+			increase_tree_amount(best_square, obj.getAttribute('amount'));
+			back_to_drag();
+		}
+	}
+	else
+		back_to_drag();
+	update_tree();
+}
+
 function update_tree()
 {
-	var drag_trees = document.querySelectorAll('.active');
-	for (const tree of drag_trees){
-		tree.onmousedown = function(event){
-			if (!this.classList.contains('choiced'))
-				add_tree(def_X, def_Y)
-			else
-			{
-				if (this.getAttribute('amount') > 1)
-					reduce_tree_amount(get_square(this), 1)
-				this.setAttribute('amount', '1')
-				this.setAttribute('href', '/static/tree.png')
-			}
-			this.classList.add('targeted');
-			this.classList.remove('choiced');
-			svg_box.appendChild(this);
-			var svg_box_X = svg_box.getBoundingClientRect().left;
-			var svg_box_Y = svg_box.getBoundingClientRect().top;
-			moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
-			document.addEventListener('mousemove', move)
-			update_tree();
-		}
-		tree.onmouseup = function(event){
-			if (!document.querySelector('.targeted'))
-				return 
-			var min_diff = 10 ** 9;
-			var best_square = '';
-			for (const square of board){
-				let x_diff = square.getAttribute('x') - this.getAttribute('x');
-				let y_diff = square.getAttribute('y') - this.getAttribute('y');
-				let tot_diff = x_diff ** 2 + y_diff ** 2;
-				if (tot_diff < min_diff){
-					best_square = square;
-					min_diff = tot_diff;
-				}
-			};
-			if (min_diff < side ** 2)
-			{
-				if (get_amount(best_square) == '0')
-				{
-					if (this.getAttribute('href') == '/static/tree.png')
-						this.setAttribute('href', '/static/1_tree.png');
-					drop(best_square);
-				}
-				else
-				{
-					increase_tree_amount(best_square, this.getAttribute('amount'));
-					back_to_drag();
-				}
-			}
-			else
-				back_to_drag();
-			update_tree();
-		}
+	let drag_trees = document.querySelectorAll('.active');
+	for (let tree of drag_trees){
+		tree.addEventListener("mousedown", start)
+		tree.addEventListener("touchstart", start)
+		tree.addEventListener("mouseup", end)
+		tree.addEventListener("touchend", end)
 	}
 }
 
 rel = document.querySelector('.reload');
-rel.onclick = function(){
+
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	var drag_trees = document.querySelectorAll('.active.choiced');
 	for (var tree of drag_trees){
 		tree.classList.remove('choiced');
@@ -193,3 +253,6 @@ rel.onclick = function(){
 	}
 	update_tree();
 }
+
+rel.addEventListener("click", (e) => reload(e))
+rel.addEventListener("touchstart", (e) => reload(e))
