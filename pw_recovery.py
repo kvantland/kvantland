@@ -53,8 +53,12 @@ def show_send_message():
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
 	yield '<main>'
-	yield '<div style="text-align:center">'
-	yield '<p> На вашу почту отправлено письмо с подтверждением! </p>'
+	yield '<div style="margin: 100px 50px 0 50px">'
+	yield '<p> Здравствуйте, Чертоляс Дмитрий Андреевич! </p>'
+	yield '<p> Недавно был получен запрос на изменение пароля вашей учетной записи. Если вы запрашивали это изменение пароля, нажмите на ссылку ниже для установки нового пароля: </p>'
+	yield '<div style="text-align:center; color:white; background-color:blue; display:block; padding:3px 10px 3px 10px; width:500px; margin: 50px auto 60px auto"> <p> Нажмите здесь, чтобы изменить пароль </p> </div>'
+	yield '<p> Если вам не нужно менять пароль, просто проигнорируйте данное сообщение. </p>'
+	yield '<p> С уважением, команда Kvantland </p>'
 	yield '</div>'
 	yield '</main>'
 
