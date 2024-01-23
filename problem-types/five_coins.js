@@ -294,8 +294,11 @@ function move_scales(side)
 				down_cup = document.querySelector('.movement.left')
 			}
 		}
-		up_cup = document.querySelector('.movement.right')
-		down_cup = document.querySelector('.movement.left')
+		else
+		{
+			up_cup = document.querySelector('.movement.right')
+			down_cup = document.querySelector('.movement.left')
+		}
 	}
 
 	let plank = document.querySelector('.plank')
