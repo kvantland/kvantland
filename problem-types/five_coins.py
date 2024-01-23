@@ -201,7 +201,7 @@ def entry_form(data, kwargs):
 
 
 def steps(step_num, params, data):
-	if step_num > 2:
+	if step_num > data['weightings_amount']:
 		return {'answer': 'no_tries'}
 	weight = data['weight']
 	left, right = 0, 0
