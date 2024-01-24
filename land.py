@@ -35,7 +35,7 @@ def finished(db, user_id):
 	(finish, ), = db.fetchall()
 	return finish
 
-@route('/')
+@route('/land')
 def show_land(db):
 	user_id = user.current_user(db)
 	if finished(db, user_id):
