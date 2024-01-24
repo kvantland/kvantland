@@ -127,7 +127,7 @@
 	font-size:24px;
 	text-align: center;
 	padding: 10px 20px 10px 20px;
-	background: linear-gradient(180deg, #B2B2B2 16%, white 40%, #FFFFFF 55%, #B2B2B2 80%);
+	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%); 
 	box-shadow: 7px 7px 6.699999809265137px #1A5866; 
 	border-radius: 10px;
 	overflow: hidden; 
@@ -302,7 +302,7 @@
 .problem .button {
 	flex: 1 1 0; 
 	padding: 10px 20px 10px 20px;
-	background: linear-gradient(180deg, #B2B2B2 16%, white 40%, #FFFFFF 55%, #B2B2B2 80%); 
+	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%); 
 	box-shadow: 7px 7px 6.699999809265137px #1A5866; 
 	border-radius: 10px; 
 	overflow: hidden; 
