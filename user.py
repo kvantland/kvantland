@@ -9,7 +9,34 @@ def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
 	user = current_user(db)
 	yield '<nav class="user_nav">'
-	yield '<ul class="flex_ul">'
+
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+	if user == None:
+		yield '<div class="menu">'
+		yield '<div class="menu_item" id="info">О турнире</div>'
+		yield '<div class="menu_item" id="team">О команде</div>'
+		yield '<div class="menu_item" id="examples">Примеры задач</div>'
+		yield '<div class="menu_item" id="contacts">Наши контакты</div>'
+		yield '</div>'
+
+		yield '<div class="button_area">'
+		yield '<a href="/login">'
+		yield '<div class="login_button"> Войти </div>'
+		yield '</a>'
+		yield '<div class="lang_button">'
+		yield '<div> RU </div>'
+		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" /> '
+		yield '</div>'
+
+	yield '</nav>'
+
+	'''
 	if user != None:
 		db.execute('select coalesce(name, login), score from Kvantland.Student where student = %s', (user,))
 		(login, money), = db.fetchall()
@@ -23,3 +50,4 @@ def display_banner(db):
 		yield f'<li><a class="login" href="/login?path={path_arg}">Войти</a>'
 	yield '</ul>'
 	yield '</nav>'
+	'''

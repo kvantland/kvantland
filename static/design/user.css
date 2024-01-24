@@ -1,0 +1,93 @@
+.user_nav {
+	-webkit-user-select: none;
+	user-select: none;
+	background-color: white;
+	width: 100%;
+	box-sizing: border-box;
+	position: fixed;
+	padding: 30px 80px 30px 80px;
+	justify-content: space-between; 
+	align-items: center; 
+	display: inline-flex;
+	z-index: 1;
+	box-shadow: 0 1px 5px #C2C2C2;
+}
+
+.logo_area {
+	justify-content: center;
+	align-items: center; 
+	gap: 10px; 
+	display: flex;
+}
+
+.logo {
+	width: 52px; 
+	height: 52px;
+	border-radius: 10px;
+}
+
+.logo_name {
+	color: #1E8B93; 
+	font-size: 20px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 600;
+}
+
+.user_nav .menu {
+	ustify-content: flex-start; 
+	align-items: center; 
+	gap: 40px; 
+	display: flex;
+}
+
+.user_nav .menu .menu_item {
+	color: black; 
+	font-size: 16px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 500;
+}
+
+.user_nav .button_area {
+	justify-content: flex-start; 
+	align-items: center; 
+	gap: 20px; 
+	display: flex;
+}
+
+.user_nav .button_area .login_button {
+	width: 116px; 
+	text-align: center;
+	padding: 20px 10px 20px 10px;
+	background: #1E8B93; 
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+	border-radius: 10px; 
+	overflow: hidden; 
+	justify-content: center; 
+	align-items: center; 
+	gap: 10px; 
+	display: inline-flex;
+	color: white; 
+	font-size: 20px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 600;
+}
+
+.user_nav .button_area .lang_button {
+	width: 96px; 
+	align-self: stretch; 
+	border-radius: 10px; 
+	border: 2px #1E8B93 solid; 
+	justify-content: center; 
+	align-items: center; 
+	gap: 10px; 
+	display: inline-flex;
+	color: black; 
+	font-size: 20px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 500;
+}
+
+.user_nav .button_area #lang_change {
+	width: 8.76px; 
+	height: 15px;
+}
