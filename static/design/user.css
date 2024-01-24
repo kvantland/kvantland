@@ -55,9 +55,25 @@
 }
 
 .user_nav .button_area .login_button {
-	width: 116px; 
 	text-align: center;
-	padding: 20px 10px 20px 10px;
+	padding: 10px 20px;
+	background: #1E8B93; 
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+	border-radius: 10px; 
+	overflow: hidden; 
+	justify-content: center; 
+	align-items: center; 
+	gap: 10px; 
+	display: inline-flex;
+	color: white; 
+	font-size: 20px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 600;
+}
+
+.user_nav .button_area .rules_button {
+	text-align: center;
+	padding: 10px 20px;
 	background: #1E8B93; 
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
 	border-radius: 10px; 
@@ -73,7 +89,7 @@
 }
 
 .user_nav .button_area .lang_button {
-	width: 96px; 
+	padding: 8px 20px;
 	align-self: stretch; 
 	border-radius: 10px; 
 	border: 2px #1E8B93 solid; 
@@ -87,7 +103,30 @@
 	font-weight: 500;
 }
 
+.user_nav .button_area .acc_button {
+	width: 70px; 
+	height: 44px;
+}
+
 .user_nav .button_area #lang_change {
 	width: 8.76px; 
 	height: 15px;
 }
+
+.user_nav .user_area {
+	padding: 10px 40px;
+	box-shadow: 0px 2px 14.800000190734863px rgba(0, 0, 0, 0.20); 
+	border-radius: 10px; 
+	border: 3px #1E8B93 solid; 
+	justify-content: flex-start; 
+	align-items: center; 
+	gap: 40px; 
+	display: flex;
+}
+
+.user_nav .user_area div {
+	color: black; 
+	font-size: 20px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 500;
+} 
