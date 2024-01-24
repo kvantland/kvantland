@@ -1,0 +1,19 @@
+nav.breadcrumbs {
+	ustify-content: flex-start; 
+	align-items: center; 
+	gap: 20px; 
+	display: inline-flex;
+	color: #1E8B93; 
+	font-size: 40px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 500;
+}
+
+.between {
+	display: inline-flex;
+}
+
+.between img {
+	width: 16.8px;
+	height: 24px;
+}
