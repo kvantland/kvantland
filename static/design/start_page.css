@@ -158,7 +158,7 @@
 	justify-content: center; 
 	align-items: center; 
 	gap: 30px; 
-	display: flex;
+	display: inline-flex;
 }
 
 .info_container .content .content_row {
@@ -166,6 +166,7 @@
 	align-items: flex-start; 
 	gap: 40px; 
 	display: inline-flex;
+	height: 432px;
 }
 
 .info_container .content_box {
