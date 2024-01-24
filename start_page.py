@@ -1,14 +1,18 @@
 from bottle import route
+from pathlib import Path
 
 import nav
 import user
 
 @route('/')
 def display_start_page(db):
+	path = Path(__file__).parent / 'static/design/start_page.js'
+	script = open(f'{path}', 'r', encoding="utf-8").read()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	#yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/start_page.css">'
 	yield from user.display_banner(db)
 
@@ -22,7 +26,9 @@ def display_start_page(db):
 	yield '<div class="text">Твоя возможность проявить себя!</div>'
 	yield '</div>'
 	yield '<div class="text">Тебя ждут задачи из самых разных областей:  Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</div>'
+	yield '<a href="/land">'
 	yield '<div class="start_button"> Начать турнир </div>'
+	yield '</a>'
 	yield '</div>'
 	yield '</div>'
 
@@ -79,6 +85,7 @@ def display_start_page(db):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
+	yield '</div>'
 
 	yield '<div class="examples_container">'
 	yield '<div class="page_header"> Примеры задач </div>'
@@ -116,6 +123,7 @@ def display_start_page(db):
 	yield '<img src="/static/design/right_arrow.svg" />'
 	yield '</div>'
 	yield '</div>'
+	yield '</div>'
 
 	yield '<div class="contacts_area">'
 	yield '<div class="page_header">Будем на связи</div>'
@@ -129,3 +137,5 @@ def display_start_page(db):
 	yield '</div>'
 
 	yield '</div>'
+	if script:
+		yield f'<script type="text/ecmascript">{script}</script>'
