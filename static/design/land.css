@@ -1,0 +1,30 @@
+.content_wrapper {
+	width: 100%;
+	padding: 0 80px;
+	margin-top: 130px;
+	box-sizing: border-box;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 40px;
+	display: inline-flex;
+}
+
+.town-icon {
+	stroke: white;
+	stroke-width: 6px;
+	fill: transparent;
+}
+
+.town-name {
+	fill: #B62C5A;
+}
+
+text.town-name {
+	dominant-baseline: central;
+	text-anchor: middle;
+	fill: white; 
+	font-size: 24px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 700;
+}
