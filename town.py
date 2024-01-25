@@ -15,14 +15,43 @@ def show_town(db, town):
 	db.execute('select name from Kvantland.Town where town = %s', (town,))
 	(name, ), = db.fetchall()
 	yield f'<title>{name}</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield '<div class="content_wrapper">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/town.css">'
 	yield from user.display_banner(db)
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
-	yield f'<h1>{name}</h1>'
-	yield '</div>'
+	yield '<div class="content_wrapper">'
+	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), (f'/town/{town}', f'{name}'))
 	yield '<svg version="1.1" class="map" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-	yield f'<image href="/static/map/town-{town}.png" width="1280" height="720" preserveAspectRatio="xMidYMid meet" />'
+	yield '<defs>'
+	yield '<clipPath id="map_border">'
+	yield f'''<path stroke="#1E8B93" stroke-width="3px" fill="none" d="
+		M 1.5 21.5
+		v 676
+		a 20 20 0 0 0 20 20
+		h 1237
+		a 20 20 0 0 0 20 -20
+		v -676
+		a 20 20 0 0 0 -20 -20
+		h -1237
+		a 20 20 0 0 0 -20 20
+		z" />'''
+	yield '</clipPath>'
+	yield '</defs>'
+
+
+	yield f'<image href="/static/map/town-{town}.png" width="1280" height="720"preserveAspectRatio="xMidYMid" clip-path="url(#map_border)" meet />'
+	yield f'''<path stroke="#1E8B93" stroke-width="3px" fill="none" d="
+		M 1.5 21.5
+		v 676
+		a 20 20 0 0 0 20 20
+		h 1237
+		a 20 20 0 0 0 20 -20
+		v -676
+		a 20 20 0 0 0 -20 -20
+		h -1237
+		a 20 20 0 0 0 -20 20
+		z" />'''
 
 	if user_id is not None:
 		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and student = %s', (town, user_id))
@@ -46,3 +75,4 @@ def show_town(db, town):
 		yield f'<text class="level-value">{points}</text>'
 		yield f'</a>'
 	yield '</svg>'
+	yield '</div>'
