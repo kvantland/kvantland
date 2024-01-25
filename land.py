@@ -43,13 +43,42 @@ def show_land(db):
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield '<div class="content_wrapper">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/land.css">'
 	yield from user.display_banner(db)
-	yield f'<h1 class="title">Квантландия</h1>'
-	yield '</div>'
+	yield '<div class="content_wrapper">'
+	yield '<div style="font-family:Montserrat Alternates"></div>'
+	yield from nav.display_breadcrumbs(('/land', 'Квантландия'))
 	yield '<svg class="map" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
+	yield '<defs>'
+	yield '<clipPath id="map_border">'
+	yield '''<path d="
+			M 0 20
+			v 680
+			a 20 20 0 0 0 20 20
+			h 1240
+			a 20 20 0 0 0 20 -20
+			v -680
+			a 20 20 0 0 0 -20 -20
+			h -1240
+			a 20 20 0 0 0 -20 20
+			z" />'''
+	yield '</clipPath>'
+
+	yield '<clipPath id="icon_border">'
+	yield '''<path d="
+			M -30 0
+			a 30 30 0 0 0 30 30 
+			a 30 30 0 0 0 30 -30
+			a 30 30 0 0 0 -30 -30
+			a 30 30 0 0 0 -30 30
+			z" />'''
+	yield '</clipPath>'
+	yield '</defs>'
+
+	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin" clip-path="url(#map_border)" meet/>'
 	if tournament_completed(db, user_id):
 		yield '<a transform="translate(640 0)" href="/final_page">' 
 		yield '<text class="town-name to_results" font-size="2em" text-anchor="middle" y="2em"> Завершить турнир </text>'
@@ -58,22 +87,42 @@ def show_land(db):
 		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false) from Kvantland.Town', (user_id, ))
 	else:
 		db.execute('select town, name, position, true from Kvantland.Town')
+
+	paths = [
+	'm 0 6 v 30.72199043273926 a 6 6 0 0 0 6 6 h 154.96492919921874 a 6 6 0 0 0 6 -6 v -30.72199043273926 a 6 6 0 0 0 -6 -6 h -154.96492919921874 a 6 6 0 0 0 -6 6 z',
+	'm 0 6 v 30.72199043273926 a 6 6 0 0 0 6 6 h 230.9311767578125 a 6 6 0 0 0 6 -6 v -30.72199043273926 a 6 6 0 0 0 -6 -6 h -230.9311767578125 a 6 6 0 0 0 -6 6 z',
+	'm 0 6 v 30.72199043273926 a 6 6 0 0 0 6 6 h 183.9388214111328 a 6 6 0 0 0 6 -6 v -30.72199043273926 a 6 6 0 0 0 -6 -6 h -183.9388214111328 a 6 6 0 0 0 -6 6 z',
+	'm 0 6 v 30.72199043273926 a 6 6 0 0 0 6 6 h 92.43402252197265 a 6 6 0 0 0 6 -6 v -30.72199043273926 a 6 6 0 0 0 -6 -6 h -92.43402252197265 a 6 6 0 0 0 -6 6 z',
+	'm 0 6 v 30.72199043273926 a 6 6 0 0 0 6 6 h 265.24155578613284 a 6 6 0 0 0 6 -6 v -30.72199043273926 a 6 6 0 0 0 -6 -6 h -265.24155578613284 a 6 6 0 0 0 -6 6 z',
+	]
+	trans = [ 
+	'-83.48246459960937 -84.36099521636963',
+	'-121.46558837890625 -84.36099521636963',
+	'-97.9694107055664 -84.36099521636963',
+	'-52.217011260986325 -84.36099521636963',
+	'-138.62077789306642 -84.36099521636963'
+	]
+	cnt = 0
 	for town, name, (x, y), opened in db.fetchall():
 		clazz = "town"
 		if not opened:
 			clazz += " town_completed"
 		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{town}/">'
-		yield f'<image href="/static/icon/icon-{town}.png" x="-40px" y ="-40px" width="80px"/>'
-		yield f'<circle class="town-icon" r="30px" fill="rgba(0, 0, 0, 0)" stroke="currentColor" stroke-width="0.2em" />'
-		yield f'<rect fill="#FF6A44" class="town-name" height="30px" width="{max(len(name) * 16, 90)}px" y="-69px" x="{-len(name) * (8 + (90 > len(name) * 16))}"/>'
-		yield f'<text class="town-name" text-anchor="middle" y="-45px">{name}</text>'
+		yield f'<image href="/static/icon/icon-{town}.png" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />'
+		yield f'<circle class="town-icon" r="33px" />'
+		yield f'<path class="town-name" num="{cnt}" d="{paths[cnt]}" transform="translate({trans[cnt]})"/>'
+		yield f'<text class="town-name" style="font-family:Montserrat Alternates" num="{cnt}" y="-63">{name}</text>'
 		yield f'</a>'
+		cnt += 1
 	yield '</svg>'
+	'''
 	yield '<div class="contacts_block">'
 	yield '<h2 class="contacts_header"> Контакты: </h2>'
 	yield f'<p class="contact"> Техническая поддержка: <a href="mailto:{config["contacts"]["support_email"]}">{config["contacts"]["support_email"]}</a> </p>'
 	yield '</div>'
+	'''
 	yield '<script type="module" src="/static/results.js"></script>'
+	#yield '<script type="text/ecmascript" src="/static/design/land.js"></script>'
 
 @route('/rules')
 def show_land(db):
