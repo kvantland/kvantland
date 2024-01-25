@@ -4,7 +4,7 @@ for (let name of names) {
 
 	let box = name.getBBox()
 	let [h, v] = [box.width, box.height]
-	let [h_p, v_p] = [13.3, 6.67]
+	let [h_p, v_p] = [13.3, 2.17]
 	let r = 6
 	let [x, y] = [h + 2 * h_p, v + 2 * v_p]
 	let up = name.getAttribute('y')
