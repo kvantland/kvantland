@@ -11,7 +11,7 @@ def display_start_page(db):
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
-	#yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/start_page.css">'
 	yield from user.display_banner(db)
