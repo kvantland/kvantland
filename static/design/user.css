@@ -108,6 +108,15 @@
 	height: 44px;
 }
 
+.user_nav .button_area .acc_cont {
+	display: flex;
+	width: 60px;
+	height: 44px;
+	border-radius: 10px; 
+	background-color: rgba(0, 0, 0, 0);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25)
+}
+
 .user_nav .button_area #lang_change {
 	width: 8.76px; 
 	height: 15px;

@@ -59,7 +59,9 @@ def display_banner_tournament(db):
 
 		yield '<div class="button_area">'
 		yield '<a href="/acc">'
+		yield '<div class="acc_cont">'
 		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
+		yield '</div>'
 		yield '</a>'
 		yield '<a href="/rules">'
 		yield '<div class="rules_button"> Правила </div>'
