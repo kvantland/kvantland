@@ -201,7 +201,7 @@ def show_question_old(db, variant, hint_mode):
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield from user.display_banner(db)
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
+	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), (f'/town/{town}/', town_name))
 	yield '<div class="content_wrapper">'
 	yield '<main>'
 	yield f'<h1>{name}</h1>'

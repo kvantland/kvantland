@@ -21,7 +21,7 @@ def show_town(db, town):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/town.css">'
 	yield from user.display_banner(db)
 	yield '<div class="content_wrapper">'
-	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), (f'/town/{town}', f'{name}'))
+	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), (f'/town/{town}/', f'{name}'))
 	yield '<svg version="1.1" class="map" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	yield '<defs>'
 	yield '<clipPath id="map_border">'
