@@ -346,6 +346,8 @@
 	font-size: 24px;
 	padding: 40px;
 	background-color: white;
+	display: inline-flex;
+	flex-direction: row;
 }
 
 .dialog .head {
@@ -375,6 +377,8 @@
 }
 
 .dialog .button{
+	width: 580px;
+	box-sizing: border-box;
 	padding: 10px 20px;
 	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%); 
 	box-shadow: 7px 7px 6.699999809265137px #1A5866; 
@@ -382,6 +386,7 @@
 	font-size: 24px;
 	font-weight: 600;
 	text-align: center;
+	justify-content: center;
 	display: inline-flex;
 }
 
