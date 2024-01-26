@@ -7,7 +7,6 @@ from enum import Enum, auto
 from importlib import import_module
 from pathlib import Path
 import psycopg
-from answer_area import show_answer_area
 
 import nav
 import user
@@ -35,20 +34,153 @@ def try_read_file(path):
 	except OSError:
 		return None
 
+def show_answer_area(data, clas, kwargs, value='',):
+	if clas == 'with_input':
+		attrs = [
+		'name="answer"',
+		'type="number"',
+		'required'
+		]
+		if lim := data.get('range'):
+			if (a := lim.get('min')) != None:
+				attrs.append(f'min="{a}"')
+			if (b := lim.get('max')) != None:
+				attrs.append(f'max="{b}"')
+		attrs.append(f'value="{value}"')
+		attrs = ' '.join(attrs)
+		yield '<div class="answer_bar with_input">'
+		yield '<div class="input_field">'
+		yield '<div class="input_text">Введите ответ:</div> ' 
+		yield f'<form method="post" id="problem_form" class="problem answer_zone">'
+		yield f'<input {attrs} />'
+		yield '</form>'
+		yield from show_submit_button(**kwargs)
+		yield '</div>'
+		yield from show_hint_button(**kwargs)
+		yield '</div>'
+	if clas == 'hint_only':
+		yield '<div class="answer_bar hint_only">'
+		yield from show_hint_button(**kwargs)
+		yield '</div>'
+	if clas == 'without_input':
+		yield '<div class="answer_bar without_input">'
+		yield '<div class="input_field">'
+		yield from show_submit_button(**kwargs)
+		yield '</div>'
+		yield from show_hint_button(**kwargs)
+		yield '</div>'
+
+
 def show_submit_button(**kwargs):
-	yield '<button id="send" type="submit" form="problem_form">Отправить</button>'
+	yield '<div id="send" type="submit" class="submit_button" form="problem_form"><div class="inside_submit">Отправить</div></div>'
 
 def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
-		yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {hint_cost})">Подсказка</button></form>'
+		yield '<div class="hint_box">'
+		yield f'<image class="hint_icon" href="/static/design/icons/hint_icon.svg" />'
+		yield '</div>'
+		#yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {hint_cost})">Подсказка</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
 		yield f'<button type="button" disabled title="Недостаточно квантиков (стоимость: {hint_cost})">Подсказка</button>'
 
-def show_buttons(**kwargs):
-	yield from show_submit_button(**kwargs)
-	yield from show_hint_button(**kwargs)
-
 def show_question(db, variant, hint_mode):
+	user_id = require_user(db)
+	if user_id == None:
+		redirect('/')
+	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
+	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
+	db.execute('select xhr_amount from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+	(step, ), = db.fetchall()
+	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
+	typedesc = import_module(f'problem-types.{type_}')
+	script = try_read_file(f'problem-types/{type_}.js')
+	style = try_read_file(f'problem-types/{type_}.css')
+	try:
+		save_progress = typedesc.SAVE_PROGRESS
+	except AttributeError:
+		save_progress = True
+
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
+
+	try:
+		hybrid = typedesc.HYBRID
+	except AttributeError:
+		hybrid = False
+
+	try:
+		without_buttons = typedesc.WITHOUT_BUTTONS
+	except AttributeError:
+		without_buttons = False
+
+	try:
+		hint_only = typedesc.HINT_ONLY
+	except AttributeError:
+		hint_only = False
+
+	yield '<!DOCTYPE html>'
+	yield f'<title>{name}</title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
+	yield '<script type="module" src="/static/master.js"></script>'
+	if style:
+		yield f'<style type="text/css">{style}</style>'
+	yield from user.display_banner(db)
+	yield '<div class="content_wrapper">'
+	yield '<main>'
+	yield '<div class="content_box">'
+	yield '<div class="problem_wrapper">'
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
+	yield '<div class="problem_box">'
+	yield '<div class="problem_desc">'
+	yield '<div class="header">'
+	yield f'<div class="header_text">{name}</div>'
+	yield '<div class="problem_cost">3 квантика</div>'
+	yield '</div>'
+	yield '<div class="problem_desc_box">'
+	yield f'<div class="problem_text"><span class="span_text">{description}</div>'
+	if hint_mode == HintMode.SHOW:
+		yield '<section class="hint">'
+		yield '<h2>Подсказка</h2>'
+		yield f'<p>{hint}</p>'
+		yield '</section>'
+	if save_progress:
+		if hybrid:
+			yield f'<div id="interactive_problem_form">'
+		else:
+			yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{type_}">'
+	yield from typedesc.entry_form(content, kwargs)
+	if save_progress and not hybrid:
+		yield '</form>'
+	elif hybrid:
+		yield '</div>'
+	if image:
+		yield f'<img class="picture" src="/static/problem/{image}">'
+	#yield '<img style="width: 417px; height: 457px" src="https://via.placeholder.com/417x457" />' THERE CAN BE YOUR IMAGE
+	yield '</div>'
+	if not without_buttons:
+		if hint_only:
+			yield from show_answer_area(content, 'hint_only', kwargs)
+		elif show_default_buttons:
+			yield from show_answer_area(content, 'without_input', kwargs)
+		else:
+			yield from show_answer_area(content, 'with_input', kwargs)
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	#yield from footer
+	yield '</div>'
+	yield '</main>'
+	yield '</div>'
+	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
+	if script:
+		yield f'<script type="text/ecmascript">{script}</script>'
+
+def show_question_old(db, variant, hint_mode):
 	user_id = require_user(db)
 	if user_id == None:
 		redirect('/')
@@ -63,12 +195,14 @@ def show_question(db, variant, hint_mode):
 	yield '<!DOCTYPE html>'
 	yield f'<title>{name}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
 	yield '<script type="module" src="/static/master.js"></script>'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
-	yield '<div class="content_wrapper">'
 	yield from user.display_banner(db)
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
+	yield '<div class="content_wrapper">'
 	yield '<main>'
 	yield f'<h1>{name}</h1>'
 	yield f'<p class="description">{description}</p>'
@@ -158,6 +292,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '<!DOCTYPE html>'
 	yield f'<title>{name}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'
