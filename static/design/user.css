@@ -1,3 +1,21 @@
+@keyframes down {
+	0% {
+		transform: translate(0, 0)
+	}
+	100% {
+		transform: translate(0, -100%);
+	}
+}
+
+@keyframes up {
+	0% {
+		transform: translate(0, -100%);
+	}
+	100% {
+		transform: translate(0, 0);
+	}
+}
+
 .user_nav {
 	-webkit-user-select: none;
 	user-select: none;
@@ -11,6 +29,30 @@
 	display: inline-flex;
 	z-index: 2;
 	box-shadow: 0 1px 5px #C2C2C2;
+}
+
+.user_nav.up {
+	transform: none;
+}
+
+.user_nav.down {
+	transform: translate(0, -100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .user_nav.down {
+    animation-name: down;
+    animation-duration: 0.25s;
+    animation-iteration-count: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .user_nav.up {
+    animation-name: up;
+    animation-duration: 0.25s;
+    animation-iteration-count: 1;
+  }
 }
 
 .logo_area {

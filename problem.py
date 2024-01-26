@@ -138,6 +138,7 @@ def show_question(db, variant, hint_mode):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
 	yield '<script type="module" src="/static/master.js"></script>'
+	yield '<script type="module" src="/static/design/user.js"></script>'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield from user.display_banner_tournament(db)
@@ -304,6 +305,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield f'<title>{name}</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
+	yield '<script type="module" src="/static/design/user.js"></script>'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield '<div class="content_wrapper">'

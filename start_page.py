@@ -4,10 +4,17 @@ from pathlib import Path
 import nav
 import user
 
+def get_file(*paths):
+	scripts = []
+	for path_ in paths:
+		path = Path(__file__).parent / f'static/design/{path_}.js'
+		script = open(f'{path}', 'r', encoding="utf-8").read()
+		scripts.append(script)
+	return scripts
+
 @route('/')
 def display_start_page(db):
-	path = Path(__file__).parent / 'static/design/start_page.js'
-	script = open(f'{path}', 'r', encoding="utf-8").read()
+	scripts = get_file('start_page')
 
 	user_id = user.current_user(db)
 	link = f'/land' if user_id is not None else f'/login?path=/land'
@@ -18,6 +25,7 @@ def display_start_page(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/start_page.css">'
+	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield from user.display_banner(db)
 
 	yield '<div class="content_wrapper">'
@@ -134,12 +142,13 @@ def display_start_page(db):
 	yield '<div class="text">В наших социальных сетях мы регулярно публикуем интересные новости о проекте, анонсы ближайших событий и нестандартные задачки для всех!    </br></br>  Присоединяйтесь и будете всегда в курсе событий!</div>'
 	yield '<div class="button_area">'
 	yield '<div class="contact_button"> <img class="contact_icon" src="/static/design/icons/vk.svg" /> </div>'
-	yield '<div class="contact_button"> <img class="contact_icon" src="/static/design/icons/calls.svg" /> </div>'
 	yield '<div class="contact_button"> <img class="contact_icon" src="/static/design/icons/tg.svg" /> </div>'
+	yield '<div class="contact_button"> <img class="contact_icon" src="/static/design/icons/play.svg" /> </div>'
 	yield '<div class="contact_button"> <img class="contact_icon" src="/static/design/icons/email.svg" /> </div>'
 	yield '</div>'
 	yield '</div>'
 
 	yield '</div>'
-	if script:
-		yield f'<script type="text/ecmascript">{script}</script>'
+	for script in scripts:
+		if script:
+			yield f'<script type="text/ecmascript">{script}</script>'

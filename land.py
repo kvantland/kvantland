@@ -5,6 +5,7 @@ from bottle import route, redirect
 
 import nav
 import user
+from start_page import get_file
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -47,6 +48,7 @@ def show_land(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/land.css">'
+	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
 	yield '<div style="font-family:Montserrat Alternates"></div>'
@@ -115,6 +117,9 @@ def show_land(db):
 		yield f'</a>'
 		cnt += 1
 	yield '</svg>'
+	for script in scripts:
+		if script:
+			yield f'<script type="text/ecmascript">{script}</script>'
 	'''
 	yield '<div class="contacts_block">'
 	yield '<h2 class="contacts_header"> Контакты: </h2>'
@@ -134,6 +139,7 @@ def show_land(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/rules.css">'
+	yield '<script type="module" src="/static/design/user.js"></script>'
 	#yield from user.display_banner(db)
 	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
@@ -167,7 +173,7 @@ def show_land(db):
 	yield '</div>'
 	yield '</div>'
 	#yield from footer.display_footer()
-	yield '</div>'
+	yield '</div>'	
 
 @route('/final_page')
 def show_result(db):
