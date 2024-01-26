@@ -62,6 +62,7 @@
 
 .content_wrapper {
 	width: 100%;
+	padding: 0 80px;
 	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
@@ -69,19 +70,6 @@
 	align-items: flex-start;
 	gap: 40px;
 	display: inline-flex;
-}
-
-.content_box {
-	align-self: stretch;
-	height: 1573px;
-	padding-bottom: 80px;
-	padding-left: 80px;
-	padding-right: 80px;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
-	gap: 60px;
-	display: flex
 }
 
 .rules_box {

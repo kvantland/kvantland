@@ -132,11 +132,12 @@ def show_land(db):
 	yield f'<title>Правила — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/rules.css">'
 	#yield from user.display_banner(db)
-	#yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
+	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), ('/rules', 'Правила'))
 	yield '<div class="content_box">'
 	yield '<div class="rules_box">'
 	yield '<div class="header">Правила турнира</div>'
@@ -166,7 +167,6 @@ def show_land(db):
 	yield '</div>'
 	yield '</div>'
 	#yield from footer.display_footer()
-	yield '</div>'
 	yield '</div>'
 
 @route('/final_page')
