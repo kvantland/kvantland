@@ -1,6 +1,6 @@
 .content_wrapper {
 	width: 100%;
-	padding: 0 80px;
+	padding: 0 80px 0 80px;
 	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
@@ -153,13 +153,17 @@
 	display: flex;
 }
 
-.examples_container .content .problem { 
+.problem { 
 	padding: 40px 60px; 
 	background: #1E8B93; 
 	border-radius: 20px; 
 	flex-direction: column; 
 	align-items: flex-start; 
 	gap: 40px; 
+	display: none;
+}
+
+.active {
 	display: flex;
 }
 
@@ -191,8 +195,7 @@
 }
 
 .problem img {
-	width: 279px;
-	height: 298px
+	height: 298px;
 }
 
 .problem .body {
@@ -202,7 +205,7 @@
 	 border-radius: 16px; 
 	 justify-content: center; 
 	 align-items: center; 
-	 gap: 20px; 
+	 gap: 40px; 
 	 display: inline-flex
 }
 
@@ -215,13 +218,13 @@
 
 .problem .body .text {
 	color: black; 
-	font-size: 24px; 
+	font-size: 22px; 
 	font-weight: 500;
 }
 
 .problem .body .bold_text {
 	color: black;
-	font-size: 24px;
+	font-size: 22px;
 	font-weight: 700;
 }
 

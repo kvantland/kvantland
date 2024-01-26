@@ -3,6 +3,10 @@ var nav = document.querySelector('.user_nav')
 document.addEventListener('scroll', nav_scroll)
 
 function nav_scroll () {
+	if (nav.classList.contains('blocked')) {
+		nav.classList.remove('blocked')
+		return;
+	}
 	console.log('here')
 	let cur = document.documentElement.scrollTop
 	if (cur < position)
