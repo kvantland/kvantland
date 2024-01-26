@@ -34,6 +34,17 @@ def try_read_file(path):
 	except OSError:
 		return None
 
+def lang_form(score):
+	if score % 100 >= 10 and score % 100 < 20:
+		return 'квантиков'
+	else:
+		if score % 10 in [2, 3, 4]:
+			return 'квантика'
+		elif score % 10 == 1:
+			return 'квантик'
+		else:
+			return 'квантиков'
+
 def show_answer_area(data, clas, kwargs, value='',):
 	if clas == 'with_input':
 		attrs = [
@@ -87,8 +98,8 @@ def show_question(db, variant, hint_mode):
 	user_id = require_user(db)
 	if user_id == None:
 		redirect('/')
-	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
-	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
+	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
+	(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
 	db.execute('select xhr_amount from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 	(step, ), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
@@ -139,7 +150,7 @@ def show_question(db, variant, hint_mode):
 	yield '<div class="problem_desc">'
 	yield '<div class="header">'
 	yield f'<div class="header_text">{name}</div>'
-	yield '<div class="problem_cost">3 квантика</div>'
+	yield f'<div class="problem_cost">{points} {lang_form(points)}</div>'
 	yield '</div>'
 	yield '<div class="problem_desc_box">'
 	yield f'<div class="problem_text"><span class="span_text">{description}</div>'

@@ -29,17 +29,6 @@ def get_town_id(cur, name):
 	(town,), = cur.fetchall()
 	return town
 
-def lang_form(score):
-	if score % 100 >= 10 and score % 100 < 20:
-		return 'квантиков'
-	else:
-		if score % 10 in [2, 3, 4]:
-			return 'квантика'
-		elif score % 10 == 1:
-			return 'квантик'
-		else:
-			return 'квантиков'
-
 def cmp(item):
 	return item['points']
 
@@ -88,7 +77,7 @@ def add_list(problems_list, variants_list):
 def add_problem(cur, town, points, type_, name, hint=None, hint_cost=None, image=None):
 	type_ = get_type_id(cur, type_)
 	town = get_town_id(cur, town)
-	name = f"{name} ({points} {lang_form(points)})"
+	name = f"{name}"
 	cur.execute("insert into Kvantland.Problem (town, points, name, type_, image) values (%s, %s, %s, %s, %s) returning problem", (town, points, name, type_, image))
 	(problem,), = cur.fetchall()
 	if hint:
