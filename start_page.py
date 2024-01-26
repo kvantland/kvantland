@@ -8,6 +8,10 @@ import user
 def display_start_page(db):
 	path = Path(__file__).parent / 'static/design/start_page.js'
 	script = open(f'{path}', 'r', encoding="utf-8").read()
+
+	user_id = user.current_user(db)
+	link = f'/land' if user_id is not None else f'/login?path=/land'
+
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -26,7 +30,7 @@ def display_start_page(db):
 	yield '<div class="text">Твоя возможность проявить себя!</div>'
 	yield '</div>'
 	yield '<div class="text">Тебя ждут задачи из самых разных областей:  Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</div>'
-	yield '<a href="/land">'
+	yield f'<a href={link}>'
 	yield '<div class="start_button"> Начать турнир </div>'
 	yield '</a>'
 	yield '</div>'

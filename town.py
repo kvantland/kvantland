@@ -19,7 +19,7 @@ def show_town(db, town):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/town.css">'
-	yield from user.display_banner(db)
+	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
 	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), (f'/town/{town}/', f'{name}'))
 	yield '<svg version="1.1" class="map" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
@@ -69,7 +69,7 @@ def show_town(db, town):
 			True: 'solved',
 			False: 'failed',
 		}[ans_true]
-		link = f'/problem/{variant}/' if user_id is not None else f'/login?path=/town/{town}/'
+		link = f'/problem/{variant}/'
 		yield f'<a xlink:href="{link}" class="level level_{status}" transform="translate({x} {y})"><title>{name}</title>'
 		yield f'<circle class="level-icon" r="0.65em" />'
 		yield f'<text class="level-value">{points}</text>'

@@ -47,7 +47,7 @@ def show_land(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/land.css">'
-	yield from user.display_banner(db)
+	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
 	yield '<div style="font-family:Montserrat Alternates"></div>'
 	yield from nav.display_breadcrumbs(('/land', 'Квантландия'))
@@ -135,7 +135,7 @@ def show_land(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/rules.css">'
 	#yield from user.display_banner(db)
 	#yield from nav.display_breadcrumbs(('/', 'Квантландия'))
-	yield from user.display_banner(db)
+	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
 	yield '<div class="content_box">'
 	yield '<div class="rules_box">'
