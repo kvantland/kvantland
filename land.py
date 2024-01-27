@@ -18,17 +18,6 @@ def lang_form(score):
 		else:
 			return 'квантиков'
 
-def tournament_completed(db, user_id):
-	not_completed = False
-	if user_id is not None:
-		db.execute('select town, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false) from Kvantland.Town', (user_id, ))
-	else:
-		db.execute('select town, true from Kvantland.Town')
-	for town, opened in db.fetchall():
-		if opened:
-			not_completed = True
-	return not not_completed
-
 def finished(db, user_id):
 	if user_id == None:
 		return False
@@ -81,10 +70,6 @@ def show_land(db):
 	yield '</defs>'
 
 	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin" clip-path="url(#map_border)" meet/>'
-	if tournament_completed(db, user_id):
-		yield '<a transform="translate(640 0)" href="/final_page">' 
-		yield '<text class="town-name to_results" font-size="2em" text-anchor="middle" y="2em"> Завершить турнир </text>'
-		yield '</a>'
 	if user_id is not None:
 		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false) from Kvantland.Town', (user_id, ))
 	else:
@@ -174,25 +159,3 @@ def show_land(db):
 	yield '</div>'
 	#yield from footer.display_footer()
 	yield '</div>'	
-
-@route('/final_page')
-def show_result(db):
-	user_id = user.current_user(db)
-	if user_id == None:
-		redirect('/')
-	db.execute('update Kvantland.Student set is_finished=true where student=%s', (user_id, ))
-	db.execute('select score from Kvantland.Student where student= %s', (user_id, ))
-	(score, ), = db.fetchall()
-	yield '<!DOCTYPE html>'
-	yield '<html lang="ru" class="map">'
-	yield f'<title>Квантландия</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield '<div class="content_wrapper">'
-	yield from user.display_banner(db)
-	yield '</div>'
-	yield '<svg class="map final_result_area" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin meet" />'
-	yield '<text text-anchor="middle" x="640" y="4em"> Поздравляем! </text>'
-	yield '<text text-anchor="middle" x="640" y="6em"> Вы успешно завершили турнир. </text>'
-	yield f'<text text-anchor="middle" x="640" y="8em"> Ваш результат составляет {score} {lang_form(score)}. </text>'
-	yield '</svg>'
