@@ -17,7 +17,7 @@ def display_start_page(db):
 	scripts = get_file('start_page')
 
 	user_id = user.current_user(db)
-	link = f'/land' if user_id is not None else f'/login?path=/land'
+	link = f'/rules' if user_id is not None else f'/login?path=/land'
 
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
@@ -106,7 +106,7 @@ def display_start_page(db):
 	yield '<div> Раздел участка </div>'
 	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
-	yield '<div class="content">'
+	yield '<div class="body">'
 	yield '<img class="ans" src="/static/design/answer/fields.png" />'
 	yield '</div>'
 	yield '<div class="button solution"> Посмотреть решение </div>'
@@ -117,8 +117,8 @@ def display_start_page(db):
 	yield '<div> Кони-невидимки </div>'
 	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
-	yield '<div class="content">'
-	yield '<span class="bold_text"> Ответ:<span> <span class="text"> Undefined </span>'
+	yield '<div class="body">'
+	yield '<span class="bold_text"> Ответ:</span> <span class="text"> 3 </span>'
 	yield '</div>'
 	yield '<div class="button solution"> Посмотреть решение </div>'
 	yield '</div>'
@@ -128,7 +128,7 @@ def display_start_page(db):
 	yield '<div> Как такое возможно? </div>'
 	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
-	yield '<div class="content">'
+	yield '<div class="body">'
 	yield '<span class="bold_text"> Ответ:</span> <span class="text"> 800 </span>'
 	yield '</div>'
 	yield '<div class="button solution"> Посмотреть решение </div>'
@@ -139,7 +139,7 @@ def display_start_page(db):
 	yield '<div> Раздел участка </div>'
 	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
-	yield '<div class="content">' 
+	yield '<div class="body">' 
 	yield '''<iframe width="560" height="315"
 			src="https://www.youtube.com/embed/88lOJeuaHDw?enablejapi=1"
 			frameborder="0"  allowfullscreen></iframe>'''
@@ -152,7 +152,7 @@ def display_start_page(db):
 	yield '<div> Кони-невидимки </div>'
 	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
-	yield '<div class="content">' 
+	yield '<div class="body">' 
 	yield '''<iframe width="560" height="315" class="video"
 			src="https://www.youtube.com/embed/vqlC9c2LTV4?enablejsapi=1" 
 			frameborder="0" allowfullscreen></iframe>'''
@@ -165,7 +165,7 @@ def display_start_page(db):
 	yield '<div> Как такое возможно? </div>'
 	yield '<img class="cross" src="/static/design/icons/cross.svg" />'
 	yield '</div>'
-	yield '<div class="content">' 
+	yield '<div class="body">' 
 	yield '''<iframe width="560" height="315"
 			src="https://www.youtube.com/embed/m7lA9CoOq_g?enablejsapi=1&origin=http://localhost:8080" 
 			frameborder="0" allowfullscreen></iframe>'''

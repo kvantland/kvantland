@@ -338,7 +338,7 @@
 	z-index: 4;
 }
 
-.dialog .content {
+.dialog .body {
 	box-shadow: 12px 12px 14px rgba(0, 0, 0, 0.25);
 	border-radius: 16px;
 	justify-content: center;
@@ -348,6 +348,11 @@
 	background-color: white;
 	display: inline-flex;
 	flex-direction: row;
+	gap: 10px;
+}
+
+.dialog .body .bold_text {
+	font-weight: 600;
 }
 
 .dialog .head {
