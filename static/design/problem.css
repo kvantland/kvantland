@@ -67,7 +67,6 @@ button, input {
 }
 
 .content_wrapper{
-	width: 100%;
 	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
@@ -243,6 +242,7 @@ button, input {
 	justify-content: flex-start;
 	align-items: flex-start;
 	display: flex;
+	border-radius: 10px;
 }
 
 .submit_button_inside {

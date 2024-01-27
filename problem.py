@@ -82,20 +82,27 @@ def show_answer_area(data, clas, kwargs, value='',):
 
 
 def show_submit_button(**kwargs):
-	yield '<div class="submit_button button">'
+	"""yield '<div class="submit_button button">'
 	yield '<div class="submit_button_inside">'
 	yield '<div class="submit_button_text">Отправить</div>'
 	yield '</div>'
 	yield '</div>'
+	yield '</div>'"""
+	yield '<button class="submit_button button" id="send" type="submit" form="problem_form">'
+	yield '<div class="submit_button_inside">'
+	yield '<div class="submit_button_text">Отправить</div>'
 	yield '</div>'
-	#yield '<button id="send" type="submit" form="problem_form">Отправить</button>'
+	yield '</div>'
+	yield '</button>'
 
 def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
-		yield '<div class="hint_box">'
+		"""yield '<div class="hint_box">'
 		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
-		yield '</div>'
-		#yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {hint_cost})">Подсказка</button></form>'
+		yield '</div>'"""
+		yield f'<form id="hint" action="hint" method="post" class="hint"><button class="hint_box" form="hint" type="submit" title="Получить подсказку (стоимость: {hint_cost})">'
+		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
+		yield '</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
 		yield '<div class="hint_box">'
 		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
