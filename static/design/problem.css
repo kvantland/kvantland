@@ -208,6 +208,18 @@ button, input {
 	word-wrap: break-word
 }
 
+.answer_input {
+	width: 200px;
+	height: 50px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: white;
+	border-radius: 10px;
+	border: 2px white solid;
+	font-size: 24px;
+}
 .hint_box {
 	width: 59.39px;
 	align-self: stretch;

@@ -59,20 +59,12 @@ def show_answer_area(data, clas, kwargs, value='',):
 				attrs.append(f'max="{b}"')
 		attrs.append(f'value="{value}"')
 		attrs = ' '.join(attrs)
-		"""yield '<div class="answer_bar with_input">'
-		yield '<div class="input_field">'
-		yield '<div class="input_text">Введите ответ:</div> ' 
-		yield f'<form method="post" id="problem_form" class="problem answer_zone">'
-		yield f'<input {attrs} />'
-		yield '</form>'
-		yield from show_submit_button(**kwargs)
-		yield '</div>'
-		yield from show_hint_button(**kwargs)
-		yield '</div>'"""
 		yield '<div class="answer_box">'
 		yield '<div class="input_zone">'
 		yield '<div class="input_text">Введите ответ:</div>'
-		yield '<div style="width: 200px; height: 50px; padding-left: 20px; padding-right: 20px; padding-top: 10px; padding-bottom: 10px; background: white; border-radius: 10px; border: 2px white solid"></div>'
+		yield f'<form method="post" id="problem_form" class="problem answer_zone">'
+		yield f'<input class="answer_input" {attrs} />'
+		yield f'</form>'
 		yield from show_submit_button(**kwargs)
 		yield from show_hint_button(**kwargs)
 		yield '</div>'
@@ -187,7 +179,6 @@ def show_question(db, variant, hint_mode):
 		yield '</div>'
 	if image:
 		yield f'<img class="picture" src="/static/problem/{image}">'
-	#yield '<img style="width: 417px; height: 457px" src="https://via.placeholder.com/417x457" />' THERE CAN BE YOUR IMAGE
 	yield '</div>'
 	if not without_buttons:
 		if hint_only:
@@ -196,7 +187,6 @@ def show_question(db, variant, hint_mode):
 			yield from show_answer_area(content, 'without_input', kwargs)
 		else:
 			yield from show_answer_area(content, 'with_input', kwargs)
-	#yield from show_answer_area(content, 'with_input', kwargs)
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
