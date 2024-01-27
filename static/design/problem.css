@@ -79,7 +79,6 @@ button, input {
 
 .content_box {
 	align-self: stretch;
-	height: 1366px;
 	padding-bottom: 80px;
 	padding-left: 80px;
 	padding-right: 80px;
@@ -92,7 +91,6 @@ button, input {
 
 .problem_wrapper {
 	align-self: stretch;
-	height: 1108px;
 	padding-top: 20px;
 	flex-direction: column;
 	justify-content: flex-start;
@@ -103,7 +101,6 @@ button, input {
 
 .problem_box {
 	align-self: stretch;
-	height: 1019px;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;
@@ -187,12 +184,59 @@ button, input {
 	word-wrap: break-word;
 }
 
-.picture {
-}
-
-.submit_button {
+.answer_box {
 	width: 100%;
 	height: 100%;
+	justify-content: space-between;
+	align-items: center;
+	display: inline-flex;
+}
+
+.input_zone {
+	align-self: stretch;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 20px;
+	display: flex;
+}
+
+.input_text {
+	color: white;
+	font-size: 24px;
+	font-family: Montserrat;
+	font-weight: 500;
+	word-wrap: break-word
+}
+
+.hint_box {
+	width: 59.39px;
+	align-self: stretch;
+	padding-left: 20px;
+	padding-right: 20px;
+	background: #FFC400;
+	box-shadow: 7px 7px 7px #1A5866;
+	border-radius: 10px;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	display: flex;
+}
+
+.hint_icon {
+	height: 40px;
+	color: black;
+}
+
+.submit_button{
+	align-self: stretch;
+	justify-content: flex-start;
+	align-items: flex-start;
+	display: flex;
+}
+
+.submit_button_inside {
+	flex: 1 1 0;
+	height: 50px;
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-top: 10px;
@@ -204,10 +248,10 @@ button, input {
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
-	display: inline-flex;
+	display: flex;
 }
 
-.inside_submit {
+.submit_button_text {
 	flex: 1 1 0;
 	text-align: center;
 	color: black;
@@ -215,61 +259,4 @@ button, input {
 	font-family: Montserrat;
 	font-weight: 600;
 	word-wrap: break-word;
-}
-
-.answer_bar {
-	width: 100%;
-	height: 100%;
-	justify-content: space-between;
-	align-items: center;
-	display: inline-flex;
-}
-
-.input_field {
-	width: 100%;
-	height: 100%;
-	justify-content: flex-start;
-	align-items: center;
-	gap: 20px;
-	display: inline-flex;
-}
-
-.input_text {
-	color: white;
-	font-size: 24px;
-	font-family: Montserrat;
-	font-weight: 500;
-	word-wrap: break-word;
-}
-
-.answer_zone {
-	width: 200px;
-	height: 50px;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	background: white;
-	border-radius: 10px;
-	border: 2px white solid;
-}
-
-.hint_box {
-	width: 100%;
-	height: 100%;
-	padding-left: 20px;
-	padding-right: 20px;
-	background: #FFC400;
-	box-shadow: 7px 7px 7px #1A5866;
-	border-radius: 10px;
-	justify-content: flex-start;
-	align-items: center;
-	gap: 10px;
-	display: inline-flex;
-}
-
-.hint_icon {
-	width: 100%;
-	height: 100%;
-	color: black;
 }

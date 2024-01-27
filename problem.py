@@ -59,7 +59,7 @@ def show_answer_area(data, clas, kwargs, value='',):
 				attrs.append(f'max="{b}"')
 		attrs.append(f'value="{value}"')
 		attrs = ' '.join(attrs)
-		yield '<div class="answer_bar with_input">'
+		"""yield '<div class="answer_bar with_input">'
 		yield '<div class="input_field">'
 		yield '<div class="input_text">Введите ответ:</div> ' 
 		yield f'<form method="post" id="problem_form" class="problem answer_zone">'
@@ -68,31 +68,46 @@ def show_answer_area(data, clas, kwargs, value='',):
 		yield from show_submit_button(**kwargs)
 		yield '</div>'
 		yield from show_hint_button(**kwargs)
+		yield '</div>'"""
+		yield '<div class="answer_box">'
+		yield '<div class="input_zone">'
+		yield '<div class="input_text">Введите ответ:</div>'
+		yield '<div style="width: 200px; height: 50px; padding-left: 20px; padding-right: 20px; padding-top: 10px; padding-bottom: 10px; background: white; border-radius: 10px; border: 2px white solid"></div>'
+		yield from show_submit_button(**kwargs)
+		yield from show_hint_button(**kwargs)
 		yield '</div>'
 	if clas == 'hint_only':
-		yield '<div class="answer_bar hint_only">'
+		yield '<div class="answer_box">'
+		yield '<div class="input_zone">'
 		yield from show_hint_button(**kwargs)
 		yield '</div>'
 	if clas == 'without_input':
-		yield '<div class="answer_bar without_input">'
-		yield '<div class="input_field">'
+		yield '<div class="answer_box">'
+		yield '<div class="input_zone">'
 		yield from show_submit_button(**kwargs)
-		yield '</div>'
 		yield from show_hint_button(**kwargs)
 		yield '</div>'
 
 
 def show_submit_button(**kwargs):
-	yield '<div id="send" type="submit" class="submit_button" form="problem_form"><div class="inside_submit">Отправить</div></div>'
+	yield '<div class="submit_button button">'
+	yield '<div class="submit_button_inside">'
+	yield '<div class="submit_button_text">Отправить</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	#yield '<div id="send" type="submit" class="submit_button" form="problem_form"><div class="inside_submit">Отправить</div></div>'
 
 def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
 		yield '<div class="hint_box">'
-		yield f'<image class="hint_icon" href="/static/design/icons/hint_icon.svg" />'
+		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
 		yield '</div>'
 		#yield f'<form id="hint" action="hint" method="post" class="hint"><button form="hint" type="submit" title="Получить подсказку (стоимость: {hint_cost})">Подсказка</button></form>'
 	elif hint_mode == HintMode.TOO_EXPENSIVE:
-		yield f'<button type="button" disabled title="Недостаточно квантиков (стоимость: {hint_cost})">Подсказка</button>'
+		yield '<div class="hint_box">'
+		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
+		yield '</div>'
 
 def show_question(db, variant, hint_mode):
 	user_id = require_user(db)
@@ -181,6 +196,7 @@ def show_question(db, variant, hint_mode):
 			yield from show_answer_area(content, 'without_input', kwargs)
 		else:
 			yield from show_answer_area(content, 'with_input', kwargs)
+	#yield from show_answer_area(content, 'with_input', kwargs)
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'

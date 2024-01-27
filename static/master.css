@@ -381,7 +381,7 @@ form.login{
 	height: 30%;
 }
 
-.submit_button{
+/*.submit_button{
 	font-size: 3vh;
 	margin-top: 2vh;
 	height: 30%;
@@ -391,7 +391,7 @@ form.login{
 .submit_button:hover{
 	cursor: pointer;
 	background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
-}
+}*/
 
 .auth_button_bar {
 	display: flex;
