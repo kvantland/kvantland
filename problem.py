@@ -140,6 +140,7 @@ def show_question(db, variant, hint_mode):
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{name}</title>'
+	yield '<link rel="icon" href="/static/design/icons/logo.svg">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
@@ -212,6 +213,7 @@ def show_question_old(db, variant, hint_mode):
 	style = try_read_file(f'problem-types/{type_}.css')
 	yield '<!DOCTYPE html>'
 	yield f'<title>{name}</title>'
+	yield '<link rel="icon" href="/static/design/icons/logo.svg">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
@@ -309,6 +311,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{name}</title>'
+	yield '<link rel="icon" href="/static/design/icons/logo.svg">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
 	yield '<script type="module" src="/static/design/user.js"></script>'

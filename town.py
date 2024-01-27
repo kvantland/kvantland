@@ -15,6 +15,7 @@ def show_town(db, town):
 	db.execute('select name from Kvantland.Town where town = %s', (town,))
 	(name, ), = db.fetchall()
 	yield f'<title>{name}</title>'
+	yield '<link rel="icon" href="/static/design/icons/logo.svg">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
