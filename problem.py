@@ -88,7 +88,7 @@ def show_submit_button(**kwargs):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
-	yield '<button id="send" type="submit" form="problem_form">Отправить</button>'
+	#yield '<button id="send" type="submit" form="problem_form">Отправить</button>'
 
 def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 	if hint_mode == HintMode.AFFORDABLE:
