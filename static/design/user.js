@@ -7,7 +7,6 @@ function nav_scroll () {
 		nav.classList.remove('blocked')
 		return;
 	}
-	console.log('here')
 	let cur = document.documentElement.scrollTop
 	if (cur < position)
 	{
