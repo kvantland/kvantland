@@ -67,6 +67,17 @@ def show_land(db):
 			a 30 30 0 0 0 -30 30
 			z" />'''
 	yield '</clipPath>'
+	yield '<filter id="dropshadow" height="130%">'
+	yield '<feGaussianBlur in="SourceAlpha" stdDeviation="3"/>'
+	yield '<feOffset dx="2" dy="2" result="offsetblur"/>'
+	yield '<feComponentTransfer>'
+	yield '<feFuncA type="linear" slope="0.5"/>'
+	yield '</feComponentTransfer>'
+	yield '<feMerge>' 
+	yield '<feMergeNode/>'
+	yield '<feMergeNode in="SourceGraphic"/>'
+	yield '</feMerge>'
+	yield '</filter>'
 	yield '</defs>'
 
 	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin" clip-path="url(#map_border)" meet/>'
@@ -97,7 +108,7 @@ def show_land(db):
 		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{town}/">'
 		yield f'<image href="/static/icon/icon-{town}.png" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />'
 		yield f'<circle class="town-icon" r="33px" />'
-		yield f'<path class="town-name" num="{cnt}" d="{paths[cnt]}" transform="translate({trans[cnt]})"/>'
+		yield f'<path class="town-name" num="{cnt}" d="{paths[cnt]}" transform="translate({trans[cnt]})" style="filter:url(#dropshadow)"/>'
 		yield f'<text class="town-name" style="font-family:Montserrat Alternates" num="{cnt}" y="-60">{name}</text>'
 		yield f'</a>'
 		cnt += 1
