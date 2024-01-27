@@ -1,14 +1,35 @@
-function close_answer(e) {
-	if (e.touches)
-		e.preventDefault()
+function stopVideo() {
+	let num = document.querySelector('.problem.active').getAttribute('num')
+	let video = document.querySelector(`.dialog.solution[num="${num}"] iframe`)
+	video.src = video.src
+}
+
+
+function close_answer() {
 	let zone = document.querySelector('.shadow')
+	if (!zone)
+		return;
 	zone.remove()
 	let num = document.querySelector('.problem.active').getAttribute('num')
 	let dialog = document.querySelector(`.dialog.answer[num="${num}"]`)
 	dialog.classList.remove('show')
+	update_button()
+}
+
+function close_solution() {
+	let zone = document.querySelector('.shadow')
+	if (!zone)
+		return;
+	zone.remove()
+	let num = document.querySelector('.problem.active').getAttribute('num')
+	let dialog = document.querySelector(`.dialog.solution[num="${num}"]`)
+	dialog.classList.remove('show')
+	update_button()
+	stopVideo()
 }
 
 function show_answer() {
+	close_solution()
 	let num = document.querySelector('.problem.active').getAttribute('num')
 	let dialog = document.querySelector(`.dialog.answer[num="${num}"]`)
 	let cross = dialog.querySelector('.cross')
@@ -20,22 +41,36 @@ function show_answer() {
 		dialog.classList.add('show')
 	cross.addEventListener('click', close_answer)
 	cross.addEventListener('touchstart', close_answer)
+	update_button()
 }
 
 function show_solution() {
+	close_answer()
 	let num = document.querySelector('.problem.active').getAttribute('num')
 	let dialog = document.querySelector(`.dialog.solution[num="${num}"]`)
+	let cross = dialog.querySelector('.cross')
 	block_nav()
-	dialog.classList.add('show')
+	let zone = document.createElement('div')
+	zone.classList.add('shadow')
+	document.body.append(zone)
+	if (!dialog.classList.contains('show'))
+		dialog.classList.add('show')
+	cross.addEventListener('click', close_solution)
+	cross.addEventListener('touchstart', close_solution)
+	update_button()
 }
 
 function update_button() {
-	let answer = document.querySelector('.problem.active .answer')
-	let solution = document.querySelector('.problem.active .solution')
-	answer.addEventListener('click', show_answer)
-	answer.addEventListener('touchstart', show_answer)
-	solution.addEventListener('click', show_solution)
-	answer.addEventListener('touchstart', show_answer)
+	let answer_button = document.querySelectorAll('.button.answer')
+	let solution_button = document.querySelectorAll('.button.solution')
+	for (let answer of answer_button) {
+		answer.addEventListener('click', show_answer)
+		answer.addEventListener('touchstart', show_answer)
+	}
+	for (let solution of solution_button) {
+		solution.addEventListener('click', show_solution)
+		solution.addEventListener('touchstart', show_answer)
+	}
 }
 
 function block_nav() {
