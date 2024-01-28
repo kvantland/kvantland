@@ -18,13 +18,13 @@ alph_lower = 'abcdefghijklmnopqrstuvwxyz'
 alph_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 num = '0123456789'
 
-all_info = [['login', 'text', 'Логин'],
-			['password', 'password', 'Пароль'],
-			['email', 'email', 'Почта'],
-			['name', 'text', 'Имя'],
+all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
-			['school', 'text', 'Школа'],
+			['email', 'email', 'E-mail'],
+			['login', 'text', 'Логин'],
+			['password', 'password', 'Пароль'],
 			['city', 'text', 'Город'],
+			['school', 'text', 'Школа'],
 			['clas', 'select', 'Класс', [str(i) for i in range(1, 12)] + ['Другое']]]
 
 
@@ -67,7 +67,9 @@ def display_registration_form(user_info, err=None):
 	yield '<!DOCTYPE html>'
 	yield '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
 	yield '<title> Регистрация — Квантландия </title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/registration.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	if err:
 		yield '<dialog open="open" class="reg_dialog">'
 		yield f'<p> {err} </p>'
@@ -75,19 +77,29 @@ def display_registration_form(user_info, err=None):
 		yield '<button type="submit" class="dialog_button">Закрыть</button>'
 		yield '</form>'
 		yield '</dialog>'
-	yield '<main>'
+	yield '<div class="content_wrapper">'
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<div class="reg_form">'
-	yield '<div class = "reg_form_header"> Регистрация </div>'
-	yield f'<form class="reg" style="height: {form_size}px" method="post">'
+	yield '<div class="header">'
+	yield '<a href="/login">'
+	yield '<span class="light"> ВХОД </span>'
+	yield '</a>'
+	yield '<a href="/reg">'
+	yield '<span class="dark"> РЕГИСТРАЦИЯ </span>'
+	yield '</a>'
+	yield '</div>'
+	yield f'<form id="reg" method="post">'
+	yield '<div class="fields">'
 	for name in placeholder_info:
+		yield '<div class="field">'	
 		placeholder_ = placeholder_info[name]
 		type_ = type_info[name]
 		value_ = user_info[name]
+		yield f'<div class="placeholder"> {placeholder_} </div>'
 		if type_ == 'select':
-			yield f'<select style="height: {field_size}px" name="{name}" required>'
+			yield f'<select name="{name}" required>'
 			if not(user_info[name]):
-				yield f'<option value="" disabled selected> {placeholder_} </option>'
+				yield f'<option value="" disabled selected> </option>'
 			opt_list = option_info[name]
 			for opt in opt_list:
 				if user_info[name] != str(opt):
@@ -95,16 +107,26 @@ def display_registration_form(user_info, err=None):
 				else:
 					yield f'<option selected> {opt} </option>'
 		else:
-			yield f'<input style="height: {field_size}px" name="{name}" type="{type_}" placeholder="{placeholder_}" value="{escape(value_)}" required />'
-	yield '</select>'	
+			yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
+		yield '</div>'
+	yield '</select>'
+	yield '</div>'
+	yield '</div>'
+	yield '<div class="check_cont">'
+	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
+	yield '''<label for="approval"> Я принимаю условия Политики конфиденциальности и даю согласие
+		на обработку своих персональных данных'''
+	yield '</label>'
+	yield '</div>'
+	yield '<div class="g-recaptcha-outer">'
+	yield '<div class="g-recaptcha-inner">'
 	yield f'<div class="g-recaptcha" data-sitekey="{sitekey}"></div>'
-	yield f'<button type="submit" class="reg_button" style="height: {button_size}px; margin-top: {button_margin}px"> Зарегистрироваться </button>'
+	yield '</div>'
+	yield '</div>'
+	yield '<hr size="1">'
+	yield f'<button type="submit" class="reg_button" form="reg"> Зарегистрироваться </button>'
 	yield '</form>'
-	yield '<div class="back_to_log">'
-	yield '<a href="/login"> Уже зарегистрированы? </a>'
 	yield '</div>'
-	yield '</div>'
-	yield '</main>'
 	yield '<script type="text/javascript" src ="/static/registration.js"></script>'
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
@@ -190,18 +212,22 @@ def login_attempt(db):
 		not_robot = json.loads(cont.read())['success']
 
 		if not_robot:
-			if check_login(db, user_info['login']):
-				user_info['login'] = ''
-				yield from display_registration_form(user_info, 'К сожалению, пользователь с таким loginом уже существует, <br /> попробуйте другой login')
-			else:
-				mes, param_to_change = check_format(user_info)
-				if not mes:
-					user = add_user(db, user_info)
-					do_login(user, user_info['login'])
-					redirect('/')
+			approval = request.forms['approval']
+			if approval:
+				if check_login(db, user_info['login']):
+					user_info['login'] = ''
+					yield from display_registration_form(user_info, 'К сожалению, пользователь с таким loginом уже существует, <br /> попробуйте другой login')
 				else:
-					user_info[param_to_change] = ''
-					yield from display_registration_form(user_info, mes)
+					mes, param_to_change = check_format(user_info)
+					if not mes:
+						user = add_user(db, user_info)
+						do_login(user, user_info['login'])
+						redirect('/')
+					else:
+						user_info[param_to_change] = ''
+						yield from display_registration_form(user_info, mes)
+			else:
+				yield from display_registration_form(user_info, 'Нет согласия на обработку персональных данных')
 		else:
 			yield from display_registration_form(user_info, 'Ошибка заполнения капчи')
 	else:
