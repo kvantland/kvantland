@@ -230,6 +230,7 @@ button, input {
 	align-items: center;
 	gap: 10px;
 	display: flex;
+	height: 73.2px;
 }
 
 .hint_icon {
