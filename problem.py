@@ -16,8 +16,8 @@ from config import config
 _key = config['keys']['cookie']
 
 result_text = {
-	True: 'Верно!',
-	False: 'Неверно',
+	True: 'Верный ответ',
+	False: 'Неверный ответ',
 }
 
 class HintMode(Enum):
@@ -68,10 +68,12 @@ def show_answer_area(data, clas, kwargs, value='',):
 		yield from show_submit_button(**kwargs)
 		yield from show_hint_button(**kwargs)
 		yield '</div>'
+		yield '</div>'
 	if clas == 'hint_only':
 		yield '<div class="answer_box">'
 		yield '<div class="input_zone">'
 		yield from show_hint_button(**kwargs)
+		yield '</div>'
 		yield '</div>'
 	if clas == 'without_input':
 		yield '<div class="answer_box">'
@@ -79,7 +81,7 @@ def show_answer_area(data, clas, kwargs, value='',):
 		yield from show_submit_button(**kwargs)
 		yield from show_hint_button(**kwargs)
 		yield '</div>'
-
+		yield '</div>'
 
 def show_submit_button(**kwargs):
 	"""yield '<div class="submit_button button">'
@@ -297,7 +299,71 @@ def check_answer(db, var_id, answer):
 	typedesc = import_module(f'problem-types.{type_}')
 	return typedesc.validate(content, answer)
 
+
 def _display_result(db, var_id, ok, answer=None, solution=None):
+	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
+	(type_, ), = db.fetchall()
+	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (var_id,))
+	(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
+	
+	typedesc = import_module(f'problem-types.{type_}')
+	style = try_read_file(f'problem-types/{type_}.css')
+
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
+
+	try:
+		save_progress = typedesc.SAVE_PROGRESS
+	except AttributeError:
+		save_progress = True
+
+	yield '<!DOCTYPE html>'
+	yield f'<title>{name}</title>'
+	yield '<link rel="icon" href="/static/design/icons/logo.svg">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
+	yield '<script type="module" src="/static/master.js"></script>'
+	yield '<script type="module" src="/static/design/user.js"></script>'
+	if style:
+		yield f'<style type="text/css">{style}</style>'
+	yield from user.display_banner_tournament(db)
+	yield '<div class="content_wrapper">'
+	yield '<main>'
+	yield '<div class="content_box">'
+	yield '<div class="problem_wrapper">'
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
+	yield '<div class="problem_box">'
+	yield '<div class="problem_desc">'
+	yield '<div class="header">'
+	yield f'<div class="header_text">{name}</div>'
+	yield f'<div class="problem_cost">{points} {lang_form(points)}</div>'
+	yield '</div>'
+	yield '<div class="problem_desc_box">'
+	yield f'<div class="problem_text"><span class="span_text">{description}</div>'
+	if save_progress:
+		yield solution
+	if image:
+		yield f'<img class="picture" src="/static/problem/{image}">'
+	yield '</div>'
+	yield '<div class="answer_box">'
+	yield '<div class="result_box">'
+	yield f'<div class="result_text">{result_text[ok]}</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	#yield from footer
+	yield '</div>'
+	yield '</main>'
+	yield '</div>'
+
+
+def _display_result_old(db, var_id, ok, answer=None, solution=None):
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()
 	db.execute('select town, Kvantland.Town.name, Kvantland.Problem.name, description, image from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Town using (town) where variant = %s', (var_id,))

@@ -238,6 +238,28 @@ button, input {
 	color: black;
 }
 
+.result_box {
+	flex: 1 1 0;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background: white;
+	box-shadow: 2.3333334922790527px 2.3333334922790527px 10.850001335144043px rgba(0, 0, 0, 0.25);
+	border-radius: 12px;
+	overflow: hidden;
+	justify-content: center;
+	align-items: center;
+	gap: 5.83px;
+	display: flex;
+}
+
+.result_text {
+	color: #B62C5A;
+	font-size: 21px;
+	font-family: Montserrat Alternates;
+	font-weight: 700;
+	word-wrap: break-word;
+}
+
 .submit_button{
 	align-self: stretch;
 	justify-content: flex-start;
