@@ -10,6 +10,7 @@ import psycopg
 
 import nav
 import user
+import footer
 
 from config import config
 
@@ -153,6 +154,7 @@ def show_question(db, variant, hint_mode):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
 	yield '<script type="module" src="/static/master.js"></script>'
 	yield '<script type="module" src="/static/design/user.js"></script>'
@@ -160,7 +162,7 @@ def show_question(db, variant, hint_mode):
 		yield f'<style type="text/css">{style}</style>'
 	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
-	yield '<main>'
+	#yield '<main>'
 	yield '<div class="content_box">'
 	yield '<div class="problem_wrapper">'
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
@@ -200,9 +202,9 @@ def show_question(db, variant, hint_mode):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
-	#yield from footer
+	yield from footer.display_problem()
 	yield '</div>'
-	yield '</main>'
+	#yield '</main>'
 	yield '</div>'
 	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
 	if script:
@@ -357,7 +359,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
-	#yield from footer
+	#yield from footer.display_problem()
 	yield '</div>'
 	yield '</main>'
 	yield '</div>'

@@ -1,0 +1,46 @@
+.problem_footer {
+	padding: 40px;
+	border-radius: 20px;
+	overflow: hidden;
+	border: 3px #1E8B93 solid;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 40px; display: inline-flex;
+}
+
+.problem_footer_text {
+	flex: 1 1 0;
+	color: black;
+	font-size: 24px;
+	font-family: Montserrat;
+	font-weight: 500;
+	word-wrap: break-word;
+}
+
+.support_button_border {
+	padding-left: 40px;
+	padding-right: 40px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background: #1E8B93;
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+	border-radius: 10px;
+	overflow: hidden;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	display: flex;
+}
+
+.support_button {
+	color: white;
+	font-size: 24px;
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+	word-wrap: break-word;
+}
+
+.problem_footer_border {
+	padding-left: 80px;
+  	padding-right: 80px;
+}
