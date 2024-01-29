@@ -5,7 +5,6 @@ from bottle import route, redirect
 
 import nav
 import user
-from start_page import get_file
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -114,9 +113,6 @@ def show_land(db):
 		yield f'</a>'
 		cnt += 1
 	yield '</svg>'
-	for script in scripts:
-		if script:
-			yield f'<script type="text/ecmascript">{script}</script>'
 	'''
 	yield '<div class="contacts_block">'
 	yield '<h2 class="contacts_header"> Контакты: </h2>'

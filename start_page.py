@@ -4,17 +4,9 @@ from pathlib import Path
 import nav
 import user
 
-def get_file(*paths):
-	scripts = []
-	for path_ in paths:
-		path = Path(__file__).parent / f'static/design/{path_}.js'
-		script = open(f'{path}', 'r', encoding="utf-8").read()
-		scripts.append(script)
-	return scripts
 
 @route('/')
 def display_start_page(db):
-	scripts = get_file('start_page')
 
 	user_id = user.current_user(db)
 	link = f'/rules' if user_id is not None else f'/login?path=/land'
@@ -272,6 +264,4 @@ def display_start_page(db):
 	yield '</div>'
 
 	yield '</div>'
-	for script in scripts:
-		if script:
-			yield f'<script type="text/ecmascript">{script}</script>'
+	yield '<script type="text/javascript" src ="/static/design/start_page.js"></script>'
