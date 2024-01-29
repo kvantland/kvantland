@@ -159,11 +159,10 @@ body {
 }
 
 #reg .check_cont input.checkbox:checked {
-	background-color: #99BBFF;
 }
 
 #reg .check_cont input.checkbox:checked:after {
-	content: '\2714';
+	content: '✔️';
 	color:white;
 }
 
