@@ -40,13 +40,30 @@ def display_login_form(err: str=None):
 	yield '</a>'
 	yield '</div>'
 	yield '<form method="post" id="login">'
+	yield '<div class="full_field">'
 	yield '<div class="field">'
+	yield '<div class="content">'
 	yield '<div class="placeholder"> Логин </div>'
 	yield '<input name="login" type="text" required />'
 	yield '</div>'
+	yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+	yield '</div>'
+	yield '<div class="err hidden"></div>'
+	yield '</div>'
+	yield '<div class="full_field">'
 	yield '<div class="field">'
+	yield '<div class="content">'
 	yield '<div class="placeholder"> Пароль </div>'
 	yield '<input name="password" type="password" required />'
+	yield '</div>'
+	if err:
+		yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
+		yield '</div>'
+		yield f'<div class="err"> {err} </div>'
+	else:
+		yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+		yield '</div>'
+		yield f'<div class="err hidden"></div>'
 	yield '</div>'
 	yield '</form>'
 	yield '<div class="button_area">'
@@ -58,8 +75,7 @@ def display_login_form(err: str=None):
 	yield '<img src="/static/design/icons/vk_button.svg" />'
 	yield '</div>'
 	yield '</a>'
-	if err:
-		yield f'<p class="error">{err}</p>'
+	yield '<script type="text/javascript" src ="/static/design/login.js"></script>'
 
 def check_login(db, user_name, password):
 	db.execute('select student, password from Kvantland.Student where login = %s', (user_name, ))

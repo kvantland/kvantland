@@ -54,16 +54,38 @@ body {
 	color: rgba(0, 0, 0, 0.30);
 }
 
-
-.login_form .field{
+.login_form .full_field {
 	display: inline-flex;
 	flex-direction: column;
-	gap: 2px;
-	justify-content: flex-start;
+	gap: 4px;
+	align-items: stretch;
+}
+
+.login_form .field {
+	display: inline-flex;
+	justify-content: space-between;
 	padding: 10px 20px;
 	background: rgba(26.35, 88.38, 102, 0.10);
 	border-radius: 6px;
 	width: 280px;
+	gap: 2px;
+}
+
+.login_form .field .content {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 2px;
+	width: 100%;
+}
+
+.login_form .field .info {
+	display: flex;
+	align-items: center;
+}
+
+.login_form .field .info img {
+	width: 16px;
+	height: 16px;
 }
 
 .login_form .field .placeholder {
@@ -85,6 +107,18 @@ body {
 
 .login_form .field input:-webkit-autofill {
 	background: none;
+}
+
+.login_form .full_field .err {
+	padding: 0 20px;
+	align-self: flex-start;
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.hidden {
+	display: none !important;
 }
 
 .login_form .button {
