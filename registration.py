@@ -56,6 +56,17 @@ for field in all_info:
 		options = field[3]
 		option_info[field_name] = options
 
+def lang_form(num):
+	r = num % 10
+	if num > 10 and num < 20:
+		return 'символов'
+	elif r in [5, 6, 7, 8, 9, 0]:
+		return 'символов'
+	elif r in [1]:
+		return 'символ'
+	else:
+		return 'символа'
+
 @route('/reg')
 def reg_from(db):
 	if current_user(db) != None:
@@ -70,13 +81,7 @@ def display_registration_form(user_info, err=None):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/registration.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
-	if err:
-		yield '<dialog open="open" class="reg_dialog">'
-		yield f'<p> {err} </p>'
-		yield '<form method="dialog">'
-		yield '<button type="submit" class="dialog_button">Закрыть</button>'
-		yield '</form>'
-		yield '</dialog>'
+
 	yield '<div class="content_wrapper">'
 	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<div class="reg_form">'
@@ -91,7 +96,9 @@ def display_registration_form(user_info, err=None):
 	yield f'<form id="reg" method="post">'
 	yield '<div class="fields">'
 	for name in placeholder_info:
-		yield '<div class="field">'	
+		yield '<div class="full_field">'
+		yield '<div class="field">'
+		yield '<div class="content">'	
 		placeholder_ = placeholder_info[name]
 		type_ = type_info[name]
 		value_ = user_info[name]
@@ -106,28 +113,49 @@ def display_registration_form(user_info, err=None):
 					yield f'<option> {opt} </option>'
 				else:
 					yield f'<option selected> {opt} </option>'
+			yield '</select>'
 		else:
 			yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
 		yield '</div>'
-	yield '</select>'
+		if err and name in err.keys():
+			yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
+			yield '</div>'
+			yield f'<div class="err"> {err[name]} </div>'
+		else:
+			yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+			yield '</div>'
+			yield f'<div class="err hidden"></div>'
+		yield '</div>'
 	yield '</div>'
-	yield '</div>'
+	yield '<div class="full_field">'
 	yield '<div class="check_cont">'
 	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
 	yield '''<label for="approval"> Я принимаю условия Политики конфиденциальности и даю согласие
 		на обработку своих персональных данных'''
 	yield '</label>'
 	yield '</div>'
+	if err and 'approval' in err.keys():
+		yield f'<div class="err"> {err["approval"]} </div>'
+	else:
+		yield f'<div class="err hidden"></div>'
+	yield '</div>'
+	yield '<div class="full_field">'
 	yield '<div class="g-recaptcha-outer">'
 	yield '<div class="g-recaptcha-inner">'
 	yield f'<div class="g-recaptcha" data-sitekey="{sitekey}"></div>'
 	yield '</div>'
+	yield '</div>'
+	if err and 'captcha' in err.keys():
+		yield f'<div class="err"> {err["captcha"]} </div>'
+	else:
+		yield f'<div class="err hidden"></div>'
 	yield '</div>'
 	yield '<hr size="1">'
 	yield f'<button type="submit" class="reg_button" form="reg"> Зарегистрироваться </button>'
 	yield '</form>'
 	yield '</div>'
 	yield '<script type="text/javascript" src ="/static/registration.js"></script>'
+	yield '<script type="text/javascript" src ="/static/design/registration.js"></script>'
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def add_user(db, info):
@@ -152,6 +180,7 @@ def empty_user_info():
 	return user_info
 
 def check_format(user_info):
+	err_dict = {}
 	
 	for field in user_info:
 		min_size = config['reg']['min_' + field + '_size']
@@ -160,17 +189,17 @@ def check_format(user_info):
 
 		if type_info[field] == "select":
 			if not(user_info[field] in option_info[field]):
-				return "Недопустимое значение в поле " + name + "<br /> Пожалуйста, выберите значение из выпадающего списка", field
+				err_dict[field] = "Значение не из списка"
 
 		if field == "login":
 			tmp_alph = 0
 			for s in user_info[field]:
 				if s != '_' and s != '-' and s not in alph and s not in num:
-					return "Логин должен состоять из английских букв, цифр и символов - и _ <br /> Ваш login содержит недопустимые символы", field
+					err_dict[field] = "Логин должен состоять из английских букв, </br> цифр и символов - и _"
 				if s in alph:
 					tmp_alph = 1
 			if not tmp_alph:
-				return "Логин должен содержать буквы", field
+				err_dict[field] = "Логин должен содержать буквы"
 
 
 		if type_info[field] == "password":
@@ -183,14 +212,14 @@ def check_format(user_info):
 				if s in num:
 					tmp_number = 1
 			if not(tmp_lower and tmp_upper and tmp_number):
-				return "Пароль должен содержать заглавные и строчные буквы, а также цифры", field
+				err_dict[field] = "Пароль должен содержать заглавные и </br> строчные буквы, а также цифры"
 
 		if len(user_info[field]) < min_size:
-			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size),  field
+			err_dict[field] = "Минимум " + str(min_size) + ' ' + lang_form(min_size)
 		if len(user_info[field]) > max_size:
-			return "Слишком много символов в поле " + name, field
+			err_dict[field] = "Слишком много символов"
 
-	return False, ''
+	return err_dict
 
 @route('/reg', method='POST')
 def login_attempt(db):
@@ -202,6 +231,8 @@ def login_attempt(db):
 		new_value = request.forms.get(name).encode('l1').decode().strip()
 		user_info[name] = new_value
 
+	not_robot = False
+	captcha = 0
 	if len(request.forms['g-recaptcha-response']) != 0:
 		params = {
 		"secret": secret,
@@ -210,25 +241,31 @@ def login_attempt(db):
 		out = reg_url + '?' + urllib.parse.urlencode(params)
 		cont = urllib2.urlopen(out)
 		not_robot = json.loads(cont.read())['success']
-
-		if not_robot:
-			approval = request.forms['approval']
-			if approval:
-				if check_login(db, user_info['login']):
-					user_info['login'] = ''
-					yield from display_registration_form(user_info, 'К сожалению, пользователь с таким loginом уже существует, <br /> попробуйте другой login')
-				else:
-					mes, param_to_change = check_format(user_info)
-					if not mes:
-						user = add_user(db, user_info)
-						do_login(user, user_info['login'])
-						redirect('/')
-					else:
-						user_info[param_to_change] = ''
-						yield from display_registration_form(user_info, mes)
-			else:
-				yield from display_registration_form(user_info, 'Нет согласия на обработку персональных данных')
-		else:
-			yield from display_registration_form(user_info, 'Ошибка заполнения капчи')
 	else:
-		yield from display_registration_form(user_info,'Заполните капчу!')
+		captcha = 1
+
+	err_dict = check_format(user_info)
+
+	if not not_robot:
+		err_dict['captcha'] = 'Ошибка заполнения капчи'
+
+	if captcha:
+		err_dict['captcha'] = 'Заполните капчу!'
+
+	approval = request.forms['approval']
+	if not approval:
+		err_dict['approval'] = 'Поставьте галочку'
+
+	if check_login(db, user_info['login']):
+		user_info['login'] = ''
+		err_dict['login'] = 'Логин уже используется'
+
+	if len(err_dict) == 0:
+		user = add_user(db, user_info)
+		do_login(user, user_info['login'])
+		redirect('/')
+	else: 
+		for field in err_dict:
+			if field in user_info.keys():
+				user_info[field] = ''
+		yield from display_registration_form(user_info, err_dict)

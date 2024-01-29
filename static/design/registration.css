@@ -60,15 +60,50 @@ body {
 	gap: 10px;
 }
 
-#reg .fields .field {
+#reg .fields .full_field {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: stretch;
+}
+
+#reg .fields .field .content {
 	display: inline-flex;
 	flex-direction: column;
 	gap: 2px;
-	justify-content: flex-start;
+	width: 100%;
+}
+
+#reg .fields .field .info {
+	display: flex;
+	align-items: center;
+}
+
+#reg .fields .field .info img {
+	width: 16px;
+	height: 16px;
+}
+
+#reg .full_field .err {
+	padding: 0 20px;
+	align-self: flex-start;
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.hidden {
+	display: none !important;
+}
+
+#reg .fields .field {
+	display: inline-flex;
+	justify-content: space-between;
 	padding: 10px 20px;
 	background: rgba(26.35, 88.38, 102, 0.10);
 	border-radius: 6px;
 	width: 280px;
+	gap: 2px;
 }
 
 #reg .field .placeholder {
