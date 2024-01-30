@@ -17,8 +17,8 @@ from config import config
 _key = config['keys']['cookie']
 
 result_text = {
-	True: 'Верный ответ',
-	False: 'Неверный ответ',
+	True: 'Верно!',
+	False: 'Неверно',
 }
 
 class HintMode(Enum):
@@ -351,7 +351,10 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</div>'
 	yield '<div class="answer_box">'
 	yield '<div class="result_box">'
-	yield f'<div class="result_text">{result_text[ok]}</div>'
+	if ok:
+		yield f'<div class="result_text_true">{result_text[ok]}</div>'
+	else:
+		yield f'<div class="result_text_false">{result_text[ok]}</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'

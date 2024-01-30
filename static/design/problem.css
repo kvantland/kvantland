@@ -250,7 +250,15 @@ button, input {
 	display: flex;
 }
 
-.result_text {
+.result_text_true {
+	color: #17A814;
+	font-size: 21px;
+	font-family: Montserrat Alternates;
+	font-weight: 700;
+	word-wrap: break-word;
+}
+
+.result_text_false {
 	color: #B62C5A;
 	font-size: 21px;
 	font-family: Montserrat Alternates;
