@@ -196,6 +196,22 @@ def entry_form(data, kwargs):
 	yield '<div class="remaining_weightings">'
 	yield f"<p> Осталось </br> взвешиваний: {max(0, data['weightings_amount'] - kwargs['step'])} </p> <p></p>"
 	yield '</div>'
+	yield '<div class="history">'
+	yield '<div class="item">'
+	yield '<div class="header"> Взвешивание 0 </div>'
+	yield '<p> (1, 2, 3) = (4, 5) </p>'
+	yield '</div>'
+	try:
+		cnt = 1
+		for item in data['history']:
+			yield '<div class="item">'
+			yield f'<div class="header"> Взвешивание {cnt} </div>'
+			yield f'<p> {item} </p>'
+			yield '</div>'
+			cnt += 1
+	except KeyError:
+		pass
+	yield '</div>'
 	yield '</div>'
 	yield '</div>'
 
@@ -205,17 +221,29 @@ def steps(step_num, params, data):
 		return {'answer': 'no_tries'}
 	weight = data['weight']
 	left, right = 0, 0
+	h_left, h_right = [], []
 	conf = params['conf']
 	for i in range(len(conf)):
 		if conf[i] == '1':
 			left += weight[data['perm'].index(i + 1)]
+			h_left.append(str(i + 1))
 		elif conf[i] == '2':
 			right += weight[data['perm'].index(i + 1)]
+			h_right.append(str(i + 1))
+
+	try:
+		data['history']
+	except KeyError:
+		data['history'] = []
+		
 	if left > right:
-		return {'answer': 'left'}
+		data['history'].append('(' + ', '.join(h_left) + ') > (' + ', '.join(h_right) + ')')
+		return {'answer': 'left', 'data_update': data}
 	elif right > left:
-		return {'answer': 'right'}
-	return {'answer': 'equal'}
+		data['history'].append('(' + ', '.join(h_left) + ') < (' + ', '.join(h_right) + ')')
+		return {'answer': 'right', 'data_update': data}
+	data['history'].append('(' + ', '.join(h_left) + ') = (' + ', '.join(h_right) + ')')
+	return {'answer': 'equal', 'data_update': data}
 
 
 def validate(data, answer):
