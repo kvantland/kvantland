@@ -1,4 +1,4 @@
-.problem_footer {
+.support_area {
 	padding: 40px;
 	border-radius: 20px;
 	overflow: hidden;
@@ -8,7 +8,7 @@
 	gap: 40px; display: inline-flex;
 }
 
-.problem_footer_text {
+.support_area .text {
 	flex: 1 1 0;
 	color: black;
 	font-size: 24px;
@@ -17,7 +17,7 @@
 	word-wrap: break-word;
 }
 
-.support_button_border {
+.support_area .border {
 	padding-left: 40px;
 	padding-right: 40px;
 	padding-top: 10px;
@@ -32,7 +32,7 @@
 	display: flex;
 }
 
-.support_button {
+.support_area .button {
 	color: white;
 	font-size: 24px;
 	font-family: Montserrat Alternates;
