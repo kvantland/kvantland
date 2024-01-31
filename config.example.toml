@@ -44,6 +44,9 @@ max_clas_size = 100
 
 [contacts]
 support_email = 'test@test.com'
+vk_link = 'https://vk.com/kvantland'
+tg_link = 'https://t.me/kvantland'
+youtube_link = 'https://www.youtube.com/@Kvantland'
 
 [xhr]
 dead_step = 1000
