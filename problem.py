@@ -54,8 +54,10 @@ def show_question(db, variant, hint_mode):
 		redirect('/')
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
-	db.execute('select xhr_amount from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-	(step, ), = db.fetchall()
+	db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+	(step, curr, ), = db.fetchall()
+	if curr:
+		content = curr
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
 	typedesc = import_module(f'problem-types.{type_}')
 	script = try_read_file(f'problem-types/{type_}.js')
@@ -298,7 +300,7 @@ def xhr_request(db, user_id, var_id, params):
 	typedesc = import_module(f'problem-types.{type_}')
 	resp = typedesc.steps(xhr_amount, params, cont)
 	try: 
-		db.execute('update Kvantland.Variant set content = %s where variant = %s', (json.dumps(resp['data_update']), var_id,))
+		db.execute('update Kvantland.AvailableProblem set curr = %s where variant = %s and student= %s', (json.dumps(resp['data_update']), var_id, user_id))
 	except KeyError:
 		pass
 	try: 
