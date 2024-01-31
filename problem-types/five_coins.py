@@ -21,14 +21,16 @@ def entry_form(data, kwargs):
 	base_inside_xr = cup_xr * 0.7
 	coin_size = 70
 	drag_pad = 30
+	scale_width = cup_xr * 2 + plank_length
 	weight = sorted(data['weight'])
 	answer_zone_height = 120
 	container_height = answer_zone_height
-	container_width = 100
-	container_pad = 20
+	container_pad = 0 * scale_1
+	container_width = ((scale_width + container_pad / scale_1) / coin_amount - container_pad / scale_1) * scale_1
+	print(container_width, file=sys.stderr)
 	coin_pad = container_width - coin_size + container_pad
 	cont_a = 0.25
-	answer_zone_pad = 20
+	answer_zone_pad = 10
 	svg_width = max((plank_length + cup_xr * 2) * scale_1, (container_width + container_pad) * coin_amount - container_pad)
 	svg_height = (base_plank_width / 2 * ellipse_a + base_plank_height + basement_hight + basement_width / 2 * ellipse_a) * scale_1 + drag_pad + coin_size * 2 + answer_zone_height + answer_zone_pad
 	yield '<input name="answer" type="hidden" />'
@@ -235,7 +237,7 @@ def steps(step_num, params, data):
 		data['history']
 	except KeyError:
 		data['history'] = []
-		
+
 	if left > right:
 		data['history'].append('(' + ', '.join(h_left) + ') > (' + ', '.join(h_right) + ')')
 		return {'answer': 'left', 'data_update': data}
