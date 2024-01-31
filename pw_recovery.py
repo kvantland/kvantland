@@ -76,7 +76,7 @@ def recovery_attempt(db):
 		else:
 			token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
 			link = f'''
-			http://{config['server']['host']}:{str(config['server']['port'])}/pw_recovery/new_password?token={token}&mail={_email} 
+			{config['recovery']['redirect_uri']}?token={token}&mail={_email} 
 			'''
 			host = config['recovery']['host']
 			port = config['recovery']['port']
