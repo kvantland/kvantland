@@ -299,7 +299,6 @@ def xhr_request(db, user_id, var_id, params):
 	(cont, ), = db.fetchall()
 	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
 	(curr, ), = db.fetchall()
-	print(curr, file=sys.stderr)
 	if curr:
 		cont = curr
 	typedesc = import_module(f'problem-types.{type_}')

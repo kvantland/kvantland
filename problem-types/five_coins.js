@@ -366,9 +366,25 @@ function weight(e){
 				alert('Больше нельзя делать взвешивания!')
 			else
 			{
+				let sign = {'equal': '=', 'right': '<', 'left': '>'}
+				let [h_left, h_right] = [[], []]
+				let cnt = 1
+				for (let i of conf) {
+					if (i == '1')
+						h_left.push(cnt)
+					if (i == '2')
+						h_right.push(cnt)
+					cnt += 1
+				}
 				let [text, amount] = document.querySelector('.remaining_weightings p').innerHTML.split(':')
+				let hist = document.querySelector('.history')
+				let h_item = document.createElement('div')
+				hist.append(h_item)
 				document.querySelector('.remaining_weightings p').innerHTML = text + ': ' + (amount - 1)
 				let side = xhr.response
+				let h_text = '(' + h_left.join(', ') + `) ${sign[side]} (` + h_right.join(', ') + ')'
+				h_item.classList.add('item')
+				h_item.innerHTML = `<div class="header"> Взвешивание ${3 - amount} </div> <p> ${h_text} </p>`
 				movement = setInterval(function(){move_scales(side)}, 20)
 				movement_tmp = 1
 			}
