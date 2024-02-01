@@ -6,16 +6,19 @@ var def_X_horse = def_horse.getAttribute('x');
 var def_y_horse = def_horse.getAttribute('y');
 var def_X_bishop = def_bishop.getAttribute('x');
 var def_Y_bishop = def_bishop.getAttribute('y');
-var svg_box = document.querySelector('.plot_area');
+var svg_box = document.querySelector('svg');
 var width = def_horse.getAttribute('width');
 var height = def_horse.getAttribute('height');
 
-document.querySelector('button').onclick = function(e){
+function send(e){
 	var ans = '';
 	for (square of document.querySelectorAll('rect'))
 		ans += nearest_figure_type(square);
 	document.querySelector("input[name='answer']").value = ans;
 }
+
+document.querySelector('button').addEventListener("click", (e) => send(e))
+document.querySelector('button').addEventListener("touchstart", (e) => send(e))
 
 function nearest_figure_type(square){
 	var all_figures = document.querySelectorAll('.active');
@@ -49,23 +52,58 @@ function moveAt(x, y){
 	a.setAttribute('y', y);
 }
 
-function move(event){
-	var svg_box_X = svg_box.getBoundingClientRect().left;
-	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	var cur_X = event.clientX - svg_box_X;
-	var cur_Y = event.clientY - svg_box_Y;
-	var right = document.documentElement.clientWidth - svg_box_X;
-	var bottom = document.documentElement.clientHeight - svg_box_Y;
-	var left = -svg_box_X;
-	var top = -svg_box_Y;
-	if (cur_X + side / 2 < right && cur_X - side / 2 > left && cur_Y - side / 2 > top && cur_Y + side / 2 < bottom)
-		moveAt(cur_X - side / 2, cur_Y - side / 2);
+function screen_border_check(x, y) {
+	let [right, f_right] = [window.innerWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [window.innerHeight, document.documentElement.scrollHeight]
+	if (x >= right && window.scrollX >= f_right - right)
+		return false
+	if (x <= 0 && window.scrollX <= 0)
+		return false
+	if (y <= 0 && window.scrollY <= 0)
+		return false
+	if (y >= bott && window.scrollY >= f_bott - bott)
+		return false
+	return true
+}
+
+function autoscroll(x, y) {
+	let add = 40
+	let [x_diff, y_diff] = [0, 0]
+	let [bott, right] = [window.innerHeight, window.innerWidth]
+	if (x < add)
+		x_diff = x - add
+	if (y < add)
+		y_diff = y - add
+	if (y > bott - add)
+		y_diff = y - bott + add
+	if (x > right - add)
+		x_diff = x - right + add
+	scrollBy(x_diff, y_diff)
+}
+
+function move(event) {
+	let svg_box_X = svg_box.getBoundingClientRect().left;
+	let svg_box_Y = svg_box.getBoundingClientRect().top;
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
+		event.preventDefault()
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	autoscroll(cur_X, cur_Y)
+	if (screen_border_check(cur_X, cur_Y))
+		moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2)
 	else
-		back_to_drag();
+		back_to_drag()
 }
 
 function back_to_drag(){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -73,7 +111,8 @@ function back_to_drag(){
 }
 
 function drop(square){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -106,55 +145,80 @@ function add_figure(type)	{
 
 document.addEventListener('DOMContentLoaded', update_figures());
 
+function start(event) {
+	let obj = event.target
+	if (!obj.classList.contains('choiced')){
+		if (obj.classList.contains('horse') )
+			add_figure('horse');
+		else
+			add_figure('bishop');
+	}
+	obj.classList.add('targeted');
+	obj.classList.remove('choiced');
+	svg_box.appendChild(obj);
+	var svg_box_X = svg_box.getBoundingClientRect().left;
+	var svg_box_Y = svg_box.getBoundingClientRect().top;
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
+		event.preventDefault()
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2);
+	document.addEventListener("mousemove", move);
+	document.addEventListener("touchmove", move);
+	update_figures();
+}
+
+function end(event) {
+	let obj = event.target
+	if (!document.querySelector('.targeted'))
+		return;
+	let min_diff = 10 ** 9;
+	let best_square = '';
+	for (const square of board){
+		let x_diff = square.getAttribute('x') - obj.getAttribute('x');
+		let y_diff = square.getAttribute('y') - obj.getAttribute('y');
+		let tot_diff = x_diff ** 2 + y_diff ** 2;
+		if (tot_diff < min_diff){
+			best_square = square;
+			min_diff = tot_diff;
+		}
+	};
+	if (min_diff < side ** 2 && check_if_empty(best_square))
+		drop(best_square);
+	else
+		back_to_drag();
+	update_figures();
+}
+
 function update_figures()
 {
-	var drag_figures = document.querySelectorAll('.active');
-	for (const figure of drag_figures){
-		figure.onmousedown = function(event){
-			if (!this.classList.contains('choiced')){
-				if (this.classList.contains('horse') )
-					add_figure('horse');
-				else
-					add_figure('bishop');
-			}
-			this.classList.add('targeted');
-			this.classList.remove('choiced');
-			svg_box.appendChild(this);
-			var svg_box_X = svg_box.getBoundingClientRect().left;
-			var svg_box_Y = svg_box.getBoundingClientRect().top;
-			moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
-			document.addEventListener('mousemove', move)
-			update_figures();
-		}
-		figure.onmouseup = function(event){
-			if (!document.querySelector('.targeted'))
-				return;
-			var min_diff = 10 ** 9;
-			var best_square = '';
-			for (const square of board){
-				let x_diff = square.getAttribute('x') - this.getAttribute('x');
-				let y_diff = square.getAttribute('y') - this.getAttribute('y');
-				let tot_diff = x_diff ** 2 + y_diff ** 2;
-				if (tot_diff < min_diff){
-					best_square = square;
-					min_diff = tot_diff;
-				}
-			};
-			if (min_diff < side ** 2 && check_if_empty(best_square))
-				drop(best_square);
-			else
-				back_to_drag();
-			update_figures();
-		}
+	let drag_figures = document.querySelectorAll('.active')
+	for (let figure of drag_figures){
+		figure.addEventListener("mousedown", start)
+		figure.addEventListener("touchstart", start)
+		figure.addEventListener("mouseup", end) 
+		figure.addEventListener("touchend", end)
 	}
 }
 
 var rel = document.querySelector('.reload');
-rel.onclick = function(){
-	var drag_horses = document.querySelectorAll('.active.choiced');
-	for (var horse of drag_horses){
+
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
+	let drag_horses = document.querySelectorAll('.active.choiced');
+	for (let horse of drag_horses){
 		horse.classList.remove('choiced');
 		horse.parentNode.removeChild(horse);
 	}
 	update_figures();
 }
+
+rel.addEventListener("click", (e) => reload(e))
+rel.addEventListener("touchstart", (e) => reload(e))

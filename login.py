@@ -75,6 +75,7 @@ def display_login_form(err: str=None):
 	yield '<img src="/static/design/icons/vk_button.svg" />'
 	yield '</div>'
 	yield '</a>'
+	yield f'<a href="/pw_recovery"> Забыли пароль? </a>'
 	yield '<script type="text/javascript" src ="/static/design/login.js"></script>'
 
 def check_login(db, user_name, password):
@@ -105,6 +106,7 @@ def do_login(user, login):
 def do_logout():
 	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='lax')
 	response.set_cookie('login', '', path='/', max_age=0, httponly=True, samesite='lax')
+	response.set_cookie('email', '', path='/', max_age=0, httponly=True, samesite='lax')
 
 def do_redirect():
 	path = request.query.path

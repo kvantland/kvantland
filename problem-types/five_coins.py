@@ -21,14 +21,16 @@ def entry_form(data, kwargs):
 	base_inside_xr = cup_xr * 0.7
 	coin_size = 70
 	drag_pad = 30
+	scale_width = cup_xr * 2 + plank_length
 	weight = sorted(data['weight'])
 	answer_zone_height = 120
 	container_height = answer_zone_height
-	container_width = 100
-	container_pad = 20
+	container_pad = 0 * scale_1
+	container_width = ((scale_width + container_pad / scale_1) / coin_amount - container_pad / scale_1) * scale_1
+	print(container_width, file=sys.stderr)
 	coin_pad = container_width - coin_size + container_pad
 	cont_a = 0.25
-	answer_zone_pad = 20
+	answer_zone_pad = 10
 	svg_width = max((plank_length + cup_xr * 2) * scale_1, (container_width + container_pad) * coin_amount - container_pad)
 	svg_height = (base_plank_width / 2 * ellipse_a + base_plank_height + basement_hight + basement_width / 2 * ellipse_a) * scale_1 + drag_pad + coin_size * 2 + answer_zone_height + answer_zone_pad
 	yield '<input name="answer" type="hidden" />'
@@ -37,26 +39,26 @@ def entry_form(data, kwargs):
 	yield '<defs>'
 
 	yield '<linearGradient id="cupShadowInside">'
-	yield '<stop offset="0%" stop-color="#373200" />'
-	yield '<stop offset="100%" stop-color="#7B6F01" />'
+	yield '<stop offset="0%" stop-color="#303030" />'
+	yield '<stop offset="100%" stop-color="#696969" />'
 	yield '</linearGradient>'
 
 	yield '<linearGradient id="cupShadowOutside">'
-	yield '<stop offset="0%" stop-color="#B0A000" />'
-	yield '<stop offset="36%" stop-color="#EDE8B4" />'
-	yield '<stop offset="100%" stop-color="#B0A000" />'
+	yield '<stop offset="0%" stop-color="#909090" />'
+	yield '<stop offset="36%" stop-color="#E4E4E4" />'
+	yield '<stop offset="100%" stop-color="#909090" />'
 	yield '</linearGradient>'
 
 	yield '<linearGradient id="baseBlankShadow">'
-	yield '<stop offset="0%" stop-color="#C9B700" />'
-	yield '<stop offset="38%" stop-color="#EDE8B4" />'
-	yield '<stop offset="100%" stop-color="#C9B700" />'
+	yield '<stop offset="0%" stop-color="#A6783F" />'
+	yield '<stop offset="38%" stop-color="#C8BAA7" />'
+	yield '<stop offset="100%" stop-color="#A6783F" />'
 	yield '</linearGradient>'
 
 	yield '<linearGradient id="blankShadow" x1="0" x2="0" y1="0" y2="1">'
-	yield '<stop offset="0%" stop-color="#C9B700" />'
-	yield '<stop offset="62%" stop-color="#EDE8B4" />'
-	yield '<stop offset="100%" stop-color="#C9B700" />'
+	yield '<stop offset="0%" stop-color="#A6783F" />'
+	yield '<stop offset="62%" stop-color="#C8BAA7" />'
+	yield '<stop offset="100%" stop-color="#A6783F" />'
 	yield '</linearGradient>'
 
 	yield '<linearGradient id="coinShadow" x1="0" x2="1" y1="0" y2="1">'
@@ -191,31 +193,59 @@ def entry_form(data, kwargs):
 	yield '</g>'
 	yield '</svg>'
 	yield '<div class="interface_zone">'
-	yield '<button type="button" class="weight"> Взвесить! </button>'
-	yield '<button type="button" class="clean"> Очистить весы </button>'
+	yield '<div class="button weight"> <p> Взвесить! </p> <p></p> </div>'
+	yield '<div class="button clean"> <p> Очистить </br> весы </p> <p></p> </div>'
 	yield '<div class="remaining_weightings">'
-	yield f"<p> Осталось </br> взвешиваний: {max(0, data['weightings_amount'] - kwargs['step'])}<p>"
+	yield f"<p> Осталось </br> взвешиваний: {max(0, data['weightings_amount'] - kwargs['step'])} </p> <p></p>"
+	yield '</div>'
+	yield '<div class="history">'
+	yield '<div class="item">'
+	yield '<div class="header"> Взвешивание 0 </div>'
+	yield '<p> (1, 2, 3) = (4, 5) </p>'
+	yield '</div>'
+	try:
+		cnt = 1
+		for item in data['history']:
+			yield '<div class="item">'
+			yield f'<div class="header"> Взвешивание {cnt} </div>'
+			yield f'<p> {item} </p>'
+			yield '</div>'
+			cnt += 1
+	except KeyError:
+		pass
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
 
 
 def steps(step_num, params, data):
-	if step_num > 2:
+	if step_num > data['weightings_amount']:
 		return {'answer': 'no_tries'}
 	weight = data['weight']
 	left, right = 0, 0
+	h_left, h_right = [], []
 	conf = params['conf']
 	for i in range(len(conf)):
 		if conf[i] == '1':
 			left += weight[data['perm'].index(i + 1)]
+			h_left.append(str(i + 1))
 		elif conf[i] == '2':
 			right += weight[data['perm'].index(i + 1)]
+			h_right.append(str(i + 1))
+
+	try:
+		data['history']
+	except KeyError:
+		data['history'] = []
+
 	if left > right:
-		return {'answer': 'left'}
+		data['history'].append('(' + ', '.join(h_left) + ') > (' + ', '.join(h_right) + ')')
+		return {'answer': 'left', 'data_update': data}
 	elif right > left:
-		return {'answer': 'right'}
-	return {'answer': 'equal'}
+		data['history'].append('(' + ', '.join(h_left) + ') < (' + ', '.join(h_right) + ')')
+		return {'answer': 'right', 'data_update': data}
+	data['history'].append('(' + ', '.join(h_left) + ') = (' + ', '.join(h_right) + ')')
+	return {'answer': 'equal', 'data_update': data}
 
 
 def validate(data, answer):

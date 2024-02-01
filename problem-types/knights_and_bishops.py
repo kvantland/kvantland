@@ -11,7 +11,8 @@ def entry_form(data, kwargs):
 	plot_width = pad + board_width + inner_side 
 	plot_height = board_height
 	yield '<input name="answer" type="hidden" />'
-	yield f'<svg version="1.1" class="plot_area" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield '<div class="plot_area">'
+	yield f'<svg version="1.1" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	for y in range(0, height + 1):
 		yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
 	for x in range(0, width + 1):
@@ -28,6 +29,7 @@ def entry_form(data, kwargs):
 	yield f'<image class="bishop active" x="{pad + board_width}" y="{inner_side + line_width * 2}" width="{inner_side}" height="{inner_side}" href="/static/chess/bishop_w.png" />'
 	yield f'<image class="reload" x = "{pad + board_width}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
 	yield '</svg>'
+	yield '</div>'
 
 def to_str(a):
 	ans = ''

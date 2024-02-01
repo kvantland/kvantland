@@ -9,65 +9,57 @@
 }
 
 .outside{
-	filter: grayscale(100%);
 	fill: url(#cupShadowOutside);
-	stroke: #A89800;
+	stroke: #949494;
 	stroke-width: 2;
 }
 
 .inside{
-	filter: grayscale(100%);
 	fill: url(#cupShadowInside);
-	stroke: #9E8E00;
+	stroke: #949494;
 	stroke-width: 2;
 }
 
 line{
-	filter: grayscale(100%);
-	stroke: #544C01;
+	stroke: #484848;
 	stroke-width: 2;
 }
 
 .hinge{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
-	fill: #B0A000;
-	stroke: #887A01;
+	fill: #A7763D;
+	stroke: #815A30;
 	stroke-width: 4;
 }
 
 .plank{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
 	fill: url(#blankShadow);
-	stroke: #9E8E00;
+	stroke: #976B38;
 	stroke-width: 2;
 }
 
 .base_plank{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
 	fill: url(#baseBlankShadow);
-	stroke: #9E8E00;
+	stroke: #976B38;
 	stroke-width: 2;
 }
 
 .base_inside{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
-	fill: #C9B700;
-	stroke: #9E8E00;
+	fill: #B68645;
+	stroke: #976B38;
 	stroke-width: 2;
 }
 
 .base_outside{
-	filter: hue-rotate(-24.81deg) saturate(60.43%) brightness(82.16%);
-	stroke: #7b7b3b;
+	stroke: #86755B;
 	stroke-width: 2;
 }
 
 ellipse.base_outside{
-	fill: url(#cupShadowOutside);
+	fill: url(#baseBlankShadow);
 }
 
 path.base_outside{
-	fill: url(#cupShadowOutside);
+	fill: url(#baseBlankShadow);
 }
 
 .coin{
@@ -115,6 +107,27 @@ text.coin_text{
 	border: #9a9aa7 1px solid;
 }
 
+.button{
+	text-align: center;
+	border-radius: 0.2em;
+	border: #9a9aa7 1px solid;
+	background-color: #e9e9ed;
+}
+
+.button *{
+	margin-bottom: 0;
+}
+
+@media(hover:hover) and (pointer:fine) {
+	.button:hover{
+		background-color: #D0D0D7;
+	}
+}
+
+.button:active {
+	background-color: #B1B1B9
+}
+
 .coin_container_drag{
 	fill: #e9e9ed;
 	stroke:  #9a9aa7;
@@ -145,4 +158,34 @@ rect.answer_zone{
 
 .drag_zone rect{
 	fill: #e9e9ed;
+}
+
+.history {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 15px 20px;
+	align-self: center;
+	box-sizing: border-box;
+	border-radius: 0.5em;
+	border: #9a9aa7 1px solid;
+
+}
+
+.history .item {
+	width: 100%;
+	display: inline-flex;
+	flex-direction: column;
+	gap: 2px;
+	margin-bottom: 0;
+}
+
+.history .item * {
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+.history .item .header {
+	font-weight: 700;
+	font-size: large;
 }

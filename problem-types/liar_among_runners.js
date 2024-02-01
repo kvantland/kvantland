@@ -10,7 +10,7 @@ for (const boy of drag_boys){
 }
 var def_X = drag_boys[0].getAttribute('x');
 var def_Y = drag_boys[0].getAttribute('y');
-var svg_box = document.querySelector('.plot_area');
+var svg_box = document.querySelector('svg');
 
 const column_set = new Set()
 
@@ -20,7 +20,7 @@ for (square of board){
 
 var in_column = column_set.size;
 
-document.querySelector('button').onclick = function(e){
+function send(e) {
 	var curr = [];
 
 	for (const square of board){
@@ -32,6 +32,9 @@ document.querySelector('button').onclick = function(e){
 	}
 	sender.value = curr;
 }
+
+document.querySelector('button').addEventListener("click", (e) => send(e))
+document.querySelector('button').addEventListener("touchstart", (e) => send(e))
 
 function check_if_empty(square){
 	for (const boy of all_boys){
@@ -49,26 +52,59 @@ function moveAt(x, y){
 	a.setAttribute('y', y);
 }
 
-function move(event){
-	var svg_box_X = svg_box.getBoundingClientRect().left;
-	var svg_box_Y = svg_box.getBoundingClientRect().top;
-	var cur_X = event.clientX - svg_box_X;
-	var cur_Y = event.clientY - svg_box_Y;
-	var right = document.documentElement.clientWidth - svg_box_X;
-	var bottom = document.documentElement.clientHeight - svg_box_Y;
-	var left = -svg_box_X;
-	var top = -svg_box_Y;
-	if (cur_X + side / 2 < right && cur_X - side / 2 > left && cur_Y - side / 2 > top && cur_Y + side / 2 < bottom)
-		moveAt(cur_X - side / 2, cur_Y - side / 2);
-	else
-		back_to_drag();
+function screen_border_check(x, y) {
+	let [right, f_right] = [window.innerWidth, document.documentElement.scrollWidth]
+	let [bott, f_bott] = [window.innerHeight, document.documentElement.scrollHeight]
+	if (x >= right && window.scrollX >= f_right - right)
+		return false
+	if (x <= 0 && window.scrollX <= 0)
+		return false
+	if (y <= 0 && window.scrollY <= 0)
+		return false
+	if (y >= bott && window.scrollY >= f_bott - bott)
+		return false
+	return true
+}
 
+function autoscroll(x, y) {
+	let add = 40
+	let [x_diff, y_diff] = [0, 0]
+	let [bott, right] = [window.innerHeight, window.innerWidth]
+	if (x < add)
+		x_diff = x - add
+	if (y < add)
+		y_diff = y - add
+	if (y > bott - add)
+		y_diff = y - bott + add
+	if (x > right - add)
+		x_diff = x - right + add
+	scrollBy(x_diff, y_diff)
+}
+
+function move(event) {
+	let svg_box_X = svg_box.getBoundingClientRect().left;
+	let svg_box_Y = svg_box.getBoundingClientRect().top;
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
+		event.preventDefault()
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	autoscroll(cur_X, cur_Y)
+	if (screen_border_check(cur_X, cur_Y))
+		moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2)
+	else
+		back_to_drag()
 }
 
 
-
 function back_to_drag(){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -80,7 +116,8 @@ function back_to_drag(){
 }
 
 function drop(square){
-	document.removeEventListener('mousemove', move);
+	document.removeEventListener("mousemove", move);
+	document.removeEventListener("touchmove", move);
 	var a = document.querySelector('.targeted');
 	if (!a)
 		return;
@@ -98,56 +135,76 @@ function drop(square){
 	square.setAttribute('num', a.getAttribute('num'))
 }
 
-for (const boy of drag_boys){
-	boy.onmousedown = function(event){
-		this.classList.add('targeted');
-		this.classList.remove('choiced');
-		for (const square of board) {
-			if (square.getAttribute('num') == this.getAttribute('num')){
-				square.setAttribute('num', "*")
-			}
-		}
-		svg_box.appendChild(this);
-		var svg_box_X = svg_box.getBoundingClientRect().left;
-		var svg_box_Y = svg_box.getBoundingClientRect().top;
-		moveAt(event.clientX - svg_box_X - side / 2, event.clientY - svg_box_Y - side / 2);
-		document.addEventListener('mousemove', move)
-		this.onmouseup = function(event){
-			var min_diff = 10 ** 9;
-			var best_square = '';
-			var best_square_row = 0;
-			var best_square_column = 0;
-			let row = 0;
-			let column = 0;
-			for (const square of board){
-				let x_diff = square.getAttribute('x') - this.getAttribute('x');
-				let y_diff = square.getAttribute('y') - this.getAttribute('y');
-				let tot_diff = x_diff ** 2 + y_diff ** 2;
-				if (tot_diff < min_diff){
-					best_square = square;
-					min_diff = tot_diff;
-					best_square_row = row;
-					best_square_column = column;
-				}
-				row += 1;
-				if (row == in_column){
-					row = 0;
-					column += 1;
-				}
-			};
-			if (min_diff < side ** 2){
-				this.setAttribute('column', best_square_column);
-				this.setAttribute('row', best_square_row);
-				drop(best_square);
-			}
-			else
-				back_to_drag();
+function start(event) {
+	let obj = event.target
+	obj.classList.add('targeted');
+	obj.classList.remove('choiced');
+	for (const square of board) {
+		if (square.getAttribute('num') == obj.getAttribute('num')){
+			square.setAttribute('num', "*")
 		}
 	}
+	svg_box.appendChild(obj);
+	var svg_box_X = svg_box.getBoundingClientRect().left;
+	var svg_box_Y = svg_box.getBoundingClientRect().top;
+	let cur_X, cur_Y
+	if (event.touches) {
+		cur_X = event.touches[0].clientX
+		cur_Y = event.touches[0].clientY
+		event.preventDefault()
+	}
+	else {
+		cur_X = event.clientX
+		cur_Y = event.clientY
+	}
+	moveAt(cur_X - svg_box_X - side / 2, cur_Y - svg_box_Y - side / 2);
+	document.addEventListener("mousemove", move)
+	document.addEventListener("touchmove", move)
 }
 
-var rel = document.querySelector('.reload');
-rel.onclick = function(){
+function end(event) {
+	let obj = event.target
+	var min_diff = 10 ** 9;
+	var best_square = '';
+	var best_square_row = 0;
+	var best_square_column = 0;
+	let row = 0;
+	let column = 0;
+	for (const square of board){
+		let x_diff = square.getAttribute('x') - obj.getAttribute('x');
+		let y_diff = square.getAttribute('y') - obj.getAttribute('y');
+		let tot_diff = x_diff ** 2 + y_diff ** 2;
+		if (tot_diff < min_diff){
+			best_square = square;
+			min_diff = tot_diff;
+			best_square_row = row;
+			best_square_column = column;
+		}
+		row += 1;
+		if (row == in_column){
+			row = 0;
+			column += 1;
+		}
+	};
+	if (min_diff < side ** 2){
+		obj.setAttribute('column', best_square_column);
+		obj.setAttribute('row', best_square_row);
+		drop(best_square);
+	}
+	else
+		back_to_drag();
+}
+
+for (const boy of drag_boys){
+	boy.addEventListener("mousedown", start)
+	boy.addEventListener("touchstart",  start)
+	boy.addEventListener("mouseup", end)
+	boy.addEventListener("touchend", end)
+}
+
+function reload(e) {
+	if (e.targetTouches)
+		e.preventDefault()
 	for (const a of drag_boys){
 		var num = parseInt(a.getAttribute('num')) - 1
 		a.setAttribute('x', cp[num][0]);
@@ -157,3 +214,7 @@ rel.onclick = function(){
 		b.setAttribute('num', '*');
 	}
 }
+
+var rel = document.querySelector('.reload');
+rel.addEventListener("click", (e) => reload(e))
+rel.addEventListener("touchstart", (e) => reload(e))

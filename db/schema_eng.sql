@@ -60,6 +60,7 @@ create table AvailableProblem (
 	xhr_amount int not null default 0,
 	answer text,
 	solution text,
+	curr jsonb,
 	primary key (student, variant)
 );
 

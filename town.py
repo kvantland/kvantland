@@ -71,7 +71,7 @@ def show_town(db, town):
 			True: 'solved',
 			False: 'failed',
 		}[ans_true]
-		link = f'/problem/{variant}/'
+		link = f'/problem/{variant}/' if user_id is not None else f'/login?path=/town/{town}/'
 		yield f'<a xlink:href="{link}" class="level level_{status}" transform="translate({x} {y})"><title>{name}</title>'
 		yield f'<circle class="level-icon" r="0.65em" />'
 		yield f'<text class="level-value">{points}</text>'

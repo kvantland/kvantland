@@ -23,7 +23,7 @@ text {
 	margin: 40px auto 0 auto;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;	
+	justify-content: center;	
 	z-index: 1;
 	position: relative;
 	user-select: none
@@ -37,7 +37,8 @@ text {
 	cursor: grabbing;
 }
 
-.reload:hover {
-	cursor: pointer;
+@media(hover:hover) and (pointer:fine) {
+	.reload:hover {
+		cursor: pointer;
+	}
 }
-

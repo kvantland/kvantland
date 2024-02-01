@@ -10,7 +10,8 @@ def entry_form(data, kwargs):
 	svg_width = len(data['end']) * (card_width + 2 * r) + (len(data['end']) - 1) * pad + reload_pad + reload_side
 	svg_height = card_height + 2 * r + 1.5 * icon_side
 	yield '<input type="hidden" name="answer" />'
-	yield f'<svg version="1.1" class="plot_area" width="{svg_width}" height="{svg_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield '<div class="plot_area">'
+	yield f'<svg version="1.1" width="{svg_width}" height="{svg_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	yield f'<g class="exchange_bar hidden" bar_width="{icon_side * 2.5}">'
 	yield f'<image class="icon exchange" width="{icon_side}" height="{icon_side}" href="/static/exchange_icon.png"/>'
 	yield f'<image class="icon cross" x="{icon_side * 1.5}" width="{icon_side}" height="{icon_side}" href="/static/cross_icon.png">'
@@ -33,6 +34,7 @@ def entry_form(data, kwargs):
 		yield '</g>'
 	yield f'<image class="reload" width="{reload_side}" height="{reload_side}" transform="translate({svg_width - reload_side} {icon_side * 1.5})" href="/static/reload.png">'
 	yield '</svg>'
+	yield '</div>'
 
 def steps(step_num, params, data):
 	resp = {}
