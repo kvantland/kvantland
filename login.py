@@ -41,8 +41,9 @@ def display_login_form(err: str=None):
   yield f'<a class="button_bar_item" href="' + escape(auth_url + '?' + urllib.parse.urlencode(params)) + '"></a>'
   yield '</div>' 
   yield '</div>'
-  yield '<div class="anon_reg">'
+  yield '<div class="form_bottom">'
   yield f'<a href="/reg"> Зарегистрироваться </a>'
+  yield f'<a href="/pw_recovery"> Забыли пароль? </a>'
   yield '</div>'
   yield '</div>'
   yield '</main>'
@@ -77,6 +78,7 @@ def do_login(user, login):
 def do_logout():
 	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='lax')
 	response.set_cookie('login', '', path='/', max_age=0, httponly=True, samesite='lax')
+	response.set_cookie('email', '', path='/', max_age=0, httponly=True, samesite='lax')
 
 def do_redirect():
 	path = request.query.path

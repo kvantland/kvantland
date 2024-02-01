@@ -12,6 +12,7 @@ url = 'postgres://user:password@127.0.0.1:5432/database'
 
 [keys]
 cookie = 'any random string'
+recovery = 'any random string'
 
 [vk]
 client_id = 11111111
@@ -47,3 +48,11 @@ support_email = 'test@test.com'
 
 [xhr]
 dead_step = 1000
+
+[recovery]
+redirect_uri = 'http://localhost:8080/pw_recovery/new_password'
+host = 'smtp.go1.unisender.ru'
+port = 465
+login = '11111111'
+password = ''
+sender = 'noreply@kvantland.ru'
