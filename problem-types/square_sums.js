@@ -112,7 +112,7 @@ function start_exchange(e) {
 		else
 		{
 			if (xhr.response == 'rejected'){
-				alert('Сумма номеров не явялется полным квадратом!')
+				alert('Сумма номеров не явялется точным квадратом!')
 				hide_interface()
 			}
 			else

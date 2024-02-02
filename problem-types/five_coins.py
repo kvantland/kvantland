@@ -22,6 +22,7 @@ def entry_form(data, kwargs):
 	coin_size = 70
 	drag_pad = 30
 	scale_width = cup_xr * 2 + plank_length
+	coin_name = ['A', 'B', 'C', 'D', 'E']
 	weight = sorted(data['weight'])
 	answer_zone_height = 120
 	container_height = answer_zone_height
@@ -177,9 +178,9 @@ def entry_form(data, kwargs):
 	yield f'<text x="{svg_width / 2 - (container_width - coin_size) / 2}" y="20"> Зона для монет </text>'
 	for i in range(1, 6):
 		yield f'<g class="coin num_{i}" transform="translate({(coin_size + coin_pad) * (i - 1) + coin_size / 2} {coin_size * 1.3})">'
-		yield f'<title> {i} </title>'
+		yield f'<title> {coin_name[i - 1]} </title>'
 		yield f'<circle cx="0" cy="0" r="{coin_size / 2}" />'
-		yield f'<text class="coin_text" x="0" y="0"> {i} </text>'
+		yield f'<text class="coin_text" x="0" y="0"> {coin_name[i - 1]} </text>'
 		yield '</g>'
 	yield '</g>'
 	yield f'<g class="answer_zone" transform="translate(0 {svg_height - answer_zone_height})">'
