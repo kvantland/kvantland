@@ -75,7 +75,10 @@ def display_login_form(err: str=None):
 	yield '<img src="/static/design/icons/vk_button.svg" />'
 	yield '</div>'
 	yield '</a>'
-	yield f'<a href="/pw_recovery"> Забыли пароль? </a>'
+	yield '</div>'
+	yield '<div class="pw_recovery">'
+	yield '<a href="/pw_recovery"> Восстановить пароль </a>'
+	yield '</div>'
 	yield '<script type="text/javascript" src ="/static/design/login.js"></script>'
 
 def check_login(db, user_name, password):

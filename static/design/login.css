@@ -174,3 +174,13 @@ body {
 	height: 24px;
 	align-self: center;
 }
+
+.login_form .pw_recovery {
+	display: flex;
+	color: #1E8B93;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: underline;
+	align-self: stretch;
+	justify-content: right;
+}
