@@ -8,14 +8,14 @@ import hmac
 import urllib.parse
 import sys
 import email.message
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from pathlib import Path
+from email.message import EmailMessage
 import smtplib
 from html import escape
 
 from login import do_login, current_user
 from config import config
-import nav
+import user
 
 alph_lower = 'abcdefghijklmnopqrstuvwxyz'
 alph_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -24,52 +24,74 @@ num = '0123456789'
 _key = config['keys']['recovery']
 
 
-
 @route('/pw_recovery')
 def display_recovery_form(err=None):
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	if err:
-		yield '<dialog open="open" class="reg_dialog">'
-		yield f'<p> {err} </p>'
-		yield '<form method="dialog">'
-		yield '<button type="submit" class="dialog_button">Закрыть</button>'
-		yield '</form>'
-		yield '</dialog>'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
-	yield '<main>'
-	yield '<div class="recovery_form">'
-	yield '<div class="login_form_header"> Восстановление пароля </div>'
-	yield '<form method="post" class="recovery">'
-	yield '<div class="form_desc">'
-	yield '<p> Введите адрес электронной почты, привязанной к вашему аккаунту </p>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield from user.display_banner_empty()
+	yield '<div class="content_wrapper">'
+	yield '<div class="email_req_form">'
+	yield '<div class="header"> Восстановление пароля </div>'
+	yield '<div class="description"> Введите адрес электронной почты,</br> привязанной к Вашему аккаунту </div>'
+	yield '<form method="post" id="email_req">'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Почта </div>'
+	yield '<input name="email" type="email" required />'
 	yield '</div>'
-	yield '<input name="email" type="email" placeholder="Почта..." class="form_field" required />'
-	yield '<button type="submit" class="submit_button"> ОТПРАВИТЬ </button>'
+	if err and 'email' in err.keys():
+		yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
+		yield '</div>'
+		yield f'<div class="err"> {err["email"]} </div>'
+	else:
+		yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+		yield '</div>'
+		yield f'<div class="err hidden"></div>'
+	yield '</div>'
 	yield '</form>'
+	yield '<button type="submit" form="email_req"> Отправить </button>'
 	yield '</div>'
 	yield '</div>'
-	yield '</main>'
-	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
+	yield '<script type="text/javascript" src ="/static/design/pw_recovery.js"></script>'
 
-def show_send_message():
+def show_send_message(email):
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
-	yield '<div> Письмо с восстановлением пароля отправлено на ваш адрес! </div>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
+	yield from user.display_banner_empty()
+	yield '<div class="content_wrapper">'
+	yield '<div class="advert_form">'
+	yield '<div class="header"> Восстановление пароля </div>'
+	yield '<div class="description"> Письмо для восстановления пароля</br>успешно отправлено на Ваш адрес! </div>'
+	yield '<div id="advert">'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Почта </div>'
+	yield f'<div class="input"> {email} </div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
 
 @route('/pw_recovery', method="POST")
 def recovery_attempt(db):
 	_email = request.forms.email
 	if not _email:
-		yield from display_recovery_form(err="Не указан адрес электронной почты")
+		yield from display_recovery_form(err={"email":"Не указан адрес электронной почты"})
 		return
 	try:
 		db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
 		(user, name, ), = db.fetchall()
-		yield from show_send_message()
+		yield from show_send_message(_email)
 		check_user = current_user(db)
 		if check_user:
 			redirect('/')
@@ -87,25 +109,50 @@ def recovery_attempt(db):
 			server = smtplib.SMTP(f'{host}')
 			email_content =  f'''
 				<!DOCTYPE html>
+				<head>
+				<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+       			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>Восстановление пароля</title>
-				<div style="margin: 100px 50px 0 50px">
-				<p> Здравствуйте, {name}! </p>
-				<p> Недавно был получен запрос на изменение пароля вашей учетной записи. 
-				Если вы запрашивали это изменение пароля, нажмите на ссылку ниже для установки нового пароля: </p>
-				<a href="{link}"> 
-				<div style="text-align:center; color:white; background-color:blue; display:block; padding:3px 10px 3px 10px;
-				width:500px; margin: 50px auto 60px auto"> <p> Нажмите здесь, чтобы изменить пароль </p> </div>
-				</a>
-				<p> Если вам не нужно менять пароль, просто проигнорируйте данное сообщение. </p>
-				<p> С уважением, команда Kvantland </p>
+				</head>
+				<body style="padding: 80px;
+					font-family: Montserrat, Arial !important;
+					word-wrap: break-word;
+					font-size: 20px;
+					font-weight: 500;">
+				<div style="font-family: Montserrat, Arial !important;">
+				<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+				<div style="margin-top: 20px"> Недавно был получен запрос на изменение пароля вашей учетной записи. 
+				Если вы запрашивали это изменение пароля, нажмите на ссылку ниже для установки нового пароля: </div>
 				</div>
+				<div style="width: 640px;
+					margin: 80px auto; 
+					background: #1E8B93; 
+					box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+					border-radius: 6px;">
+				<a href="{link}" style="text-decoration: none">
+				<div style="text-align: center;
+					padding: 10px 0;
+					color: white; 
+					font-weight: 600;
+					box-sizing: border-box;
+					font-family: Montserrat, Arial !important;">
+				Нажмите здесь, чтобы изменить пароль
+				</div>
+				</a>
+				</div>
+				<div>
+				<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно менять пароль, просто проигнорируйте данное сообщение. </div>
+				<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+				</div>
+				</body>
 				</html>'''
 
-			msg = MIMEMultipart()
+			msg = EmailMessage()
 			msg['Subject'] = 'Password recovery'
 			msg['From'] = sender
 			msg['To'] = _email
-			msg.attach(MIMEText(email_content, 'html'))
+			msg.set_content(email_content, subtype='html')
 
 			server.starttls()
 			server.login(str(login), str(password))
@@ -116,7 +163,7 @@ def recovery_attempt(db):
 			finally:
 				server.quit()	
 	except ValueError:
-		yield from display_recovery_form(err='Неверный адрес электронной почты')
+		yield from display_recovery_form(err={'email':'Неверный адрес электронной почты'})
 		return 
 		
 
@@ -139,7 +186,6 @@ def display_new_password_form(err=None):
 		yield '<button type="submit" class="dialog_button">Закрыть</button>'
 		yield '</form>'
 		yield '</dialog>'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
 	yield '<main>'
 	yield '<div class="recovery_form">'
 	yield '<div class="login_form_header"> Восстановление пароля </div>'
