@@ -64,12 +64,12 @@ def show_send_message():
 def recovery_attempt(db):
 	_email = request.forms.email
 	if not _email:
-		return display_recovery_form(err="Не указан адрес электронной почты")
+		yield from display_recovery_form(err="Не указан адрес электронной почты")
+		return
 	try:
-		yield from show_send_message()
 		db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
-		(user, name, ) = db.fetchall()[0]
-
+		(user, name, ), = db.fetchall()
+		yield from show_send_message()
 		check_user = current_user(db)
 		if check_user:
 			redirect('/')
@@ -116,7 +116,9 @@ def recovery_attempt(db):
 			finally:
 				server.quit()	
 	except ValueError:
-		return display_recovery_form(err="Неверный адрес электронной почты")
+		yield from display_recovery_form(err='Неверный адрес электронной почты')
+		return 
+		
 
 @route('/pw_recovery/new_password')
 def display_new_password_form(err=None):
