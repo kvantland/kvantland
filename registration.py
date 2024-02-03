@@ -1,7 +1,7 @@
 from login import do_login, current_user
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
-import nav
+import user
 import json
 from html import escape
 from config import config
@@ -80,10 +80,10 @@ def display_registration_form(user_info, err=None):
 	yield '<title> Регистрация — Квантландия </title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/registration.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 
+	yield from user.display_banner_empty()
 	yield '<div class="content_wrapper">'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<div class="reg_form">'
 	yield '<div class="header">'
 	yield '<a href="/login">'

@@ -6,7 +6,7 @@ from passlib.hash import pbkdf2_sha256 as pwhash
 import urllib.parse
 
 from config import config
-import nav
+import user
 
 _key = config['keys']['cookie']
 
@@ -27,9 +27,9 @@ def display_login_form(err: str=None):
 	yield '<title>Вход — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/login.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield from user.display_banner_empty()
 	yield '<div class="content_wrapper">'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
 	yield '<div class="login_form">'
 	yield '<div class="header">'
 	yield '<a href="/login">'
