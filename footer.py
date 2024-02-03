@@ -19,3 +19,23 @@ def display_starter():
 	yield f'<a class="contact_button" href="mailto:{config["contacts"]["support_email"]}"> <img class="contact_icon" src="/static/design/icons/email.svg" /> </a>'
 	yield '</div>'
 	yield '</div>'
+
+def display_basement():
+	yield '<div class="basement">'
+
+	yield '<hr size="1" />'
+
+	yield '<div class="content">'
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+	yield '<div class="confidentiality"><a href="/confidentiality"> Политика конфиденциальности </a></div>'
+
+	yield '<div class="organization"> © ООО "Квантик", 2024 </div>'
+	yield '</div>'
+
+	yield '</div>'

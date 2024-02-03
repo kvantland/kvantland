@@ -256,4 +256,5 @@ def display_start_page(db):
 	yield from footer.display_starter()
 
 	yield '</div>'
+	yield from footer.display_basement()
 	yield '<script type="text/javascript" src ="/static/design/start_page.js"></script>'
