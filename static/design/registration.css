@@ -219,3 +219,11 @@ body {
 	font-size: 14px;
 	font-weight: 600;
 }
+
+#reg .check_cont a {
+	text-decoration: underline;
+}
+
+#reg .check_cont span.underline {
+	text-decoration: underline;
+}

@@ -3,7 +3,7 @@ from bottle import route
 from config import config
 import user
 
-@route('/confidentiality')
+@route('/policy')
 def display_confidentiality():
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'

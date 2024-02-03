@@ -33,7 +33,7 @@ def display_basement():
 	yield '</div>'
 	yield '</a>'
 
-	yield '<div class="confidentiality"><a href="/confidentiality"> Политика конфиденциальности </a></div>'
+	yield '<div class="confidentiality"><a href="/policy"> Политика конфиденциальности </a></div>'
 
 	yield '<div class="organization"> © ООО "Квантик", 2024 </div>'
 	yield '</div>'

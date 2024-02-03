@@ -130,8 +130,8 @@ def display_registration_form(user_info, err=None):
 	yield '<div class="full_field">'
 	yield '<div class="check_cont">'
 	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
-	yield '''<label for="approval"> Я принимаю условия Политики конфиденциальности и даю согласие
-		на обработку своих персональных данных'''
+	yield '''<label for="approval"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline"> согласие
+		на обработку своих персональных данных</span>'''
 	yield '</label>'
 	yield '</div>'
 	if err and 'approval' in err.keys():
