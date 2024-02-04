@@ -135,6 +135,16 @@ body {
 	border: none;
 }
 
+.email_req_form .login {
+	display: flex;
+	color: #1E8B93;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: underline;
+	align-self: stretch;
+	justify-content: right;
+}
+
 .advert_form {
 	-webkit-user-select: none;
 	user-select: none;
@@ -207,3 +217,121 @@ body {
 	background-color: transparent;
 	border: none;
 }
+
+
+.new_pw_form {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 40px;
+	gap: 21px;
+	background: white;
+	box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.10); 
+	border-radius: 20px;
+	margin: 0 auto;
+}
+
+.new_pw_form .header {
+	text-align: center;
+	color: black;
+	font-size: 16px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.new_pw_form .description {
+	color: black;
+	align-self: stretch;
+	text-align: center;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+#new_pw {
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 21px;
+}
+
+#new_pw .full_field {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: stretch;
+}
+
+#new_pw .field {
+	display: inline-flex;
+	justify-content: space-between;
+	padding: 10px 20px;
+	background: rgba(26.35, 88.38, 102, 0.10);
+	border-radius: 6px;
+	width: 280px;
+	gap: 2px;
+}
+
+#new_pw .field .content {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 2px;
+	width: 100%;
+}
+
+#new_pw .field .info {
+	display: flex;
+	align-items: center;
+}
+
+#new_pw .field .info img {
+	width: 16px;
+	height: 16px;
+}
+
+#new_pw .field .placeholder {
+	color: rgba(0, 0, 0, 0.60);
+	font-size: 10px;
+	font-weight: 400;
+}
+
+#new_pw .field input {
+	font-size: 12px;
+	font-weight: 600;
+	background-color: transparent;
+	border: none;
+}
+
+#new_pw .field input:focus {
+	outline: none;
+}
+
+#new_pw .field input:-webkit-autofill {
+	background: none;
+}
+
+#new_pw .full_field .err {
+	padding: 0 20px;
+	align-self: flex-start;
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.new_pw_form button {
+	align-self: stretch;
+	padding: 0 20px;
+	height: 50px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 14px;
+	font-weight: 600;
+	background: #1E8B93; 
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+	border-radius: 6px;
+	color: white;
+	border: none;
+}
+

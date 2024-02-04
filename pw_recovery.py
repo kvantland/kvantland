@@ -54,6 +54,9 @@ def display_recovery_form(err=None):
 	yield '</div>'
 	yield '</form>'
 	yield '<button type="submit" form="email_req"> Отправить </button>'
+	yield '<div class="login">'
+	yield '<a href="/login"> Авторизироваться </a>'
+	yield '</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '<script type="text/javascript" src ="/static/design/pw_recovery.js"></script>'
@@ -178,29 +181,45 @@ def display_new_password_form(err=None):
 	response.set_cookie('email', str(email), path='/', httponly=True, samesite='lax', secret=_key)
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	if err:
-		yield '<dialog open="open" class="reg_dialog">'
-		yield f'<p> {err} </p>'
-		yield '<form method="dialog">'
-		yield '<button type="submit" class="dialog_button">Закрыть</button>'
-		yield '</form>'
-		yield '</dialog>'
-	yield '<main>'
-	yield '<div class="recovery_form">'
-	yield '<div class="login_form_header"> Восстановление пароля </div>'
-	yield f'<form method="post" class="recovery">'
-	yield '<div class="form_desc">'
-	yield '<p> Придумайте новый пароль </p>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield from user.display_banner_empty()
+	yield '<div class="content_wrapper">'
+	yield '<div class="new_pw_form">'
+	yield '<div class="header"> Восстановление пароля </div>'
+	yield '<div class="description"> Придумайте новый пароль </div>'
+	yield '<form method="post" id="new_pw">'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Пароль </div>'
+	yield '<input name="password" type="password" required />'
 	yield '</div>'
-	yield '<input name="password" type="password" placeholder="Пароль..." class="form_field" required />'
-	yield '<input name="password_confirm" type="password" placeholder="Повторите пароль..." class="form_field" required />'
-	yield '<button type="submit" class="submit_button"> ОТПРАВИТЬ </button>'
+	yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+	yield '</div>'
+	yield f'<div class="err hidden"></div>'
+	yield '</div>'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Повторите пароль </div>'
+	yield '<input name="password_confirm" type="password" required />'
+	yield '</div>'
+	if err and 'password' in err.keys():
+		yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
+		yield '</div>'
+		yield f'<div class="err"> {err["password"]} </div>'
+	else:
+		yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+		yield '</div>'
+		yield f'<div class="err hidden"></div>'
+	yield '</div>'
 	yield '</form>'
+	yield '<button type="submit" form="new_pw"> Отправить </button>'
 	yield '</div>'
 	yield '</div>'
-	yield '</main>'
-	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
+	yield '<script type="text/javascript" src ="/static/design/pw_recovery.js"></script>'
 
 
 @route('/pw_recovery/new_password', method="POST")
@@ -209,9 +228,9 @@ def new_password_attempt(db):
 	password = request.forms.password
 	password_confirm = request.forms.password_confirm
 	if (not password or not password_confirm):
-		return display_new_password_form(err="Заполните форму!")
+		return display_new_password_form(err={"password": "Заполните форму!"})
 	if password != password_confirm:
-		return display_new_password_form(err="Пароли не совпадают")
+		return display_new_password_form(err={"password": "Пароли не совпадают"})
 
 	min_size = config['reg']['min_password_size']
 	max_size = config['reg']['max_password_size']
@@ -225,12 +244,12 @@ def new_password_attempt(db):
 		if s in num:
 			tmp_number = 1
 	if not(tmp_lower and tmp_upper and tmp_number):
-		return display_new_password_form(err="Пароль должен содержать заглавные и строчные буквы, а также цифры")
+		return display_new_password_form(err={"password": "Пароль должен содержать заглавные <br /> и строчные буквы, а также цифры"})
 
 	if len(password) < min_size:
-		return display_new_password_form(err=f"Слишком мало символов в поле Пароль, <br /> должно быть минимум  {min_size}")
+		return display_new_password_form(err={"password": f"Слишком мало символов, <br /> должно быть минимум  {min_size}"})
 	if len(password) > max_size:
-		return display_new_password_form(err=f"Слишком много символов в поле Пароль")
+		return display_new_password_form(err={"password": f"Слишком много символов"})
 
 	update_user(db, email, password)
 	redirect('/')
