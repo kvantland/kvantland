@@ -39,7 +39,7 @@ def entry_form(data, kwargs):
                 yield '</g>'
             yield f'<rect class="free square" row="{y}" column="{x}" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
     yield f'</g>'
-    yield f'<image class="boy" x="{board_height / 2 - inner_side}" y="{board_height + ind - inner_side}" width="{inner_side}" height="{inner_side}" href="/static/runner/boy-0.svg">'
+    yield f'<image class="arrow" x="{board_height / 2 - inner_side}" y="{board_height + ind - inner_side}" width="{inner_side}" height="{inner_side}" href="/static/arrow.svg">'
     yield '</svg>'
     yield '</div>'
 

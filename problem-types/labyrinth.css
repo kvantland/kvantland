@@ -37,6 +37,10 @@ body{
 	cursor: grab;
 }
 
+.arrow{
+	color:red;
+}
+
 .choiced{
 	fill: rgba(250, 250, 0, 0.7);
 }
