@@ -167,8 +167,7 @@ def recovery_attempt(db):
 				server.quit()	
 	except ValueError:
 		yield from display_recovery_form(err={'email':'Неверный адрес электронной почты'})
-		return 
-		
+		return
 
 @route('/pw_recovery/new_password')
 def display_new_password_form(err=None):

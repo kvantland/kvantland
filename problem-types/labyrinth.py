@@ -9,7 +9,7 @@ def entry_form(data, kwargs):
     board_height = line_width + height * side + ind
     yield '<input name="answer" type="hidden" />'
     yield '<div class="plot_area">'
-    yield f'<svg version="1.1" width="{board_height}" height="{board_width}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield f'<svg version="1.1" width="{board_height}" height="{board_width + ind + inner_side}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
     yield '<defs>'
     yield '<linearGradient id="coinShadow" x1="0" x2="1" y1="0" y2="1">'
     yield '<stop offset="0%" stop-color="gold" />'
@@ -39,6 +39,7 @@ def entry_form(data, kwargs):
                 yield '</g>'
             yield f'<rect class="free square" row="{y}" column="{x}" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
     yield f'</g>'
+    yield f'<image class="boy" x="{board_height / 2 - inner_side}" y="{board_height + ind - inner_side}" width="{inner_side}" height="{inner_side}" href="/static/runner/boy-0.svg">'
     yield '</svg>'
     yield '</div>'
 
