@@ -164,7 +164,7 @@ def show_question(db, variant, hint_mode):
 	yield '<div class="content_wrapper">'
 	yield '<div class="content_box">'
 	yield '<div class="problem_wrapper">'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
+	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), (f'/town/{town}/', town_name))
 	yield '<div class="problem_box">'
 	yield '<div class="problem_desc">'
 	yield '<div class="header">'
