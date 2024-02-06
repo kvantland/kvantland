@@ -1,3 +1,12 @@
+@keyframes show {
+	0% {
+		opacity: 0
+	}
+	100% {
+		opacity: 1
+	}
+}
+
 body {
 	background-color: #D2E8E9;
 }
@@ -96,6 +105,10 @@ body {
 	display: none !important;
 }
 
+.shown {
+	animation: show 0.2s 1;
+}
+
 #reg .fields .field {
 	display: inline-flex;
 	justify-content: space-between;
@@ -127,19 +140,51 @@ body {
 	background: none;
 }
 
-#reg .field select {
-	font-size: 12px;
-	font-weight: 600;
-	background-color: transparent;
-	border: none;
+#reg .full_field .select_line {
+	cursor: pointer;
 }
 
-#reg .field select:focus {
-	outline: none;
+#reg .full_field .select_line input {
+	appearance: none;
+	cursor: inherit;
 }
 
-#reg .field select:-webkit-autofill {
-	background: none;
+#reg .full_field .select_line {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-family: Montserrat Alternates;
+}
+
+#reg .full_field .arrow {
+	width: 10px;
+	height: 5.84px;
+}
+
+#reg .full_field .select_box {
+	z-index: 1;
+	position: absolute;
+	transform: translate(-5%, -60%);
+	align-self: flex-end;
+	box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.20);
+	padding: 10px 0;
+	border-radius: 10px;
+	background-color: white;
+	display: inline-flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+#reg .full_field .select_box .option {
+	padding: 4px 20px;
+	font-family: Montserrat Alternates;
+	font-size: 14px;
+	font-weight: 500;
+	width: 160px;
+}
+
+#reg .full_field .select_box .option.selected{
+	background-color: #E8EEF0;
 }
 
 #reg .g-recaptcha {

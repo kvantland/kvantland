@@ -21,7 +21,6 @@ def display_start_page(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/start_page.css">'
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield from user.display_banner(db)
-
 	yield '<div class="content_wrapper">'
 
 	yield '<div class="tournament">'

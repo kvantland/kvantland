@@ -104,19 +104,13 @@ def display_registration_form(user_info, err=None):
 		value_ = user_info[name]
 		yield f'<div class="placeholder"> {placeholder_} </div>'
 		if type_ == 'select':
-			yield f'<select name="{name}" required>'
-			if not(user_info[name]):
-				yield f'<option value="" disabled selected> </option>'
-			opt_list = option_info[name]
-			for opt in opt_list:
-				if user_info[name] != str(opt):
-					yield f'<option> {opt} </option>'
-				else:
-					yield f'<option selected> {opt} </option>'
-			yield '</select>'
+			yield f'<div class="select_line" name="{name}">'
+			yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" readonly required />'
+			yield '<img class="arrow" src="/static/design/icons/down_arrow.svg" />'
+			yield '</div>'
 		else:
 			yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
-		yield '</div>'
+			yield '</div>'
 		if err and name in err.keys():
 			yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
 			yield '</div>'
@@ -126,6 +120,15 @@ def display_registration_form(user_info, err=None):
 			yield '</div>'
 			yield f'<div class="err hidden"></div>'
 		yield '</div>'
+		if type_ == 'select':
+			yield f'<div class="select_box hidden" name="{name}">'
+			opt_list = option_info[name]
+			for opt in opt_list:
+				if user_info[name] != str(opt):
+					yield f'<div class="option"> {opt} </div>'
+				else:
+					yield f'<div class="option selected"> {opt} </div>'
+			yield '</div>'
 	yield '</div>'
 	yield '<div class="full_field">'
 	yield '<div class="check_cont">'
