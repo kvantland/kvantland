@@ -1,3 +1,5 @@
+//fields mechanics
+
 for (let field of document.querySelectorAll('.full_field')) {
 	let inp = field.querySelector('input')
 	if (!inp)
@@ -22,6 +24,7 @@ for (let field of document.querySelectorAll('.full_field')) {
 		text.classList.add('hidden')
 	})
 }
+
 
 // select mechanics
 
@@ -74,6 +77,9 @@ function choiced(e) {
 	curr.classList.add('selected')
 	let inp = document.querySelector(`input[name=${name}]`)
 	inp.value = curr.innerHTML.trim()
+	let event = document.createEvent('Event');
+	event.initEvent('input', true, false);
+	inp.dispatchEvent(event);
 }
 
 for (let select of document.querySelectorAll('div.select_box')) {

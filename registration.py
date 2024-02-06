@@ -105,12 +105,12 @@ def display_registration_form(user_info, err=None):
 		yield f'<div class="placeholder"> {placeholder_} </div>'
 		if type_ == 'select':
 			yield f'<div class="select_line" name="{name}">'
-			yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" readonly required />'
+			yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" required />'
 			yield '<img class="arrow" src="/static/design/icons/down_arrow.svg" />'
 			yield '</div>'
 		else:
 			yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
-			yield '</div>'
+		yield '</div>'
 		if err and name in err.keys():
 			yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
 			yield '</div>'
@@ -119,7 +119,6 @@ def display_registration_form(user_info, err=None):
 			yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
 			yield '</div>'
 			yield f'<div class="err hidden"></div>'
-		yield '</div>'
 		if type_ == 'select':
 			yield f'<div class="select_box hidden" name="{name}">'
 			opt_list = option_info[name]
@@ -129,6 +128,7 @@ def display_registration_form(user_info, err=None):
 				else:
 					yield f'<div class="option selected"> {opt} </div>'
 			yield '</div>'
+		yield '</div>'
 	yield '</div>'
 	yield '<div class="full_field">'
 	yield '<div class="check_cont">'
