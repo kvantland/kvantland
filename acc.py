@@ -1,6 +1,7 @@
 from html import escape
 from bottle import route, request, response, redirect
 import nav
+import user
 import sys
 from login import current_user
 from config import config
@@ -53,58 +54,113 @@ def empty_user_info():
 	return user_info
 
 @route('/acc')
-def display_pers_acc(db, err='', user_info=empty_user_info()):
+def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	if current_user(db) == None:
 		redirect('/')
 	yield '<!DOCTYPE html>'
-	yield '<title>Личный кабинет</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	if err:
-	    yield '<dialog open="open" class="reg_dialog">'
-	    yield f'<p> {err} </p>'
-	    yield '<form method="dialog">'
-	    yield '<button type="submit" class="dialog_button">Закрыть</button>'
-	    yield '</form>'
-	    yield '</dialog>'
-	yield '<main>'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
-	yield '<div class="acc_plot">'
-	yield '<div class="acc_header"> Личный кабинет </div>'
+	yield '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+	yield '<title> Личный кабинет — Квантландия </title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+
+	yield from user.display_banner_empty()
+	yield '<div class="content_wrapper">'
 	yield '<div class="acc_form">'
-	yield f'<form method="post" class="acc" style="height: {form_size}px">'
+	yield '<div class="header"> Личный кабинет </div>'
+	yield f'<form id="acc" method="post">'
+	yield '<div class="fields">'
 	start_user_info = get_user(db, current_user(db))
 	for i in range(len(all_info)):
 		field = all_info[i]
-		if user_info[field[0]]:
-			value = user_info[field[0]]
+		name = field[0]
+		if user_info[name]:
+			value_ = user_info[name]
 		else:
-			value = start_user_info[field[0]]
-		if value == None:
-			value = ''
-		yield '<div class="acc_field">'
-		yield f'<p> {field[2]}: </p>'
-		if field[1] != 'select':
-			yield f'<input class="acc" style="height: {field_size}px" name="{field[0]}" type="{field[1]}" value="{value}" required/>'
+			value_ = start_user_info[name]
+		if value_ == None:
+			value_ = ''
+		yield '<div class="full_field">'
+		yield '<div class="field">'
+		yield '<div class="content">'
+		placeholder_ = placeholder_info[name]
+		type_ = type_info[name]
+		yield f'<div class="placeholder"> {placeholder_} </div>'
+		if type_ == 'select':
+			yield f'<div class="select_line" name="{name}">'
+			yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" readonly required />'
+			yield '<img class="arrow" src="/static/design/icons/down_arrow.svg" />'
+			yield '</div>'
 		else:
-			yield f'<select class="acc" style="height: {field_size}px" name="{field[0]}" required>'
-			yield f'<option  value="" disabled selected> </option>'
-			opt_list = field[3]
-			for opt in opt_list:
-				if value != str(opt):
-					yield f'<option> {opt} </option>'
-				else:
-					yield f'<option selected> {opt} </option>'
-			yield '</select>'
+			yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
 		yield '</div>'
-	yield '<div class="acc_field">'
-	yield '<p>Счёт:</p>'
-	yield f'<input class="acc" style="height: {field_size}px" value="{start_user_info["score"]}" readonly/>'
+		if err and name in err.keys():
+			yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
+			yield '</div>'
+			yield f'<div class="err"> {err[name]} </div>'
+		else:
+			yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+			yield '</div>'
+			yield f'<div class="err hidden"></div>'
+		if type_ == 'select':
+			yield f'<div class="select_box hidden" name="{name}">'
+			opt_list = option_info[name]
+			for opt in opt_list:
+				if user_info[name] != str(opt):
+					yield f'<div class="option"> {opt} </div>'
+				else:
+					yield f'<div class="option selected"> {opt} </div>'
+			yield '</div>'
+		yield '</div>'
 	yield '</div>'
-	yield f'<button type="submit" class="acc_submit_button" style="height: {button_size}px; margin-top:{button_margin}px"> СОХРАНИТЬ </button>'
+	yield '<div class="full_field">'
+	yield '<div class="check_cont">'
+	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
+	yield '''<label for="approval"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline approval"> согласие
+		на обработку своих персональных данных</span>'''
+	yield '</label>'
+	yield '</div>'
+	if err and 'approval' in err.keys():
+		yield f'<div class="err"> {err["approval"]} </div>'
+	else:
+		yield f'<div class="err hidden"></div>'
+	yield '</div>'
 	yield '</form>'
+	yield '<div class="button_area">'
+	yield f'<button type="submit" class="acc_button" form="acc"> Сохранить </button>'
+	yield '<hr size="1">'
+	yield f'<a href="/"><div class="back_button"> Назад </div></a>'
 	yield '</div>'
 	yield '</div>'
-	yield '</main>'
+
+	yield '<div class="approv hidden">'
+	yield '<div class="header">' 
+	yield '<div> Согласие на обработку персональных данных </div>'
+	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '</div>'
+	yield '<div class="content">'
+	yield '''<div class="par">
+				На­сто­я­щим я со­гла­ша­юсь с тем, что про­чи­тал <a href="/policy">По­ли­ти­ку 
+				Конфиденциальности</a> и дал согласие на обработку моих 
+				персональных данных: фамилия, имя, наименование и номер 
+				школы, номер класса, город, e-mail и иных, указанных в <a href="/policy">Политике</a>, 
+				в соответствии с её положени­я­ми. </div>'''
+	yield '''<div class="par"> 
+				Если мне меньше 14 лет,  я со­гла­ша­юсь с тем, что мои за­конные 
+				пред­ста­ви­те­ли –  ро­ди­те­ли/усы­но­ви­те­ли/по­пе­чи­тель  прочитали 
+				<a href="/policy">По­ли­ти­ку Конфиденци­аль­но­сти</a> и дали согласие на обработку 
+				моих персональных данных: фамилия, имя, наименование и 
+				номер школы, номер класса, город, e-mail и иных, указанных в 
+				Политике,  в соответствии с её положениями.</div>'''
+	yield '''<div class="par">
+				Я по­ни­маю, что могу ото­звать свое со­гла­сие в любой мо­мент по 
+				адресу электронной почты support@kvantland.com.</div>'''
+	yield '</div>'
+	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
+	yield '<script type="text/javascript" src ="/static/design/acc.js"></script>'
+	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def get_user(db, user):
 	db.execute('select name, surname, school, town, clas, score, email from Kvantland.Student where student= %s', (user, ))
@@ -119,11 +175,14 @@ def get_user(db, user):
 	return user_info
 
 def check_format(user_info):
+	err_dict = {}
+
 	for field in user_info:
-		min_size = config['reg']['min_' + field + '_size']
-		max_size = config['reg']['max_' + field + '_size']
+		min_size = config['acc']['min_' + field + '_size']
+		max_size = config['acc']['max_' + field + '_size']
 		name = placeholder_info[field]
 
+		'''
 		if field in lett_only:
 			tmp_en = 0
 			tmp_ru = 0
@@ -135,21 +194,21 @@ def check_format(user_info):
 				elif s in symb:
 					continue
 				else:
-					return "Недопустимые символы в поле " + name, field
+					err_dict[field] = "Недопустимые символы в поле " + name
 			if tmp_ru + tmp_en == 0:
-				return "В поле " + name + " должны присутствовать буквы", field
+				err_dict[field] = "В поле " + name + " должны присутствовать буквы"
 			if tmp_ru + tmp_en == 2:
-				return "В поле " + name + " присутствуют буквы из разных языков", field
-
+				err_dict[field] = "В поле " + name + " присутствуют буквы из разных языков"
+		'''
 
 		if type_info[field] == "select":
 			if not(user_info[field] in option_info[field]):
-				return "Недопустимое значение в поле " + name + "<br /> Пожалуйста, выберите значение из выпадающего списка", field
+				err_dict[field] = "Значение не из списка"
 
 		if len(user_info[field]) < min_size:
-			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size), field
+			err_dict[field] = "Слишком мало символов в поле, <br /> должно быть минимум " + str(min_size)
 		if len(user_info[field]) > max_size:
-			return "Слишком много символов в поле " + name, field
+			err_dict[field] = "Слишком много символов"
 
 	return False, ''
 

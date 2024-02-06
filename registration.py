@@ -105,7 +105,7 @@ def display_registration_form(user_info, err=None):
 		yield f'<div class="placeholder"> {placeholder_} </div>'
 		if type_ == 'select':
 			yield f'<div class="select_line" name="{name}">'
-			yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" required />'
+			yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" readonly required />'
 			yield '<img class="arrow" src="/static/design/icons/down_arrow.svg" />'
 			yield '</div>'
 		else:
