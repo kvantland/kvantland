@@ -56,19 +56,14 @@
 }
 
 .start_button {
-	height: 30px;
-	color: black;
 	font-weight: 600;
 	font-size:24px;
 	text-align: center;
-	padding: 10px 20px 10px 20px;
+	padding: 10px 0;
 	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%); 
 	box-shadow: 7px 7px 6.699999809265137px #1A5866; 
 	border-radius: 10px;
-	overflow: hidden; 
-	justify-content: center; 
-	align-items: center; 
-	display: inline-flex;
+	align-self: stretch;
 }
 
 .info_container {
