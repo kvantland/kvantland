@@ -231,3 +231,4 @@ def display_confidentiality():
 
 	yield '</div>'
 	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'

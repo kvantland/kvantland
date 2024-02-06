@@ -59,6 +59,7 @@ def display_recovery_form(err=None):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/pw_recovery.js"></script>'
 
 def show_send_message(email):
@@ -84,6 +85,7 @@ def show_send_message(email):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 
 @route('/pw_recovery', method="POST")
 def recovery_attempt(db):
@@ -218,6 +220,7 @@ def display_new_password_form(err=None):
 	yield '<button type="submit" form="new_pw"> Отправить </button>'
 	yield '</div>'
 	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/pw_recovery.js"></script>'
 
 

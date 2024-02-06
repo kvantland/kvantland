@@ -79,6 +79,7 @@ def display_login_form(err: str=None):
 	yield '<div class="pw_recovery">'
 	yield '<a href="/pw_recovery"> Восстановить пароль </a>'
 	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/login.js"></script>'
 
 def check_login(db, user_name, password):

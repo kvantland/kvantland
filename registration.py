@@ -182,6 +182,7 @@ def display_registration_form(user_info, err=None):
 				адресу электронной почты support@kvantland.com.</div>'''
 	yield '</div>'
 	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/registration.js"></script>'
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
