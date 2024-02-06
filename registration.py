@@ -133,7 +133,7 @@ def display_registration_form(user_info, err=None):
 	yield '<div class="full_field">'
 	yield '<div class="check_cont">'
 	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
-	yield '''<label for="approval"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline"> согласие
+	yield '''<label for="approval"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline approval"> согласие
 		на обработку своих персональных данных</span>'''
 	yield '</label>'
 	yield '</div>'
@@ -156,6 +156,31 @@ def display_registration_form(user_info, err=None):
 	yield '<hr size="1">'
 	yield f'<button type="submit" class="reg_button" form="reg"> Зарегистрироваться </button>'
 	yield '</form>'
+	yield '</div>'
+
+	yield '<div class="approv hidden">'
+	yield '<div class="header">' 
+	yield '<div> Согласие на обработку персональных данных </div>'
+	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '</div>'
+	yield '<div class="content">'
+	yield '''<div class="par">
+				На­сто­я­щим я со­гла­ша­юсь с тем, что про­чи­тал <a href="/policy">По­ли­ти­ку 
+				Конфиденциальности</a> и дал согласие на обработку моих 
+				персональных данных: фамилия, имя, наименование и номер 
+				школы, номер класса, город, e-mail и иных, указанных в <a href="/policy">Политике</a>, 
+				в соответствии с её положени­я­ми. </div>'''
+	yield '''<div class="par"> 
+				Если мне меньше 14 лет,  я со­гла­ша­юсь с тем, что мои за­конные 
+				пред­ста­ви­те­ли –  ро­ди­те­ли/усы­но­ви­те­ли/по­пе­чи­тель  прочитали 
+				<a href="/policy">По­ли­ти­ку Конфиденци­аль­но­сти</a> и дали согласие на обработку 
+				моих персональных данных: фамилия, имя, наименование и 
+				номер школы, номер класса, город, e-mail и иных, указанных в 
+				Политике,  в соответствии с её положениями.</div>'''
+	yield '''<div class="par">
+				Я по­ни­маю, что могу ото­звать свое со­гла­сие в любой мо­мент по 
+				адресу электронной почты support@kvantland.com.</div>'''
+	yield '</div>'
 	yield '</div>'
 	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/registration.js"></script>'

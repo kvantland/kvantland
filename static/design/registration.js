@@ -94,3 +94,37 @@ for (let select of document.querySelectorAll('div.select_box')) {
 		option.addEventListener('touch', choiced)
 	}
 }
+
+
+// approval window showing
+
+function show_approv(e) {
+	if (e.touches)
+		e.preventDefault();
+	let approv = document.querySelector('.approv')
+	approv.classList.remove('hidden')
+	approv.classList.add('shown')
+	let zone = document.createElement('div')
+	zone.classList.add('shadow')
+	document.body.append(zone)
+}
+
+function hide_approv(e) {
+	if (e.touches)
+		e.preventDefault();
+	let zone = document.querySelector('.shadow')
+	if (!zone)
+		return;
+	zone.remove()
+	let approv = document.querySelector('.approv')
+	approv.classList.add('hidden')
+	approv.classList.remove('shown')
+}
+
+var approv_link = document.querySelector('span.approval')
+var approv_cross = document.querySelector('.approv .cross')
+
+approv_link.addEventListener('click', show_approv)
+approv_link.addEventListener('touch', show_approv)
+approv_cross.addEventListener('click', hide_approv)
+approv_cross.addEventListener('touch', hide_approv)
