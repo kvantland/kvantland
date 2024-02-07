@@ -66,6 +66,13 @@
 	align-self: stretch;
 }
 
+@media(min-width:961px) {
+	.start_button {
+		user-select: none;
+		-webkit-user-select: none;
+	}
+}
+
 .info_container {
 	height: 983px; 
 	flex-direction: column; 
@@ -164,7 +171,7 @@
 
 .problem .head {
 	justify-content: space-between; 
-	align-items: flex-start; 
+	align-items: center; 
 	display: inline-flex;
 }
 
@@ -176,13 +183,12 @@
 }
 
 .problem .cost {
-	height: 29px; 
-	padding: 10px 50px 10px 50px;
+	user-select: none;
+	-webkit-user-select: none;
+	align-self: center;
+	padding: 10px 50px;
 	border-radius: 10px; 
 	border: 2px white solid; 
-	justify-content: space-between; 
-	align-items: flex-start; 
-	display: inline-flex;
 	color: white; 
 	font-size: 24px; 
 	font-family: Montserrat Alternates; 
@@ -231,6 +237,9 @@
 }
 
 .problem .button {
+	user-select: none;
+	-webkit-user-select: none;
+	cursor: pointer;
 	flex: 1 1 0; 
 	padding: 10px 20px 10px 20px;
 	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%); 
@@ -255,6 +264,7 @@
 .nav img{
 	width: 100px;
 	height: 53px;
+	cursor: pointer;
 }
 
 .nav .pages {
@@ -324,6 +334,9 @@
 }
 
 .dialog .cross {
+	user-select: none;
+	-webkit-user-select: none;
+	cursor: pointer;
 	width: 20px;
 	height: 20px;
 }
@@ -337,6 +350,9 @@
 }
 
 .dialog .button{
+	user-select: none;
+	-webkit-user-select: none;
+	cursor: pointer;
 	width: 580px;
 	box-sizing: border-box;
 	padding: 10px 20px;
