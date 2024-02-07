@@ -19,10 +19,10 @@ def display_banner(db):
 
 
 	yield '<div class="menu">'
-	yield '<div class="menu_item" id="info">О турнире</div>'
-	yield '<div class="menu_item" id="team">О команде</div>'
-	yield '<div class="menu_item" id="examples">Примеры задач</div>'
-	yield '<div class="menu_item" id="contacts">Наши контакты</div>'
+	yield '<div class="menu_item" id="info"><div>О турнире</div></div>'
+	yield '<div class="menu_item" id="team"><div>О команде</div></div>'
+	yield '<div class="menu_item" id="examples"><div>Примеры задач</div></div>'
+	yield '<div class="menu_item" id="contacts"><div>Наши контакты</div></div>'
 	yield '</div>'
 
 	if user == None:

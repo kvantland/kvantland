@@ -117,7 +117,7 @@ function scroll(e) {
 	let add = document.querySelector('nav').getBoundingClientRect().height
 	if (e.touches)
 		e.preventDefault()
-	let id = e.target.id
+	let id = e.currentTarget.id
 	let X, Y, box, key_obj
 	switch(id) {
 		case 'info': {
