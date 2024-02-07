@@ -122,12 +122,10 @@ body {
 }
 
 .login_form .button {
+	cursor: pointer;
 	align-self: stretch;
 	padding: 0 20px;
 	height: 50px;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
 	font-size: 14px;
 	font-weight: 600;
 	background: #1E8B93; 
