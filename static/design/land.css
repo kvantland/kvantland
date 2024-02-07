@@ -11,7 +11,7 @@
 }
 
 .town-icon {
-	stroke: white;
+	stroke: currentColor;
 	stroke-width: 6px;
 	fill: transparent;
 }
@@ -23,8 +23,18 @@
 text.town-name {
 	dominant-baseline: central;
 	text-anchor: middle;
-	fill: white; 
+	fill: currentColor; 
 	font-size: 24px; 
 	font-family: Montserrat Alternates; 
 	font-weight: 700;
+}
+
+a.town {
+	color: white;
+}
+
+@media(min-width: 961px) {
+	a.town:hover {
+		color: #ffc400;
+	}
 }
