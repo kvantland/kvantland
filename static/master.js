@@ -8,6 +8,7 @@ function confirm_answer(ev) {
 }
 
 function confirm_hint(ev) {
+	show_hint();
 	if (!confirm('Вы точно хотите получить подсказку? Её стоимость 1 квантик.'))
 		ev.preventDefault()
 	else
@@ -46,3 +47,30 @@ function save_progress(){
 		progress.value = document.querySelector('#problem_form').outerHTML;
 }
 
+function show_hint(){
+	close_solution()
+	let dialog = document.querySelector('.hint_notification')
+	block_nav()
+	let zone = document.createElement('div')
+	zone.classList.add('shadow')
+	document.body.append(zone)
+	if (!dialog.classList.contains('show'))
+		dialog.classList.add('show')
+	//update_button()
+}
+
+function close_hint() {
+	let zone = document.querySelector('.shadow')
+	if (!zone)
+		return;
+	zone.remove()
+	let dialog = document.querySelector('.hint_notification')
+	dialog.classList.remove('show')
+	//update_button()
+}
+
+function block_nav() {
+	let nav = document.querySelector('.user_nav')
+	if (!nav.classList.contains('blocked'))
+		nav.classList.add('blocked')
+}
