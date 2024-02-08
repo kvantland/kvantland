@@ -106,10 +106,6 @@ def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 		yield f'<button class="hint_box" title="Получить подсказку (стоимость: {hint_cost})">'
 		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
 		yield '</button>'
-	elif hint_mode == HintMode.TOO_EXPENSIVE:
-		yield '<div class="hint_box">'
-		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
-		yield '</div>'
 
 def show_question(db, variant, hint_mode):
 	user_id = require_user(db)
