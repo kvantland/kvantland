@@ -169,11 +169,6 @@ def show_question(db, variant, hint_mode):
 	yield '</div>'
 	yield '<div class="problem_desc_box">'
 	yield f'<div class="problem_text"><span class="span_text">{description}</div>'
-	if hint_mode == HintMode.SHOW:
-		yield '<section class="hint">'
-		yield '<h2>Подсказка</h2>'
-		yield f'<p>{hint}</p>'
-		yield '</section>'
 	if save_progress:
 		if hybrid:
 			yield f'<div id="interactive_problem_form">'
@@ -186,6 +181,18 @@ def show_question(db, variant, hint_mode):
 		yield '</div>'
 	if image:
 		yield f'<img class="picture" src="/static/problem/{image}">'
+	if hint_mode == HintMode.SHOW:
+		yield f'<div class="hint_wrapper">'
+		yield f'<div class="header">'
+		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
+		yield f'<div class="text_area">'
+		yield f'<div class="text">Подсказка</div>'
+		yield f'</div>'
+		yield f'</div>'
+		yield f'<div class="text_zone">'
+		yield f'<div class="text">{hint}</div>'
+		yield f'</div>'
+		yield f'</div>'
 	yield '</div>'
 	if not without_buttons:
 		if hint_only:
