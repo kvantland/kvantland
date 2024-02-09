@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="1280.000000pt"
+   height="640.000000pt"
+   viewBox="0 0 1280.000000 640.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg1"
+   sodipodi:docname="arrow.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     inkscape:zoom="0.24217026"
+     inkscape:cx="-320.02278"
+     inkscape:cy="753.60203"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="2871"
+     inkscape:window-y="352"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <metadata
+     id="metadata1">
+Created by potrace 1.15, written by Peter Selinger 2001-2017
+</metadata>
+  <g
+     transform="matrix(0,-0.07410604,-0.1,0,959.863,628.4879)"
+     fill="red"
+     stroke="none"
+     id="g1">
+    <path
+       d="m 9079,6154 -24,-26 -3,-694 -2,-694 H 4569 c -4886,0 -4536,4 -4559,-55 -13,-35 -14,-2934 0,-2969 5,-14 23,-32 39,-41 27,-13 486,-15 4515,-15 h 4486 l 2,-694 3,-694 24,-26 c 29,-31 84,-35 121,-9 14,10 747,609 1630,1332 883,723 1680,1376 1772,1450 91,75 174,150 183,167 19,32 16,65 -8,95 -11,15 -3526,2846 -3577,2882 -37,26 -92,22 -121,-9 z"
+       id="path1" />
+  </g>
+</svg>
