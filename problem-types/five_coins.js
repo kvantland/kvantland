@@ -368,12 +368,13 @@ function weight(e){
 			{
 				let sign = {'equal': '=', 'right': '<', 'left': '>'}
 				let [h_left, h_right] = [[], []]
-				let cnt = 1
+				let cnt = 0
+				let coin_name = ['A', 'B', 'C', 'D', 'E']
 				for (let i of conf) {
 					if (i == '1')
-						h_left.push(cnt)
+						h_left.push(coin_name[cnt])
 					if (i == '2')
-						h_right.push(cnt)
+						h_right.push(coin_name[cnt])
 					cnt += 1
 				}
 				let [text, amount] = document.querySelector('.remaining_weightings p').innerHTML.split(':')

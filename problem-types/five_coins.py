@@ -202,7 +202,7 @@ def entry_form(data, kwargs):
 	yield '<div class="history">'
 	yield '<div class="item">'
 	yield '<div class="header"> Взвешивание 0 </div>'
-	yield '<p> (1, 2, 3) = (4, 5) </p>'
+	yield '<p> (A, B, C) = (D, E) </p>'
 	yield '</div>'
 	try:
 		cnt = 1
@@ -223,16 +223,17 @@ def steps(step_num, params, data):
 	if step_num > data['weightings_amount']:
 		return {'answer': 'no_tries'}
 	weight = data['weight']
+	coin_name = ['A', 'B', 'C', 'D', 'E']
 	left, right = 0, 0
 	h_left, h_right = [], []
 	conf = params['conf']
 	for i in range(len(conf)):
 		if conf[i] == '1':
 			left += weight[data['perm'].index(i + 1)]
-			h_left.append(str(i + 1))
+			h_left.append(coin_name[i])
 		elif conf[i] == '2':
 			right += weight[data['perm'].index(i + 1)]
-			h_right.append(str(i + 1))
+			h_right.append(coin_name[i])
 
 	try:
 		data['history']
