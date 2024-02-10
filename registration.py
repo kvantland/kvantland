@@ -366,7 +366,7 @@ def send_reg_confirm_message(info):
 			<div style="font-family: Montserrat, Arial !important;">
 			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
 			<div style="margin-top: 20px">  Спасибо за регистрацию в <a href="{config['server']['host']}:{config['server']['port']}">Кванталандии</a>. 
-			Для подтверждения адреса электронной почты, нажмите на кнопку ниже: </div>
+			Для подтверждения регистрации нажмите на кнопку ниже: </div>
 			</div>
 			<div style="width: 640px;
 				margin: 80px auto; 
@@ -380,12 +380,11 @@ def send_reg_confirm_message(info):
 				font-weight: 600;
 				box-sizing: border-box;
 				font-family: Montserrat, Arial !important;">
-			Нажмите здесь, чтобы изменить пароль
+			Нажмите здесь для подверждения
 			</div>
 			</a>
 			</div>
 			<div>
-			<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно менять пароль, просто проигнорируйте данное сообщение. </div>
 			<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
 			</div>
 			</body>
