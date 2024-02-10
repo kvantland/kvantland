@@ -182,12 +182,18 @@ body {
 	font-size: 14px;
 	font-weight: 500;
 	width: 160px;
+	cursor: pointer;
 }
 
 #acc .full_field .select_box .option.selected{
 	background-color: #E8EEF0;
 }
 
+@media(min-width:961px) {
+	#acc .full_field .select_box .option:hover {
+		background-color: rgba(26.35, 88.38, 102, 0.10);
+	}
+}
 
 #acc .check_cont {
 	display: inline-flex;
@@ -210,6 +216,7 @@ body {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	cursor: pointer;
 }
 
 #acc .check_cont input.checkbox:checked {
@@ -220,8 +227,12 @@ body {
 	color:white;
 }
 
-#acc .check_cont label {
+#acc .check_cont .label {
 	width: 270px;
+}
+
+#acc .check_cont span.underline {
+	cursor: pointer;
 }
 
 .acc_form button.acc_button {
@@ -237,6 +248,7 @@ body {
 	color: white;
 	font-size: 14px;
 	font-weight: 600;
+	cursor: pointer;
 }
 
 #acc .check_cont a {
@@ -269,49 +281,6 @@ body {
 	background-color: white;
 }
 
-.approv {
-	z-index: 4;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	-webkit-transform: translate(-50%, -50%);
-	display: inline-flex;
-	padding: 40px 60px;
-	gap: 40px;
-	flex-direction: column;
-	background: #1E8B93;
-	border-radius: 20px;
-}
-
-.approv .header {
-	display: inline-flex;
-	flex-direction: row;
-	justify-content: space-between;
-	color: white;
-	font-size: 24px;
-	font-weight: 600;
-	font-family: Montserrat Alternates;
-}
-
-.approv .content {
-	width: 700px;
-	box-shadow: 12px 12px 14px rgba(0, 0, 0, 0.25); 
-	border-radius: 16px;
-	background-color: white;
-	padding: 40px;
-	gap: 40px;
-	display: inline-flex;
-	flex-direction: column;
-	font-size: 20px;
-	font-weight: 400;
-}
-
-.approv a {
-	text-decoration: underline;
-	font-weight: 600;
-}
-
 .shadow {
 	position: fixed;
 	top: 0;
@@ -323,3 +292,75 @@ body {
 }
 
 
+.advert_form {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 40px;
+	gap: 21px;
+	background: white;
+	box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.10); 
+	border-radius: 20px;
+	margin: 0 auto;
+}
+
+.advert_form .header {
+	text-align: center;
+	color: black;
+	font-size: 16px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.advert_form .description {
+	color: black;
+	align-self: stretch;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+#advert {
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 21px;
+}
+
+#advert .full_field {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: stretch;
+}
+
+#advert .field {
+	display: inline-flex;
+	justify-content: space-between;
+	padding: 10px 20px;
+	background: rgba(26.35, 88.38, 102, 0.10);
+	border-radius: 6px;
+	gap: 2px;
+	align-self: stretch;
+}
+
+#advert .field .content {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 2px;
+	width: 100%;
+}
+
+#advert .field .placeholder {
+	color: rgba(0, 0, 0, 0.60);
+	font-size: 10px;
+	font-weight: 400;
+}
+
+#advert .field .input {
+	font-size: 12px;
+	font-weight: 600;
+	background-color: transparent;
+	border: none;
+}

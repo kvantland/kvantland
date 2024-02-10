@@ -1,15 +1,24 @@
+#!/usr/bin/python3
+
 from html import escape
 from bottle import route, request, response, redirect
 import nav
 import user
 import sys
-from login import current_user
+from login import current_user, do_login
+import approv
+import hmac
+import email.message
+from email.message import EmailMessage
+import smtplib
 from config import config
+
+_key = config['keys']['mail_confirm']
 
 all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
 			['school', 'text', 'Школа'],
-			['city', 'text', 'Город'],
+			['town', 'text', 'Город'],
 			['email', 'email', 'Почта'],
 			['clas', 'select', 'Класс', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
 
@@ -18,7 +27,7 @@ alph_ru = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯа�
 symb = ' -_'
 
 # поля в которых могут использоваться только буквы и символы из symb
-lett_only = ['name', 'surname', 'city']
+lett_only = ['name', 'surname', 'town']
 
 field_amount = len(all_info) + 1 # количество полей в форме
 field_size = 40 # размер поля
@@ -53,6 +62,12 @@ def empty_user_info():
 		user_info[field[0]] = ''
 	return user_info
 
+def req_query(params):
+	query = []
+	for key, val in params.items():
+		query.append(f'{key}={val}')
+	return '&'.join(query)
+
 @route('/acc')
 def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	if current_user(db) == None:
@@ -63,6 +78,7 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/approv.css">'
 
 	yield from user.display_banner_empty()
 	yield '<div class="content_wrapper">'
@@ -116,9 +132,9 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield '<div class="full_field">'
 	yield '<div class="check_cont">'
 	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
-	yield '''<label for="approval"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline approval"> согласие
+	yield '''<div class="label"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline approval"> согласие
 		на обработку своих персональных данных</span>'''
-	yield '</label>'
+	yield '</div>'
 	yield '</div>'
 	if err and 'approval' in err.keys():
 		yield f'<div class="err"> {err["approval"]} </div>'
@@ -133,30 +149,8 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield '</div>'
 	yield '</div>'
 
-	yield '<div class="approv hidden">'
-	yield '<div class="header">' 
-	yield '<div> Согласие на обработку персональных данных </div>'
-	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
-	yield '</div>'
-	yield '<div class="content">'
-	yield '''<div class="par">
-				На­сто­я­щим я со­гла­ша­юсь с тем, что про­чи­тал <a href="/policy">По­ли­ти­ку 
-				Конфиденциальности</a> и дал согласие на обработку моих 
-				персональных данных: фамилия, имя, наименование и номер 
-				школы, номер класса, город, e-mail и иных, указанных в <a href="/policy">Политике</a>, 
-				в соответствии с её положени­я­ми. </div>'''
-	yield '''<div class="par"> 
-				Если мне меньше 14 лет,  я со­гла­ша­юсь с тем, что мои за­конные 
-				пред­ста­ви­те­ли –  ро­ди­те­ли/усы­но­ви­те­ли/по­пе­чи­тель  прочитали 
-				<a href="/policy">По­ли­ти­ку Конфиденци­аль­но­сти</a> и дали согласие на обработку 
-				моих персональных данных: фамилия, имя, наименование и 
-				номер школы, номер класса, город, e-mail и иных, указанных в 
-				Политике,  в соответствии с её положениями.</div>'''
-	yield '''<div class="par">
-				Я по­ни­маю, что могу ото­звать свое со­гла­сие в любой мо­мент по 
-				адресу электронной почты support@kvantland.com.</div>'''
-	yield '</div>'
-	yield '</div>'
+	yield from approv.display_confirm_window()
+
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/acc.js"></script>'
@@ -168,7 +162,7 @@ def get_user(db, user):
 	user_info = {'name': user_list[0],
 				'surname': user_list[1],
 				'school': user_list[2],
-				'city': user_list[3],
+				'town': user_list[3],
 				'clas': user_list[4],
 				'score': user_list[5],
 				'email': user_list[6]}
@@ -178,28 +172,15 @@ def check_format(user_info):
 	err_dict = {}
 
 	for field in user_info:
-		min_size = config['acc']['min_' + field + '_size']
-		max_size = config['acc']['max_' + field + '_size']
+		try:
+			min_size = config['acc']['min_' + field + '_size']
+		except:
+			min_size = 1
+		try:
+			max_size = config['acc']['max_' + field + '_size']
+		except:
+			max_size = 500
 		name = placeholder_info[field]
-
-		'''
-		if field in lett_only:
-			tmp_en = 0
-			tmp_ru = 0
-			for s in user_info[field]:
-				if s in alph_en:
-					tmp_en = 1
-				elif s in alph_ru:
-					tmp_ru = 1
-				elif s in symb:
-					continue
-				else:
-					err_dict[field] = "Недопустимые символы в поле " + name
-			if tmp_ru + tmp_en == 0:
-				err_dict[field] = "В поле " + name + " должны присутствовать буквы"
-			if tmp_ru + tmp_en == 2:
-				err_dict[field] = "В поле " + name + " присутствуют буквы из разных языков"
-		'''
 
 		if type_info[field] == "select":
 			if not(user_info[field] in option_info[field]):
@@ -210,35 +191,191 @@ def check_format(user_info):
 		if len(user_info[field]) > max_size:
 			err_dict[field] = "Слишком много символов"
 
-	return False, ''
+	return err_dict
 
-def update_info(user_info, field):
-	user_info[field] = ''
+def update_info(user_info, err_dict):
+	for field in err_dict:
+		if field in user_info.keys():
+			user_info[field] = ''
 	return user_info
 
-@route('/acc', method="post")
+@route('/acc', method="POST")
 def check_new_params(db):
-
 	user_info = dict()
 
-	for i in range(len(all_info)):
-		name = all_info[i][0]
-		user_info[name] = request.forms.decode().get(name).strip()
+	for field in all_info:
+		name = field[0]
+		new_value = request.forms.get(name).encode('l1').decode().strip()
+		user_info[name] = new_value
 
-	stat, field_to_update = check_format(user_info)
+	err_dict = check_format(user_info)
 
-	if not stat:
-		set_new_params(db, user_info)
+	db.execute("select login from Kvantland.Student where student = %s", (current_user(db), ))
+	(login, ), = db.fetchall()
+	user_info['login'] = login
+
+	approval = request.forms['approval']
+	if not approval:
+		err_dict['approval'] = 'Поставьте галочку'
+
+	if not err_dict:
+		if new_info(db, user_info):
+			yield from send_reg_confirm_message(user_info)
+			yield from show_send_message(user_info['email'])
+		else:
+			redirect('/')
+	else:
+		user_info = update_info(user_info, err_dict)
+		yield from display_pers_acc(db, err_dict, user_info)
+
+def new_info(db, info):
+	if not current_user(db):
+		return True
+	else:
+		db.execute("select name, surname, school, clas, town, email from Kvantland.Student where student = %s", (current_user(db), ))
+		(_name, _surname, _school, _clas, _town, _email, ), = db.fetchall()
+		curr_info = {
+			"name": _name,
+			"surname": _surname,
+			"school": _school,
+			"clas": _clas,
+			"town": _town,
+			"email": _email
+		}
+		for field in info.keys():
+			if not curr_info[field]:
+				return True
+			if curr_info[field] != info[field]:
+				return True
+	return False
+
+def show_send_message(email):
+	yield '<!DOCTYPE html>'
+	yield '<title>Личный кабинет — Квантландия</title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
+	yield from user.display_banner_empty()
+	yield '<div class="content_wrapper">'
+	yield '<div class="advert_form">'
+	yield '<div class="header"> Смена адреса электронной почты </div>'
+	yield '''<div class="description"> 
+		Письмо для подтверждения смены адреса</br>
+		электронной почты, привязанной к вашему</br>
+		аккаунту успешно отправлено! </div>'''
+	yield '<div id="advert">'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Почта </div>'
+	yield f'<div class="input"> {email} </div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+
+def send_reg_confirm_message(info):
+	print('here3', file=sys.stderr)
+	_email = info['email']
+	name = info['name']
+	try:
+		token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
+		info['token'] = token
+		link = f'''
+		{config['recovery']['acc_confirm_uri']}?{req_query(info)}
+		'''
+		print(link, file=sys.stderr)
+		host = config['recovery']['host']
+		port = config['recovery']['port']
+		login = config['recovery']['login']
+		password = config['recovery']['password']
+		sender = config['recovery']['sender']
+
+		server = smtplib.SMTP(f'{host}')
+		email_content =  f'''
+			<!DOCTYPE html>
+			<head>
+			<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+   			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Восстановление пароля</title>
+			</head>
+			<body style="padding: 80px;
+				font-family: Montserrat, Arial !important;
+				word-wrap: break-word;
+				font-size: 20px;
+				font-weight: 500;">
+			<div style="font-family: Montserrat, Arial !important;">
+			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+			<div style="margin-top: 20px">  Недавно был получен запрос на изменение данных вашей учетной записью. Если вы 
+				запрашивали это изменение, нажмите на ссылку ниже для подтверждения: </div>
+			</div>
+			<div style="width: 640px;
+				margin: 80px auto; 
+				background: #1E8B93; 
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+				border-radius: 6px;">
+			<a href="{link}" style="text-decoration: none">
+			<div style="text-align: center;
+				padding: 10px 0;
+				color: white; 
+				font-weight: 600;
+				box-sizing: border-box;
+				font-family: Montserrat, Arial !important;">
+			Нажмите здесь для подтверждения
+			</div>
+			</a>
+			</div>
+			<div>
+			<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно менять адрес электронной почты, 
+			просто проигнорируйте данное сообщение.</div>
+			<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+			</div>
+			</body>
+			</html>'''
+
+		msg = EmailMessage()
+		msg['Subject'] = 'Registration confirmation'
+		msg['From'] = sender
+		msg['To'] = _email
+		msg.set_content(email_content, subtype='html')
+
+		print(msg, file=sys.stderr)
+
+		server.starttls()
+		server.login(str(login), str(password))
+		try:
+			server.sendmail(sender, [_email], msg.as_string())
+			print('here4', file=sys.stderr)
+		except:
+			redirect('/')
+		finally:
+			server.quit()	
+	except ValueError:
+		yield from display_registration_form(err={'email':'Неверный адрес электронной почты'})
+		return
+
+def update_user(db, info):
+	db.execute("update Kvantland.Student set name = %s, surname = %s, school = %s, clas = %s, town = %s, email = %s where login = %s returning student", (info['name'], info['surname'], info['school'], info['clas'], info['town'], info['email'], info['login']))
+	(user, ), = db.fetchall()
+	return int(user)
+
+@route('/acc_confirm')
+def check(db):
+	email = request.query['email']
+	token = request.query['token']
+	if not email or not token:
+		redirect('/')
+	elif hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
+		print('here', file=sys.stderr)
 		redirect('/')
 	else:
-		user_info = update_info(user_info, field_to_update)
-		yield from display_pers_acc(db, stat, user_info)
-
-def set_new_params(db, user_info):
-	new_name = user_info['name']
-	new_surname = user_info['surname']
-	new_school = user_info['school']
-	new_city = user_info['city']
-	new_class = user_info['clas']
-	new_email = user_info['email']
-	db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, town=%s, clas=%s, email=%s where student=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(db), ))
+		user_info = request.query.decode()
+		del user_info['token']
+		user = update_user(db, user_info)
+		print(user, user_info['login'], file=sys.stderr)
+		do_login(user, user_info['login'])
+		redirect('/')
