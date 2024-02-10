@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from login import do_login, current_user, do_logout
+import approv
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
 import user
@@ -89,6 +90,7 @@ def display_registration_form(user_info, err=None):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/registration.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/approv.css">'
 
 	yield from user.display_banner_empty()
 	yield '<div class="content_wrapper">'
@@ -166,30 +168,8 @@ def display_registration_form(user_info, err=None):
 	yield '</form>'
 	yield '</div>'
 
-	yield '<div class="approv hidden">'
-	yield '<div class="header">' 
-	yield '<div> Согласие на обработку персональных данных </div>'
-	yield '<div class="cross"> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
-	yield '</div>'
-	yield '<div class="content">'
-	yield '''<div class="par">
-				На­сто­я­щим я со­гла­ша­юсь с тем, что про­чи­тал <a href="/policy">По­ли­ти­ку 
-				Конфиденциальности</a> и дал согласие на обработку моих 
-				персональных данных: фамилия, имя, наименование и номер 
-				школы, номер класса, город, e-mail и иных, указанных в <a href="/policy">Политике</a>, 
-				в соответствии с её положени­я­ми. </div>'''
-	yield '''<div class="par"> 
-				Если мне меньше 14 лет,  я со­гла­ша­юсь с тем, что мои за­конные 
-				пред­ста­ви­те­ли –  ро­ди­те­ли/усы­но­ви­те­ли/по­пе­чи­тель  прочитали 
-				<a href="/policy">По­ли­ти­ку Конфиденци­аль­но­сти</a> и дали согласие на обработку 
-				моих персональных данных: фамилия, имя, наименование и 
-				номер школы, номер класса, город, e-mail и иных, указанных в 
-				Политике,  в соответствии с её положениями.</div>'''
-	yield f'''<div class="par">
-				Я по­ни­маю, что могу ото­звать свое со­гла­сие в любой мо­мент по 
-				адресу электронной почты <a href="mailto:{config['contacts']['support_email']}">{config['contacts']['support_email']}</a>.</div>'''
-	yield '</div>'
-	yield '</div>'
+	yield from approv.display_confirm_window()
+
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/registration.js"></script>'
@@ -225,8 +205,14 @@ def check_format(user_info):
 	err_dict = {}
 	
 	for field in user_info:
-		min_size = config['reg']['min_' + field + '_size']
-		max_size = config['reg']['max_' + field + '_size']
+		try:
+			min_size = config['reg']['min_' + field + '_size']
+		except:
+			min_size = 1
+		try:
+			max_size = config['reg']['max_' + field + '_size']
+		except:
+			max_size = 500
 		name = placeholder_info[field]
 
 		if type_info[field] == "select":
