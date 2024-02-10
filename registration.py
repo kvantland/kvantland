@@ -141,9 +141,9 @@ def display_registration_form(user_info, err=None):
 	yield '<div class="full_field">'
 	yield '<div class="check_cont">'
 	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
-	yield '''<label for="approval"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline approval"> согласие
+	yield '''<div class="label"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline approval"> согласие
 		на обработку своих персональных данных</span>'''
-	yield '</label>'
+	yield '</div>'
 	yield '</div>'
 	if err and 'approval' in err.keys():
 		yield f'<div class="err"> {err["approval"]} </div>'
@@ -169,7 +169,7 @@ def display_registration_form(user_info, err=None):
 	yield '<div class="approv hidden">'
 	yield '<div class="header">' 
 	yield '<div> Согласие на обработку персональных данных </div>'
-	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '<div class="cross"> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="content">'
 	yield '''<div class="par">
@@ -185,9 +185,9 @@ def display_registration_form(user_info, err=None):
 				моих персональных данных: фамилия, имя, наименование и 
 				номер школы, номер класса, город, e-mail и иных, указанных в 
 				Политике,  в соответствии с её положениями.</div>'''
-	yield '''<div class="par">
+	yield f'''<div class="par">
 				Я по­ни­маю, что могу ото­звать свое со­гла­сие в любой мо­мент по 
-				адресу электронной почты support@kvantland.com.</div>'''
+				адресу электронной почты <a href="mailto:{config['contacts']['support_email']}">{config['contacts']['support_email']}</a>.</div>'''
 	yield '</div>'
 	yield '</div>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'

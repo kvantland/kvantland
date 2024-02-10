@@ -67,7 +67,7 @@ function select_hide(e) {
 function choiced(e) {
 	if (e.touches)
 		e.preventDefault();
-	let curr = e.target
+	let curr = e.currentTarget
 	let name = curr.parentNode.getAttribute('name')
 	console.log(name)
 	for (let option of curr.parentNode.querySelectorAll('.option')) {
