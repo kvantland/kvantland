@@ -1,0 +1,49 @@
+.approv {
+	z-index: 4;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	display: inline-flex;
+	padding: 40px 60px;
+	gap: 40px;
+	flex-direction: column;
+	background: #1E8B93;
+	border-radius: 20px;
+}
+
+.approv .header {
+	display: inline-flex;
+	flex-direction: row;
+	justify-content: space-between;
+	color: white;
+	font-size: 24px;
+	font-weight: 600;
+	font-family: Montserrat Alternates;
+}
+
+.approv .header div.cross {
+	cursor: pointer;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.approv .content {
+	width: 700px;
+	box-shadow: 12px 12px 14px rgba(0, 0, 0, 0.25); 
+	border-radius: 16px;
+	background-color: white;
+	padding: 40px;
+	gap: 40px;
+	display: inline-flex;
+	flex-direction: column;
+	font-size: 20px;
+	font-weight: 400;
+}
+
+.approv a {
+	text-decoration: underline;
+	font-weight: 600;
+}
