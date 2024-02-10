@@ -1,8 +1,14 @@
-from login import do_login, current_user
+#!/usr/bin/python3
+
+from login import do_login, current_user, do_logout
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
 import user
 import json
+import hmac
+import email.message
+from email.message import EmailMessage
+import smtplib
 from html import escape
 from config import config
 import urllib.request as urllib2
@@ -17,6 +23,8 @@ alph = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 alph_lower = 'abcdefghijklmnopqrstuvwxyz'
 alph_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 num = '0123456789'
+
+_key = config['keys']['mail_confirm']
 
 all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
@@ -188,9 +196,14 @@ def display_registration_form(user_info, err=None):
 	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def add_user(db, info):
-	db.execute("insert into Kvantland.Student (login, password, name, surname, school, clas, town, email) values (%s, %s, %s, %s, %s, %s, %s, %s) returning student", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['city'], info['email']))
-	(user, ), = db.fetchall()
-	db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
+	db.execute("select student from Kvantland.Student where login = %s", (info['login'], ))
+	try:
+		(user, ), = db.fetchall()
+	except:
+		db.execute("insert into Kvantland.Student (login, password, name, surname, school, clas, town, email) values (%s, %s, %s, %s, %s, %s, %s, %s) returning student", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['city'], info['email']))
+		(user, ), = db.fetchall()
+		db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
+	print(user, file=sys.stderr)
 	return int(user)
 
 def check_login(db, login):
@@ -290,11 +303,142 @@ def login_attempt(db):
 		err_dict['login'] = 'Логин уже используется'
 
 	if len(err_dict) == 0:
-		user = add_user(db, user_info)
-		do_login(user, user_info['login'])
-		redirect('/')
+		print('here1', file=sys.stderr)
+		yield from send_reg_confirm_message(user_info)
+		print('here2', file=sys.stderr)
+		yield from show_send_message(user_info['email'])
 	else: 
 		for field in err_dict:
 			if field in user_info.keys():
 				user_info[field] = ''
 		yield from display_registration_form(user_info, err_dict)
+
+def show_send_message(email):
+	yield '<!DOCTYPE html>'
+	yield '<title>Регистрация — Квантландия</title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/registration.css">'
+	yield from user.display_banner_empty()
+	yield '<div class="content_wrapper">'
+	yield '<div class="advert_form">'
+	yield '<div class="header"> Регистрация </div>'
+	yield '<div class="description"> Письмо для подтверждения регистрации</br> успешно отправлено на Ваш адрес! </div>'
+	yield '<div id="advert">'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Почта </div>'
+	yield f'<div class="input"> {email} </div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+
+
+def req_query(params):
+	query = []
+	for key, val in params.items():
+		query.append(f'{key}={val}')
+	return '&'.join(query)
+
+
+def send_reg_confirm_message(info):
+	print('here3', file=sys.stderr)
+	_email = info['email']
+	name = info['name']
+	try:
+		token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
+		info['token'] = token
+		link = f'''
+		{config['recovery']['reg_confirm_uri']}?{req_query(info)}
+		'''
+		print(link, file=sys.stderr)
+		host = config['recovery']['host']
+		port = config['recovery']['port']
+		login = config['recovery']['login']
+		password = config['recovery']['password']
+		sender = config['recovery']['sender']
+
+		server = smtplib.SMTP(f'{host}')
+		email_content =  f'''
+			<!DOCTYPE html>
+			<head>
+			<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+   			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Восстановление пароля</title>
+			</head>
+			<body style="padding: 80px;
+				font-family: Montserrat, Arial !important;
+				word-wrap: break-word;
+				font-size: 20px;
+				font-weight: 500;">
+			<div style="font-family: Montserrat, Arial !important;">
+			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+			<div style="margin-top: 20px">  Спасибо за регистрацию в <a href="{config['server']['host']}:{config['server']['port']}">Кванталандии</a>. 
+			Для подтверждения адреса электронной почты, нажмите на кнопку ниже: </div>
+			</div>
+			<div style="width: 640px;
+				margin: 80px auto; 
+				background: #1E8B93; 
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+				border-radius: 6px;">
+			<a href="{link}" style="text-decoration: none">
+			<div style="text-align: center;
+				padding: 10px 0;
+				color: white; 
+				font-weight: 600;
+				box-sizing: border-box;
+				font-family: Montserrat, Arial !important;">
+			Нажмите здесь, чтобы изменить пароль
+			</div>
+			</a>
+			</div>
+			<div>
+			<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно менять пароль, просто проигнорируйте данное сообщение. </div>
+			<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+			</div>
+			</body>
+			</html>'''
+
+		msg = EmailMessage()
+		msg['Subject'] = 'Registration confirmation'
+		msg['From'] = sender
+		msg['To'] = _email
+		msg.set_content(email_content, subtype='html')
+
+		print(msg, file=sys.stderr)
+
+		server.starttls()
+		server.login(str(login), str(password))
+		try:
+			server.sendmail(sender, [_email], msg.as_string())
+			print('here4', file=sys.stderr)
+		except:
+			redirect('/')
+		finally:
+			server.quit()	
+	except ValueError:
+		yield from display_registration_form(err={'email':'Неверный адрес электронной почты'})
+		return
+
+@route('/reg_confirm')
+def check(db):
+	email = request.query['email']
+	token = request.query['token']
+	if not email or not token:
+		redirect('/')
+	elif hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
+		print('here', file=sys.stderr)
+		redirect('/')
+	else:
+		user_info = request.query.decode()
+		del user_info['token']
+		user = add_user(db, user_info)
+		print(user, user_info['login'], file=sys.stderr)
+		do_login(user, user_info['login'])
+		redirect('/')
