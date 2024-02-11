@@ -238,13 +238,15 @@
 
 .dialog.out .button_area {
 	display: inline-flex;
+	justify-content: space-between;
 	gap: 40px;
+	align-self: stretch;
 }
 .dialog.out .button {
 	user-select: none;
 	-webkit-user-select: none;
 	cursor: pointer;
-	width: 230px;
+	width: 270px;
 	padding: 10px 0;
 	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%); 
 	box-shadow: 7px 7px 6.699999809265137px #1A5866; 
