@@ -93,7 +93,7 @@ def show_submit_button(**kwargs):
 	yield '</div>'"""
 	yield '<button class="submit_button button">'
 	#yield '<div class="submit_button_inside">'
-	yield '<div class="submit_button_text">Отправить</div>'
+	yield '<text>Отправить</text>'
 	#yield '</div>'
 	yield '</div>'
 	yield '</button>'

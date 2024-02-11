@@ -219,8 +219,8 @@ button:hover {
 }
 
 .answer_input {
-	width: 200px;
-	height: 50px;
+	width: 160px;
+	height: 30px;
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-top: 10px;
@@ -240,11 +240,11 @@ button:hover {
 	align-items: center;
 	gap: 10px;
 	display: flex;
-	height: 73.2px;
+	height: 50px;
 }
 
 .hint_icon {
-	height: 40px;
+	height: 25px;
 	color: black;
 }
 
@@ -289,24 +289,12 @@ button:hover {
 
 .submit_button {
 	flex: 1 1 0;
-	height: 70px;
+	height: 50px;
+	padding: 10px 0;
 	border-radius: 10px;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	width:200px;
 	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%);
 	box-shadow: 7px 7px 7px #1A5866;
-	border-radius: 10px;
-	overflow: hidden;
-	justify-content: center;
-	align-items: center;
-	gap: 10px;
-	display: flex;
-}
-
-.submit_button_text {
-	flex: 1 1 0;
 	text-align: center;
 	color: black;
 	font-size: 24px;
