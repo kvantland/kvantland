@@ -107,14 +107,14 @@ text.coin_text{
 	border: #9a9aa7 1px solid;
 }
 
-.button{
+.answer_area .button{
 	text-align: center;
 	border-radius: 0.2em;
 	border: #9a9aa7 1px solid;
 	background-color: #e9e9ed;
 }
 
-.button *{
+.answer_area .button *{
 	margin-bottom: 0;
 }
 

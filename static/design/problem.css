@@ -175,11 +175,6 @@ button:hover {
 	align-items: center;
 	gap: 20px;
 	display: flex;
-	color: black;
-	font-size: 24px;
-	font-family: Montserrat;
-	font-weight: 500;
-	word-wrap: break-word;
 }
 
 .problem_text {
