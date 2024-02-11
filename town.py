@@ -6,9 +6,20 @@ from bottle import route, HTTPError
 import nav
 import user
 
+def require_user(db):
+	user_id = user.current_user(db)
+	if user_id:
+		db.execute('select * from Kvantland.Student where student = %s', (user_id, ))
+		(stats), = db.fetchall()
+		if None in stats:
+			return None
+	return user_id
+
 @route('/town/<town:int>/')
 def show_town(db, town):
-	user_id = user.current_user(db)
+	user_id = require_user(db)
+	if not user_id:
+		redirect('/')
 
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'

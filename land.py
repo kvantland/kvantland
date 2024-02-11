@@ -24,9 +24,20 @@ def finished(db, user_id):
 	(finish, ), = db.fetchall()
 	return finish
 
+def require_user(db):
+	user_id = user.current_user(db)
+	if user_id:
+		db.execute('select * from Kvantland.Student where student = %s', (user_id, ))
+		(stats), = db.fetchall()
+		if None in stats:
+			return None
+	return user_id
+
 @route('/land')
 def show_land(db):
-	user_id = user.current_user(db)
+	user_id = require_user(db)
+	if not user_id:
+		redirect('/acc')
 	if finished(db, user_id):
 		redirect("/final_page")
 	yield '<!DOCTYPE html>'
@@ -124,7 +135,9 @@ def show_land(db):
 
 @route('/rules')
 def show_land(db):
-	user_id = user.current_user(db)
+	user_id = require_user(db)
+	if not user_id:
+		redirect('/acc')
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
