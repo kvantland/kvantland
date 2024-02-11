@@ -118,8 +118,8 @@ text.coin_text{
 	margin-bottom: 0;
 }
 
-@media(hover:hover) and (pointer:fine) {
-	.button:hover{
+@media(min-width:961px) {
+	.interface_zone .button:hover{
 		background-color: #D0D0D7;
 	}
 }
