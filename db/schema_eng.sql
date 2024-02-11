@@ -64,3 +64,12 @@ create table AvailableProblem (
 	primary key (student, variant)
 );
 
+create table Score (
+	student int not null references Student on delete cascade,
+	tournament int not null,
+	score int not null default 10 check(score >= 0),
+
+
+
+);
+
