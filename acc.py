@@ -219,7 +219,7 @@ def check_new_params(db):
 		err_dict['approval'] = 'Поставьте галочку'
 
 	if not err_dict:
-		if new_info(db, user_info):
+		if new_mail(db, user_info):
 			yield from send_reg_confirm_message(user_info)
 			yield from show_send_message(user_info['email'], db)
 		else:
