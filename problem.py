@@ -456,6 +456,11 @@ def _display_result_old(db, var_id, ok, answer=None, solution=None):
 
 def require_user(db):
 	user_id = user.current_user(db)
+	if user_id:
+		db.execute('select * from Kvantland.Student where student = %s', (user_id, ))
+		(stats), = db.fetchall()
+		if None in stats:
+			return None
 	return user_id
 
 def has_current_problem(db, user):
