@@ -42,9 +42,7 @@ def display_banner(db):
 		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
 		yield '</div>'
 		yield '</a>'
-		yield f'<a href="/logout?path={path_arg}">'
-		yield '<div class="login_button"> Выйти </div>'
-		yield '</a>'
+		yield '<div class="logout_button"> Выйти </div>'
 		yield '<div class="lang_button">'
 		yield '<div> RU </div>'
 		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
@@ -52,6 +50,16 @@ def display_banner(db):
 		yield '</div>'
 
 	yield '</nav>'
+	yield '<div class="dialog out">'
+	yield '''<div class="content"> Вы уверены, что хотите выйти? <br/><br/> 
+			Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже </div>'''
+	yield '<div class="button_area">'
+	yield '<div class="button cancel"> Отмена </div>'
+	yield f'<a href="/logout?path={path_arg}">'
+	yield '<div class="button out"> Выйти </div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
 
 def display_banner_tournament(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
