@@ -190,6 +190,10 @@ button:hover {
 	word-wrap: break-word;
 }
 
+.plot_area {
+	font-family: "Linux Biolinum", sans-serif;
+}
+
 .answer_box {
 	width: 100%;
 	height: 100%;

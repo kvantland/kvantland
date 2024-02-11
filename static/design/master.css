@@ -81,6 +81,11 @@ a {
 	text-decoration: none;
 }
 
+text {
+	fill: currentColor;
+  	stroke: none;
+}
+
 a:visited {
 	color: inherit;
 }
