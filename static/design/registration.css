@@ -132,6 +132,10 @@ body {
 	border: none;
 }
 
+#reg .field input[type="password"] {
+	font-weight: 400;
+}
+
 #reg .field input:focus {
 	outline: none;
 }

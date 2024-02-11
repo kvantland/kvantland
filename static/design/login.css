@@ -101,6 +101,10 @@ body {
 	border: none;
 }
 
+.login_form .field input[type="password"] {
+	font-weight: 400;
+}
+
 .login_form .field input:focus {
 	outline: none;
 }

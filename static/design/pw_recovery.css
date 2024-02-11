@@ -99,6 +99,10 @@ body {
 	border: none;
 }
 
+#email_req .field input[type="password"] {
+	font-weight: 400;
+}
+
 #email_req .field input:focus {
 	outline: none;
 }
