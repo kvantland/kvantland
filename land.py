@@ -51,7 +51,6 @@ def show_land(db):
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
-	yield '<div style="font-family:Montserrat Alternates"></div>'
 	yield from nav.display_breadcrumbs(('/land', 'Квантландия'))
 	yield '<svg class="map" version="1.1" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	yield '<defs>'
