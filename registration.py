@@ -384,9 +384,11 @@ def send_reg_confirm_message(info):
 			</div>
 			</a>
 			</div>
-			<div>
-			<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
-			</div>
+			<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> 
+				Данные для входа:<br/><br/>
+				<span style="font-weight:700">Логин:</span> {info['login']}<br/>
+				<span style="font-weight:700">Пароль:</span> {info['password']}<br/><br/>
+				С уважением, команда Kvantland </div>
 			</body>
 			</html>'''
 
