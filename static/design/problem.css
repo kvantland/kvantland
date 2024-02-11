@@ -228,7 +228,6 @@ button:hover {
 	padding-bottom: 10px;
 	background: white;
 	border-radius: 10px;
-	border: 2px white solid;
 	font-size: 24px;
 }
 .hint_box {
@@ -289,17 +288,10 @@ button:hover {
 	word-wrap: break-word;
 }
 
-.submit_button{
-	align-self: stretch;
-	justify-content: flex-start;
-	align-items: flex-start;
-	display: flex;
-	border-radius: 10px;
-}
-
-.submit_button_inside {
+.submit_button {
 	flex: 1 1 0;
-	height: 50px;
+	height: 70px;
+	border-radius: 10px;
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-top: 10px;
@@ -509,6 +501,7 @@ button:hover {
 	align-items: flex-end;
 	gap: 20px;
 	display: inline-flex;
+	align-self: stretch;
 }
 
 .hint_wrapper .header {

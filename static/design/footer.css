@@ -6,6 +6,7 @@
 	justify-content: flex-start;
 	align-items: center;
 	gap: 40px; display: inline-flex;
+	align-self: stretch;
 }
 
 .support_area .text {
