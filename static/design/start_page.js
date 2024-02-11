@@ -132,10 +132,9 @@ function scroll(e) {
 			break;
 		}
 		case 'team': {
-			[X, Y] = [-window.pageXOffset, -window.pageYOffset];
+			key_obj = document.querySelector('.team_container').getBoundingClientRect();
+			[X, Y] = [key_obj.left, key_obj.top]
 			break;
-			// key_obj = document.querySelector('.team_container').getBoundingClientRect();
-			// [X, Y] = [key_obj.left, key_obj.top]
 		}
 		case 'examples': {
 			key_obj = document.querySelector('.examples_container').getBoundingClientRect();

@@ -251,6 +251,111 @@ def display_start_page(db):
 	yield '</div>'
 	yield '</div>'
 
+	yield '<div class="team_container">'
+	yield '<div class="page_header">О команде</div>'
+	yield '<div class="content">'
+
+	yield '<div class="content_row">'
+	yield '<div class="content_box">'
+	yield '<img class="photo" src="/static/design/photo/M_Evdokimov.png" />'
+	yield '<div class="name"> Михаил Евдокимов </div>'
+	yield '''<div> 
+		Автор многих олимпиадных 
+		задач по математике: Турнир 
+		Городов, Московская олимпиада, 
+		Всероссийская, Матпраздник и 
+		других.<br/><br/>
+		Автор книг «Сто граней 
+		математики» и «От задачек к 
+		задачам», один из авторов 
+		журнала «Квантик».</div>'''
+	yield '</div>'
+
+	yield '<div class="content_box">'
+	yield '<img class="photo" src="/static/design/photo/A_Shapovalov.png" />'
+	yield '<div class="name"> Александр Шаповалов </div>'
+	yield '''<div> 
+		Автор дюжины книг по 
+		кружковой и олимпиадной 
+		математике, автор около 1000 
+		олимпиадных задач.<br/><br/>
+		Преподаватель летних школ и 
+		онлайн кружков, ответственный 
+		редактор серии «Школьные 
+		математические кружки».</div>'''
+	yield '</div>'
+
+	yield '<div class="content_box">'
+	yield '<img class="photo" src="/static/design/photo/A_Gribalco.png" />'
+	yield '<div class="name"> Александр Грибалко </div>'
+	yield '''<div> 
+		Автор многих олимпиадных 
+		задач по математике: Турнир 
+		Городов, Московская олимпиада, 
+		Матпраздник и других.<br/><br/>
+		Председатель жюри турнира 
+		математических боев имени <br/>
+		А.П. Савина. Автор трех книг <br/>
+		по материалам турнира.</div>'''
+	yield '</div>'
+	yield '</div>'
+
+	yield '<div class="content_row">'
+	yield '<div class="content_box">'
+	yield '<img class="photo" src="/static/design/photo/E_Bakaev.png" />'
+	yield '<div class="name"> Егор Бакаев </div>'
+	yield '''<div> 
+		Автор многих олимпиадных 
+		задач по математике: Турнир 
+		Городов, Московская олимпиада, 
+		Всероссийская, Матпраздник.<br/><br/>
+		Преподаватель кружков <br/>
+		по олимпиадной математике <br/>
+		в ведущих школах Москвы.</div>'''
+	yield '</div>'
+
+	yield '<div class="content_box">'
+	yield '<img class="photo" src="/static/design/photo/B_Butyrin.png" />'
+	yield '<div class="name"> Богдан Бутырин </div>'
+	yield '''<div> 
+		Автор олимпиадных задач <br/>
+		по математике: Турнир Городов, 
+		Московская олимпиада. Призёр 
+		Всероссийской олимпиады.<br/><br/>
+		Автор Youtube-канала<br/>
+		MathOlymp, студент ФКН ВШЭ.</div>'''
+	yield '</div>'
+
+	yield '<div class="content_box">'
+	yield '<div class="list">'
+	yield '<div class="par">'
+	yield '<div class="header"> Редакторы: </div>'
+	yield '<div class="body"> С. Дориченко, <br/> Г. Мерзон, <br/> Т. Корчемкина, <br/> М. Прасолов </div>'
+	yield '</div>'
+
+	yield '<div class="par">'
+	yield '<div class="header"> IT: </div>'
+	yield '<div class="body"> В. Лобачевский, <br/> Д. Чертоляс, <br/> В. Аксенов, <br/> Д. Миронов </div>'
+	yield '</div>'
+
+	yield '<div class="par">'
+	yield '<div class="header"> Дизайнер: </div>'
+	yield '<div class="body"> А. Москаленко </div>'
+	yield '</div>'
+
+	yield '<div class="par">'
+	yield '<div class="header"> Художник: </div>'
+	yield '<div class="body"> А. Вайнер </div>'
+	yield '</div>'
+
+	yield '</div>'
+	yield '</div>'
+
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+
+
 	yield from footer.display_starter()
 
 	yield '</div>'

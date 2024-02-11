@@ -219,7 +219,7 @@ def check_new_params(db):
 		err_dict['approval'] = 'Поставьте галочку'
 
 	if not err_dict:
-		if new_info(db, user_info):
+		if new_mail(db, user_info):
 			yield from send_reg_confirm_message(user_info)
 			yield from show_send_message(user_info['email'], db)
 		else:
@@ -228,25 +228,17 @@ def check_new_params(db):
 		user_info = update_info(user_info, err_dict)
 		yield from display_pers_acc(db, err_dict, user_info)
 
-def new_info(db, info):
+def new_mail(db, info):
 	if not current_user(db):
 		return True
 	else:
-		db.execute("select name, surname, school, clas, town, email from Kvantland.Student where student = %s", (current_user(db), ))
-		(_name, _surname, _school, _clas, _town, _email, ), = db.fetchall()
-		curr_info = {
-			"name": _name,
-			"surname": _surname,
-			"school": _school,
-			"clas": _clas,
-			"town": _town,
-			"email": _email
-		}
-		for field in info.keys():
-			if not curr_info[field]:
-				return True
-			if curr_info[field] != info[field]:
-				return True
+		db.execute("email from Kvantland.Student where student = %s", (current_user(db), ))
+		(_email, ), = db.fetchall()
+		if not _email:
+			return True
+		if _email != info['email']:
+			return True
+		
 	return False
 
 def show_send_message(email, db):
@@ -310,8 +302,9 @@ def send_reg_confirm_message(info):
 				font-weight: 500;">
 			<div style="font-family: Montserrat, Arial !important;">
 			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
-			<div style="margin-top: 20px">  Недавно был получен запрос на изменение данных вашей учетной записью. Если вы 
-				запрашивали это изменение, нажмите на ссылку ниже для подтверждения: </div>
+			<div style="margin-top: 20px"> 
+				 Недавно был получен запрос на изменение адреса электронной почты, связанной с вашей учетной записью. 
+				Если вы запрашивали это изменение, нажмите на ссылку ниже для подтверждения: </div>
 			</div>
 			<div style="width: 640px;
 				margin: 80px auto; 
@@ -338,7 +331,7 @@ def send_reg_confirm_message(info):
 			</html>'''
 
 		msg = EmailMessage()
-		msg['Subject'] = 'Registration confirmation'
+		msg['Subject'] = 'Email changing'
 		msg['From'] = sender
 		msg['To'] = _email
 		msg.set_content(email_content, subtype='html')
