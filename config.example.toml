@@ -13,6 +13,7 @@ url = 'postgres://user:password@127.0.0.1:5432/database'
 [keys]
 cookie = 'any random string'
 recovery = 'any random string'
+mail_confirm = 'any random string'
 
 [vk]
 client_id = 11111111
@@ -53,6 +54,8 @@ youtube_link = 'https://www.youtube.com/@Kvantland'
 dead_step = 1000
 
 [recovery]
+acc_confirm_uri = 'http://localhost:8080/acc_confirm'
+reg_confirm_uri = 'http://localhost:8080/reg_confirm'
 redirect_uri = 'http://localhost:8080/pw_recovery/new_password'
 host = 'smtp.go1.unisender.ru'
 port = 465
