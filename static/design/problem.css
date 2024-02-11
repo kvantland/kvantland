@@ -1,5 +1,5 @@
 @charset "utf-8";
-
+@import "../biolinum/font.css";
 @font-face {
 	font-family: "Montserrat";
 	font-weight: 300;
@@ -192,6 +192,7 @@ button:hover {
 
 .plot_area {
 	font-family: "Linux Biolinum", sans-serif;
+	font-size: 1.5rem;
 }
 
 .answer_box {
