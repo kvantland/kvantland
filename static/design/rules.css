@@ -70,6 +70,7 @@
 	align-items: flex-start;
 	gap: 40px;
 	display: inline-flex;
+	padding-bottom: 80px;
 }
 
 .rules_box {

@@ -64,7 +64,7 @@ def show_answer_area(data, clas, kwargs, value='',):
 		yield '<div class="input_zone">'
 		yield '<div class="input_text">Введите ответ:</div>'
 		yield f'<form method="post" id="problem_form" class="problem answer_zone">'
-		yield f'<input class="answer_input" {attrs} />'
+		yield f'<input class="answer_input" {attrs}/>'
 		yield f'</form>'
 		yield from show_submit_button(**kwargs)
 		yield from show_hint_button(**kwargs)
@@ -105,6 +105,7 @@ def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 		yield '</div>'"""
 		yield f'<button class="hint_box" title="Получить подсказку (стоимость: {hint_cost})">'
 		yield '<img class="hint_icon" src="/static/design/icons/hint_icon.svg" />'
+		yield '<div class="text">Подсказка</div>'
 		yield '</button>'
 
 def show_question(db, variant, hint_mode):
@@ -213,14 +214,16 @@ def show_question(db, variant, hint_mode):
 	yield f'<div class="text">Подсказка стоит {points} {lang_form(points)}. <br/>Хотите воспользоваться?</div>'
 	yield '</div>'
 	yield '<div class="button_area">'
-	yield f'<form id="hint" action="hint" method="post" class="hint buttons">'
+	yield '<div class="buttons">'
 	yield '<button class="button notification_hint yes" form="hint" type="submit">'
+	yield f'<form id="hint" action="hint" method="post" class="hint">'
 	yield '<div class="text">Да</div>'
+	yield f'</form>'
 	yield '</button>'
 	yield '<button class="button notification_hint no">'
 	yield '<div class="text">Нет</div>'
 	yield '</button>'
-	yield f'</form>'
+	yield '</div>'
 	yield '</div>'
 	yield '</div>'
 	#

@@ -60,10 +60,19 @@
 	src: url("montserrat/MontserratAlternates-Bold.ttf") format("truetype");
 }
 
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number]{
+    -moz-appearance: textfield;
+}
 
 button, input {
 	font-size: 1em; /* yes this is not the default */
 	font-family: inherit; /* neither this is */
+	border: none;
 }
 
 button:hover {
@@ -78,6 +87,7 @@ button:hover {
 	align-items: flex-start;
 	gap: 40px;
 	display: inline-flex;
+	padding-bottom: 80px;
 }
 
 .content_box {
@@ -238,6 +248,15 @@ button:hover {
 .hint_icon {
 	height: 40px;
 	color: black;
+}
+
+.hint_box .text {
+	text-align: center;
+	color: black;
+	font-size: 24px;
+	font-family: Montserrat;
+	font-weight: 600;
+	word-wrap: break-word;
 }
 
 .result_box {
