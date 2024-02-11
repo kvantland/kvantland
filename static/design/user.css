@@ -242,6 +242,7 @@
 	gap: 40px;
 	align-self: stretch;
 }
+
 .dialog.out .button {
 	user-select: none;
 	-webkit-user-select: none;
@@ -271,4 +272,10 @@
 
 .show {
 	display: inline-flex !important;
+}
+
+.centred {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0);
 }

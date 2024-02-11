@@ -80,7 +80,7 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/approv.css">'
 
-	yield from user.display_banner_empty()
+	yield from user.display_banner_acc(db)
 	yield '<div class="content_wrapper">'
 	yield '<div class="acc_form">'
 	yield '<div class="header"> Личный кабинет </div>'
@@ -221,7 +221,7 @@ def check_new_params(db):
 	if not err_dict:
 		if new_info(db, user_info):
 			yield from send_reg_confirm_message(user_info)
-			yield from show_send_message(user_info['email'])
+			yield from show_send_message(user_info['email'], db)
 		else:
 			redirect('/')
 	else:
@@ -249,13 +249,13 @@ def new_info(db, info):
 				return True
 	return False
 
-def show_send_message(email):
+def show_send_message(email, db):
 	yield '<!DOCTYPE html>'
 	yield '<title>Личный кабинет — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
-	yield from user.display_banner_empty()
+	yield from user.display_banner_acc(db)
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Смена адреса электронной почты </div>'
