@@ -219,6 +219,7 @@ def check_new_params(db):
 		err_dict['approval'] = 'Поставьте галочку'
 
 	if not err_dict:
+		update_user(db, user_info)
 		if new_mail(db, user_info):
 			yield from send_reg_confirm_message(user_info)
 			yield from show_send_message(user_info['email'], db)
@@ -232,7 +233,7 @@ def new_mail(db, info):
 	if not current_user(db):
 		return True
 	else:
-		db.execute("email from Kvantland.Student where student = %s", (current_user(db), ))
+		db.execute("select email from Kvantland.Student where student = %s", (current_user(db), ))
 		(_email, ), = db.fetchall()
 		if not _email:
 			return True
@@ -352,7 +353,12 @@ def send_reg_confirm_message(info):
 		return
 
 def update_user(db, info):
-	db.execute("update Kvantland.Student set name = %s, surname = %s, school = %s, clas = %s, town = %s, email = %s where login = %s returning student", (info['name'], info['surname'], info['school'], info['clas'], info['town'], info['email'], info['login']))
+	db.execute("update Kvantland.Student set name = %s, surname = %s, school = %s, clas = %s, town = %s where login = %s returning student", (info['name'], info['surname'], info['school'], info['clas'], info['town'], info['login']))
+	(user, ), = db.fetchall()
+	return int(user)
+
+def update_email(db, info):
+	db.execute("update Kvantland.Student set email = %s where login = %s returning student", (info['email'], info['login']))
 	(user, ), = db.fetchall()
 	return int(user)
 
@@ -363,12 +369,10 @@ def check(db):
 	if not email or not token:
 		redirect('/')
 	elif hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
-		print('here', file=sys.stderr)
 		redirect('/')
 	else:
 		user_info = request.query.decode()
 		del user_info['token']
-		user = update_user(db, user_info)
-		print(user, user_info['login'], file=sys.stderr)
+		user = update_email(db, user_info)
 		do_login(user, user_info['login'])
 		redirect('/')
