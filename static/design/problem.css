@@ -75,7 +75,7 @@ button, input {
 	border: none;
 }
 
-button:hover {
+button {
 	cursor: pointer;
 }
 
@@ -292,6 +292,7 @@ button:hover {
 }
 
 .submit_button {
+	align-self: stretch;
 	padding: 10px 0;
 	border-radius: 10px;
 	width:200px;
