@@ -165,11 +165,9 @@
 }
 .start_button {
 	flex: 1 1 0;
-	height: 50px;
-	padding-left: 20px;
-	padding-right: 20px;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	height: 30px;
+	width: 367px;
+	padding: 10px 0;
 	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%);
 	box-shadow: 7px 7px 6.699999809265137px #1A5866;
 	border-radius: 10px;
