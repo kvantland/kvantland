@@ -105,13 +105,14 @@ def recovery_attempt(db):
 			link = f'''
 			{config['recovery']['redirect_uri']}?token={token}&mail={_email} 
 			'''
+			localhost = config['recovery']['localhost']
 			host = config['recovery']['host']
 			port = config['recovery']['port']
 			login = config['recovery']['login']
 			password = config['recovery']['password']
 			sender = config['recovery']['sender']
 
-			server = smtplib.SMTP(f'{host}')
+			server = smtplib.SMTP_SSL(host, port, local_hostname=localhost, timeout=120)
 			email_content =  f'''
 				<!DOCTYPE html>
 				<head>

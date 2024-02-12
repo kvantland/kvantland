@@ -221,6 +221,7 @@ def check_new_params(db):
 	if not err_dict:
 		update_user(db, user_info)
 		if new_mail(db, user_info):
+			yield from send_reg_confirm_message(user_info)
 			yield from show_send_message(user_info['email'], db)
 		else:
 			redirect('/')
@@ -278,13 +279,14 @@ def send_reg_confirm_message(info):
 		link = f'''
 		{config['recovery']['acc_confirm_uri']}?{req_query(info)}
 		'''
+		localhost = config['recovery']['localhost']
 		host = config['recovery']['host']
 		port = config['recovery']['port']
 		login = config['recovery']['login']
 		password = config['recovery']['password']
 		sender = config['recovery']['sender']
 
-		server = smtplib.SMTP(f'{host}')
+		server = smtplib.SMTP_SSL(host, port, local_hostname=localhost, timeout=120)
 		email_content =  f'''
 			<!DOCTYPE html>
 			<head>
@@ -334,7 +336,6 @@ def send_reg_confirm_message(info):
 		msg['To'] = _email
 		msg.set_content(email_content, subtype='html')
 
-		server.starttls()
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
@@ -343,7 +344,7 @@ def send_reg_confirm_message(info):
 		finally:
 			server.quit()	
 	except ValueError:
-		yield from display_registration_form(err={'email':'Неверный адрес электронной почты'})
+		yield from display_registration_form(info, err={'email':'Неверный адрес электронной почты'})
 		return
 
 def update_user(db, info):

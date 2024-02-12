@@ -54,6 +54,7 @@ youtube_link = 'https://www.youtube.com/@Kvantland'
 dead_step = 1000
 
 [recovery]
+localhost = 'localhost'
 acc_confirm_uri = 'http://localhost:8080/acc_confirm'
 reg_confirm_uri = 'http://localhost:8080/reg_confirm'
 redirect_uri = 'http://localhost:8080/pw_recovery/new_password'
