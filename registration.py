@@ -183,7 +183,6 @@ def add_user(db, info):
 		db.execute("insert into Kvantland.Student (login, password, name, surname, school, clas, town, email) values (%s, %s, %s, %s, %s, %s, %s, %s) returning student", (info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['city'], info['email']))
 		(user, ), = db.fetchall()
 		db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
-	print(user, file=sys.stderr)
 	return int(user)
 
 def check_login(db, login):
@@ -289,9 +288,7 @@ def login_attempt(db):
 		err_dict['login'] = 'Логин уже используется'
 
 	if len(err_dict) == 0:
-		print('here1', file=sys.stderr)
 		yield from send_reg_confirm_message(user_info)
-		print('here2', file=sys.stderr)
 		yield from show_send_message(user_info['email'])
 	else: 
 		for field in err_dict:
@@ -333,7 +330,6 @@ def req_query(params):
 
 
 def send_reg_confirm_message(info):
-	print('here3', file=sys.stderr)
 	_email = info['email']
 	name = info['name']
 	try:
@@ -342,7 +338,6 @@ def send_reg_confirm_message(info):
 		link = f'''
 		{config['recovery']['reg_confirm_uri']}?{req_query(info)}
 		'''
-		print(link, file=sys.stderr)
 		host = config['recovery']['host']
 		port = config['recovery']['port']
 		login = config['recovery']['login']
@@ -398,13 +393,10 @@ def send_reg_confirm_message(info):
 		msg['To'] = _email
 		msg.set_content(email_content, subtype='html')
 
-		print(msg, file=sys.stderr)
-
 		server.starttls()
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
-			print('here4', file=sys.stderr)
 		except:
 			redirect('/')
 		finally:
@@ -420,12 +412,10 @@ def check(db):
 	if not email or not token:
 		redirect('/')
 	elif hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
-		print('here', file=sys.stderr)
 		redirect('/')
 	else:
 		user_info = request.query.decode()
 		del user_info['token']
 		user = add_user(db, user_info)
-		print(user, user_info['login'], file=sys.stderr)
 		do_login(user, user_info['login'])
 		redirect('/')

@@ -221,7 +221,6 @@ def check_new_params(db):
 	if not err_dict:
 		update_user(db, user_info)
 		if new_mail(db, user_info):
-			yield from send_reg_confirm_message(user_info)
 			yield from show_send_message(user_info['email'], db)
 		else:
 			redirect('/')
@@ -271,7 +270,6 @@ def show_send_message(email, db):
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 
 def send_reg_confirm_message(info):
-	print('here3', file=sys.stderr)
 	_email = info['email']
 	name = info['name']
 	try:
@@ -280,7 +278,6 @@ def send_reg_confirm_message(info):
 		link = f'''
 		{config['recovery']['acc_confirm_uri']}?{req_query(info)}
 		'''
-		print(link, file=sys.stderr)
 		host = config['recovery']['host']
 		port = config['recovery']['port']
 		login = config['recovery']['login']
@@ -337,13 +334,10 @@ def send_reg_confirm_message(info):
 		msg['To'] = _email
 		msg.set_content(email_content, subtype='html')
 
-		print(msg, file=sys.stderr)
-
 		server.starttls()
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
-			print('here4', file=sys.stderr)
 		except:
 			redirect('/')
 		finally:
