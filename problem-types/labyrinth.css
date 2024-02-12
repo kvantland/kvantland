@@ -16,7 +16,7 @@ body{
 	fill: transparent;
 }
 
-@media(hover:hover) and (pointer:fine) {
+@media(min-width: 961px) {
 	.square:hover{
 		cursor: pointer;
 	}

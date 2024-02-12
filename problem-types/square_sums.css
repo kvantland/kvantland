@@ -4,7 +4,7 @@
 	stroke-width: 3;
 }
 
-.card:hover {
+.card {
 	cursor: pointer;
 }
 
@@ -40,10 +40,10 @@ text {
 	visibility: hidden;
 }
 
-.icon:hover {
+.icon {
 	cursor: pointer;
 }
 
-.reload:hover {
+.reload {
 	cursor: pointer;
 }

@@ -23,11 +23,11 @@
 	fill: grey;
 }
 
-@media(hover:hover) and (pointer:fine) {
-	.point:hover{
-		cursor: pointer;
-	}
+
+.point{
+	cursor: pointer;
 }
+
 
 .selected{
 	fill: red;

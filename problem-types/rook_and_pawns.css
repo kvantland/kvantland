@@ -43,7 +43,7 @@ text.finish{
 	fill:yellow;
 }
 
-@media(hover:hover) and (pointer:fine) {
+@media(min-width: 961px) {
 	.free:hover{
 		cursor: pointer;
 		fill: rgba(0, 0, 0, 0.15);

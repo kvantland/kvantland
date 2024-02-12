@@ -45,17 +45,16 @@ text.bottom{
 	font-size: 50px;
 }
 
-@media(hover:hover) and (pointer:fine) {
+@media(min-width: 961px) {
 	.top:hover{
 		cursor: pointer;
 		fill:rgba(0, 0, 0, 0.15);
 	}
 }
 
-@media(hover:hover) and (pointer:fine) {
-	.reload:hover{
-		cursor: pointer;
-	}
+
+.reload{
+	cursor: pointer;
 }
 
 text{
