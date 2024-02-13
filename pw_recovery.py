@@ -102,7 +102,7 @@ def recovery_attempt(db):
 			redirect('/')
 		else:
 			token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
-			params = {'token': token, 'mail': _mail}
+			params = {'token': token, 'mail': _email}
 			link = f'''
 			{config['recovery']['redirect_uri']}?{urllib.parse.urlencode(params)}
 			'''

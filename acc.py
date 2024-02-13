@@ -287,7 +287,7 @@ def send_reg_confirm_message(info):
 		password = config['recovery']['password']
 		sender = config['recovery']['sender']
 
-		server = smtplib.SMTP_SSL(host)
+		server = smtplib.SMTP_SSL(host, port,  local_hostname=localhost, timeout=120)
 		email_content =  f'''
 			<!DOCTYPE html>
 			<head>
