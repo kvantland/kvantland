@@ -147,7 +147,7 @@ function scroll(e) {
 			break;
 		}
 	}
-	console.log(X, Y)
+	block_nav()
 	window.scrollTo(X + window.pageXOffset, Y - add + window.pageYOffset)
 }
 
