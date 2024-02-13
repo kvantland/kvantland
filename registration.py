@@ -336,7 +336,7 @@ def send_reg_confirm_message(info):
 		token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
 		info['token'] = token
 		link = f'''
-		{config['recovery']['reg_confirm_uri']}?{req_query(info)}
+		{config['recovery']['reg_confirm_uri']}?{urllib.parse.urlencode(info)}
 		'''
 		localhost = config['recovery']['localhost']
 		host = config['recovery']['host']
@@ -407,14 +407,14 @@ def send_reg_confirm_message(info):
 
 @route('/reg_confirm')
 def check(db):
-	email = request.query['email']
-	token = request.query['token']
+	user_info = request.query.decode()
+	email = user_info['email']
+	token = user_info['token']
 	if not email or not token:
 		redirect('/')
 	elif hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
 		redirect('/')
 	else:
-		user_info = request.query.decode()
 		del user_info['token']
 		user = add_user(db, user_info)
 		do_login(user, user_info['login'])

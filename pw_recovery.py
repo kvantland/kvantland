@@ -102,8 +102,9 @@ def recovery_attempt(db):
 			redirect('/')
 		else:
 			token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
+			params = {'token': token, 'mail': _mail}
 			link = f'''
-			{config['recovery']['redirect_uri']}?token={token}&mail={_email} 
+			{config['recovery']['redirect_uri']}?{urllib.parse.urlencode(params)}
 			'''
 			localhost = config['recovery']['localhost']
 			host = config['recovery']['host']
@@ -160,7 +161,6 @@ def recovery_attempt(db):
 			msg['To'] = _email
 			msg.set_content(email_content, subtype='html')
 
-			server.starttls()
 			server.login(str(login), str(password))
 			try:
 				server.sendmail(sender, [_email], msg.as_string())
@@ -174,8 +174,9 @@ def recovery_attempt(db):
 
 @route('/pw_recovery/new_password')
 def display_new_password_form(err=None):
-	email = request.query['mail']
-	token = request.query['token']
+	user_info = request.query.decode()
+	email = user_info['mail']
+	token = user_info['token']
 	if not email or not token:
 		redirect('/')
 	if hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:

@@ -12,6 +12,7 @@ import email.message
 from email.message import EmailMessage
 import smtplib
 from config import config
+import urllib.parse
 
 _key = config['keys']['mail_confirm']
 
@@ -277,7 +278,7 @@ def send_reg_confirm_message(info):
 		token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
 		info['token'] = token
 		link = f'''
-		{config['recovery']['acc_confirm_uri']}?{req_query(info)}
+		{config['recovery']['acc_confirm_uri']}?{urllib.parse.urlencode(info)}
 		'''
 		localhost = config['recovery']['localhost']
 		host = config['recovery']['host']
@@ -286,7 +287,7 @@ def send_reg_confirm_message(info):
 		password = config['recovery']['password']
 		sender = config['recovery']['sender']
 
-		server = smtplib.SMTP_SSL(host, port, local_hostname=localhost, timeout=120)
+		server = smtplib.SMTP_SSL(host)
 		email_content =  f'''
 			<!DOCTYPE html>
 			<head>
@@ -359,14 +360,14 @@ def update_email(db, info):
 
 @route('/acc_confirm')
 def check(db):
-	email = request.query['email']
-	token = request.query['token']
+	user_info = request.query.decode()
+	email = user_info['email']
+	token = user_info['token']
 	if not email or not token:
 		redirect('/')
 	elif hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
 		redirect('/')
 	else:
-		user_info = request.query.decode()
 		del user_info['token']
 		user = update_email(db, user_info)
 		do_login(user, user_info['login'])
