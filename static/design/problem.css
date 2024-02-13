@@ -119,6 +119,10 @@ button {
 	display: flex;
 }
 
+.answer_area_radio li::marker {
+	content: "";
+}
+
 .problem_desc {
 	align-self: stretch;
 	flex: 1 1 0;
