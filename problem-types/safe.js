@@ -109,17 +109,17 @@ document.querySelector('.reload').addEventListener("touchstart", (e) => reload(e
 
 function xhr_request(xhr) {
 	if (xhr.status != 200)
-			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
+			show_xhr(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
 			if (xhr.response == 'no_tries')
-				alert('Больше нельзя делать проверок!')
+				show_xhr('Больше нельзя делать проверок!')
 			else
 				{
 					if (xhr.response == 'false')
-						alert('Неверная комбинация!')
+						show_xhr('Неверная комбинация!')
 					else
-						alert('Верная комбинация!')
+						show_xhr('Верная комбинация!')
 					let [text, cur_amount] = document.querySelector('.remaining_checks p').innerHTML.split(': ')
 					if (xhr.response == 'true' || cur_amount == '0')
 						window.location.reload('true')

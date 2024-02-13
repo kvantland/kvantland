@@ -257,6 +257,7 @@ def show_question(db, variant, hint_mode):
 	yield '</div> '
 	#
 	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
+	yield '<script type="text/ecmascript" src="/static/design/xhr_dialog.js"></script>'
 	if script:
 		yield f'<script type="text/ecmascript">{script}</script>'
 

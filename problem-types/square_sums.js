@@ -108,11 +108,11 @@ function start_exchange(e) {
 
 	xhr.onload = function() {
 		if (xhr.status != 200)
-			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
+			show_xhr(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
 			if (xhr.response == 'rejected'){
-				alert('Сумма номеров не явялется точным квадратом!')
+				show_xhr('Сумма номеров не явялется точным квадратом!')
 				hide_interface()
 			}
 			else
@@ -157,7 +157,7 @@ function reload(e) {
 
 	xhr.onload = function(){
 		if (xhr.status != 200)
-			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
+			show_xhr(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 			window.location.reload('true')
 	}

@@ -359,11 +359,11 @@ function weight(e){
 	xhr.send(JSON.stringify({'conf': conf}));
 	xhr.onload = function() {
 		if (xhr.status != 200)
-			alert(`Ошибка ${xhr.status}: ${xhr.statusText}`)
+			show_xhr(`Ошибка ${xhr.status}: ${xhr.statusText}`)
 		else
 		{
 			if (xhr.response == 'no_tries')
-				alert('Больше нельзя делать взвешивания!')
+				show_xhr('Больше нельзя делать взвешивания!')
 			else
 			{
 				let sign = {'equal': '=', 'right': '<', 'left': '>'}
