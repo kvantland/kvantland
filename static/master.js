@@ -40,6 +40,7 @@ progress.name = 'progress';
 if (document.querySelector('#problem_form') && !document.querySelector("input[name='progress']"))
 	document.querySelector('#problem_form').appendChild(progress);
 
+
 function hint_save(){
 	var interactive = document.querySelector('#interactive_problem_form');
 	var form = document.querySelector('#problem_form');
@@ -61,11 +62,43 @@ function save_progress(){
 
 function show_hint(){
 	close_confirm()
+	close_xhr()
 	let dialog = document.querySelector('.hint_notification')
 	block_nav()
 	let zone = document.createElement('div')
 	zone.classList.add('shadow')
 	document.body.append(zone)
+	if (!dialog.classList.contains('show'))
+		dialog.classList.add('show')
+	//update_button()
+}
+
+function show_confirm() {
+	close_hint()
+	close_xhr()
+	let dialog = document.querySelector('.confirm_notification')
+	block_nav()
+	let zone = document.createElement('div')
+	zone.classList.add('shadow')
+	document.body.append(zone)
+	if (!dialog.classList.contains('show'))
+		dialog.classList.add('show')
+	//update_button()
+}
+
+function show_xhr(desc) {
+	close_hint()
+	close_confirm()
+	let dialog = document.querySelector('.xhr_notification')
+	block_nav()
+	let cross = dialog.querySelector('.cross')
+	cross.addEventListener('click', close_xhr)
+	cross.addEventListener('touchstart', close_xhr)
+	let zone = document.createElement('div')
+	zone.classList.add('shadow')
+	document.body.append(zone)
+	let txt = dialog.querySelector('.text_area').querySelector('.text')
+	txt.innerHTML = desc
 	if (!dialog.classList.contains('show'))
 		dialog.classList.add('show')
 	//update_button()
@@ -81,24 +114,22 @@ function close_hint() {
 	//update_button()
 }
 
-function show_confirm() {
-	close_hint()
-	let dialog = document.querySelector('.confirm_notification')
-	block_nav()
-	let zone = document.createElement('div')
-	zone.classList.add('shadow')
-	document.body.append(zone)
-	if (!dialog.classList.contains('show'))
-		dialog.classList.add('show')
-	//update_button()
-}
-
 function close_confirm() {
 	let zone = document.querySelector('.shadow')
 	if (!zone)
 		return;
 	zone.remove()
 	let dialog = document.querySelector('.confirm_notification')
+	dialog.classList.remove('show')
+	//update_button()
+}
+
+function close_xhr() {
+	let zone = document.querySelector('.shadow')
+	if (!zone)
+		return;
+	zone.remove()
+	let dialog = document.querySelector('.xhr_notification')
 	dialog.classList.remove('show')
 	//update_button()
 }

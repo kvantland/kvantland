@@ -360,7 +360,7 @@ button {
 	-webkit-transform: translate(-50%, -50%);
 }
 
-.hxr_notification {
+.xhr_notification {
 	padding-left: 60px;
 	padding-right: 60px;
 	padding-top: 40px;
@@ -501,7 +501,7 @@ button {
 	word-wrap: break-word;
 }
 
-.hxr_notification .header_area {
+.xhr_notification .header_area {
 	align-self: stretch;
 	justify-content: flex-end;
 	align-items: center;
@@ -509,13 +509,13 @@ button {
 	display: inline-flex;
 }
 
-.hxr_notification .warning_icon {
+.xhr_notification .warning_icon {
 	width: 30px;
 	height: 30px;
 	position: relative;
 }
 
-.hxr_notification .header_area .header_text {
+.xhr_notification .header_area .header_text {
 	flex: 1 1 0;
 	height: 29px;
 	justify-content: space-between;
@@ -523,7 +523,7 @@ button {
 	display: flex;
 }
 
-.hxr_notification .header_area .header_text .text {
+.xhr_notification .header_area .header_text .text {
 	width: 580px;
 	height: 29px;
 	text-align: justify;
@@ -534,13 +534,13 @@ button {
 	word-wrap: break-word;
 }
 
-.cross {
+.xhr_notification .header_area .header_text .cross {
 	width: 20px;
 	height: 20px;
 	cursor: pointer;
 }
 
-.hxr_notification .text_area {
+.xhr_notification .text_area {
 	align-self: stretch;
 	justify-content: flex-end;
 	align-items: center;
@@ -548,7 +548,7 @@ button {
 	display: inline-flex;
 }
 
-.hxr_notification .text_area .text {
+.xhr_notification .text_area .text {
 	flex: 1 1 0;
 	color: white;
 	font-size: 24px;
