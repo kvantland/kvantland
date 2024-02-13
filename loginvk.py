@@ -6,6 +6,7 @@ from config import config
 import json
 import urllib.request as urllib2
 from login import do_login, current_user
+from passlib.hash import pbkdf2_sha256 as pwhash
 
 import urllib.parse
 
@@ -21,7 +22,7 @@ info_url = config['vk']['info_url']
 def login_attempt(db):
 	user = get_user()
 	login = 'vk#' + str(user['id'])
-	password, name, surname, city, school = (None, None, None, None, None)
+	password, name, surname, city, school = ('some', None, None, None, None)
 	try:
 		name = user['first_name']
 	except KeyError:
@@ -88,7 +89,7 @@ def get_user():
 	return convert(get_info(get_token()))
 
 def add_user(login, name, surname, city, school, password, db):
-	db.execute("insert into Kvantland.Student (login, name, surname, town, school, password) values (%s, %s, %s, %s, %s, %s) returning student", (login, name, surname, city, school, password))
+	db.execute("insert into Kvantland.Student (login, name, surname, town, school, password) values (%s, %s, %s, %s, %s, %s) returning student", (login, name, surname, city, school, pwhash.hash(password)))
 	(user, ), = db.fetchall()
 	db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
 	return user
