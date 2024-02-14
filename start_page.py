@@ -280,7 +280,7 @@ def display_start_page(db):
 		математике, автор около 1000 
 		олимпиадных задач.<br/><br/>
 		Преподаватель летних школ и 
-		онлайн кружков, ответственный 
+		онлайн-кружков, ответственный 
 		редактор серии «Школьные 
 		математические кружки».</div>'''
 	yield '</div>'
@@ -335,7 +335,7 @@ def display_start_page(db):
 
 	yield '<div class="par">'
 	yield '<div class="header"> IT: </div>'
-	yield '<div class="body"> В. Лобачевский, <br/> Д. Чертоляс, <br/> В. Аксенов, <br/> Д. Миронов </div>'
+	yield '<div class="body"> Д. Чертоляс, <br/> В. Аксенов, <br/> Д. Миронов </div>'
 	yield '</div>'
 
 	yield '<div class="par">'
