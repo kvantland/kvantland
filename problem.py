@@ -114,6 +114,7 @@ def show_question(db, variant, hint_mode):
 		redirect('/')
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
+	print(hint_cost, file=sys.stderr)
 	db.execute('select xhr_amount from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 	(step, ), = db.fetchall()
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
@@ -208,25 +209,26 @@ def show_question(db, variant, hint_mode):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
-	#
-	yield '<div class="hint_notification">'
-	yield '<div class="text_area">'
-	yield f'<div class="text">Подсказка стоит {hint_cost} {lang_form(hint_cost)}. <br/>Хотите воспользоваться?</div>'
-	yield '</div>'
-	yield '<div class="button_area">'
-	yield '<div class="buttons">'
-	yield '<button class="button notification_hint yes" form="hint" type="submit">'
-	yield '<form id="hint" action="hint" method="post" class="hint">'
-	yield '<div class="text">Да</div>'
-	yield '</form>'
-	yield '</button>'
-	yield '<button class="button notification_hint no">'
-	yield '<div class="text">Нет</div>'
-	yield '</button>'
-	yield '</div>'
-	yield '</div>'
-	yield '</div>'
-	#
+
+	if hint_cost:
+		yield '<div class="hint_notification">'
+		yield '<div class="text_area">'
+		yield f'<div class="text">Подсказка стоит {hint_cost} {lang_form(hint_cost)}. <br/>Хотите воспользоваться?</div>'
+		yield '</div>'
+		yield '<div class="button_area">'
+		yield '<div class="buttons">'
+		yield '<button class="button notification_hint yes" form="hint" type="submit">'
+		yield '<form id="hint" action="hint" method="post" class="hint">'
+		yield '<div class="text">Да</div>'
+		yield '</form>'
+		yield '</button>'
+		yield '<button class="button notification_hint no">'
+		yield '<div class="text">Нет</div>'
+		yield '</button>'
+		yield '</div>'
+		yield '</div>'
+		yield '</div>'
+
 	yield f'<div class="confirm_notification">'
 	yield f'<div class="text_area">'
 	yield f'<div class="text">Готовы отправить ответ? <br/>Изменить его позже будет нельзя!</div>'
