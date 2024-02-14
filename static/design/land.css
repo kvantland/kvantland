@@ -33,6 +33,10 @@ a.town {
 	color: white;
 }
 
+a.town.town_completed {
+	color: #bdbdbd !important;
+}
+
 @media(min-width: 961px) {
 	a.town:hover {
 		color: #ffc400;
