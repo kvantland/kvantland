@@ -247,7 +247,7 @@ def show_question(db, variant, hint_mode):
 	yield '<div class="header_area">'
 	yield '<img class="warning_icon" src="/static/design/icons/warning.svg" />'
 	yield '<div class="header_text">'
-	yield '<div class="text">Обрати внимание</div>'
+	yield '<div class="text">Обратите внимание</div>'
 	yield '<div><img class="cross" src="/static/design/icons/cross.svg"></div>'
 	yield '</div>'
 	yield '</div>'
