@@ -245,8 +245,7 @@ button {
 }
 .hint_box {
 	align-self: stretch;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 10px 20px;
 	background: #FFC400;
 	box-shadow: 7px 7px 7px #1A5866;
 	border-radius: 10px;

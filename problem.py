@@ -73,8 +73,8 @@ def show_answer_area(data, clas, kwargs, value='',):
 	if clas == 'hint_only':
 		yield '<div class="answer_box">'
 		yield '<div class="input_zone">'
-		yield from show_hint_button(**kwargs)
 		yield '</div>'
+		yield from show_hint_button(**kwargs)
 		yield '</div>'
 	if clas == 'without_input':
 		yield '<div class="answer_box">'
