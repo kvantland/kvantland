@@ -252,7 +252,7 @@ def display_start_page(db):
 	yield '</div>'
 
 	yield '<div class="team_container">'
-	yield '<div class="page_header">О команде</div>'
+	yield '<div class="page_header">Авторы и команда</div>'
 	yield '<div class="content">'
 
 	yield '<div class="content_row">'
