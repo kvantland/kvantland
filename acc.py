@@ -153,9 +153,7 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield from approv.display_confirm_window()
 
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
-	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/acc.js"></script>'
-	yield '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
 
 def get_user(db, user):
 	db.execute('select name, surname, school, town, clas, score, email from Kvantland.Student where student= %s', (user, ))
