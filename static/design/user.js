@@ -4,8 +4,6 @@ document.addEventListener('scroll', nav_scroll)
 
 function nav_scroll () {
 	let cur = document.documentElement.scrollTop
-	console.log(cur, position)
-	console.log(nav.classList)
 	if (nav.classList.contains('blocked')) {
 		nav.classList.remove('blocked')
 		position = cur
