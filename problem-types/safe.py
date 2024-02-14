@@ -48,8 +48,8 @@ def entry_form(data, kwargs):
             yield '</svg>'
     yield '</svg>'
     yield '<div class="interface_zone">'
-    yield '<button type="button" class="check"> Проверить </button>'
-    yield '<button type="button" class="reload"> Сбросить </button>'
+    yield '<button type="button" class="check button"> Проверить </button>'
+    yield '<button type="button" class="reload button"> Сбросить </button>'
     yield '<div class="remaining_checks">'
     yield f"<p> Осталось проверок: {max(0, data['left'] - kwargs['step'])}<p>"
     yield '</div>'
