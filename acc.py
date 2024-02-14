@@ -297,7 +297,7 @@ def send_reg_confirm_message(info):
 			<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
    			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<title>Восстановление пароля</title>
+			<title>Подтверждение почты</title>
 			</head>
 			<body style="padding: 80px;
 				font-family: Montserrat, Arial !important;
@@ -335,7 +335,7 @@ def send_reg_confirm_message(info):
 			</html>'''
 
 		msg = EmailMessage()
-		msg['Subject'] = 'Confirm email'
+		msg['Subject'] = 'Подтверждение почты'
 		msg['From'] = sender
 		msg['To'] = _email
 		msg.set_content(email_content, subtype='html')

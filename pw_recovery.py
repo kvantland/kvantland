@@ -159,7 +159,7 @@ def recovery_attempt(db):
 				</html>'''
 
 			msg = EmailMessage()
-			msg['Subject'] = 'Password recovery'
+			msg['Subject'] = 'Восстановление пароля'
 			msg['From'] = sender
 			msg['To'] = _email
 			msg.set_content(email_content, subtype='html')
