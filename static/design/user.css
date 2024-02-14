@@ -16,6 +16,15 @@
 	}
 }
 
+@keyframes show {
+	0% {
+		opacity: 0
+	}
+	100% {
+		opacity: 1
+	}
+}
+
 .user_nav {
 	-webkit-user-select: none;
 	user-select: none;
@@ -271,6 +280,7 @@
 }
 
 .show {
+	animation: show 0.2s 1;
 	display: inline-flex !important;
 }
 
