@@ -304,8 +304,8 @@ def send_reg_confirm_message(info):
 			<div style="font-family: Montserrat, Arial !important;">
 			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
 			<div style="margin-top: 20px"> 
-				 Недавно был получен запрос на изменение адреса электронной почты, связанной с вашей учетной записью. 
-				Если вы запрашивали это изменение, нажмите на ссылку ниже для подтверждения: </div>
+				 Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
+				Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
 			</div>
 			<div style="width: 640px;
 				margin: 80px auto; 
@@ -324,7 +324,7 @@ def send_reg_confirm_message(info):
 			</a>
 			</div>
 			<div>
-			<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно менять адрес электронной почты, 
+			<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно подтверждать адрес электронной почты, 
 			просто проигнорируйте данное сообщение.</div>
 			<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
 			</div>
@@ -332,7 +332,7 @@ def send_reg_confirm_message(info):
 			</html>'''
 
 		msg = EmailMessage()
-		msg['Subject'] = 'Email changing'
+		msg['Subject'] = 'Confirm email'
 		msg['From'] = sender
 		msg['To'] = _email
 		msg.set_content(email_content, subtype='html')
