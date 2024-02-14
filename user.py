@@ -186,3 +186,31 @@ def display_banner_acc(db):
 	yield '</div>'
 	yield '</div>'
 
+def display_banner_policy(db):
+	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
+	user = current_user(db)
+	yield '<nav class="user_nav">'
+
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+	if user == None:
+		yield '<div class="button_area">'
+		yield '<a href="/login">'
+		yield '<div class="login_button"> Войти </div>'
+		yield '</a>'
+	else:
+		yield '<div class="button_area">'
+		yield '<a href="/acc">'
+		yield '<div class="acc_cont">'
+		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
+		yield '</div>'
+		yield '</a>'
+		yield f'<a href="/logout?path={path_arg}">'
+		yield '<div class="logout_button"> Выйти </div>'
+		yield '</a>'
+	yield '</nav>'

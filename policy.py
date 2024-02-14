@@ -4,7 +4,7 @@ from config import config
 import user
 
 @route('/policy')
-def display_confidentiality():
+def display_confidentiality(db):
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -13,7 +13,7 @@ def display_confidentiality():
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/policy.css">'
 	yield '<script type="module" src="/static/design/user.js"></script>'
-	yield from user.display_banner_empty()
+	yield from user.display_banner_policy(db)
 	yield '<div class="content_wrapper">'
 	yield '<div class="conf_content">'
 
