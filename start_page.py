@@ -335,7 +335,7 @@ def display_start_page(db):
 
 	yield '<div class="par">'
 	yield '<div class="header"> IT: </div>'
-	yield '<div class="body"> Д. Чертоляс, <br/> В. Аксенов, <br/> Д. Миронов </div>'
+	yield '<div class="body"> Д. Чертоляс, <br/> В. Аксенов, <br/> Д. Миронов, <br/> В. Лобачевский </div>'
 	yield '</div>'
 
 	yield '<div class="par">'
