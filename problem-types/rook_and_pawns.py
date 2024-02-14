@@ -20,13 +20,15 @@ def entry_form(data, kwargs):
     for x in range(0, size):
         for y in range(0, size):
             if (x + y) % 2 == 1:
-                if x == 0 or y == size - 1:
+                if x == 7 and y == 0:
+                    yield f'<rect class="occupied orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
+                elif x == 0 or y == size - 1:
                     yield f'<rect class="free orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}" />'
                 elif [x, y] in data['cur']:
                     yield f'<rect class="occupied orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
                     yield f'<image class="pawn passive choiced" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/pawn_b.png" />'
                 else:
-                    yield f'<rect class="orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
+                    yield f'<rect class="clear orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
             else:
                 if x == 0 or y == size - 1:
                     yield f'<rect class="free white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
@@ -34,7 +36,7 @@ def entry_form(data, kwargs):
                     yield f'<rect class="occupied white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
                     yield f'<image class="pawn passive choiced" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/pawn_b.png" />'
                 else:
-                    yield f'<rect class="white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
+                    yield f'<rect class="clear white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" column="{x}" row="{y}"/>'
     yield f'<image class="rook free" x="{0 * side + line_width}" y ="{(size - 1) * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/rook_b.png" column="{0}" row="{size - 1}"/>'
     yield f'<g class="finish passive choiced" transform="translate({(size - 1) * side + ind + side / 2} {0 * side + 7 * side / 8})">'
     yield f'<text class="finish">*</text>'

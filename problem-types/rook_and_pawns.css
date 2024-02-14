@@ -34,9 +34,17 @@ body{
 	stroke-linecap: square;
 }
 
+.finish {
+	pointer-events: none;
+}
+
 text.finish{
 	font-size: 90px;
 	fill:white;
+}
+
+.cross {
+	pointer-events: none;
 }
 
 .star{
