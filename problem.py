@@ -387,7 +387,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
-	yield '<script type="module" src="/static/problem.js"></script>'
+	yield '<script type="module" src="/static/master.js"></script>'
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
@@ -411,10 +411,12 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</div>'
 	yield '<div class="answer_box">'
 	yield '<div class="result_box">'
+	yield '<section class="answerSection" tabindex="1">'
 	if ok:
 		yield f'<div class="result_text_true">{result_text[ok]}</div>'
 	else:
 		yield f'<div class="result_text_false">{result_text[ok]}</div>'
+	yield '</section>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
@@ -423,6 +425,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield from footer.display_problem()
 	yield '</div>'
 	yield '</div>'
+	yield '<script type="text/ecmascript" src="/static/focus_on_answer.js"></script>'
 
 
 def _display_result_old(db, var_id, ok, answer=None, solution=None):

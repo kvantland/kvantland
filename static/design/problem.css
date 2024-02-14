@@ -271,6 +271,11 @@ button {
 	word-wrap: break-word;
 }
 
+
+.answerSection:focus {
+	outline: none;
+}
+
 .result_box {
 	flex: 1 1 0;
 	padding-top: 20px;
