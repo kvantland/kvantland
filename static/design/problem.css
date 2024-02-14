@@ -241,6 +241,9 @@ button {
 	background: white;
 	border-radius: 10px;
 	font-size: 24px;
+	font-family: Montserrat;
+	font-weight: 500;
+	word-wrap: break-word
 }
 .hint_box {
 	align-self: stretch;
