@@ -206,7 +206,7 @@ def entry_form(data, kwargs):
 	yield '</div>'
 	try:
 		cnt = 1
-		for item in data['history']:
+		for item in data['curr']['history']:
 			yield '<div class="item">'
 			yield f'<div class="header"> Взвешивание {cnt} </div>'
 			yield f'<p> {item} </p>'
@@ -234,27 +234,29 @@ def steps(step_num, params, data):
 		elif conf[i] == '2':
 			right += weight[data['perm'].index(i + 1)]
 			h_right.append(coin_name[i])
-
 	try:
-		data['history']
+		data['curr']['history']
 	except KeyError:
-		data['history'] = []
+		data['curr'] = {'history': []}
 
 	if left > right:
-		data['history'].append('(' + ', '.join(h_left) + ') > (' + ', '.join(h_right) + ')')
+		data['curr']['history'].append('(' + ', '.join(h_left) + ') > (' + ', '.join(h_right) + ')')
 		return {'answer': 'left', 'data_update': data}
 	elif right > left:
-		data['history'].append('(' + ', '.join(h_left) + ') < (' + ', '.join(h_right) + ')')
+		data['curr']['history'].append('(' + ', '.join(h_left) + ') < (' + ', '.join(h_right) + ')')
 		return {'answer': 'right', 'data_update': data}
-	data['history'].append('(' + ', '.join(h_left) + ') = (' + ', '.join(h_right) + ')')
+	data['curr']['history'].append('(' + ', '.join(h_left) + ') = (' + ', '.join(h_right) + ')')
+	print(data, file=sys.stderr)
 	return {'answer': 'equal', 'data_update': data}
 
 
 def validate(data, answer):
 	weight = data['weight']
 	ans = list(map(int, answer.split(' ')))
+	if 0 in ans:
+		return 0;
 	ans_transform = [-1] * len(weight)
 	for i in range(len(ans)):
 		ans_transform[i] = weight[data['perm'].index(ans[i])]
-	print(ans_transform, file=sys.stderr)
+	print('gere3de3', ans_transform, file=sys.stderr)
 	return ans_transform == sorted(weight)
