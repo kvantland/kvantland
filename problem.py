@@ -211,7 +211,7 @@ def show_question(db, variant, hint_mode):
 	#
 	yield '<div class="hint_notification">'
 	yield '<div class="text_area">'
-	yield f'<div class="text">Подсказка стоит {points} {lang_form(points)}. <br/>Хотите воспользоваться?</div>'
+	yield f'<div class="text">Подсказка стоит {hint_cost} {lang_form(hint_cost)}. <br/>Хотите воспользоваться?</div>'
 	yield '</div>'
 	yield '<div class="button_area">'
 	yield '<div class="buttons">'
