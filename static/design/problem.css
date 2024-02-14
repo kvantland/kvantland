@@ -137,6 +137,11 @@ button {
 	align-items: center;
 	gap: 40px;
 	display: flex;
+	color: black;
+	font-size: 24px;
+	font-family: Montserrat;
+	font-weight: 500;
+	word-wrap: break-word;
 }
 
 
@@ -193,10 +198,10 @@ button {
 	font-weight: 500;
 	word-wrap: break-word;
 }
-.problem {
+/*.problem {
 	font-family: "Linux Biolinum", sans-serif;
 	font-size: 1.5rem;
-}
+}*/
 
 .plot_area {
 	font-family: "Linux Biolinum", sans-serif;
