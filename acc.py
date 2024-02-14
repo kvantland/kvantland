@@ -254,9 +254,12 @@ def show_send_message(email, db):
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Смена адреса электронной почты </div>'
 	yield '''<div class="description"> 
-		Письмо для подтверждения смены адреса</br>
+		Письмо для подтверждения адреса</br>
 		электронной почты, привязанной к вашему</br>
-		аккаунту успешно отправлено! </div>'''
+		аккаунту успешно отправлено!</br>
+		Для подтверждения адреса,</br>
+		перейдите по ссылке в письме,</br>
+		которое придёт вам на почту</div>'''
 	yield '<div id="advert">'
 	yield '<div class="full_field">'
 	yield '<div class="field">'
