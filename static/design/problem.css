@@ -625,3 +625,7 @@ button {
 	font-weight: 500;
 	word-wrap: break-word;
 }
+
+.solution_hide {
+	pointer-events: none;
+}

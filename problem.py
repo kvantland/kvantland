@@ -405,7 +405,10 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '<div class="problem_desc_box">'
 	yield f'<div class="problem_text"><span class="span_text">{description}</div>'
 	if save_progress:
+		print('herrr', file=sys.stderr)
+		yield '<div class="solution_hide">'
 		yield solution
+		yield '</div>'
 	if image:
 		yield f'<img class="picture" src="/static/problem/{image}">'
 	yield '</div>'
@@ -463,7 +466,10 @@ def _display_result_old(db, var_id, ok, answer=None, solution=None):
 	yield f'<p class="description">{description}</p>'
 	yield '<div class="save_zone_wrapper" style="z-index: -1">'
 	if save_progress:
+		print('here', file=sys.stderr)
+		yield '<div class="solution_hide">'
 		yield solution
+		yield '</div>'
 	if not show_default_buttons:
 		yield '<div class="answer_bar">'
 		yield 'Введите ответ:'
