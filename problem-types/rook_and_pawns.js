@@ -31,10 +31,15 @@ function free_board(){
 function clear_board(){
 	for (var square of clear_squares)
 	{
-		square.classList.remove('unclear')
+		square.classList.remove('crossed')
+		square.classList.remove('ticked')
 		square.classList.add('clear')
 	}
-	for (const tick of document.querySelectorAll('.cross'))
+	for (const cross of document.querySelectorAll('.cross'))
+	{
+		cross.parentNode.removeChild(cross);
+	}
+	for (const tick of document.querySelectorAll('.tick'))
 	{
 		tick.parentNode.removeChild(tick);
 	}
@@ -57,7 +62,7 @@ function attempt(e, obj) {
 		e.preventDefault()
 	if (obj.classList.contains('clear')) {
 		obj.classList.remove('clear');
-		obj.classList.add('unclear');
+		obj.classList.add('crossed');
 		svgNS = "http://www.w3.org/2000/svg"
 		var cross = document.createElementNS(svgNS, 'text');
 		cross.innerHTML = '&#x274C;';
@@ -68,12 +73,31 @@ function attempt(e, obj) {
 		cross.classList.add('cross');
 		svg_box.appendChild(cross);
 	}
+	else if (obj.classList.contains('crossed')){
+		obj.classList.remove('crossed');
+		obj.classList.add('ticked');
+		for (const cross of document.querySelectorAll('.cross')){
+			if (cross.getAttribute('column') == obj.getAttribute('column') && cross.getAttribute('row') == obj.getAttribute('row')){
+				cross.parentNode.removeChild(cross);
+				break;
+			}
+		}
+		svgNS = "http://www.w3.org/2000/svg"
+		var tick = document.createElementNS(svgNS, 'text');
+		tick.innerHTML = '✔️';
+		tick.setAttribute('x', obj.getAttribute('x') - -(side / 2));
+		tick.setAttribute('y', obj.getAttribute('y') - -(side / 2));
+		tick.setAttribute('column', obj.getAttribute('column'));
+		tick.setAttribute('row', obj.getAttribute('row'));
+		tick.classList.add('tick');
+		svg_box.appendChild(tick);
+	}
 	else {
-		obj.classList.remove('unclear');
+		obj.classList.remove('ticked');
 		obj.classList.add('clear');
-		for (const tick of document.querySelectorAll('.cross')){
-			if (tick.getAttribute('column') == obj.getAttribute('column') && tick.getAttribute('row') == obj.getAttribute('row')){
-				tick.parentNode.removeChild(tick);
+		for (const cross of document.querySelectorAll('.tick')){
+			if (cross.getAttribute('column') == obj.getAttribute('column') && cross.getAttribute('row') == obj.getAttribute('row')){
+				cross.parentNode.removeChild(cross);
 				break;
 			}
 		}

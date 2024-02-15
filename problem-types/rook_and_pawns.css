@@ -47,6 +47,11 @@ text.finish{
 	pointer-events: none;
 }
 
+.tick {
+	pointer-events: none;
+	fill: green;
+}
+
 .star{
 	fill:yellow;
 }
