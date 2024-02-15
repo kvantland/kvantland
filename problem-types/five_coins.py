@@ -255,6 +255,9 @@ def validate(data, answer):
 	if 0 in ans:
 		return False
 	ans_transform = [-1] * len(weight)
-	for i in range(len(ans)):
-		ans_transform[i] = weight[data['perm'].index(ans[i])]
-	return ans_transform == sorted(weight)
+	try:
+		for i in range(len(ans)):
+			ans_transform[i] = weight[data['perm'].index(ans[i])]
+		return ans_transform == sorted(weight)
+	except:
+		return False
