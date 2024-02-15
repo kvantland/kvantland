@@ -193,6 +193,14 @@ def check_login(db, login):
 		return None
 	return user
 
+def check_email(db, email):
+	db.execute("select student from Kvantland.Student where email = %s", (email,))
+	try:
+		(user,) = db.fetchall()
+	except ValueError:
+		return None
+	return user
+
 def empty_user_info():
 	user_info = dict()
 	for field in all_info:
@@ -286,6 +294,10 @@ def login_attempt(db):
 	if check_login(db, user_info['login']):
 		user_info['login'] = ''
 		err_dict['login'] = 'Логин уже используется'
+
+	if (check_email(db, user_info['email'])):
+		user_info['email'] = ''
+		err_dict['email'] = 'Почта уже используется'
 
 	if len(err_dict) == 0:
 		yield from send_reg_confirm_message(user_info)
