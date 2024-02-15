@@ -62,7 +62,7 @@ def display_start_page(db):
 	yield '<div class="item">'
 	yield '<div class="text_cont">'
 	yield '<div class="header"> 31.03.2024 </div>'
-	yield '<div class="text"> Финищ Турнира 2 </div>'
+	yield '<div class="text"> Финиш Турнира 2 </div>'
 	yield '</div>'
 	yield '<div class="rect"> </div>'
 	yield '</div>'
