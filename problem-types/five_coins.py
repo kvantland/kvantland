@@ -246,7 +246,6 @@ def steps(step_num, params, data):
 		data['curr']['history'].append('(' + ', '.join(h_left) + ') < (' + ', '.join(h_right) + ')')
 		return {'answer': 'right', 'data_update': data}
 	data['curr']['history'].append('(' + ', '.join(h_left) + ') = (' + ', '.join(h_right) + ')')
-	print(data, file=sys.stderr)
 	return {'answer': 'equal', 'data_update': data}
 
 
@@ -254,9 +253,8 @@ def validate(data, answer):
 	weight = data['weight']
 	ans = list(map(int, answer.split(' ')))
 	if 0 in ans:
-		return 0;
+		return False
 	ans_transform = [-1] * len(weight)
 	for i in range(len(ans)):
 		ans_transform[i] = weight[data['perm'].index(ans[i])]
-	print('gere3de3', ans_transform, file=sys.stderr)
 	return ans_transform == sorted(weight)
