@@ -1,3 +1,12 @@
+@keyframes show {
+	0% {
+		opacity: 0
+	}
+	100% {
+		opacity: 1
+	}
+}
+
 .plot_area {
 	margin: 40px auto 0 auto;
 	display: flex;
@@ -188,4 +197,56 @@ rect.answer_zone{
 .history .item .header {
 	font-weight: 700;
 	font-size: large;
+}
+
+.dialog {
+	padding: 40px 60px;
+	display: none;
+	flex-direction: column;
+	gap: 40px;
+	border-radius: 20px;
+	background: #1E8B93;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 4;
+}
+
+.dialog .text {
+	color: white;
+	font-size: 24px;
+	font-family: Montserrat Alternates;
+	font-weight: 500;
+}
+
+.dialog .button_area {
+	display: inline-flex;
+	gap: 40px;
+}
+
+.dialog .button_area .button {
+	border-radius: 10px;
+	border: none;
+	padding: 10px 0;
+	width: 270px;
+	text-align: center;
+	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%); 
+	box-shadow: 7px 7px 6.699999809265137px #1A5866;
+	cursor: pointer;
+}
+
+.shadow {
+	position: fixed;
+	top: 0;
+	left: 0	;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	background-color: rgba(0, 0, 0, 0.25)
+}
+
+.show {
+	animation: show 0.2s 1;
+	display: inline-flex;
 }

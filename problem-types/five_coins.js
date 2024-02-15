@@ -333,10 +333,11 @@ function move_scales(side)
 	}
 }
 
-document.querySelector('.weight').addEventListener("click", (e) => weight(e))
-document.querySelector('.weight').addEventListener("touchstart", (e) => weight(e))
+document.querySelector('.weight').addEventListener("click", show_weight_dialog)
+document.querySelector('.weight').addEventListener("touchstart", show_weight_dialog)
 
 function weight(e){
+	hide_weight_dialog(e)
 	if (e.targetTouches)
 		e.preventDefault()
 	let url = new URL(window.location.href + 'xhr')
@@ -424,3 +425,37 @@ function send(e) {
 
 document.querySelector('#send').addEventListener("click", (e) => send(e))
 document.querySelector('#send').addEventListener("touchstart", (e) => send(e))
+
+function show_weight_dialog(e) {
+	if (e.touches)
+		e.preventDefault();
+	let dialog = document.querySelector('.dialog.weight_confirm')
+	let zone = document.createElement('div')
+	zone.classList.add('shadow')
+	document.body.append(zone)
+	if (!dialog.classList.contains('show'))
+		dialog.classList.add('show')
+	let cancel_button = dialog.querySelector('.button.cancel')
+	cancel_button.addEventListener('click', hide_weight_dialog)
+	cancel_button.addEventListener('touchstart', hide_weight_dialog)
+	let confirm_button = dialog.querySelector('.button.confirm')
+	confirm_button.addEventListener('click', weight)
+	confirm_button.addEventListener('touchstart', weight)
+}
+
+function hide_weight_dialog(e) {
+	if (e.touches)
+		e.preventDefault();
+	let dialog = document.querySelector('.dialog.weight_confirm')
+	let zone = document.querySelector('.shadow')
+	if (!zone)
+		return;
+	zone.remove()
+	dialog.classList.remove('show')
+	let cancel_button = dialog.querySelector('.button.cancel')
+	cancel_button.removeEventListener('click', hide_weight_dialog)
+	cancel_button.removeEventListener('touchstart', hide_weight_dialog)
+	let confirm_button = dialog.querySelector('.button.confirm')
+	confirm_button.removeEventListener('click', weight)
+	confirm_button.removeEventListener('touchstart', weight)
+}

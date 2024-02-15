@@ -218,6 +218,14 @@ def entry_form(data, kwargs):
 	yield '</div>'
 	yield '</div>'
 
+	yield '<div class="weight_confirm dialog">'
+	yield '<div class="text"> Вы точно хотите совершить <br> взвешивание? </div>'
+	yield '<div class="button_area">'
+	yield '<div class="button confirm"> Взвесить </div>'
+	yield '<div class="button cancel"> Отмена </div>'
+	yield '</div>'
+	yield '</div>'
+
 
 def steps(step_num, params, data):
 	if step_num > data['weightings_amount']:
