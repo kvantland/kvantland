@@ -33,7 +33,67 @@
 	align-items: center;
 	gap: 60px;
 	display: inline-flex;
+	flex-direction: column;
 }
+
+.tournament .curr_tournament {
+	gap: 60px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.tournament .history {
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.tournament .history .content {
+	display: inline-flex;
+	justify-content: space-between;
+}
+
+.tournament .history hr {
+	border: none;
+	position: relative;
+	top: -20px;
+	background: white;
+}
+
+.tournament .history .content .item {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.tournament .history .content .item .rect {
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	border-radius: 10px;
+}
+
+.tournament .history .content .item .text_cont {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 20px;
+
+}
+
+.tournament .history .content .item .text_cont .header {
+	color: white;
+	font-size: 32px;
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+}
+
+.tournament .history .content .item .text_cont .text {
+	color: white;
+	font-size: 24px;
+	font-family: Montserrat;
+	font-weight: 400;
+}
+
 
 .tournament img {
 	overflow: hidden;
