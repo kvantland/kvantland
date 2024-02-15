@@ -116,13 +116,15 @@ function xhr_request(xhr) {
 				show_xhr('Больше нельзя делать проверок!')
 			else
 				{
-					if (xhr.response == 'false')
-						show_xhr('Неверная комбинация!')
-					else
-						show_xhr('Верная комбинация!')
 					let [text, cur_amount] = document.querySelector('.remaining_checks p').innerHTML.split(': ')
 					if (xhr.response == 'true' || cur_amount == '0')
 						window.location.reload('true')
+					else {
+						if (xhr.response == 'false')
+							show_xhr('Неверная комбинация!')
+						else
+							show_xhr('Верная комбинация!')
+					}
 				}
 		}
 }
