@@ -171,7 +171,7 @@ def show_land(db):
 	yield '<div class="start_button_border">'
 	yield '<a href="/land">'
 	yield '<div class ="start_button">'
-	yield '<div class="start_button_text"> Начать турнир </div>'
+	yield '<div class="start_button_text"> Открыть турнир </div>'
 	yield '</div>'
 	yield '</a>'
 	yield '</div>'

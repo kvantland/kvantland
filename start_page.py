@@ -32,7 +32,7 @@ def display_start_page(db):
 	yield '</div>'
 	yield '<div class="text">Тебя ждут задачи из самых разных областей:  Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</div>'
 	yield f'<a href={link}>'
-	yield '<div class="start_button"> Начать турнир </div>'
+	yield '<div class="start_button"> Открыть турнир </div>'
 	yield '</a>'
 	yield '</div>'
 	yield '</div>'
