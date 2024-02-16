@@ -54,10 +54,9 @@
 }
 
 .tournament .history hr {
-	border: none;
 	position: relative;
 	top: -21px;
-	background: white;
+	color: white;
 }
 
 .tournament .history .content .item {

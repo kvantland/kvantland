@@ -67,7 +67,7 @@ def display_start_page(db):
 	yield '<div class="rect"> </div>'
 	yield '</div>'
 	yield '</div>'
-	yield '<hr size="2" />'
+	yield '<hr size="2" noshade />'
 	yield '</div>'
 	yield '</div>'
 
