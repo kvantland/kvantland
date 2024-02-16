@@ -318,7 +318,9 @@ def show_send_message(email):
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Регистрация </div>'
-	yield '<div class="description"> Письмо для подтверждения регистрации</br> успешно отправлено на Ваш адрес! </div>'
+	yield '''<div class="description"> Письмо для подтверждения регистрации</br> успешно отправлено на Ваш адрес!
+		Для подтверджения адреса перейдите по ссылке в письме, которое придёт вам на почту</div>
+	</div>'''
 	yield '<div id="advert">'
 	yield '<div class="full_field">'
 	yield '<div class="field">'
@@ -401,7 +403,7 @@ def send_reg_confirm_message(info):
 			</html>'''
 
 		msg = EmailMessage()
-		msg['Subject'] = 'Registration confirmation'
+		msg['Subject'] = 'Подтверждение регистрации'
 		msg['From'] = sender
 		msg['To'] = _email
 		msg.set_content(email_content, subtype='html')
