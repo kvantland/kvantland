@@ -318,8 +318,9 @@ def show_send_message(email):
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Регистрация </div>'
-	yield '''<div class="description"> Письмо для подтверждения регистрации</br> успешно отправлено на Ваш адрес!
-		Для подтверджения адреса перейдите по ссылке в письме, которое придёт вам на почту</div>
+	yield '''<div class="description"> Письмо для подтверждения регистрации</br> успешно отправлено на Ваш адрес!</br>
+		Для подтверджения адреса перейдите</br>
+		по ссылке в письме, которое придёт Вам<br/> на почту
 	</div>'''
 	yield '<div id="advert">'
 	yield '<div class="full_field">'

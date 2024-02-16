@@ -73,9 +73,8 @@ def show_send_message(email):
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Восстановление пароля </div>'
 	yield '''<div class="description"> Письмо для восстановления пароля</br>успешно отправлено на Ваш адрес!</br>
-		Для смены пароля,</br>
-		перейдите по ссылке в письме,</br>
-		которое придёт вам на почту</div>'''
+		Для смены пароля перейдите по ссылке</br>
+		в письме, которое придёт Вам на почту</div>'''
 	yield '<div id="advert">'
 	yield '<div class="full_field">'
 	yield '<div class="field">'
