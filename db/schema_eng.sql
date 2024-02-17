@@ -71,3 +71,8 @@ create table Score (
 	score int not null default 10 check(score >= 0)
 );
 
+create table Season (
+	season int not null,
+	tournament int not null
+);
+
