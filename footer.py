@@ -23,7 +23,7 @@ def display_starter():
 def display_basement():
 	yield '<div class="basement">'
 
-	yield '<hr size="1" />'
+	yield '<hr size="1" color="#1E8B93" noshade />'
 
 	yield '<div class="content">'
 	yield '<a href="/">'
