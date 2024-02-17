@@ -105,11 +105,17 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 		yield f'<div class="placeholder"> {placeholder_} </div>'
 		if type_ == 'select':
 			yield f'<div class="select_line" name="{name}">'
-			yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" readonly required />'
+			if err and name in err.keys():
+				yield f' <input name="{name}" type="{type_}" value="" readonly required />'
+			else:
+				yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" readonly required />'
 			yield '<img class="arrow" src="/static/design/icons/down_arrow.svg" />'
 			yield '</div>'
 		else:
-			yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
+			if err and name in err.keys():
+				yield f'<input name="{name}" type="{type_}" value="" required />'
+			else:
+				yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
 		yield '</div>'
 		if err and name in err.keys():
 			yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
