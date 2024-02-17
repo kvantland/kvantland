@@ -85,11 +85,11 @@ def add_list(problems_list, variants_list):
 			content = variants_list[name]['content'][i]
 			add_variant(cur, problem, description, content)
 
-def add_problem(cur, town, points, type_, name, hint=None, hint_cost=None, image=None):
+def add_problem(cur, town, points, type_, name, hint=None, hint_cost=None, image=None, tournament=config["tournament"]["version"]):
 	type_ = get_type_id(cur, type_)
 	town = get_town_id(cur, town)
 	name = f"{name} ({points} {lang_form(points)})"
-	cur.execute("insert into Kvantland.Problem (town, points, name, type_, image) values (%s, %s, %s, %s, %s) returning problem", (town, points, name, type_, image))
+	cur.execute("insert into Kvantland.Problem (town, points, name, type_, image, tournament) values (%s, %s, %s, %s, %s, %s) returning problem", (town, points, name, type_, image, tournament))
 	(problem,), = cur.fetchall()
 	if hint:
 		if not hint_cost:
