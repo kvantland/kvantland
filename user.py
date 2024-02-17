@@ -2,7 +2,7 @@
 from html import escape
 from urllib.parse import quote
 from bottle import route, request, response, redirect
-
+from config import config
 from login import current_user
 
 def display_banner(db):
@@ -12,9 +12,9 @@ def display_banner(db):
 	yield '<ul class="flex_ul">'
 	if user != None:
 		db.execute('select coalesce(name, login) from Kvantland.Student where student = %s', (user,))
-		(login), = db.fetchall()
+		(login, ), = db.fetchall()
 		db.execute('select score from Kvantland.Score where student = %s and tournament = %s', (user, config["tournament"]["version"]))
-		(money), = db.fetchall()
+		(money, ), = db.fetchall()
 		yield f'<li>{escape(login)}'
 		yield f'<li>Счёт: {money}'
 	yield f'<li><a href="/rules">Правила</a>'

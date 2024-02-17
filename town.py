@@ -2,7 +2,7 @@
 
 import random
 from bottle import route, HTTPError
-
+from config import config
 import nav
 import user
 

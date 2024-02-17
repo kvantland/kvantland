@@ -68,6 +68,6 @@ create table AvailableProblem (
 create table Score (
 	student int not null references Student on delete cascade,
 	tournament int not null,
-	score int not null default 10 check(score >= 0),
+	score int not null default 10 check(score >= 0)
 );
 

@@ -8,7 +8,9 @@ import sys
 from pathlib import Path
 import json
 import psycopg
-
+import sys
+sys.path.insert(1, '../')
+from config import config
 random.seed(1337)
 
 def read_file(name):
