@@ -217,6 +217,10 @@ def check_new_params(db):
 	if not approval:
 		err_dict['approval'] = 'Поставьте галочку'
 
+	if (new_mail(db, user_info) and check_email(db, user_info['email'])):
+		user_info['email'] = ''
+		err_dict['email'] = 'Почта уже используется'
+
 	if not err_dict:
 		update_user(db, user_info)
 		if new_mail(db, user_info):
@@ -240,6 +244,14 @@ def new_mail(db, info):
 			return True
 		
 	return False
+
+def check_email(db, email):
+	db.execute("select student from Kvantland.Student where email = %s", (email,))
+	try:
+		(user,) = db.fetchall()
+	except ValueError:
+		return None
+	return user
 
 def show_send_message(email, db):
 	yield '<!DOCTYPE html>'
