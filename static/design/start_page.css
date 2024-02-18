@@ -9,7 +9,7 @@
 
 .content_wrapper {
 	width: 100%;
-	padding: 0 min(5vw, 80px) 70px min(5vw, 80px);
+	padding: 0 max(20px, min(5vw, 80px)) 70px max(20px, min(5vw, 80px));
 	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
@@ -96,7 +96,7 @@
 
 .tournament img {
 	overflow: hidden;
-	width: 733px;
+	max-width: 733px;
 	box-shadow: 12px 12px 14px rgba(0, 0, 0, 0.25);
 	border-radius: 20px;
 	border: 2px white solid;

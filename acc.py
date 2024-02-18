@@ -359,11 +359,13 @@ def send_reg_confirm_message(info):
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
 		except:
-			redirect('/')
+			info['email'] = ''
+			yield from display_pers_acc(db, {'email':'Адреса не существует'}, info)
 		finally:
 			server.quit()	
 	except ValueError:
-		yield from display_registration_form(info, err={'email':'Неверный адрес электронной почты'})
+		info['email'] = ''
+		yield from display_pers_acc(db, {'email':'Неверный адрес электронной почты'}, info)
 		return
 
 def update_user(db, info):

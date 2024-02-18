@@ -167,7 +167,7 @@ def recovery_attempt(db):
 			try:
 				server.sendmail(sender, [_email], msg.as_string())
 			except:
-				redirect('/')
+				yield from display_recovery_form(err={'email':'Адреса не существует'})
 			finally:
 				server.quit()	
 	except ValueError:

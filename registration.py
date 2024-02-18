@@ -413,10 +413,12 @@ def send_reg_confirm_message(info):
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
 		except:
-			redirect('/')
+			info['email'] = ''
+			yield from display_registration_form(info, err={'email': 'Адреса не существует'})
 		finally:
 			server.quit()	
 	except ValueError:
+		info['email'] = ''
 		yield from display_registration_form(info, err={'email':'Неверный адрес электронной почты'})
 		return
 
