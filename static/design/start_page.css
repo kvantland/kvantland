@@ -113,7 +113,7 @@
 
 .tournament .text {
 	color: white;
-	font-size: max(22px, min(30px, 1.8vw));
+	font-size: max(15px, min(30px, 1.8vw));
 	font-weight: 400; 
 }
 
