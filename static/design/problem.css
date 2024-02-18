@@ -92,8 +92,8 @@ button {
 
 .content_box {
 	align-self: stretch;
-	padding-left: 80px;
-	padding-right: 80px;
+	padding-left: min(5vw, 80px);
+	padding-right: min(5vw, 80px);
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;
@@ -154,9 +154,10 @@ button {
 
 .header_text {
 	color: white; 
-	font-size: 40px; 
+	font-size: max(30px, min(40px, 2.6vw));
 	font-family: Montserrat Alternates; 
 	font-weight: 500;
+	white-space: nowrap;
 }
 
 .problem_cost {
@@ -171,6 +172,7 @@ button {
 	font-size: 24px; 
 	font-family: Montserrat Alternates; 
 	font-weight: 500;
+	white-space: nowrap;
 }
 
 .problem_desc_box {
@@ -628,4 +630,8 @@ button {
 
 .solution_hide {
 	pointer-events: none;
+}
+
+.problem_desc img.picture {
+	width: 100%;
 }

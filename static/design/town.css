@@ -1,6 +1,6 @@
 .content_wrapper {
 	width: 100%;
-	padding: 0 80px 80px 80px;
+	padding: 0 min(5vw, 80px) 80px min(5vw, 80px);
 	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
