@@ -1,3 +1,7 @@
+html {
+	min-width: 916px;
+}
+
 @charset "utf-8";
 
 @font-face {
