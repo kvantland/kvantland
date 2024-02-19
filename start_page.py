@@ -30,7 +30,7 @@ def display_start_page(db):
 	yield '<div class="header">Турнир</div>'
 	yield '<div class="text">Твоя возможность проявить себя!</div>'
 	yield '</div>'
-	yield '<div class="text">Тебя ждут задачи из самых разных областей:  Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</div>'
+	yield '<div class="text">Тебя ждут задачи из самых разных областей математики:  Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</div>'
 	yield f'<a href={link}>'
 	yield '<div class="start_button"> Открыть турнир </div>'
 	yield '</a>'
@@ -87,13 +87,13 @@ def display_start_page(db):
 	yield '<img class="icon" src="/static/design/icons/clock.svg" />'
 	yield '<div>'
 	yield '<span class="bold_text"> В турнире встречаются задачи разной сложности <br/> </span>'
-	yield '<span class="text"> <br/> Но в среднем для решения задач нужно выделить примерно 60 - 90 минут </span>'
+	yield '<span class="text"> <br/> Для решения задач рекомендуем выделить примерно 60 - 90 минут </span>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
 	yield '<img class="icon" src="/static/design/icons/calendar.svg" />'
 	yield '<div>'
-	yield '<span class="bold_text"> Турнир проходит в течение месяца. <br/> </span>'
+	yield '<span class="bold_text"> Турнир проходит в течение месяца <br/> </span>'
 	yield '<span class="text">  <br/>В любое время до закрытия турнира можно войти/зарегистрироваться и поучаствовать </span>'
 	yield '</div>'
 	yield '</div>'
@@ -105,21 +105,21 @@ def display_start_page(db):
 	yield '<div>'
 	yield '<span class="text"> Примерно </span>'
 	yield '<span class="bold_text"> 1300 детей<br/> и взрослых из разных стран </span>'
-	yield '<span class="text"> (Австралия, Болгария, Сербия, Россия, Казахстан, США, Белоруссия <br/>и др) поучаствовали в первом турнире </span>'
+	yield '<span class="text"> (Австралия, Болгария, Сербия, Россия, Казахстан, США, Белоруссия <br/>и других) поучаствовали в первом турнире </span>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
 	yield '<img class="icon" src="/static/design/icons/gift.svg" />'
 	yield '<div>'
-	yield '<span class="text"> Победители по итогам сезона (несколько турниров) получат </span>'
+	yield '<span class="text"> Турнир индивидуальный и рассчитан на школьников 7-9 классов и младше. Победители по итогам сезона (несколько турниров) получат </span>'
 	yield '<span class="bold_text">  призы от журнала "Квантик" </span>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
 	yield '<img class="icon" src="/static/design/icons/medal.svg" />'
 	yield '<div>'
-	yield '<span class="bold_text"> В зачёт идут 3 лучших результата из 4. <br/> </span>'
-	yield '<span class="text"> <br/>Взрослые тоже могут участвовать, но в отдельном зачёте. </span>'
+	yield '<span class="bold_text"> В зачёт идут 3 лучших результата из 4 <br/> </span>'
+	yield '<span class="text"> <br/>Взрослые тоже могут участвовать, но в отдельном зачёте (с призами для победителей) </span>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
@@ -343,10 +343,11 @@ def display_start_page(db):
 		Автор многих олимпиадных 
 		задач по математике: Турнир 
 		Городов, Московская олимпиада, 
-		Всероссийская, Матпраздник.<br/><br/>
+		Всероссийская, Матпраздник и других олимпиад.<br/><br/>
 		Преподаватель кружков <br/>
 		по олимпиадной математике <br/>
-		в ведущих школах Москвы.</div>'''
+		в ведущих школах Москвы. <br/>
+		Редактор журнала “Квант”.</div>'''
 	yield '</div>'
 
 	yield '<div class="content_box">'

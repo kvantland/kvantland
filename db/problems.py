@@ -211,7 +211,7 @@ def Geom2(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Найдите угол", hint="Постройте правильный треугольник ADC так, что B лежит внутри, и найдите два равных треугольника.", image="geoma3_2.svg")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Найдите угол", hint="Постройте правильный треугольник ADC так, что B лежит внутри него, и найдите два равных треугольника.", image="geoma3_2.svg")
 	for X, Y, A in [(104, 22, 82), (108, 24, 84), (112, 26, 86), (116, 28, 88)]:
 		desc = f"Внутри равнобедренного треугольника ABC с основанием AC и углом {X}⁰  при вершине B  взяли точку M так, что угол MAC равен {Y}⁰, а угол MCA равен 30⁰. Найдите угол ABM."
 		#desc += read_file('geoma3_2.svg').decode('utf-8')
