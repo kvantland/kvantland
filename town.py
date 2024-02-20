@@ -2,7 +2,7 @@
 
 import random
 from bottle import route, HTTPError
-
+from config import config
 import nav
 import user
 import footer
@@ -69,7 +69,7 @@ def show_town(db, town):
 		z" />'''
 
 	if user_id is not None:
-		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and student = %s', (town, user_id))
+		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and student = %s and tournament = %s', (town, user_id, config["tournament"]["version"]))
 	else:
 		db.execute('select null, position, points, name, null from Kvantland.Problem where town = %s', (town,))
 	for variant, position, points, name, ans_true in db.fetchall():

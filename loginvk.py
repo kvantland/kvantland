@@ -92,4 +92,5 @@ def add_user(login, name, surname, city, school, password, db):
 	db.execute("insert into Kvantland.Student (login, name, surname, town, school, password) values (%s, %s, %s, %s, %s, %s) returning student", (login, name, surname, city, school, pwhash.hash(password)))
 	(user, ), = db.fetchall()
 	db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
+	db.execute("insert into Kvantland.Score (student, tournament) values (%s, %s)", (user, config["tournament"]["version"]))
 	return user

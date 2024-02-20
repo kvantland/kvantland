@@ -21,6 +21,7 @@ create table Problem (
 	, position point
 	, points int not null
 	, image text
+	, tournament int not null
 );
 
 create table Hint (
@@ -64,3 +65,18 @@ create table AvailableProblem (
 	primary key (student, variant)
 );
 
+create table Score (
+	student int not null references Student on delete cascade,
+	tournament int not null,
+	score int not null default 10 check(score >= 0)
+);
+
+create table Season (
+	season int not null,
+	tournament int not null
+);
+
+create table Previousmail (
+	student int not null references Student on delete cascade,
+	email text
+);

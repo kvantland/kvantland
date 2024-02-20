@@ -8,7 +8,9 @@ import sys
 from pathlib import Path
 import json
 import psycopg
-
+import sys
+sys.path.insert(1, '../')
+from config import config
 random.seed(1337)
 
 def read_file(name):
@@ -74,11 +76,11 @@ def add_list(problems_list, variants_list):
 			content = variants_list[name]['content'][i]
 			add_variant(cur, problem, description, content)
 
-def add_problem(cur, town, points, type_, name, hint=None, hint_cost=None, image=None):
+def add_problem(cur, town, points, type_, name, hint=None, hint_cost=None, image=None, tournament=config["tournament"]["version"]):
 	type_ = get_type_id(cur, type_)
 	town = get_town_id(cur, town)
 	name = f"{name}"
-	cur.execute("insert into Kvantland.Problem (town, points, name, type_, image) values (%s, %s, %s, %s, %s) returning problem", (town, points, name, type_, image))
+	cur.execute("insert into Kvantland.Problem (town, points, name, type_, image, tournament) values (%s, %s, %s, %s, %s, %s) returning problem", (town, points, name, type_, image, tournament))
 	(problem,), = cur.fetchall()
 	if hint:
 		if not hint_cost:
@@ -2322,7 +2324,7 @@ def update_positions_town(cur, town, problem_count):
 	y0 = 720 / 2
 	R = 250
 	base = 0.25
-	cur.execute("select problem from Kvantland.Problem where town = %s", (town,))
+	cur.execute("select problem from Kvantland.Problem where town = %s and tournament = %s", (town, config["tournament"]["version"]))
 	if (problem_count == 1):
 		(problem, ), = cur.fetchall()
 		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x0, y0, problem))
@@ -2336,7 +2338,7 @@ def update_positions_town(cur, town, problem_count):
 			cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
 
 def update_positions(cur):
-	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) group by town")
+	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) where tournament = %s group by town", (config["tournament"]["version"],))
 	for town, problem_count in cur.fetchall():
 		update_positions_town(cur, town, problem_count)
 

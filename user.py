@@ -2,14 +2,13 @@
 from html import escape
 from urllib.parse import quote
 from bottle import route, request, response, redirect
-
+from config import config
 from login import current_user
 
 def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
 	user = current_user(db)
 	yield '<nav class="user_nav">'
-
 	yield '<a href="/">'
 	yield '<div class="logo_area">'
 	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
@@ -70,8 +69,10 @@ def display_banner(db):
 def display_banner_tournament(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
 	user = current_user(db)
-	db.execute('select coalesce(name, login), score from Kvantland.Student where student = %s', (user,))
-	(login, money), = db.fetchall()
+	db.execute('select coalesce(name, login) from Kvantland.Student where student = %s', (user,))
+	(login, ), = db.fetchall()
+	db.execute('select score from Kvantland.Score where student = %s and tournament = %s', (user, config["tournament"]["version"]))
+	(money, ), = db.fetchall()
 	yield '<nav class="user_nav">'
 
 	yield '<a href="/">'
@@ -143,8 +144,10 @@ def display_banner_empty():
 def display_banner_acc(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
 	user = current_user(db)
-	db.execute('select coalesce(name, login), score from Kvantland.Student where student = %s', (user,))
-	(login, money), = db.fetchall()
+	db.execute('select coalesce(name, login) from Kvantland.Student where student = %s', (user,))
+	(login, ), = db.fetchall()
+	db.execute('select score from Kvantland.Score where student = %s and tournament = %s', (user, config["tournament"]["version"]))
+	(money, ), = db.fetchall()
 	yield '<nav class="user_nav">'
 
 	yield '<a href="/">'

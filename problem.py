@@ -566,6 +566,7 @@ def problem_answer(db, var_id):
 		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, answer, var_id, user_id))
 	if is_answer_correct:
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (var_id, user_id))
+		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
 	
 	yield from _display_result(db, var_id, is_answer_correct, answer, solution)
 
@@ -586,6 +587,7 @@ def _request_hint(db, var_id):
 	db.execute('update Kvantland.AvailableProblem set hint_taken=true where variant = %s and student = %s', (var_id, user_id))
 	try:
 		db.execute('update Kvantland.Student set score=score - (select cost from Kvantland.Hint join Kvantland.Variant using (problem) where variant = %s) where student = %s', (var_id, user_id))
+		db.execute('update Kvantland.Score set score=score - (select cost from Kvantland.Hint join Kvantland.Variant using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
 	except psycopg.errors.CheckViolation:
 		pass
 
@@ -616,6 +618,7 @@ def xhr_request(db, user_id, var_id, params):
 	try: 
 		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (resp['answer_correct'], resp['user_answer'], var_id, user_id))
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) * %s where student = %s', (var_id, int(resp['answer_correct']), user_id))
+		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
 	except KeyError:
 		pass
 	try:
