@@ -137,7 +137,7 @@ def recovery_attempt(db, only_send=False, email=''):
 		try:
 			(user, name, ), = db.fetchall()
 		except:
-			db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where email=%s', (_email, ))
+			db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (_email, ))
 			(user, name, ), = db.fetchall()
 		if not only_send:
 			yield from show_send_message(_email)
