@@ -393,8 +393,15 @@ def update_user(db, info):
 	return int(user)
 
 def update_email(db, info):
+	try:
+		db.execute("select email Kvantland.Student where login = %s", (info['login'], ))
+		(prev_email, ), = db.fetchall()
+	except:
+		prev_email = ''
 	db.execute("update Kvantland.Student set email = %s where login = %s returning student", (info['email'], info['login']))
 	(user, ), = db.fetchall()
+	if prev_email:
+		db.execute("update Kvantland.Previousmail set email = %s where student = %s", (prev_email, user))
 	return int(user)
 
 @route('/acc_confirm')
