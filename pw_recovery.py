@@ -65,6 +65,7 @@ def display_recovery_form(err=None):
 def show_send_message(email):
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
+<<<<<<< HEAD
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
@@ -91,17 +92,62 @@ def show_send_message(email):
 	yield '</div>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
+=======
+<<<<<<< Updated upstream
+	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
+	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
+	yield '<div> Письмо с восстановлением пароля отправлено на ваш адрес! </div>'
+>>>>>>> 08a2f06 (Запрос на сервер при повторной отправке письма)
 
 @route('/pw_recovery', method="POST")
 def recovery_attempt(db):
 	_email = request.forms.email
 	if not _email:
+<<<<<<< HEAD
 		yield from display_recovery_form(err={"email":"Не указан адрес электронной почты"})
-		return
+=======
+		yield from display_recovery_form(err="Не указан адрес электронной почты")
+=======
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/mail_timer.css">'
+	yield from user.display_banner_empty()
+	yield '<div class="content_wrapper">'
+	yield '<div class="advert_form">'
+	yield '<div class="header"> Восстановление пароля </div>'
+	yield '''<div class="description"> Письмо для восстановления пароля</br>успешно отправлено на Ваш адрес!</br>
+		Для смены пароля перейдите по ссылке</br>
+		в письме, которое придёт Вам на почту</div>'''
+	yield '<div id="advert">'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Почта </div>'
+	yield f'<div class="input"> {email} </div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield f'<div class="timer"> Отправить еще раз через: {config["recovery"]["send_again"]}</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
+
+@route('/pw_recovery', method="POST")
+def recovery_attempt(db, only_send=False, email=''):
+	if not email:
+		_email = request.forms.email
+	else:
+		_email = email
+	if not _email and not only_send:
+		yield from display_recovery_form(err={"email":"Не указан адрес электронной почты"})
 	try:
 		db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
 		(user, name, ), = db.fetchall()
-		yield from show_send_message(_email)
+		if not only_send:
+			yield from show_send_message(_email)
 		check_user = current_user(db)
 		if check_user:
 			redirect('/')
@@ -170,12 +216,14 @@ def recovery_attempt(db):
 			try:
 				server.sendmail(sender, [_email], msg.as_string())
 			except:
-				yield from display_recovery_form(err={'email':'Адреса не существует'})
+				if not only_send:
+					yield from display_recovery_form(err={'email':'Адреса не существует'})
 			finally:
 				server.quit()	
 	except ValueError:
-		yield from display_recovery_form(err={'email':'Неверный адрес электронной почты'})
-		return
+		if not only_send:
+			yield from display_recovery_form(err={'email':'Неверный адрес электронной почты'})
+			return
 
 @route('/pw_recovery/new_password')
 def display_new_password_form(err=None):
@@ -268,3 +316,12 @@ def update_user(db, email, password):
 	db.execute('update Kvantland.Student set password=%s where email=%s returning student, login', (pwhash.hash(password), email, ))
 	(user, login, ) = db.fetchall()[0]
 	do_login(user, login)
+
+@route('/pw_recovery/send_again', method="POST")
+def send_again(db):
+	try:
+		info = json.loads(request.body.read())
+		email = info['email'].strip()
+		yield from recovery_attempt(db, True, email)
+	except KeyError:
+		return 

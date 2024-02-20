@@ -12,7 +12,9 @@ import email.message
 from email.message import EmailMessage
 import smtplib
 from config import config
+
 import urllib.parse
+import json
 
 _key = config['keys']['mail_confirm']
 
@@ -246,6 +248,7 @@ def check_new_params(db):
 		user_info = update_info(user_info, err_dict)
 		yield from display_pers_acc(db, err_dict, user_info)
 
+
 def new_mail(db, info):
 	if not current_user(db):
 		return True
@@ -267,7 +270,7 @@ def check_email(db, email):
 		return None
 	return user
 
-def show_send_message(email, db):
+def show_send_message(info, db):
 	yield '<!DOCTYPE html>'
 	yield '<title>Личный кабинет — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
@@ -289,18 +292,19 @@ def show_send_message(email, db):
 	yield '<div class="field">'
 	yield '<div class="content">'
 	yield '<div class="placeholder"> Почта </div>'
-	yield f'<div class="input"> {email} </div>'
+	yield f'<div class="input"> {info["email"]} </div>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
-	yield '<div class="timer"> Отправить еще раз через: 10</div>'
+	yield f'<div class="timer"> Отправить еще раз через: {config["recovery"]["send_again"]}</div>'
 	yield '</div>'
 	yield '</div>'
+	yield f'<input name="name" value={info["name"]} type="hidden"/>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
 
-def send_reg_confirm_message(db, info):
+def send_reg_confirm_message(db, info, only_send = False):
 	_email = info['email']
 	name = info['name']
 	try:
@@ -369,16 +373,19 @@ def send_reg_confirm_message(db, info):
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
-			yield from show_send_message(info['email'], db)
+			if not only_send:
+				yield from show_send_message(info, db)
 		except:
-			info['email'] = ''
-			yield from display_pers_acc(db, {'email':'Адреса не существует'}, info)
+			if not only_send:
+				info['email'] = ''
+				yield from display_pers_acc(db, {'email':'Адреса не существует'}, info)
 		finally:
 			server.quit()	
 	except ValueError:
-		info['email'] = ''
-		yield from display_pers_acc(db, {'email':'Неверный адрес электронной почты'}, info)
-		return
+		if not only_send:
+			info['email'] = ''
+			yield from display_pers_acc(db, {'email':'Неверный адрес электронной почты'}, info)
+			return
 
 def update_user(db, info):
 	db.execute("update Kvantland.Student set name = %s, surname = %s, school = %s, clas = %s, town = %s where login = %s returning student", (info['name'], info['surname'], info['school'], info['clas'], info['town'], info['login']))
@@ -404,3 +411,13 @@ def check(db):
 		user = update_email(db, user_info)
 		do_login(user, user_info['login'])
 		redirect('/')
+
+@route('/acc/send_again', method="POST")
+def send_again(db):
+	try:
+		info = json.loads(request.body.read())
+		email = info['email'].strip()
+		name = info['name'].strip()
+		yield from send_reg_confirm_message(db, {'email': email, 'name': name}, True)
+	except KeyError:
+		return 

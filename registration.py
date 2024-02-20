@@ -308,7 +308,11 @@ def login_attempt(db):
 				user_info[field] = ''
 		yield from display_registration_form(user_info, err_dict)
 
+<<<<<<< HEAD
 def show_send_message(email):
+=======
+def show_send_message(info):
+>>>>>>> 08a2f06 (Запрос на сервер при повторной отправке письма)
 	yield '<!DOCTYPE html>'
 	yield '<title>Регистрация — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
@@ -328,14 +332,16 @@ def show_send_message(email):
 	yield '<div class="field">'
 	yield '<div class="content">'
 	yield '<div class="placeholder"> Почта </div>'
-	yield f'<div class="input"> {email} </div>'
+	yield f'<div class="input"> {info["email"]} </div>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
-	yield '<div class="timer"> Отправить еще раз через: 10</div>'
+	yield f'<div class="timer"> Отправить еще раз через: {config["recovery"]["send_again"]}</div>'
 	yield '</div>'
 	yield '</div>'
+	for item in info:
+		yield f'<input type="hidden" name={item} value={info[item]} />'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
 
@@ -347,7 +353,7 @@ def req_query(params):
 	return '&'.join(query)
 
 
-def send_reg_confirm_message(info):
+def send_reg_confirm_message(info, only_send=False):
 	_email = info['email']
 	name = info['name']
 	try:
@@ -415,16 +421,19 @@ def send_reg_confirm_message(info):
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
-			yield from show_send_message(info['email'])
+			if not only_send:
+				yield from show_send_message(info)
 		except:
-			info['email'] = ''
-			yield from display_registration_form(info, err={'email': 'Адреса не существует'})
+			if not only_send:
+				info['email'] = ''
+				yield from display_registration_form(info, err={'email': 'Адреса не существует'})
 		finally:
 			server.quit()	
 	except ValueError:
-		info['email'] = ''
-		yield from display_registration_form(info, err={'email':'Неверный адрес электронной почты'})
-		return
+		if not only_send:
+			info['email'] = ''
+			yield from display_registration_form(info, err={'email':'Неверный адрес электронной почты'})
+			return
 
 @route('/reg_confirm')
 def check(db):
@@ -440,3 +449,13 @@ def check(db):
 		user = add_user(db, user_info)
 		do_login(user, user_info['login'])
 		redirect('/')
+
+@route('/reg/send_again', method="POST")
+def send_again():
+	try:
+		info = json.loads(request.body.read())
+		email = info['email'].strip()
+		info['email'] = email
+		yield from send_reg_confirm_message(info, True)
+	except KeyError:
+		return 
