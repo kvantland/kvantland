@@ -186,6 +186,18 @@
 	font-weight: 500;
 }
 
+.user_nav .button_area .back_button {
+	cursor: pointer;
+	padding: 10px 20px;
+	border-radius: 10px; 
+	color: white;
+	font-size: 20px; 
+	font-family: Montserrat Alternates; 
+	font-weight: 600;
+	background: #1E8B93; 
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+}
+
 .user_nav .button_area .acc_button {
 	width: 70px; 
 	height: 44px;
