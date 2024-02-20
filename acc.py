@@ -85,6 +85,14 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield '<div class="content_wrapper">'
 	yield '<div class="acc_form">'
 	yield '<div class="header"> Личный кабинет </div>'
+	try:
+		if request.query['empty']:
+			yield '<div class="empty_field_info">'
+			yield '<img src="/static/design/icons/info.svg" />'
+			yield '<div class="err"> Все поля в личном кабинете обязательны<br>для заполнения </div>'
+			yield '</div>'
+	except KeyError:
+		pass
 	yield f'<form id="acc" method="post">'
 	yield '<div class="fields">'
 	start_user_info = get_user(db, current_user(db))

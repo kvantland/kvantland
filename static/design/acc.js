@@ -20,6 +20,9 @@ for (let field of document.querySelectorAll('.full_field')) {
 		text.classList.remove('hidden')
 	})
 	inp.addEventListener('input', function(){
+		let empty_info = document.querySelector('.empty_field_info')
+		if (!empty_info.classList.contains('hidden'))
+			empty_info.classList.add('hidden')
 		let img = field.querySelector('.info')
 		if (img)
 			img.classList.add('hidden')

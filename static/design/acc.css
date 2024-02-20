@@ -57,6 +57,19 @@ body {
 	color: rgba(0, 0, 0, 0.30);
 }
 
+.acc_form .empty_field_info {
+	align-self: stretch;
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.acc_form .empty_field_info .err {
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 500;
+}
+
 #acc {
 	display: inline-flex;
 	flex-direction: column;

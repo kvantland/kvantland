@@ -38,7 +38,7 @@ def require_user(db):
 def show_land(db):
 	user_id = require_user(db)
 	if not user_id:
-		redirect('/acc')
+		redirect('/acc?empty=1')
 	if finished(db, user_id):
 		redirect("/final_page")
 	yield '<!DOCTYPE html>'
@@ -140,7 +140,7 @@ def show_land(db):
 def show_land(db):
 	user_id = require_user(db)
 	if not user_id:
-		redirect('/acc')
+		redirect('/acc?empty=1')
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
