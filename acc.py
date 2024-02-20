@@ -398,10 +398,16 @@ def update_email(db, info):
 		(prev_email, ), = db.fetchall()
 	except:
 		prev_email = None
+	print(prev_email, file=sys.stderr)
 	db.execute("update Kvantland.Student set email = %s where login = %s returning student", (info['email'], info['login']))
 	(user, ), = db.fetchall()
 	if prev_email:
-		db.execute("update Kvantland.Previousmail set email = %s where student = %s", (prev_email, user))
+		try:
+			db.execute("select email from Kvantland.Previousmail where student = %s", (user, ))
+			(mail, ), = db.fetchall()
+			db.execute("update Kvantland.Previousmail set email = %s where student = %s", (prev_mail, user))
+		except:
+			db.execute("insert into Kvantland.Previousmail (student, email) values(%s, %s)", (user, prev_email))
 	return int(user)
 
 @route('/acc_confirm')
