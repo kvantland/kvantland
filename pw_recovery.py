@@ -133,8 +133,8 @@ def recovery_attempt(db, only_send=False, email=''):
 	if not _email and not only_send:
 		yield from display_recovery_form(err={"email":"Не указан адрес электронной почты"})
 	try:
-		db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
 		try:
+			db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
 			(user, name, ), = db.fetchall()
 		except:
 			db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (_email, ))
