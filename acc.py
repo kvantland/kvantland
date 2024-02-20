@@ -161,7 +161,7 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield '<div class="button_area">'
 	yield f'<button type="submit" class="acc_button" form="acc"> Сохранить </button>'
 	yield '<hr size="1">'
-	yield f'<a href="/"><div class="back_button"> Назад </div></a>'
+	yield f'<a href="javascript:history.back()"><div class="back_button"> Назад </div></a>'
 	yield '</div>'
 	yield '</div>'
 
