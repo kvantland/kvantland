@@ -394,10 +394,10 @@ def update_user(db, info):
 
 def update_email(db, info):
 	try:
-		db.execute("select email Kvantland.Student where login = %s", (info['login'], ))
+		db.execute("select email from Kvantland.Student where login = %s", (info['login'], ))
 		(prev_email, ), = db.fetchall()
 	except:
-		prev_email = ''
+		prev_email = None
 	db.execute("update Kvantland.Student set email = %s where login = %s returning student", (info['email'], info['login']))
 	(user, ), = db.fetchall()
 	if prev_email:
