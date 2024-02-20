@@ -2492,7 +2492,7 @@ def update_positions_town(cur, town, problem_count):
 	y0 = 720 / 2
 	R = 250
 	base = 0.25
-	cur.execute("select problem from Kvantland.Problem where town = %s", (town,))
+	cur.execute("select problem from Kvantland.Problem where town = %s and tournament = %s", (town, config["tournament"]["version"]))
 	if (problem_count == 1):
 		(problem, ), = cur.fetchall()
 		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x0, y0, problem))
@@ -2506,7 +2506,7 @@ def update_positions_town(cur, town, problem_count):
 			cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
 
 def update_positions(cur):
-	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) group by town")
+	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) where tournament = %s group by town", (config["tournament"]["version"],))
 	for town, problem_count in cur.fetchall():
 		update_positions_town(cur, town, problem_count)
 
