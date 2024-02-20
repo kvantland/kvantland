@@ -3,6 +3,8 @@ from bottle import route
 from config import config
 import user
 
+import footer
+
 @route('/policy')
 def display_confidentiality(db):
 	yield '<!DOCTYPE html>'
@@ -12,6 +14,7 @@ def display_confidentiality(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/policy.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield from user.display_banner_policy(db)
 	yield '<div class="content_wrapper">'
@@ -231,4 +234,5 @@ def display_confidentiality(db):
 
 	yield '</div>'
 	yield '</div>'
+	yield from footer.display_basement()
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
