@@ -63,6 +63,7 @@ port = 465
 login = '11111111'
 password = ''
 sender = 'noreply@kvantland.ru'
+send_again = 60
 
 [tournament]
 version = 1
