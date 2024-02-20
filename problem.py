@@ -259,6 +259,7 @@ def show_question(db, variant, hint_mode):
 	yield '<div class="text">Больше нельзя делать взвешивания!</div>'
 	yield '</div>'
 	yield '</div> '
+	yield from footer.display_basement()
 	#
 	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
 	yield '<script type="text/ecmascript" src="/static/design/xhr_dialog.js"></script>'
@@ -428,6 +429,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield from footer.display_problem()
 	yield '</div>'
 	yield '</div>'
+	yield from footer.display_basement()
 	yield '<script type="text/ecmascript" src="/static/focus_on_answer.js"></script>'
 
 

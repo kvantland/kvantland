@@ -5,6 +5,7 @@ from bottle import route, redirect
 
 import nav
 import user
+import footer
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -48,6 +49,7 @@ def show_land(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/land.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
@@ -129,6 +131,8 @@ def show_land(db):
 	yield f'<p class="contact"> Техническая поддержка: <a href="mailto:{config["contacts"]["support_email"]}">{config["contacts"]["support_email"]}</a> </p>'
 	yield '</div>'
 	'''
+	yield '</div>'
+	yield from footer.display_basement()
 	yield '<script type="module" src="/static/results.js"></script>'
 	#yield '<script type="text/ecmascript" src="/static/design/land.js"></script>'
 
@@ -145,6 +149,7 @@ def show_land(db):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/rules.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	#yield from user.display_banner(db)
 	yield from user.display_banner_tournament(db)
@@ -180,3 +185,5 @@ def show_land(db):
 	yield '</div>'
 	#yield from footer.display_footer()
 	yield '</div>'	
+	yield '</div>'
+	yield from footer.display_basement()

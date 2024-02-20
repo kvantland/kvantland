@@ -5,6 +5,7 @@ from bottle import route, HTTPError
 
 import nav
 import user
+import footer
 
 def require_user(db):
 	user_id = user.current_user(db)
@@ -31,6 +32,7 @@ def show_town(db, town):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/town.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield from user.display_banner_tournament(db)
 	yield '<div class="content_wrapper">'
@@ -89,3 +91,4 @@ def show_town(db, town):
 		yield f'</a>'
 	yield '</svg>'
 	yield '</div>'
+	yield from footer.display_basement()
