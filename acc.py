@@ -271,6 +271,7 @@ def show_send_message(email, db):
 	yield '<!DOCTYPE html>'
 	yield '<title>Личный кабинет — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/mail_timer.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
 	yield from user.display_banner_acc(db)
@@ -293,9 +294,11 @@ def show_send_message(email, db):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
+	yield '<div class="timer"> Отправить еще раз через: 10</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
 
 def send_reg_confirm_message(db, info):
 	_email = info['email']
@@ -366,11 +369,10 @@ def send_reg_confirm_message(db, info):
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
-			yield from show_send_message(user_info['email'], db)
+			yield from show_send_message(info['email'], db)
 		except:
 			info['email'] = ''
 			yield from display_pers_acc(db, {'email':'Адреса не существует'}, info)
-			return
 		finally:
 			server.quit()	
 	except ValueError:

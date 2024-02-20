@@ -313,6 +313,7 @@ def show_send_message(email):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/registration.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/mail_timer.css">'
 	yield from user.display_banner_empty()
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
@@ -331,9 +332,11 @@ def show_send_message(email):
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
+	yield '<div class="timer"> Отправить еще раз через: 10</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
 
 
 def req_query(params):
