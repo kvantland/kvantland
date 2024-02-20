@@ -76,6 +76,11 @@ create table Season (
 	tournament int not null
 );
 
+create table Previousmail (
+	student int not null references Student on delete cascade,
+	email text
+);
+
 insert into Kvantland.Type_ (code) (select код from Квантландия.Тип ORDER BY тип ASC);
 
 insert into Kvantland.Town (name, position) values
@@ -100,3 +105,5 @@ insert into Kvantland.AvailableProblem (student, variant, answer_true, hint_take
 insert into Kvantland.Score (student, tournament, score) (select ученик, 1, счёт from Квантландия.Ученик ORDER BY ученик ASC);
 
 insert into Kvantland.Score (student, tournament, score) (select ученик, 2, 10 from Квантландия.Ученик ORDER BY ученик ASC);
+
+insert into Kvantland.Previousmail (student, email) (select ученик, почта from Квантландия.Ученик ORDER BY ученик ASC);

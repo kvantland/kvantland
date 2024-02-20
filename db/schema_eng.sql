@@ -76,3 +76,7 @@ create table Season (
 	tournament int not null
 );
 
+create table Previousmail (
+	student int not null references Student on delete cascade,
+	email text
+);
