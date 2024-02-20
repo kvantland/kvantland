@@ -301,7 +301,6 @@ def login_attempt(db):
 
 	if len(err_dict) == 0:
 		yield from send_reg_confirm_message(user_info)
-		yield from show_send_message(user_info['email'])
 	else: 
 		for field in err_dict:
 			if field in user_info.keys():
@@ -412,6 +411,7 @@ def send_reg_confirm_message(info):
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
+			yield from show_send_message(info['email'])
 		except:
 			info['email'] = ''
 			yield from display_registration_form(info, err={'email': 'Адреса не существует'})

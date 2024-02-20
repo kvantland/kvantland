@@ -85,14 +85,15 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield '<div class="content_wrapper">'
 	yield '<div class="acc_form">'
 	yield '<div class="header"> Личный кабинет </div>'
-	try:
-		if request.query['empty']:
-			yield '<div class="empty_field_info">'
-			yield '<img src="/static/design/icons/info.svg" />'
-			yield '<div class="err"> Все поля в личном кабинете обязательны<br>для заполнения </div>'
-			yield '</div>'
-	except KeyError:
-		pass
+	if not err:
+		try:
+			if request.query['empty']:
+				yield '<div class="empty_field_info">'
+				yield '<img src="/static/design/icons/info.svg" />'
+				yield '<div class="err"> Все поля в личном кабинете обязательны<br>для заполнения </div>'
+				yield '</div>'
+		except KeyError:
+			pass
 	yield f'<form id="acc" method="post">'
 	yield '<div class="fields">'
 	start_user_info = get_user(db, current_user(db))
@@ -238,8 +239,7 @@ def check_new_params(db):
 	if not err_dict:
 		update_user(db, user_info)
 		if new_mail(db, user_info):
-			yield from send_reg_confirm_message(user_info)
-			yield from show_send_message(user_info['email'], db)
+			yield from send_reg_confirm_message(db, user_info)
 		else:
 			redirect('/')
 	else:
@@ -297,7 +297,7 @@ def show_send_message(email, db):
 	yield '</div>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 
-def send_reg_confirm_message(info):
+def send_reg_confirm_message(db, info):
 	_email = info['email']
 	name = info['name']
 	try:
@@ -366,9 +366,11 @@ def send_reg_confirm_message(info):
 		server.login(str(login), str(password))
 		try:
 			server.sendmail(sender, [_email], msg.as_string())
+			yield from show_send_message(user_info['email'], db)
 		except:
 			info['email'] = ''
 			yield from display_pers_acc(db, {'email':'Адреса не существует'}, info)
+			return
 		finally:
 			server.quit()	
 	except ValueError:
