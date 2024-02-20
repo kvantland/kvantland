@@ -65,7 +65,6 @@ def display_recovery_form(err=None):
 def show_send_message(email):
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
-<<<<<<< HEAD
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
@@ -92,22 +91,12 @@ def show_send_message(email):
 	yield '</div>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
-=======
-<<<<<<< Updated upstream
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), ('/login', 'Войти'))
-	yield '<div> Письмо с восстановлением пароля отправлено на ваш адрес! </div>'
->>>>>>> 08a2f06 (Запрос на сервер при повторной отправке письма)
 
 @route('/pw_recovery', method="POST")
 def recovery_attempt(db):
 	_email = request.forms.email
 	if not _email:
-<<<<<<< HEAD
 		yield from display_recovery_form(err={"email":"Не указан адрес электронной почты"})
-=======
-		yield from display_recovery_form(err="Не указан адрес электронной почты")
-=======
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
@@ -145,7 +134,13 @@ def recovery_attempt(db, only_send=False, email=''):
 		yield from display_recovery_form(err={"email":"Не указан адрес электронной почты"})
 	try:
 		db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
-		(user, name, ), = db.fetchall()
+		try:
+			(user, name, ), = db.fetchall()
+		except:
+			db.execute('select student from Kvantland.Previousmail where email=%s', (_email, ))
+			(user, ), = db.fetchall()
+			db.execute('select name from Kvantland.Student where student=%s', (user, ))
+			(name, ), = db.fetchall()
 		if not only_send:
 			yield from show_send_message(_email)
 		check_user = current_user(db)

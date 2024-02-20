@@ -308,11 +308,8 @@ def login_attempt(db):
 				user_info[field] = ''
 		yield from display_registration_form(user_info, err_dict)
 
-<<<<<<< HEAD
-def show_send_message(email):
-=======
+
 def show_send_message(info):
->>>>>>> 08a2f06 (Запрос на сервер при повторной отправке письма)
 	yield '<!DOCTYPE html>'
 	yield '<title>Регистрация — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
