@@ -135,10 +135,10 @@ def recovery_attempt(db, only_send=False, email=''):
 	try:
 		try:
 			db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
-			(user, name, ), = db.fetchall()
+			(user, name, ) = db.fetchall()[0]
 		except:
 			db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (_email, ))
-			(user, name, ), = db.fetchall()
+			(user, name, ) = db.fetchall()[0]
 		if not only_send:
 			yield from show_send_message(_email)
 		check_user = current_user(db)
@@ -306,7 +306,13 @@ def new_password_attempt(db):
 
 
 def update_user(db, email, password):
-	db.execute('update Kvantland.Student set password=%s where email=%s returning student, login', (pwhash.hash(password), email, ))
+	try: 
+		db.execute('select student from Kvantland.Student where email = %s', (email, ))
+		(user, ) = db.fetchall()[0]
+	except IndexError:
+		db.execute('select student from Kvantland.Previousmail where email = %s', (email, ))
+		(user, ) = db.fetchall()[0]
+	db.execute('update Kvantland.Student set password=%s where student = %s returning student, login', (pwhash.hash(password), user, ))
 	(user, login, ) = db.fetchall()[0]
 	do_login(user, login)
 
