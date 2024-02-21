@@ -16,6 +16,10 @@ body{
 	fill: transparent;
 }
 
+.filler {
+	fill: transparent;
+}
+
 @media(min-width: 961px) {
 	.square:hover{
 		cursor: pointer;

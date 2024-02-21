@@ -37,7 +37,9 @@ def entry_form(data, kwargs):
                 yield f'<g class="coin" transform="translate({x * side + ind} {y * side + ind})">'
                 yield f'<circle cx="{side / 2}" cy="{side / 2}" r="{15}"/>'
                 yield '</g>'
-            yield f'<rect class="free square" row="{y}" column="{x}" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
+                yield f'<rect class="free square" row="{y}" column="{x}" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
+            else:
+                yield f'<rect class="filler" row="{y}" column="{x}" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
     yield f'</g>'
     yield f'<image class="arrow" x="{board_height / 2 - inner_side}" y="{board_height + ind - inner_side}" width="{inner_side}" height="{inner_side}" href="/static/arrow.svg">'
     yield '</svg>'
