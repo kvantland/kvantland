@@ -508,11 +508,19 @@ def get_past_answer_correctness(db, user_id, var_id):
 		return None
 	return is_answer_correct
 
+def is_current_tournament(db, var_id):
+	db.execute('select tournament from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s', (var_id,))
+	tourn, = db.fetchall()
+	return tourn[0] == config["tournament"]["version"]
+
+
 @route('/problem/<var_id:int>/')
 def problem_show(db, var_id):
 	user_id = require_user(db)
 	print(user_id, file=sys.stderr)
 	if user_id == None:
+		redirect('/')
+	if not is_current_tournament(db, var_id):
 		redirect('/')
 	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
 	if is_answer_correct is not None:
