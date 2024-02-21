@@ -67,3 +67,7 @@ send_again = 60
 
 [tournament]
 version = 1
+
+[mail_check]
+allowed_period = 86400
+allowed_amount = 10
