@@ -81,6 +81,12 @@ create table Previousmail (
 	email text
 );
 
+create table Mail (
+	mail text
+	, remainig_mails int not null default 10 check(remainig_mails >= 0)
+	, first_mail int
+);
+
 insert into Kvantland.Type_ (code) (select код from Квантландия.Тип ORDER BY тип ASC);
 
 insert into Kvantland.Town (name, position) values
