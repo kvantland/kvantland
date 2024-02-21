@@ -326,6 +326,19 @@ body {
 	font-weight: 500;
 }
 
+.advert_form .limit_info {
+	align-self: stretch;
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.advert_form .limit_info .err {
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 500;
+}
+
 #advert {
 	display: inline-flex;
 	flex-direction: column;

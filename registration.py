@@ -310,7 +310,7 @@ def login_attempt(db):
 		yield from display_registration_form(user_info, err_dict)
 
 
-def show_send_message(info):
+def show_send_message(info, limit_err=False):
 	yield '<!DOCTYPE html>'
 	yield '<title>Регистрация — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
@@ -321,10 +321,16 @@ def show_send_message(info):
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Регистрация </div>'
-	yield '''<div class="description"> Письмо для подтверждения регистрации</br> успешно отправлено на Ваш адрес!</br>
-		Для подтверджения адреса перейдите</br>
-		по ссылке в письме, которое придёт Вам<br/> на почту
-	</div>'''
+	if not limit_err:
+		yield '''<div class="description"> Письмо для подтверждения регистрации</br> успешно отправлено на Ваш адрес!</br>
+			Для подтверджения адреса перейдите</br>
+			по ссылке в письме, которое придёт Вам<br/> на почту
+		</div>'''
+	else:
+		yield '<div class="limit_info">'
+		yield '<img src="/static/design/icons/info.svg" />'
+		yield '<div class="err"> Превышен лимит писем за день! </div>'
+		yield '</div>'
 	yield '<div id="advert">'
 	yield '<div class="full_field">'
 	yield '<div class="field">'
@@ -448,6 +454,8 @@ def send_reg_confirm_message(db, info, only_send=False):
 				update_email_amount(db, info)
 				if not only_send:
 					yield from show_send_message(info)
+			else:
+				yield from show_send_message(info, limit_err=True)
 		except:
 			if not only_send:
 				info['email'] = ''

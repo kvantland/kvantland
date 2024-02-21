@@ -271,7 +271,7 @@ def check_email(db, email):
 		return None
 	return user
 
-def show_send_message(info, db):
+def show_send_message(info, db, limit_err=False):
 	yield '<!DOCTYPE html>'
 	yield '<title>Личный кабинет — Квантландия</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
@@ -282,12 +282,18 @@ def show_send_message(info, db):
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Подтверждение адреса электронной почты </div>'
-	yield '''<div class="description"> 
-		Письмо для подтверждения адреса
-		электронной почты,</br> 
-		привязанной	к Вашему аккаунту, успешно отправлено!</br>
-		Для подтверждения адреса, перейдите по ссылке в</br>
-		письме, которое придёт Вам на почту</div>'''
+	if not limit_err:
+		yield '''<div class="description"> 
+			Письмо для подтверждения адреса
+			электронной почты,</br> 
+			привязанной	к Вашему аккаунту, успешно отправлено!</br>
+			Для подтверждения адреса, перейдите по ссылке в</br>
+			письме, которое придёт Вам на почту</div>'''
+	else:
+		yield '<div class="limit_info">'
+		yield '<img src="/static/design/icons/info.svg" />'
+		yield '<div class="err"> Превышен лимит писем за день! </div>'
+		yield '</div>'
 	yield '<div id="advert">'
 	yield '<div class="full_field">'
 	yield '<div class="field">'
@@ -408,7 +414,7 @@ def send_reg_confirm_message(db, info, only_send = False):
 					yield from show_send_message(info, db)
 			else:
 				if not only_send:
-					yield from show_send_message(info, db)
+					yield from show_send_message(info, db, limit_err=True)
 		except:
 			if not only_send:
 				info['email'] = ''

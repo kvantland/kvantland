@@ -63,38 +63,7 @@ def display_recovery_form(err=None):
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/design/pw_recovery.js"></script>'
 
-def show_send_message(email):
-	yield '<!DOCTYPE html>'
-	yield '<title>Восстановление пароля</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/pw_recovery.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/mail_timer.css">'
-	yield from user.display_banner_empty()
-	yield '<div class="content_wrapper">'
-	yield '<div class="advert_form">'
-	yield '<div class="header"> Восстановление пароля </div>'
-	yield '''<div class="description"> Письмо для восстановления пароля</br>успешно отправлено на Ваш адрес!</br>
-		Для смены пароля перейдите по ссылке</br>
-		в письме, которое придёт Вам на почту</div>'''
-	yield '<div id="advert">'
-	yield '<div class="full_field">'
-	yield '<div class="field">'
-	yield '<div class="content">'
-	yield '<div class="placeholder"> Почта </div>'
-	yield f'<div class="input"> {email} </div>'
-	yield '</div>'
-	yield '</div>'
-	yield '</div>'
-	yield '</div>'
-	yield '<div class="timer"> Отправить еще раз через: 10</div>'
-	yield '</div>'
-	yield '</div>'
-	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
-	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
-
-@route('/pw_recovery', method="POST")
-def recovery_attempt(db):
+def show_send_message(db, email, limit_err=False):
 	_email = request.forms.email
 	if not _email:
 		yield from display_recovery_form(err={"email":"Не указан адрес электронной почты"})
@@ -106,9 +75,15 @@ def recovery_attempt(db):
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
 	yield '<div class="header"> Восстановление пароля </div>'
-	yield '''<div class="description"> Письмо для восстановления пароля</br>успешно отправлено на Ваш адрес!</br>
-		Для смены пароля перейдите по ссылке</br>
-		в письме, которое придёт Вам на почту</div>'''
+	if not limit_err:
+		yield '''<div class="description"> Письмо для восстановления пароля</br>успешно отправлено на Ваш адрес!</br>
+			Для смены пароля перейдите по ссылке</br>
+			в письме, которое придёт Вам на почту</div>'''
+	else:
+		yield '<div class="limit_info">'
+		yield '<img src="/static/design/icons/info.svg" />'
+		yield '<div class="err"> Превышен лимит писем за день! </div>'
+		yield '</div>'
 	yield '<div id="advert">'
 	yield '<div class="full_field">'
 	yield '<div class="field">'
@@ -166,7 +141,8 @@ def recovery_attempt(db, only_send=False, email=''):
 			db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (_email, ))
 			(user, name, ) = db.fetchall()[0]
 		if not only_send:
-			yield from show_send_message(_email)
+			lim_err = not(check_email_amount(db, _email))
+			yield from show_send_message(db, _email, limit_err=lim_err)
 		check_user = current_user(db)
 		if check_user:
 			redirect('/')
