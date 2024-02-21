@@ -107,5 +107,3 @@ insert into Kvantland.Score (student, tournament, score) (select ученик, 1
 insert into Kvantland.Score (student, tournament, score) (select ученик, 2, 10 from Квантландия.Ученик ORDER BY ученик ASC);
 
 insert into Kvantland.Previousmail (student, email) (select ученик, почта from Квантландия.Ученик ORDER BY ученик ASC);
-
-update Kvantland.Previousmail set email='vlador3et@gmail.com' where student=3;
