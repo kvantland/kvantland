@@ -14,6 +14,7 @@ from html import escape
 from config import config
 import urllib.request as urllib2
 import urllib.parse
+import time
 
 import sys
 
@@ -301,7 +302,7 @@ def login_attempt(db):
 		err_dict['email'] = 'Почта уже используется'
 
 	if len(err_dict) == 0:
-		yield from send_reg_confirm_message(user_info)
+		yield from send_reg_confirm_message(db, user_info)
 	else: 
 		for field in err_dict:
 			if field in user_info.keys():
@@ -349,8 +350,33 @@ def req_query(params):
 		query.append(f'{key}={val}')
 	return '&'.join(query)
 
+def check_email_amount(db, info):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (info['email'], ))
+	first_ = db.fetchall()
+	if len(first_) > 0:
+		(first_email, ), = first_
+	else:
+		first_email = time.time()
+		db.execute('insert into Kvantland.Mail (mail, first_mail) values(%s, %s)', (info['email'], first_email))
+	if time.time() - first_email > config['mail_check']['allowed_period']:
+		return True
+	else:
+		db.execute('select remainig_mails from Kvantland.Mail where mail = %s', (info['email'], ))
+		(remainig_mails, ), = db.fetchall()
+		if remainig_mails > 0:
+			return True
+	return False
 
-def send_reg_confirm_message(info, only_send=False):
+def update_email_amount(db, info):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (info['email'], ))
+	(first_email, ), = db.fetchall()
+	if time.time() - first_email < config['mail_check']['allowed_period']:
+		db.execute('update Kvantland.Mail set remainig_mails = remainig_mails - 1 where mail = %s', (info['email'], ))
+	else:
+		db.execute('update Kvantland.Mail set first_mail = %s, remainig_mails = %s where mail = %s', (time.time(), config['mail_check']['allowed_amount'], info['email']))
+
+
+def send_reg_confirm_message(db, info, only_send=False):
 	_email = info['email']
 	name = info['name']
 	try:
@@ -417,9 +443,11 @@ def send_reg_confirm_message(info, only_send=False):
 
 		server.login(str(login), str(password))
 		try:
-			server.sendmail(sender, [_email], msg.as_string())
-			if not only_send:
-				yield from show_send_message(info)
+			if check_email_amount(db, info):
+				server.sendmail(sender, [_email], msg.as_string())
+				update_email_amount(db, info)
+				if not only_send:
+					yield from show_send_message(info)
 		except:
 			if not only_send:
 				info['email'] = ''
@@ -448,11 +476,11 @@ def check(db):
 		redirect('/')
 
 @route('/reg/send_again', method="POST")
-def send_again():
+def send_again(db):
 	try:
 		info = json.loads(request.body.read())
 		email = info['email'].strip()
 		info['email'] = email
-		yield from send_reg_confirm_message(info, True)
+		yield from send_reg_confirm_message(db, info, True)
 	except KeyError:
 		return 

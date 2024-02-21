@@ -12,6 +12,7 @@ import email.message
 from email.message import EmailMessage
 import smtplib
 from config import config
+import time
 
 import urllib.parse
 import json
@@ -301,8 +302,36 @@ def show_send_message(info, db):
 	yield '</div>'
 	yield '</div>'
 	yield f'<input name="name" value={info["name"]} type="hidden"/>'
+	yield f'<input name="login" value={info["login"]} type="hidden"/>'
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
+
+
+def check_email_amount(db, info):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (info['email'], ))
+	first_ = db.fetchall()
+	if len(first_) > 0:
+		(first_email, ), = first_
+	else:
+		first_email = time.time()
+		db.execute('insert into Kvantland.Mail (mail, first_mail) values(%s, %s)', (info['email'], first_email))
+	if time.time() - first_email > config['mail_check']['allowed_period']:
+		return True
+	else:
+		db.execute('select remainig_mails from Kvantland.Mail where mail = %s', (info['email'], ))
+		(remainig_mails, ), = db.fetchall()
+		if remainig_mails > 0:
+			return True
+	return False
+
+def update_email_amount(db, info):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (info['email'], ))
+	(first_email, ), = db.fetchall()
+	if time.time() - first_email < config['mail_check']['allowed_period']:
+		db.execute('update Kvantland.Mail set remainig_mails = remainig_mails - 1 where mail = %s', (info['email'], ))
+	else:
+		db.execute('update Kvantland.Mail set first_mail = %s, remainig_mails = %s where mail = %s', (time.time(), config['mail_check']['allowed_amount'], info['email']))
+
 
 def send_reg_confirm_message(db, info, only_send = False):
 	_email = info['email']
@@ -372,9 +401,14 @@ def send_reg_confirm_message(db, info, only_send = False):
 
 		server.login(str(login), str(password))
 		try:
-			server.sendmail(sender, [_email], msg.as_string())
-			if not only_send:
-				yield from show_send_message(info, db)
+			if check_email_amount(db, info):
+				server.sendmail(sender, [_email], msg.as_string())
+				update_email_amount(db, info)
+				if not only_send:
+					yield from show_send_message(info, db)
+			else:
+				if not only_send:
+					yield from show_send_message(info, db)
 		except:
 			if not only_send:
 				info['email'] = ''
@@ -398,7 +432,6 @@ def update_email(db, info):
 		(prev_email, ), = db.fetchall()
 	except:
 		prev_email = None
-	print(prev_email, file=sys.stderr)
 	db.execute("update Kvantland.Student set email = %s where login = %s returning student", (info['email'], info['login']))
 	(user, ), = db.fetchall()
 	if prev_email:
@@ -431,6 +464,7 @@ def send_again(db):
 		info = json.loads(request.body.read())
 		email = info['email'].strip()
 		name = info['name'].strip()
-		yield from send_reg_confirm_message(db, {'email': email, 'name': name}, True)
+		login = info['name'].strip()
+		yield from send_reg_confirm_message(db, {'email': email, 'name': name, 'login': login}, True)
 	except KeyError:
 		return 

@@ -80,3 +80,9 @@ create table Previousmail (
 	student int not null references Student on delete cascade,
 	email text
 );
+
+create table Mail (
+	mail text
+	, remainig_mails int not null default 10 check(remainig_mails >= 0)
+	, first_mail int
+);

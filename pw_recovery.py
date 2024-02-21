@@ -12,6 +12,7 @@ from pathlib import Path
 from email.message import EmailMessage
 import smtplib
 from html import escape
+import time
 
 from login import do_login, current_user
 from config import config
@@ -124,6 +125,31 @@ def recovery_attempt(db):
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
 
+def check_email_amount(db, email):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (email, ))
+	first_ = db.fetchall()
+	if len(first_) > 0:
+		(first_email, ), = first_
+	else:
+		first_email = time.time()
+		db.execute('insert into Kvantland.Mail (mail, first_mail) values(%s, %s)', (email, first_email))
+	if time.time() - first_email > config['mail_check']['allowed_period']:
+		return True
+	else:
+		db.execute('select remainig_mails from Kvantland.Mail where mail = %s', (email, ))
+		(remainig_mails, ), = db.fetchall()
+		if remainig_mails > 0:
+			return True
+	return False
+
+def update_email_amount(db, email):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (email, ))
+	(first_email, ), = db.fetchall()
+	if time.time() - first_email < config['mail_check']['allowed_period']:
+		db.execute('update Kvantland.Mail set remainig_mails = remainig_mails - 1 where mail = %s', (email, ))
+	else:
+		db.execute('update Kvantland.Mail set first_mail = %s, remainig_mails = %s where mail = %s', (time.time(), config['mail_check']['allowed_amount'], email))
+
 @route('/pw_recovery', method="POST")
 def recovery_attempt(db, only_send=False, email=''):
 	if not email:
@@ -207,7 +233,9 @@ def recovery_attempt(db, only_send=False, email=''):
 
 			server.login(str(login), str(password))
 			try:
-				server.sendmail(sender, [_email], msg.as_string())
+				if check_email_amount(db, _email):
+					server.sendmail(sender, [_email], msg.as_string())
+					update_email_amount(db, _email)
 			except:
 				if not only_send:
 					yield from display_recovery_form(err={'email':'Адреса не существует'})
