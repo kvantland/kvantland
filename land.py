@@ -94,7 +94,7 @@ def show_land(db):
 
 	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin" clip-path="url(#map_border)" meet/>'
 	if user_id is not None:
-		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false) from Kvantland.Town', (user_id, ))
+		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false and tournament = %s) from Kvantland.Town', (user_id, config["tournament"]["version"]))
 	else:
 		db.execute('select town, name, position, true from Kvantland.Town')
 
