@@ -15,9 +15,10 @@ def display_starter():
 	yield '<div class="button_area">'
 	yield f'<a class="contact_button" href="{config["contacts"]["vk_link"]}" target="_blank"> <img class="contact_icon" src="/static/design/icons/vk.svg" /> </a>'
 	yield f'<a class="contact_button" href="{config["contacts"]["tg_link"]}" target="_blank"> <img class="contact_icon" src="/static/design/icons/tg.svg" /> </a>'
-	yield f'<a class="contact_button" href="{config["contacts"]["youtube_link"]} target="_blank"> <img class="contact_icon" src="/static/design/icons/play.svg" /> </a>'
-	yield f'<a class="contact_button" href="mailto:{config["contacts"]["support_email"]}" target="_blank"> <img class="contact_icon" src="/static/design/icons/email.svg" /> </a>'
+	yield f'<a class="contact_button" href="{config["contacts"]["youtube_link"]}" target="_blank"> <img class="contact_icon" src="/static/design/icons/play.svg" /> </a>'
+	yield f'<a class="contact_button" href="mailto:{config["contacts"]["support_email"]}" target="_blank" title="{config["contacts"]["support_email"]}"> <img class="contact_icon" src="/static/design/icons/email.svg" /> </a>'
 	yield '</div>'
+	yield f'<div> Адрес техподдержки: <a  href="mailto:{config["contacts"]["support_email"]}" target="_blank"> {config["contacts"]["support_email"]} </a></div>'
 	yield '</div>'
 
 def display_basement():
