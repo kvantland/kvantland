@@ -413,8 +413,7 @@ def send_reg_confirm_message(db, info, only_send = False):
 				if not only_send:
 					yield from show_send_message(info, db)
 			else:
-				if not only_send:
-					yield from show_send_message(info, db, limit_err=True)
+				yield from show_send_message(info, db, limit_err=True)
 		except:
 			if not only_send:
 				info['email'] = ''
