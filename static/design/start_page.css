@@ -363,9 +363,11 @@
 }
 
 .team_container {
-	display: inline-flex;
 	flex-direction: column;
-	gap: 40px; 
+  	justify-content: flex-start;
+  	align-items: flex-start;
+  	gap: 40px;
+  	display: flex;
 }
 
 .team_container .page_header {
@@ -376,14 +378,18 @@
 }
 
 .team_container .content {
-	display: inline-flex;
 	flex-direction: column;
-	gap: 30px;
+  	justify-content: center;
+  	align-items: center;
+  	gap: 30px;
+  	display: inline-flex;
 }
 
 .team_container .content_row {
-	display: inline-flex;
-	gap: 25px;
+	justify-content: space-between;
+  	align-items: flex-start;
+  	gap: 25px;
+  	display: inline-flex;
 }
 
 .team_container .content_box {
