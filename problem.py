@@ -354,9 +354,13 @@ def show_question_old(db, variant, hint_mode):
 	if script:
 		yield f'<script type="text/ecmascript">{script}</script>'
 
-def check_answer(db, var_id, answer):
+def check_answer(db, var_id, user_id, answer):
 	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, content), = db.fetchall()
+	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
+	(curr, ), = db.fetchall()
+	if curr:
+		content = curr
 	typedesc = import_module(f'problem-types.{type_}')
 	return typedesc.validate(content, answer)
 
@@ -567,7 +571,7 @@ def problem_answer(db, var_id):
 	except AttributeError:
 		save_progress = True
 
-	is_answer_correct = check_answer(db, var_id, answer)
+	is_answer_correct = check_answer(db, var_id, user_id, answer)
 	if save_progress:
 		db.execute('update Kvantland.AvailableProblem set answer_true=%s, solution=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, solution, answer, var_id, user_id))
 	else:
