@@ -138,8 +138,12 @@ def recovery_attempt(db, only_send=False, email=''):
 			db.execute('select student, name from Kvantland.Student where email=%s', (_email, ))
 			(user, name, ) = db.fetchall()[0]
 		except:
-			db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (_email, ))
-			(user, name, ) = db.fetchall()[0]
+			try:
+				db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (_email, ))
+				(user, name, ) = db.fetchall()[0]
+			except:
+				yield from display_recovery_form(err={"email":"Почты не существует"})
+				return
 		if not only_send:
 			lim_err = not(check_email_amount(db, _email))
 			yield from show_send_message(db, _email, limit_err=lim_err)
