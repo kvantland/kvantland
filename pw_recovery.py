@@ -141,12 +141,8 @@ def recovery_attempt(db, only_send=False, email=''):
 			try:
 				db.execute('select student, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (_email, ))
 				(user, name, ) = db.fetchall()[0]
-			except:
-				yield from display_recovery_form(err={"email":"Почты не существует"})
-				return
-		if not only_send:
-			lim_err = not(check_email_amount(db, _email))
-			yield from show_send_message(db, _email, limit_err=lim_err)
+		lim_err = not(check_email_amount(db, _email))
+		yield from show_send_message(db, _email, limit_err=lim_err)
 		check_user = current_user(db)
 		if check_user:
 			redirect('/')
@@ -221,7 +217,7 @@ def recovery_attempt(db, only_send=False, email=''):
 					yield from display_recovery_form(err={'email':'Адреса не существует'})
 			finally:
 				server.quit()	
-	except ValueError:
+	except:
 		if not only_send:
 			yield from display_recovery_form(err={'email':'Неверный адрес электронной почты'})
 			return
