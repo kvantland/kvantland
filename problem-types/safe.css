@@ -1,8 +1,3 @@
-body{
-	-webkit-user-select: none;
-	user-select: none;
-}
-
 .plot_area{
 	margin: 40px auto 0 auto;
 	display: flex;
