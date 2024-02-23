@@ -284,7 +284,6 @@ button {
 }
 
 .result_box {
-	flex: 1 1 0;
 	padding-top: 23px;
 	padding-bottom: 23px;
 	background: white;
@@ -295,6 +294,7 @@ button {
 	align-items: center;
 	gap: 5.83px;
 	display: flex;
+	flex-direction: column;
 }
 
 .result_text_true {
