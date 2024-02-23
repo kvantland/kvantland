@@ -60,7 +60,7 @@ def show_answer_area(data, clas, kwargs, value='',):
 				attrs.append(f'max="{b}"')
 		attrs.append(f'value="{value}"')
 		attrs = ' '.join(attrs)
-		yield '<div class="answer_box">'
+		yield '<div class="answer_box space">'
 		yield '<div class="input_zone">'
 		yield '<div class="input_text">Введите ответ:</div>'
 		yield f'<form method="post" id="problem_form" class="problem answer_zone">'
@@ -71,13 +71,13 @@ def show_answer_area(data, clas, kwargs, value='',):
 		yield '</div>'
 		yield '</div>'
 	if clas == 'hint_only':
-		yield '<div class="answer_box">'
+		yield '<div class="answer_box space">'
 		yield '<div class="input_zone">'
 		yield '</div>'
 		yield from show_hint_button(**kwargs)
 		yield '</div>'
 	if clas == 'without_input':
-		yield '<div class="answer_box">'
+		yield '<div class="answer_box space">'
 		yield '<div class="input_zone">'
 		yield from show_submit_button(**kwargs)
 		yield from show_hint_button(**kwargs)

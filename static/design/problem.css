@@ -218,6 +218,10 @@ button {
 	flex-direction: column;
 }
 
+.answer_box.space {
+	flex-direction: row;
+}
+
 .input_zone {
 	align-self: stretch;
 	justify-content: flex-start;
