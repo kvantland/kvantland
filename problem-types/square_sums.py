@@ -17,7 +17,7 @@ def entry_form(data, kwargs):
 	yield f'<image class="icon cross" x="{icon_side * 1.5}" width="{icon_side}" height="{icon_side}" href="/static/cross_icon.png">'
 	yield '</g>'
 	try:
-		cards = data['curr']['tmp']
+		cards = data['tmp']
 	except KeyError:
 		cards = data['start']
 	for card in range(len(cards)):
