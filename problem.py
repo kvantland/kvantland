@@ -426,6 +426,10 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 		yield f'<div class="result_text_false">{result_text[ok]}</div>'
 	yield '</section>'
 	yield '</div>'
+	if type_ == 'integer':
+		yield '<div class="result_box">'
+		yield f'<div>Ваш ответ: {answer}</div>'
+		yield '</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '</div>'
