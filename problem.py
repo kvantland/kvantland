@@ -261,6 +261,8 @@ def show_question(db, variant, hint_mode):
 	yield '</div> '
 	yield from footer.display_basement()
 	#
+	if hint_mode == HintMode.SHOW:
+		yield '<script type="text/ecmascript" src="/static/focus_on_hint.js"></script>'
 	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
 	yield '<script type="text/ecmascript" src="/static/design/xhr_dialog.js"></script>'
 	if script:
