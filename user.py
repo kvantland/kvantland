@@ -2,24 +2,233 @@
 from html import escape
 from urllib.parse import quote
 from bottle import route, request, response, redirect
-
+from config import config
 from login import current_user
 
 def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
 	user = current_user(db)
 	yield '<nav class="user_nav">'
-	yield '<ul class="flex_ul">'
-	if user != None:
-		db.execute('select coalesce(имя, логин), счёт from Ученик where ученик = %s', (user,))
-		(login, money), = db.fetchall()
-		yield f'<li>{escape(login)}'
-		yield f'<li>Счёт: {money}'
-	yield f'<li><a href="/rules">Правила</a>'
-	if user != None:
-		yield f'<li><a class="login" href="/logout?path={path_arg}">Выйти</a>'
-		yield f'<li><div class="acc_icon"> <a class="acc_href" href="/acc"></a> </div>'
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+
+	yield '<div class="menu">'
+	yield '<div class="menu_item" id="info"><div>О турнире</div></div>'
+	yield '<div class="menu_item" id="examples"><div>Примеры задач</div></div>'
+	yield '<div class="menu_item" id="team"><div>О нас</div></div>'
+	yield '<div class="menu_item" id="contacts"><div>Наши контакты</div></div>'
+	yield '</div>'
+
+	if user == None:
+		yield '<div class="button_area">'
+		yield '<a href="/login">'
+		yield '<div class="login_button"> Войти </div>'
+		yield '</a>'
+		'''
+		yield '<div class="lang_button">'
+		yield '<div> RU </div>'
+		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
+		yield '</div>'
+		'''
+		yield '</div>'
 	else:
-		yield f'<li><a class="login" href="/login?path={path_arg}">Войти</a>'
-	yield '</ul>'
+		yield '<div class="button_area">'
+		yield '<a href="/acc">'
+		yield '<div class="acc_cont">'
+		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
+		yield '</div>'
+		yield '</a>'
+		yield '<div class="logout_button"> Выйти </div>'
+		'''
+		yield '<div class="lang_button">'
+		yield '<div> RU </div>'
+		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
+		yield '</div>'
+		'''
+		yield '</div>'
+
 	yield '</nav>'
+
+	yield '<div class="dialog out">'
+	yield '''<div class="content"> Вы уверены, что хотите выйти? <br/><br/> 
+			Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже </div>'''
+	yield '<div class="button_area">'
+	yield '<div class="button cancel"> Отмена </div>'
+	yield f'<a href="/logout?path={path_arg}">'
+	yield '<div class="button out"> Выйти </div>'
+	yield '</a>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+
+def display_banner_tournament(db):
+	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
+	user = current_user(db)
+	db.execute('select coalesce(name, login) from Kvantland.Student where student = %s', (user,))
+	(login, ), = db.fetchall()
+	db.execute('select score from Kvantland.Score where student = %s and tournament = %s', (user, config["tournament"]["version"]))
+	(money, ), = db.fetchall()
+	yield '<nav class="user_nav">'
+
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+	if user != None:
+		yield '<div class="user_area">'
+		yield f'<div> {login} </div>'
+		yield f'<div> Счёт: {money} </div>'
+		yield '</div>'
+
+		yield '<div class="button_area">'
+		yield '<a href="/acc">'
+		yield '<div class="acc_cont">'
+		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
+		yield '</div>'
+		yield '</a>'
+		yield '<a href="/rules">'
+		yield '<div class="rules_button"> Правила </div>'
+		yield '</a>'
+		yield '<div class="logout_button"> Выйти </div>'
+		'''
+		yield '<div class="lang_button">'
+		yield '<div> RU </div>'
+		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
+		yield '</div>'
+		'''
+		yield '</div>'
+
+	yield '</nav>'
+
+	yield '<div class="dialog out">'
+	yield '''<div class="content"> Вы уверены, что хотите выйти? <br/><br/> 
+			Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже </div>'''
+	yield '<div class="button_area">'
+	yield '<div class="button cancel"> Отмена </div>'
+	yield f'<a href="/logout?path={path_arg}">'
+	yield '<div class="button out"> Выйти </div>'
+	yield '</a>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+
+def display_banner_empty():
+	yield '<nav class="user_nav">'
+
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+	yield '<div class="button_area">'
+	'''
+	yield '<div class="lang_button">'
+	yield '<div> RU </div>'
+	yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
+	yield '</div>'
+	'''
+	yield '</div>'
+
+	yield '</nav>'
+
+def display_banner_acc(db):
+	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
+	user = current_user(db)
+	db.execute('select coalesce(name, login) from Kvantland.Student where student = %s', (user,))
+	(login, ), = db.fetchall()
+	db.execute('select score from Kvantland.Score where student = %s and tournament = %s', (user, config["tournament"]["version"]))
+	(money, ), = db.fetchall()
+	yield '<nav class="user_nav">'
+
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+	if user != None:
+		yield '<div class="user_area centred">'
+		yield f'<div> {login} </div>'
+		yield f'<div> Счёт: {money} </div>'
+		yield '</div>'
+
+		yield '<div class="button_area">'
+		yield '<div class="logout_button"> Выйти </div>'
+		''''
+		yield '<div class="lang_button">'
+		yield '<div> RU </div>'
+		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
+		yield '</div>'
+		'''
+		yield '</div>'
+
+	yield '</nav>'
+
+	yield '<div class="dialog out">'
+	yield '''<div class="content"> Вы уверены, что хотите выйти? <br/><br/> 
+			Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже </div>'''
+	yield '<div class="button_area">'
+	yield '<div class="button cancel"> Отмена </div>'
+	yield f'<a href="/logout?path={path_arg}">'
+	yield '<div class="button out"> Выйти </div>'
+	yield '</a>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+
+def display_banner_policy(db):
+	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
+	user = current_user(db)
+	yield '<nav class="user_nav">'
+
+	yield '<a href="/">'
+	yield '<div class="logo_area">'
+	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
+	yield '</div>'
+	yield '</a>'
+
+	if user == None:
+		yield '<div class="button_area">'
+		yield '<a href="/login">'
+		yield '<div class="login_button"> Войти </div>'
+		yield '</a>'
+		yield '<a href="javascript:history.back()">'
+		yield '<div class="back_button"> Назад </div>'
+		yield '</a>'
+	else:
+		yield '<div class="button_area">'
+		yield '<a href="/acc">'
+		yield '<div class="acc_cont">'
+		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
+		yield '</div>'
+		yield '</a>'
+		yield '<div class="logout_button"> Выйти </div>'
+		yield '<a href="javascript:history.back()">'
+		yield '<div class="back_button"> Назад </div>'
+		yield '</a>'
+		yield '</div>'
+	yield '</nav>'
+
+	yield '<div class="dialog out">'
+	yield '''<div class="content"> Вы уверены, что хотите выйти? <br/><br/> 
+			Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже </div>'''
+	yield '<div class="button_area">'
+	yield '<div class="button cancel"> Отмена </div>'
+	yield f'<a href="/logout?path={path_arg}">'
+	yield '<div class="button out"> Выйти </div>'
+	yield '</a>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'

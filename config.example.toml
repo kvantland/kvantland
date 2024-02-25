@@ -12,6 +12,8 @@ url = 'postgres://user:password@127.0.0.1:5432/database'
 
 [keys]
 cookie = 'any random string'
+recovery = 'any random string'
+mail_confirm = 'any random string'
 
 [vk]
 client_id = 11111111
@@ -44,3 +46,28 @@ max_clas_size = 100
 
 [contacts]
 support_email = 'test@test.com'
+vk_link = 'https://vk.com/kvantland'
+tg_link = 'https://t.me/kvantland'
+youtube_link = 'https://www.youtube.com/@Kvantland'
+
+[xhr]
+dead_step = 1000
+
+[recovery]
+localhost = 'localhost'
+acc_confirm_uri = 'http://localhost:8080/acc_confirm'
+reg_confirm_uri = 'http://localhost:8080/reg_confirm'
+redirect_uri = 'http://localhost:8080/pw_recovery/new_password'
+host = 'smtp.go1.unisender.ru'
+port = 465
+login = '11111111'
+password = ''
+sender = 'noreply@kvantland.ru'
+send_again = 60
+
+[tournament]
+version = 1
+
+[mail_check]
+allowed_period = 86400
+allowed_amount = 10

@@ -42,7 +42,7 @@ body{
 	stroke-linecap: square;
 }
 
-.reload:hover{
+.reload {
 	cursor: pointer;
 }
 

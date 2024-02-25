@@ -1,0 +1,20 @@
+.send_again {
+	height: 50px;
+	color: white;
+	border-radius: 6px;
+	background: #1E8B93;
+	align-self: stretch;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.timer {
+	font-size: 14px;
+	text-align: center;
+	align-self: stretch;
+}

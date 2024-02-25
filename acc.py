@@ -1,14 +1,28 @@
+#!/usr/bin/python3
+
 from html import escape
 from bottle import route, request, response, redirect
 import nav
+import user
 import sys
-from login import current_user
+from login import current_user, do_login
+import approv
+import hmac
+import email.message
+from email.message import EmailMessage
+import smtplib
 from config import config
+import time
+
+import urllib.parse
+import json
+
+_key = config['keys']['mail_confirm']
 
 all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
 			['school', 'text', 'Школа'],
-			['city', 'text', 'Город'],
+			['town', 'text', 'Город'],
 			['email', 'email', 'Почта'],
 			['clas', 'select', 'Класс', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
 
@@ -17,7 +31,7 @@ alph_ru = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯа�
 symb = ' -_'
 
 # поля в которых могут использоваться только буквы и символы из symb
-lett_only = ['name', 'surname', 'city']
+lett_only = ['name', 'surname', 'town']
 
 field_amount = len(all_info) + 1 # количество полей в форме
 field_size = 40 # размер поля
@@ -52,132 +66,410 @@ def empty_user_info():
 		user_info[field[0]] = ''
 	return user_info
 
+def req_query(params):
+	query = []
+	for key, val in params.items():
+		query.append(f'{key}={val}')
+	return '&'.join(query)
+
 @route('/acc')
-def display_pers_acc(db, err='', user_info=empty_user_info()):
+def display_pers_acc(db, err={}, user_info=empty_user_info()):
+	if current_user(db) == None:
+		redirect('/')
 	yield '<!DOCTYPE html>'
-	yield '<title>Личный кабинет</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	if err:
-	    yield '<dialog open="open" class="reg_dialog">'
-	    yield f'<p> {err} </p>'
-	    yield '<form method="dialog">'
-	    yield '<button type="submit" class="dialog_button">Закрыть</button>'
-	    yield '</form>'
-	    yield '</dialog>'
-	yield '<main>'
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'))
-	yield '<div class="acc_plot">'
-	yield '<div class="acc_header"> Личный кабинет </div>'
+	yield '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+	yield '<title> Личный кабинет — Квантландия </title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/approv.css">'
+
+	yield from user.display_banner_acc(db)
+	yield '<div class="content_wrapper">'
 	yield '<div class="acc_form">'
-	yield f'<form method="post" class="acc" style="height: {form_size}px">'
+	yield '<div class="header"> Личный кабинет </div>'
+	if not err:
+		try:
+			if request.query['empty']:
+				yield '<div class="empty_field_info">'
+				yield '<img src="/static/design/icons/info.svg" />'
+				yield '<div class="err"> Все поля в личном кабинете обязательны<br>для заполнения </div>'
+				yield '</div>'
+		except KeyError:
+			pass
+	yield f'<form id="acc" method="post">'
+	yield '<div class="fields">'
 	start_user_info = get_user(db, current_user(db))
 	for i in range(len(all_info)):
 		field = all_info[i]
-		if user_info[field[0]]:
-			value = user_info[field[0]]
+		name = field[0]
+		if user_info[name]:
+			value_ = user_info[name]
 		else:
-			value = start_user_info[field[0]]
-		if value == None:
-			value = ''
-		yield '<div class="acc_field">'
-		yield f'<p> {field[2]}: </p>'
-		if field[1] != 'select':
-			yield f'<input class="acc" style="height: {field_size}px" name="{field[0]}" type="{field[1]}" value="{value}" required/>'
+			value_ = start_user_info[name]
+		if value_ == None:
+			value_ = ''
+		yield '<div class="full_field">'
+		yield '<div class="field">'
+		yield '<div class="content">'
+		placeholder_ = placeholder_info[name]
+		type_ = type_info[name]
+		yield f'<div class="placeholder"> {placeholder_} </div>'
+		if type_ == 'select':
+			yield f'<div class="select_line" name="{name}">'
+			if err and name in err.keys():
+				yield f' <input name="{name}" type="{type_}" value="" readonly required />'
+			else:
+				yield f' <input name="{name}" type="{type_}" value="{escape(value_)}" readonly required />'
+			yield '<img class="arrow" src="/static/design/icons/down_arrow.svg" />'
+			yield '</div>'
 		else:
-			yield f'<select class="acc" style="height: {field_size}px" name="{field[0]}" required>'
-			yield f'<option  value="" disabled selected> </option>'
-			opt_list = field[3]
-			for opt in opt_list:
-				if value != str(opt):
-					yield f'<option> {opt} </option>'
-				else:
-					yield f'<option selected> {opt} </option>'
-			yield '</select>'
+			if err and name in err.keys():
+				yield f'<input name="{name}" type="{type_}" value="" required />'
+			else:
+				yield f'<input name="{name}" type="{type_}" value="{escape(value_)}" required />'
 		yield '</div>'
-	yield '<div class="acc_field">'
-	yield '<p>Счёт:</p>'
-	yield f'<input class="acc" style="height: {field_size}px" value="{start_user_info["score"]}" readonly/>'
+		if err and name in err.keys():
+			yield '<div class="info"> <img src="/static/design/icons/info.svg" /> </div>'
+			yield '</div>'
+			yield f'<div class="err"> {err[name]} </div>'
+		else:
+			yield '<div class="info hidden"> <img src="/static/design/icons/info.svg" /> </div>'
+			yield '</div>'
+			yield f'<div class="err hidden"></div>'
+		if type_ == 'select':
+			yield f'<div class="select_box hidden" name="{name}">'
+			opt_list = option_info[name]
+			for opt in opt_list:
+				if user_info[name] != str(opt):
+					yield f'<div class="option"> {opt} </div>'
+				else:
+					yield f'<div class="option selected"> {opt} </div>'
+			yield '</div>'
+		yield '</div>'
 	yield '</div>'
-	yield f'<button type="submit" class="acc_submit_button" style="height: {button_size}px; margin-top:{button_margin}px"> СОХРАНИТЬ </button>'
+	yield '<div class="full_field">'
+	yield '<div class="check_cont">'
+	yield '<input class="checkbox" type="checkbox" name="approval" id="approval" required />'
+	yield '''<div class="label"> Я принимаю условия <a href="/policy"> Политики конфиденциальности</a> и даю <span class="underline approval"> согласие
+		на обработку своих персональных данных</span>'''
+	yield '</div>'
+	yield '</div>'
+	if err and 'approval' in err.keys():
+		yield f'<div class="err"> {err["approval"]} </div>'
+	else:
+		yield f'<div class="err hidden"></div>'
+	yield '</div>'
 	yield '</form>'
+	yield '<div class="button_area">'
+	yield f'<button type="submit" class="acc_button" form="acc"> Сохранить </button>'
+	yield '<hr size="1">'
+	yield f'<a href="javascript:history.back()"><div class="back_button"> Назад </div></a>'
 	yield '</div>'
 	yield '</div>'
-	yield '</main>'
+
+	yield from approv.display_confirm_window()
+
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+	yield '<script type="text/javascript" src ="/static/design/acc.js"></script>'
 
 def get_user(db, user):
-	db.execute('select имя, фамилия, школа, город, класс, счёт, почта from Ученик where ученик= %s', (user, ))
+	db.execute('select name, surname, school, town, clas, score, email from Kvantland.Student where student= %s', (user, ))
 	user_list = list(db.fetchall()[0])
 	user_info = {'name': user_list[0],
 				'surname': user_list[1],
 				'school': user_list[2],
-				'city': user_list[3],
+				'town': user_list[3],
 				'clas': user_list[4],
 				'score': user_list[5],
 				'email': user_list[6]}
 	return user_info
 
 def check_format(user_info):
+	err_dict = {}
+
 	for field in user_info:
-		min_size = config['reg']['min_' + field + '_size']
-		max_size = config['reg']['max_' + field + '_size']
+		try:
+			min_size = config['acc']['min_' + field + '_size']
+		except:
+			min_size = 1
+		try:
+			max_size = config['acc']['max_' + field + '_size']
+		except:
+			max_size = 500
 		name = placeholder_info[field]
-
-		if field in lett_only:
-			tmp_en = 0
-			tmp_ru = 0
-			for s in user_info[field]:
-				if s in alph_en:
-					tmp_en = 1
-				elif s in alph_ru:
-					tmp_ru = 1
-				elif s in symb:
-					continue
-				else:
-					return "Недопустимые символы в поле " + name, field
-			if tmp_ru + tmp_en == 0:
-				return "В поле " + name + " должны присутствовать буквы", field
-			if tmp_ru + tmp_en == 2:
-				return "В поле " + name + " присутствуют буквы из разных языков", field
-
 
 		if type_info[field] == "select":
 			if not(user_info[field] in option_info[field]):
-				return "Недопустимое значение в поле " + name + "<br /> Пожалуйста, выберите значение из выпадающего списка", field
+				err_dict[field] = "Значение не из списка"
 
 		if len(user_info[field]) < min_size:
-			return "Слишком мало символов в поле " + name + ", <br /> должно быть минимум " + str(min_size), field
+			err_dict[field] = "Слишком мало символов в поле, <br /> должно быть минимум " + str(min_size)
 		if len(user_info[field]) > max_size:
-			return "Слишком много символов в поле " + name, field
+			err_dict[field] = "Слишком много символов"
 
-	return False, ''
+	return err_dict
 
-def update_info(user_info, field):
-	user_info[field] = ''
+def update_info(user_info, err_dict):
+	for field in err_dict:
+		if field in user_info.keys():
+			user_info[field] = ''
 	return user_info
 
-@route('/acc', method="post")
+@route('/acc', method="POST")
 def check_new_params(db):
-
 	user_info = dict()
 
-	for i in range(len(all_info)):
-		name = all_info[i][0]
-		user_info[name] = request.forms.decode().get(name).strip()
+	for field in all_info:
+		name = field[0]
+		new_value = request.forms.get(name).encode('l1').decode().strip()
+		user_info[name] = new_value
 
-	stat, field_to_update = check_format(user_info)
+	err_dict = check_format(user_info)
 
-	if not stat:
-		set_new_params(db, user_info)
+	db.execute("select login from Kvantland.Student where student = %s", (current_user(db), ))
+	(login, ), = db.fetchall()
+	user_info['login'] = login
+
+	approval = request.forms['approval']
+	if not approval:
+		err_dict['approval'] = 'Поставьте галочку'
+
+	if (new_mail(db, user_info) and check_email(db, user_info['email'])):
+		user_info['email'] = ''
+		err_dict['email'] = 'Почта уже используется'
+
+	if not err_dict:
+		update_user(db, user_info)
+		if new_mail(db, user_info):
+			yield from send_reg_confirm_message(db, user_info)
+		else:
+			redirect('/')
+	else:
+		user_info = update_info(user_info, err_dict)
+		yield from display_pers_acc(db, err_dict, user_info)
+
+
+def new_mail(db, info):
+	if not current_user(db):
+		return True
+	else:
+		db.execute("select email from Kvantland.Student where student = %s", (current_user(db), ))
+		(_email, ), = db.fetchall()
+		if not _email:
+			return True
+		if _email != info['email']:
+			return True
+		
+	return False
+
+def check_email(db, email):
+	db.execute("select student from Kvantland.Student where email = %s", (email,))
+	try:
+		(user,) = db.fetchall()
+	except ValueError:
+		return None
+	return user
+
+def show_send_message(info, db, limit_err=False):
+	yield '<!DOCTYPE html>'
+	yield '<title>Личный кабинет — Квантландия</title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/mail_timer.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
+	yield from user.display_banner_acc(db)
+	yield '<div class="content_wrapper">'
+	yield '<div class="advert_form">'
+	yield '<div class="header"> Подтверждение адреса электронной почты </div>'
+	if not limit_err:
+		yield '''<div class="description"> 
+			Письмо для подтверждения адреса
+			электронной почты,</br> 
+			привязанной	к Вашему аккаунту, успешно отправлено!</br>
+			Для подтверждения адреса, перейдите по ссылке в</br>
+			письме, которое придёт Вам на почту</div>'''
+	else:
+		yield '<div class="limit_info">'
+		yield '<img src="/static/design/icons/info.svg" />'
+		yield '<div class="err"> Превышен лимит писем за день! </div>'
+		yield '</div>'
+	yield '<div id="advert">'
+	yield '<div class="full_field">'
+	yield '<div class="field">'
+	yield '<div class="content">'
+	yield '<div class="placeholder"> Почта </div>'
+	yield f'<div class="input"> {info["email"]} </div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+	yield f'<div class="timer"> Отправить еще раз через: {config["recovery"]["send_again"]}</div>'
+	yield '</div>'
+	yield '</div>'
+	yield f'<input name="name" value={info["name"]} type="hidden"/>'
+	yield f'<input name="login" value={info["login"]} type="hidden"/>'
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+	yield '<script type="text/javascript" src="/static/design/mail_timer.js"></script>'
+
+
+def check_email_amount(db, info):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (info['email'], ))
+	first_ = db.fetchall()
+	if len(first_) > 0:
+		(first_email, ), = first_
+	else:
+		first_email = time.time()
+		db.execute('insert into Kvantland.Mail (mail, first_mail) values(%s, %s)', (info['email'], first_email))
+	if time.time() - first_email > config['mail_check']['allowed_period']:
+		return True
+	else:
+		db.execute('select remainig_mails from Kvantland.Mail where mail = %s', (info['email'], ))
+		(remainig_mails, ), = db.fetchall()
+		if remainig_mails > 0:
+			return True
+	return False
+
+def update_email_amount(db, info):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (info['email'], ))
+	(first_email, ), = db.fetchall()
+	if time.time() - first_email < config['mail_check']['allowed_period']:
+		db.execute('update Kvantland.Mail set remainig_mails = remainig_mails - 1 where mail = %s', (info['email'], ))
+	else:
+		db.execute('update Kvantland.Mail set first_mail = %s, remainig_mails = %s where mail = %s', (time.time(), config['mail_check']['allowed_amount'], info['email']))
+
+
+def send_reg_confirm_message(db, info, only_send = False):
+	_email = info['email']
+	name = info['name']
+	try:
+		token = hmac.new(_key.encode('utf-8'), _email.encode('utf-8'), 'sha256').hexdigest()
+		info['token'] = token
+		link = f'''
+		{config['recovery']['acc_confirm_uri']}?{urllib.parse.urlencode(info)}
+		'''
+		localhost = config['recovery']['localhost']
+		host = config['recovery']['host']
+		port = config['recovery']['port']
+		login = config['recovery']['login']
+		password = config['recovery']['password']
+		sender = config['recovery']['sender']
+
+		server = smtplib.SMTP_SSL(host, port,  local_hostname=localhost, timeout=120)
+		email_content =  f'''
+			<!DOCTYPE html>
+			<head>
+			<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+   			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<title>Подтверждение почты</title>
+			</head>
+			<body style="padding: 80px;
+				font-family: Montserrat, Arial !important;
+				word-wrap: break-word;
+				font-size: 20px;
+				font-weight: 500;">
+			<div style="font-family: Montserrat, Arial !important;">
+			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+			<div style="margin-top: 20px"> 
+				 Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
+				Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
+			</div>
+			<div style="width: 640px;
+				margin: 80px auto; 
+				background: #1E8B93; 
+				box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+				border-radius: 6px;">
+			<a href="{link}" style="text-decoration: none">
+			<div style="text-align: center;
+				padding: 10px 0;
+				color: white; 
+				font-weight: 600;
+				box-sizing: border-box;
+				font-family: Montserrat, Arial !important;">
+			Нажмите здесь для подтверждения
+			</div>
+			</a>
+			</div>
+			<div>
+			<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно подтверждать адрес электронной почты, 
+			просто проигнорируйте данное сообщение.</div>
+			<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+			</div>
+			</body>
+			</html>'''
+
+		msg = EmailMessage()
+		msg['Subject'] = 'Подтверждение почты'
+		msg['From'] = sender
+		msg['To'] = _email
+		msg.set_content(email_content, subtype='html')
+
+		server.login(str(login), str(password))
+		try:
+			if check_email_amount(db, info):
+				server.sendmail(sender, [_email], msg.as_string())
+				update_email_amount(db, info)
+				if not only_send:
+					yield from show_send_message(info, db)
+			else:
+				yield from show_send_message(info, db, limit_err=True)
+		except:
+			if not only_send:
+				info['email'] = ''
+				yield from display_pers_acc(db, {'email':'Адреса не существует'}, info)
+		finally:
+			server.quit()	
+	except ValueError:
+		if not only_send:
+			info['email'] = ''
+			yield from display_pers_acc(db, {'email':'Неверный адрес электронной почты'}, info)
+			return
+
+def update_user(db, info):
+	db.execute("update Kvantland.Student set name = %s, surname = %s, school = %s, clas = %s, town = %s where login = %s returning student", (info['name'], info['surname'], info['school'], info['clas'], info['town'], info['login']))
+	(user, ), = db.fetchall()
+	return int(user)
+
+def update_email(db, info):
+	try:
+		db.execute("select email from Kvantland.Student where login = %s", (info['login'], ))
+		(prev_email, ), = db.fetchall()
+	except:
+		prev_email = None
+	db.execute("update Kvantland.Student set email = %s where login = %s returning student", (info['email'], info['login']))
+	(user, ), = db.fetchall()
+	if prev_email:
+		try:
+			db.execute("select email from Kvantland.Previousmail where student = %s", (user, ))
+			(mail, ), = db.fetchall()
+			db.execute("update Kvantland.Previousmail set email = %s where student = %s", (prev_mail, user))
+		except:
+			db.execute("insert into Kvantland.Previousmail (student, email) values(%s, %s)", (user, prev_email))
+	return int(user)
+
+@route('/acc_confirm')
+def check(db):
+	user_info = request.query.decode()
+	email = user_info['email']
+	token = user_info['token']
+	if not email or not token:
+		redirect('/')
+	elif hmac.new(_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest() != token:
 		redirect('/')
 	else:
-		user_info = update_info(user_info, field_to_update)
-		yield from display_pers_acc(db, stat, user_info)
+		del user_info['token']
+		user = update_email(db, user_info)
+		do_login(user, user_info['login'])
+		redirect('/')
 
-def set_new_params(db, user_info):
-	new_name = user_info['name']
-	new_surname = user_info['surname']
-	new_school = user_info['school']
-	new_city = user_info['city']
-	new_class = user_info['clas']
-	new_email = user_info['email']
-	db.execute('update Ученик set имя=%s, фамилия=%s, школа=%s, город=%s, класс=%s, почта=%s where ученик=%s', (new_name, new_surname, new_school, new_city, new_class, new_email, current_user(), ))
+@route('/acc/send_again', method="POST")
+def send_again(db):
+	try:
+		info = json.loads(request.body.read())
+		email = info['email'].strip()
+		name = info['name'].strip()
+		login = info['name'].strip()
+		yield from send_reg_confirm_message(db, {'email': email, 'name': name, 'login': login}, True)
+	except KeyError:
+		return 

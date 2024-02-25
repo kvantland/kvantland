@@ -8,14 +8,18 @@
 	r: 6px;
 }
 
-.point:hover{
-	cursor: pointer;
-	fill: rgba(1, 0, 0, 0.5);
+@media(min-width: 961px) {
+	.point:hover{
+		cursor: pointer;
+		fill: rgba(1, 0, 0, 0.5);
+	}
 }
 
-.base_point:hover{
-	cursor: default;
-	fill: red;
+@media(min-width: 961px) {
+	.base_point:hover{
+		cursor: default;
+		fill: red;
+	}
 }
 
 .full_window{
