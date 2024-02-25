@@ -14,7 +14,7 @@ def display_start_page(db):
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
-	yield f'<link rel="icon" href="/static/design/icons/logo.svg" />'
+	yield f'<link rel="icon" href="/static/design/icons/logo.svg" sizes="48x48" type="image/x-icon">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
