@@ -22,3 +22,5 @@ SELECT pg_catalog.setval('Kvantland.Student_student_seq', 3, true);
 insert into Kvantland.Score ("student", "tournament", "score") VALUES (1, 2, 10);
 insert into Kvantland.Score ("student", "tournament", "score") VALUES (2, 2, 10);
 insert into Kvantland.Score ("student", "tournament", "score") VALUES (3, 2, 10);
+
+update Kvantland.Student set email = 'test@gmail.com';
