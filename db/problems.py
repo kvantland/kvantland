@@ -98,13 +98,42 @@ def add_variant(cur, problem, description, content):
 def IslandOfLiars3(cur):
 	problems_list = []
 	variants_list = dict()
-	
+
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "За круглым столом")
+	for N, A in [
+			(12, 3),
+			(16, 4),
+			(20, 5),
+			(24, 6),
+			]:
+			desc = f"""За круглым столом сидят {N} человек, каждый из которых либо рыцарь (всегда говорит правду), либо лжец (всегда лжёт). 
+			Каждый из сидящих сказал, что среди трёх его соседей по часовой стрелке ровно двое – рыцари. Сколько лжецов сидит за столом, если среди собравшихся точно есть рыцарь?"""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "За круглым столом", desc, json.dumps(cont))	
+
 	add_list(problems_list, variants_list)
 
 
 def Chiselburg3(cur):
 	problems_list = []
 	variants_list = dict()
+
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Хороший стимул")
+	for N, M, A in [
+			(5, 6, 7),
+			(6, 5, 8),
+			(6, 7, 9),
+			(8, 6, 10),
+			]:
+			desc = f"""Вовочка получил {N} двоек и {M} троек по математике (других оценок не было). Папа пообещал купить ему новый ноутбук, если он сможет закончить год с итоговой оценкой 4. 
+			Какое наименьшее количество пятерок необходимо получить Вовочке для этого, если учительница выводит оценку за год, округляя среднее значение до ближайшего целого числа 
+			(среднее 4,5 она округляет до оценки 5, а среднее 3,5 до оценки 4)."""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Хороший стимул", desc, json.dumps(cont))	
 
 	add_list(problems_list, variants_list)
 
@@ -134,6 +163,35 @@ def Golovolomsk3(cur):
 def CombiRepublic3(cur):
 	problems_list = []
 	variants_list = dict()
+
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'integer', "Васин досуг")
+	for a, b, c, d, A in [
+			(2, 4, 6, 3, 15),
+			(3, 5, 6, 4, 10),
+			(3, 4, 8, 2, 10),
+			(3, 4, 6, 3, 10),
+			]:
+			desc = f"""Вася решил разнообразить свой досуг. Каждое утро он смотрит в календарь. Если сегодняшнее число делится на {a}, то в этот день Вася читает книги, если делится на {b} – решает задачи, 
+			а если делится на {c} – играет в футбол. Но делать все три дела в один день у Васи не получается – если число делится и на {a}, и на {b}, и на {c}, то в такой день Вася выбирает любые два занятия из трёх. 
+			В результате в июле Вася играл в футбол {d} раз. А сколько раз он в июле читал книги?"""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Васин досуг", desc, json.dumps(cont))	
+
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'integer', "Футбольный турнир")
+	for N, A in [
+			(65, 19),
+			(70, 14),
+			(85, 23),
+			(88, 20),
+			]:
+			desc = f"""Футбольный турнир проходил в один круг (каждая команда с каждой сыграла один раз). За победу дают 3 очка, а за ничью — одно. В итоге оказалось, что все команды вместе набрали {N} очков. 
+			Сколько ничьих было в этом турнире?"""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Футбольный турнир", desc, json.dumps(cont))	
 
 	add_list(problems_list, variants_list)
 
