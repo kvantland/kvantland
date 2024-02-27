@@ -175,6 +175,20 @@ def Geom3(cur):
 	problems_list = []
 	variants_list = dict()
 	
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Прямоугольный треугольник")
+	for x, y, z, A in [
+			(40, 10, 5, 85),
+			(39, 12, 6, 84),
+			(38, 14, 7, 83),
+			(37, 16, 8, 82),
+			]:
+			desc = f"""На гипотенузе AB прямоугольного треугольника ABC отметили точку D, а на катете BC – точку E. Чему равен угол EDC, если ∠B = {x}°, ∠BCD = {y}° и ∠BAE = {z}°?
+"""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Прямоугольный треугольник", desc, json.dumps(cont))
+
 	add_list(problems_list, variants_list)
 
 
