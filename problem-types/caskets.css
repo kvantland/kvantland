@@ -23,9 +23,8 @@
 }
 
 .casket {
-	align-self: center;
-	width: 120px;
 	position: absolute;
-	transform: translate(0, -110%);
+	transform: scale(0.5) translate(-50%, -150%);
+	margin-top: -10px;
 	cursor: pointer;
 }
