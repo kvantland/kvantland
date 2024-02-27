@@ -113,6 +113,22 @@ def IslandOfLiars3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "За круглым столом", desc, json.dumps(cont))	
 
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'caskets', "Шкатулки")
+	for tmp, ans in [
+			[['here', 'near', 'near', 'near', 'no'], 5],
+			[['here', 'near', 'no', 'near', 'near'], 2],
+			[['no', 'near', 'near', 'near', 'here'], 1],
+			[['near', 'near', 'no', 'near', 'here'], 4]
+			]:
+			desc = f"""Перед вами стоят в ряд 5 шкатулок, в одной из них лежит приз. К шкатулкам прикреплены записки с утверждениями.
+			Известно, что ровно одно из утверждений истинно. Откройте шкатулку, в которой лежит приз. У вас всего одна попытка.
+			"""
+			cont = {
+				'tmp': tmp,
+				'correct': ans
+			}
+			variants_list = add_variant_to_list(variants_list, "Шкатулки", desc, json.dumps(cont))	
+
 	add_list(problems_list, variants_list)
 
 
