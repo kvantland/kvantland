@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import random
-from bottle import route, HTTPError
+from bottle import route, HTTPError, redirect
 from config import config
 import nav
 import user
