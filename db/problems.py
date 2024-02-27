@@ -151,6 +151,24 @@ def Chiselburg3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Хороший стимул", desc, json.dumps(cont))	
 
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'sums_on_cube', "Равные суммы на кубе")
+	for a, b, c, ans in [
+			[12, 8, 22, 75],
+			[17, 13, 21, 72],
+			[16, 6, 20, 69],
+			[11, 9, 19, 66],
+			]:
+			desc = f"""На каждой грани куба написано натуральное число. Три из них показаны на рисунке, 
+					а про остальные три известно, что они простые. Кроме того, суммы чисел на противоположных 
+					гранях равны. Чему равна сумма всех чисел на кубе?"""
+			cont = {
+				'a': a,
+				'b': b,
+				'c': c,
+				'correct': ans,
+			}
+			variants_list = add_variant_to_list(variants_list, "Равные суммы на кубе", desc, json.dumps(cont))	
+
 	add_list(problems_list, variants_list)
 
 def Geom3(cur):
