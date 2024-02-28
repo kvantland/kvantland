@@ -114,7 +114,6 @@ def show_question(db, variant, hint_mode):
 		redirect('/')
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
-	print(hint_cost, file=sys.stderr)
 	db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 	(step, curr, ), = db.fetchall()
 	if curr:
@@ -412,7 +411,6 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '<div class="problem_desc_box">'
 	yield f'<div class="problem_text"><span class="span_text">{description}</div>'
 	if save_progress:
-		print('herrr', file=sys.stderr)
 		yield '<div class="solution_hide">'
 		yield solution
 		yield '</div>'
@@ -475,7 +473,6 @@ def _display_result_old(db, var_id, ok, answer=None, solution=None):
 	yield f'<p class="description">{description}</p>'
 	yield '<div class="save_zone_wrapper" style="z-index: -1">'
 	if save_progress:
-		print('here', file=sys.stderr)
 		yield '<div class="solution_hide">'
 		yield solution
 		yield '</div>'
@@ -524,7 +521,6 @@ def is_current_tournament(db, var_id):
 @route('/problem/<var_id:int>/')
 def problem_show(db, var_id):
 	user_id = require_user(db)
-	print(user_id, file=sys.stderr)
 	if user_id == None:
 		redirect('/')
 	if not is_current_tournament(db, var_id):
@@ -533,7 +529,6 @@ def problem_show(db, var_id):
 	if is_answer_correct is not None:
 		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
 		(answer, solution, ), = db.fetchall()
-		print(answer, solution, file=sys.stderr)
 		return _display_result(db, var_id, is_answer_correct, answer, solution)
 
 	try:
