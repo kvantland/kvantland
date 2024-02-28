@@ -23,4 +23,4 @@ insert into Kvantland.Score ("student", "tournament", "score") VALUES (1, 3, 10)
 insert into Kvantland.Score ("student", "tournament", "score") VALUES (2, 3, 10);
 insert into Kvantland.Score ("student", "tournament", "score") VALUES (3, 3, 10);
 
-update Kvantland.Student set email = 'test@gmail.com';
+update Kvantland.Student set email = 'test@gmail.com', name = 'a', surname = 'a', school = 'a', clas = 'Другое', town = 'a';
