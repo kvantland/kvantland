@@ -1,5 +1,4 @@
 function confirm_action(text, button_arr, func_arr, kwargs_arr) {
-	console.log('here')
 	$('<div>', {'class': 'confirm_dialog show'})
 		.append($('<div>', {'class': 'text_cont', 'text': text}))
 		.append($('<div>', {'class': 'button_area'})
@@ -7,7 +6,6 @@ function confirm_action(text, button_arr, func_arr, kwargs_arr) {
 			.append($('<button>', {'class': 'cancel', 'text': button_arr[1]})))
 		.appendTo($('body'))
 	$('<div>', {'class': 'shadow'}).appendTo($('body'))
-	console.log('here1')
 	$('.confirm_dialog .button_area .confirm').on('click touchstart', function(e) {
 		if (e.touches)
 			e.preventDefault()
