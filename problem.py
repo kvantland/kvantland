@@ -155,10 +155,10 @@ def show_question(db, variant, hint_mode):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/nav.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/confirm_action.css">'
 	yield '<script src="/static/jQuery/jquery-3.7.1.js"></script>'
 	yield '<script type="module" src="/static/master.js"></script>'
 	yield '<script type="module" src="/static/design/user.js"></script>'
-	yield '<script language="JavaScript" type="text/javascript" defer src="/static/jQuery/jquery-3.7.1.js"></script>'
 	if style:
 		yield f'<style type="text/css">{style}</style>'
 	yield from user.display_banner_tournament(db)
@@ -266,6 +266,7 @@ def show_question(db, variant, hint_mode):
 		yield '<script type="text/ecmascript" src="/static/focus_on_hint.js"></script>'
 	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
 	yield '<script type="text/ecmascript" src="/static/design/xhr_dialog.js"></script>'
+	yield '<script type="text/ecmascript" src="/static/confirm_action.js"></script>'
 	if script:
 		yield f'<script type="text/ecmascript">{script}</script>'
 

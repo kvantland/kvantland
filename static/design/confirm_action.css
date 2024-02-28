@@ -1,0 +1,49 @@
+.confirm_dialog {
+	padding: 40px 60px;
+	background: #1E8B93;
+	border-radius: 20px;
+	flex-direction: column;
+	gap: 40px;
+	display: none;
+	z-index: 4;
+	position: fixed;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	flex-direction: column
+}
+
+.confirm_dialog .text_cont{
+	max-width: 580px;
+	color: white;
+	font-size: 24px;
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+}
+
+.confirm_dialog .button_area {
+	gap: 40px;
+	display: inline-flex;
+	justify-content: space-between;
+	align-self: stretch;
+}
+
+.show {
+	display: inline-flex;
+}
+
+.confirm_dialog .button_area button {
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	width: 270px;
+	padding: 10px 0;
+	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%);
+	box-shadow: 7px 7px 6.699999809265137px #1A5866;
+	border-radius: 10px;
+	text-align: center;
+	font-size: 24px;
+	font-family: Montserrat;
+	font-weight: 600;
+}

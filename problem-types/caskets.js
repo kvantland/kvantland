@@ -1,23 +1,21 @@
 function open_casket(casket, config) {
-	if (casket.getAttribute('tmp') >= 6) {
+	if ($(casket).attr('tmp') >= 6) {
 		clearInterval(movement)
 		window.location.reload('true')
 		return;
 	}
-	casket.setAttribute('tmp', casket.getAttribute('tmp') - -1)
-	casket.setAttribute('src', '/static/casket/' + config + '_' + casket.getAttribute('tmp') + '.png') 
+	$(casket).attr('tmp', casket.getAttribute('tmp') - -1)
+	$(casket).attr('src', '/static/casket/' + config + '_' + $(casket).attr('tmp') + '.png') 
 }
 
-function send_xhr(e) {
-	if (e.touches)
-		e.preventDefault()
+function send_xhr(params) {
 	let url = new URL(window.location.href + 'xhr')
-	let casket = e.currentTarget
-	casket.setAttribute('src', '/static/casket/empty_6.png')
+	let casket = params['casket']
+	$(casket).attr('src', '/static/casket/empty_6.png')
 	let solution_empty = $('#problem_form')[0].outerHTML
-	casket.setAttribute('src', '/static/casket/full_6.png')
+	$(casket).attr('src', '/static/casket/full_6.png')
 	let solution_full = $('#problem_form')[0].outerHTML
-	casket.setAttribute('src', '/static/casket/empty_1.png')
+	$(casket).attr('src', '/static/casket/empty_1.png')
 	$.post(url, JSON.stringify({'answer': casket.getAttribute('num'), 'solution_empty': solution_empty, 'solution_full': solution_full}), function(data){
 		if (data == 'true')
 			movement = setInterval(function(){open_casket(casket, 'full')}, 30)
@@ -29,4 +27,7 @@ function send_xhr(e) {
 }
 
 var movement = ''
-$(".casket").on("click touchstart", send_xhr)
+$(".casket").on("click touchstart", function(){confirm_action('Вы уверены, что хотите выбрать эту шкатулку? Больше попыток не будет.', 
+	['Подтердить', 'Отмена'], 
+	[send_xhr, function(){}],
+	[{'casket': this}, {}])})
