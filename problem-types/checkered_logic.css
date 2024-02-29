@@ -1,0 +1,29 @@
+.field {
+	fill: white;
+	cursor: pointer;
+}
+
+.field.choiced {
+	fill: grey;
+}
+
+@media (hover:hover) {
+	.field:hover {
+		fill: rgba(0, 0, 0, 0.15);
+	}
+}
+
+.grid_line{
+	stroke: black;
+	stroke-linecap: round;
+}
+
+.plot_area {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+.point {
+	pointer-events: none;
+}

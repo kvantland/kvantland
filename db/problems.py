@@ -99,20 +99,6 @@ def IslandOfLiars3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "За круглым столом")
-	for N, A in [
-			(12, 3),
-			(16, 4),
-			(20, 5),
-			(24, 6),
-			]:
-			desc = f"""За круглым столом сидят {N} человек, каждый из которых либо рыцарь (всегда говорит правду), либо лжец (всегда лжёт). 
-			Каждый из сидящих сказал, что среди трёх его соседей по часовой стрелке ровно двое – рыцари. Сколько лжецов сидит за столом, если среди собравшихся точно есть рыцарь?"""
-			cont = {
-				'correct': A,
-			}
-			variants_list = add_variant_to_list(variants_list, "За круглым столом", desc, json.dumps(cont))	
-
 	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'caskets', "Шкатулки")
 	for tmp, ans in [
 			[['here', 'near', 'near', 'near', 'no'], 5],
@@ -128,6 +114,36 @@ def IslandOfLiars3(cur):
 				'correct': ans
 			}
 			variants_list = add_variant_to_list(variants_list, "Шкатулки", desc, json.dumps(cont))	
+
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "За круглым столом")
+	for N, A in [
+			(12, 3),
+			(16, 4),
+			(20, 5),
+			(24, 6),
+			]:
+			desc = f"""За круглым столом сидят {N} человек, каждый из которых либо рыцарь (всегда говорит правду), либо лжец (всегда лжёт). 
+			Каждый из сидящих сказал, что среди трёх его соседей по часовой стрелке ровно двое – рыцари. Сколько лжецов сидит за столом, если среди собравшихся точно есть рыцарь?"""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "За круглым столом", desc, json.dumps(cont))	
+
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'checkered_logic', "Клетчатая логика")
+	for N, A in [
+			('клетчатом квадрате 5×5', [
+			[0, 1, 1, 1, 0],
+			[1, 1, 0, 1, 1],
+			[1, 0, 0, 0, 1],
+			[1, 1, 0, 1, 1],
+			[0, 1, 1, 1, 0]]),
+			]:
+			desc = f"""На острове живут два племени гномов: рыцари (всегда говорят правду) и лжецы (всегда лгут). Группа гномов встала в клетках клетчатой фигуры. 
+			Соседями считаются те, кто стоит в клетках с общей стороной. На вопрос «Верно ли, что ровно двое из твоих соседей из твоего племени?» каждый ответил «Да». Найдите такую расстановку на {N}"""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Клетчатая логика", desc, json.dumps(cont))	
 
 	add_list(problems_list, variants_list)
 
