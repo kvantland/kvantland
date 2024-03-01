@@ -104,8 +104,8 @@ def current_user(db):
 	return int(user)
 		
 def do_login(user, login):
-	response.set_cookie('user', str(user), path='/', httponly=True, samesite='lax', secret=_key)
-	response.set_cookie('login', str(login), path='/', httponly=True, samesite='lax', secret=_key)
+	response.set_cookie('user', str(user), path='/', max_age=30 * 24 * 3600, httponly=True, samesite='lax', secret=_key)
+	response.set_cookie('login', str(login), path='/', max_age=30 * 24 * 3600, httponly=True, samesite='lax', secret=_key)
 
 def do_logout():
 	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='lax')
