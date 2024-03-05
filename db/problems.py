@@ -191,7 +191,7 @@ def Geom3(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Прямоугольный треугольник")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Прямоугольный треугольник", image="geoma3_3.svg")
 	for x, y, z, A in [
 			(40, 10, 5, 85),
 			(39, 12, 6, 84),
