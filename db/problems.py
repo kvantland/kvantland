@@ -181,6 +181,21 @@ def Chiselburg3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Хороший стимул", desc, json.dumps(cont))	
 
+
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'integer', "Ноутик и Квантик развлекаются")
+	for N, A in [
+			(5400, 5943215),
+			(4800, 5843215),
+			(8400, 5873215),
+			(4200, 5743215),
+			]:
+			desc = f"""Ноутик заменил буквы цифрами в слове КВАНТИК (разным буквам соответствуют разные цифры, одинаковым – одинаковые цифры). 
+			Какое наибольшее число могло у него получиться, если произведение его цифр оказалось равно {N}?"""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Ноутик и Квантик развлекаются", desc, json.dumps(cont))	
+
 	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 4, 'sums_on_cube', "Равные суммы на кубе")
 	for a, b, c, ans in [
 			[12, 8, 22, 75],
