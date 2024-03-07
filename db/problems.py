@@ -181,7 +181,7 @@ def Chiselburg3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Хороший стимул", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'sums_on_cube', "Равные суммы на кубе")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 4, 'sums_on_cube', "Равные суммы на кубе")
 	for a, b, c, ans in [
 			[12, 8, 22, 75],
 			[17, 13, 21, 72],
@@ -341,7 +341,7 @@ def Golovolomsk3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Малыш и Карлсон", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'five_knights_checkmate', "Мат пятью конями")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'five_knights_checkmate', "Мат пятью конями")
 	for king_pos, horse_pos, correct in [
 	([5, 4], [8, 2], 
 		[[
