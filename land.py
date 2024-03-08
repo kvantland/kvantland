@@ -120,8 +120,10 @@ def show_land(db):
 		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{town}/">'
 		yield f'<image href="/static/icon/icon-{town}.png" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />'
 		yield f'<circle class="town-icon" r="33px" />'
+		yield '<g class="town-name">'
 		yield f'<path class="town-name" num="{cnt}" d="{paths[cnt]}" transform="translate({trans[cnt]})" style="filter:url(#dropshadow)"/>'
 		yield f'<text class="town-name" style="font-family:Montserrat Alternates" num="{cnt}" y="-60">{name}</text>'
+		yield '</g>'
 		yield f'</a>'
 		cnt += 1
 	yield '</svg>'
