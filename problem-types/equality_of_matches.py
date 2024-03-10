@@ -81,7 +81,7 @@ def entry_form(data, kwargs):
 			yield f'<rect direction="{grid[ind][0]}" ind="{ind}" x="{grid[ind][1]}" y="{grid[ind][2]}" width="{grid[ind][3]}" height="{grid[ind][4]}" />'
 		for ind in translate[data['nums'][num_ind]]:
 			rect = num_grid[ind]
-			yield f"""<image href="/static/assets/match.svg" 
+			yield f"""<image href="/static/problem_assets/match.svg" 
 							x="{rect["x"]}" y="{rect["y"]}" 
 							width="{rect["width"]}" 
 							height="{rect["height"]}" 
@@ -91,7 +91,7 @@ def entry_form(data, kwargs):
 		if (num_ind < sgn_amount):
 			yield f'<g class="sgn" type="{data["sgn"][num_ind]}" transform="translate({cur_dist + match_length / 2 + symb_pad} {num_height / 2})">'
 			for rect in sgn_grid[data['sgn'][num_ind]]:
-				yield f"""<image href="/static/assets/match.svg" 
+				yield f"""<image href="/static/problem_assets/match.svg" 
 							x="{rect["x"]}" y="{rect["y"]}" 
 							width="{rect["width"]}" 
 							height="{rect["height"]}" 
