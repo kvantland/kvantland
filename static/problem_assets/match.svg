@@ -24,7 +24,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,30 +53,31 @@
      id="namedview932"
      showgrid="false"
      inkscape:zoom="5.2608745"
-     inkscape:cx="-33.473361"
-     inkscape:cy="33.054321"
+     inkscape:cx="-6.9382762"
+     inkscape:cy="20.420946"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg930" />
+     inkscape:current-layer="svg930"
+     inkscape:document-rotation="0" />
   <path
      d="m 4.2606937,19.875787 h 9.7513003 v 44.2867 c 0,1.6569 -1.3431,3 -3,3 H 7.2606937 c -1.6569,0 -3,-1.3431 -3,-3 z"
      fill="#e27d34"
      id="path922"
-     style="stroke:#723d00;stroke-opacity:1;paint-order:markers stroke fill;stroke-linejoin:round;stroke-linecap:round" />
+     style="stroke:#351c00;stroke-opacity:1;paint-order:markers stroke fill;stroke-linejoin:round;stroke-linecap:round;fill:#fadd7f;fill-opacity:1" />
   <path
      d="m 8.5995937,67.162487 h 2.4121003 c 1.6568,0 3,-1.3431 3,-3 v -44.2867 h -2.4121 v 44.2867 c 0,1.6569 -1.3432,3 -3.0000003,3 z"
      fill="#cd702c"
      id="path924"
-     style="stroke:none;stroke-opacity:1" />
+     style="stroke:none;stroke-opacity:1;fill:#d89c56;fill-opacity:1" />
   <path
      d="M 0.87659375,11.427887 C -0.79060625,5.9964874 3.2712937,0.50078738 8.9527937,0.50078738 c 5.5960003,0 9.6457003,5.34240002 8.1340003,10.73029962 l -3.1084,11.0785 H 4.2167937 Z"
      fill="#cc2f2f"
      id="path926"
-     style="stroke:#6f1717;stroke-width:1.002;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill;stroke-linejoin:round;stroke-linecap:round" />
+     style="stroke:#351c00;stroke-width:1.002;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill;stroke-linejoin:round;stroke-linecap:round;fill:#714226;fill-opacity:1" />
   <path
      d="m 11.611094,22.309587 h 2.367 l 3.1083,-11.0785 c 1.5118,-5.3878996 -2.5379,-10.73029962 -8.1339003,-10.73029962 -0.4033,0 -0.7985,0.0277 -1.184,0.0811 C 12.735694,1.2702874 16.122294,6.2309874 14.719394,11.231087 Z"
      fill="#ae2424"
      id="path928"
-     style="stroke:none;stroke-opacity:1" />
+     style="stroke:none;stroke-opacity:1;fill:#57331d;fill-opacity:1" />
 </svg>
