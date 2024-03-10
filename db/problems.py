@@ -436,6 +436,22 @@ def Golovolomsk3(cur):
 			'correct': correct,
 		}
 		variants_list = add_variant_to_list(variants_list, "Мат пятью конями", desc, json.dumps(cont))	
+
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'equality_of_matches', "Равенство из спичек")
+	for nums, sgn, correct in [
+		([8, 4, 6, 8], ['*', '+', '='], [0, 4, 8, 8]),
+		([2, 9, 8, 7], ['*', '-', '='], [2, 8, 9, 7]),
+		([8, 5, 5, 6], ['*', '+', '='], [0, 5, 6, 6]),
+		([9, 2, 2, 6], ['*', '+', '='], [3, 2, 2, 8])
+		]:
+		desc = "Из спичек выложено неверное равенство. Переложите одну спичку так, чтобы равенство стало верным."
+		cont = {
+			'nums': nums,
+			'sgn': sgn,
+			'correct': correct,
+		}
+		variants_list = add_variant_to_list(variants_list, "Равенство из спичек", desc, json.dumps(cont))		
+	
 	add_list(problems_list, variants_list)
 
 def CombiRepublic3(cur):

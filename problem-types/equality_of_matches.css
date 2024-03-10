@@ -1,0 +1,10 @@
+rect {
+	stroke: none;
+	fill: grey;
+	stroke-linecap: round;
+	opacity: 0.15;
+}
+
+svg {
+	background: white;
+}

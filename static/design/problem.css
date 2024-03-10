@@ -640,3 +640,8 @@ button {
 .problem_desc img.picture {
 	width: 100%;
 }
+
+#problem_form {
+	display: flex;
+	justify-content: center;
+}
