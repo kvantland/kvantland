@@ -13,6 +13,12 @@ function autoscroll(x, y) {
 	scrollBy(x_diff, y_diff)
 }
 
+function occupied(rect) {
+	let [pos, num] = [$(rect).attr('pos'), $(rect).attr('num')]
+	let match = $(`.match.active[pos=${pos}][num=${num}]`)
+	return (match.length > 0 && !match.hasClass('targeted'))
+}
+
 function dist(obj1, obj2) {
 	let rect1 = obj1.getBoundingClientRect()
 	let rect2 = obj2.getBoundingClientRect()
@@ -32,7 +38,7 @@ function update_best() {
 			[best_ind, min_dist] = [ind, new_dist]
 		}
 	})
-	if (min_dist <= min_dist_) {
+	if (min_dist <= min_dist_ && !occupied($(`rect:eq(${best_ind})`))) {
 		$(`rect:eq(${best_ind})`).addClass('best')
 	}
 }
@@ -48,6 +54,7 @@ function start_move(e) {
 			'y': e.clientY - svg.top - match_length / 2,
 			'transform': 'rotate(0)'})
 	$(obj).addClass('targeted')
+	update_best()
 	$(document).on('mousemove touchmove', move)
 }
 
@@ -94,7 +101,7 @@ function drop() {
 			'num': $(rect).attr('num'),
 		})
 		if ($(rect).attr('direction') === 'hor')
-			$(obj).attr('transform', `rotate(-90 ${$(obj).attr('x') - -pad_} ${$(obj).attr('y')})`)
+			$(obj).attr('transform', `rotate(-90 ${$(rect).attr('x')} ${$(obj).attr('y')})`)
 		rect.removeClass('best')
 		$(obj).appendTo(`g.num[num=${num}]`)
 	}
