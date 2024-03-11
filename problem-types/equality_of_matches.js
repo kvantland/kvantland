@@ -85,6 +85,7 @@ function back_to_drag() {
 	$(obj).attr('y', $(rect).attr('y'))
 	if ($(rect).attr('direction') === 'hor') {
 		$(obj).attr('y', $(obj).attr('y') - -rect_width)
+		$(obj).attr('transform', `rotate(-90 ${$(rect).attr('x')} ${$(obj).attr('y')})`)
 	}
 	$(obj).appendTo(`g.num[num=${num}]`)
 }
