@@ -1,0 +1,18 @@
+.grid_line{
+	stroke: black;
+	stroke-linecap: round;
+}
+.field {
+	fill: black;
+	cursor: pointer;
+	font-size:48px;
+}
+.plot_area {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+.point {
+	pointer-events: none;
+}
