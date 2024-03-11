@@ -1,9 +1,9 @@
 def entry_form(data, kwargs):
-	match_length = 60  #длина спички
+	match_length = 47  #длина спички
 	match_width = 7  #ширина спички
 	match_width_ = 11 #ширина картинки спички
 	pad_ = (match_width_ - match_width) / 2  # сдвиг между картинкой и тенью
-	match_length_ = 60 # длина картинки спички
+	match_length_ = 47 # длина картинки спички
 	full_match = match_length + match_width  # длина с отступом для удобства
 	full_match_ = match_length_ + match_width_  # длина картинки с отступом для удобства
 	num_height = match_length * 2 + match_width * 3  #высота цифр
@@ -68,7 +68,7 @@ def entry_form(data, kwargs):
 		7: [0, 2, 5],
 		8: [0, 1, 2, 3, 4, 5, 6],
 		9: [0, 1, 2, 3, 5, 6]
-	}  # индексы rect для отрисовки всех цифр
+	}  # индексы num_grid для отрисовки всех цифр
 
 	yield f'<svg version="1.1" width="{view_box["width"]}" height="{view_box["height"]}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	
@@ -100,4 +100,4 @@ def entry_form(data, kwargs):
 			yield '</g>'
 			cur_dist += symb_pad + match_length
 	yield '</g>'
-	yield '</svg>'
+	yield '</svg>'	
