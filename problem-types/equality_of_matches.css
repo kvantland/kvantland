@@ -7,4 +7,23 @@ rect {
 
 svg {
 	background: white;
+	z-index: 10;
+	position: relative;
+}
+
+.targeted {
+	box-shadow:0 0 20px lightyellow;
+	z-index: 10;
+}
+
+.best {
+	opacity: 1;
+	stroke-width: 3;
+	fill: white;
+	stroke-linecap: round;
+	stroke: lightgreen;
+}
+
+image.match.active {
+	cursor: pointer;
 }
