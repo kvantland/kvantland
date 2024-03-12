@@ -113,15 +113,27 @@ function drop() {
 	$(document).off('mousemove touchmove')
 }
 
+function send_answer(e) {
+	if (e.touches)
+		e.preventDefault();
+	let ans = {}
+	$('g.num').each(function(ind){ans[$(this).attr('num')] = []})
+	console.log(ans)
+	$('.match.active').each(function(ind){
+		ans[$(this).attr('num')].push($(this).attr('pos'))
+	})
+	console.log(ans)
+	$('input[name="answer"]').attr('value', JSON.stringify(ans))
+	console.log($('input[name="answer"]').attr('value'))
+}
+
 const match_width = Math.min($('.match').attr('width'), $('.match').attr('height'))
 const match_length = Math.max($('.match').attr('width'), $('.match').attr('height'))
 const rect_width = $('rect').attr('height')
 const pad_ = (match_width - rect_width) / 2
 const min_dist_ = 900 //квадрат расстояния между rect и match для подстветки
-const side = {
-	'hor': [match_length, match_width],
-	'vert': [match_width, match_length]
-}
 
 $('.match.active').on('mousedown touchstart', start_move)
 $('.match.active').on('mouseup touchend', drop)
+
+$('button.submit_button').on('click touchstart', send_answer)

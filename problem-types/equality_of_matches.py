@@ -1,3 +1,5 @@
+import json
+
 def entry_form(data, kwargs):
 	match_length = 58  #длина спички
 	match_width = 7  #ширина спички
@@ -70,6 +72,8 @@ def entry_form(data, kwargs):
 		9: [0, 1, 2, 3, 5, 6]
 	}  # индексы num_grid для отрисовки всех цифр
 
+	yield '<input name="answer" type="hidden" />'
+
 	yield f'<svg version="1.1" width="{view_box["width"]}" height="{view_box["height"]}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
 	
 	yield '<defs>'
@@ -115,3 +119,23 @@ def entry_form(data, kwargs):
 			cur_dist += symb_pad + match_length
 	yield '</g>'
 	yield '</svg>'	
+
+def validate(data, ans):
+	translate = {
+		0: [0, 1, 2, 4, 5, 6],
+		1: [2, 5],
+		2: [0, 2, 3, 4, 6],
+		3: [0, 2, 3, 5, 6],
+		4: [1, 2, 3, 5],
+		5: [0, 1, 3, 5, 6],
+		6: [0, 1, 3, 4, 5, 6],
+		7: [0, 2, 5],
+		8: [0, 1, 2, 3, 4, 5, 6],
+		9: [0, 1, 2, 3, 5, 6]
+	}  # индексы num_grid для отрисовки всех цифр
+	ans = json.loads(ans)
+	tmp = True
+	for num in range(len(data['correct'])):
+		if set(translate[data['correct'][num]]) != set(map(int, ans[str(num)])):
+			tmp = False
+	return tmp
