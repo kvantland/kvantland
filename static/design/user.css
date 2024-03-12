@@ -98,9 +98,10 @@
 	font-weight: 500;
 	border-radius: 20px;
 	padding: 5px 10px;
+	transition: 0.3s;
 }
 
-@media(min-width:961px) {
+@media(hover:hover) {
 	.user_nav .menu .menu_item:hover {
 		cursor: pointer;
 		background: rgba(26.35, 88.38, 102, 0.10);
