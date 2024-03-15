@@ -17,18 +17,22 @@ def entry_form(data, kwargs):
     yield '<stop offset="100%" stop-color="gold" />'
     yield '</linearGradient>'
     yield '</defs>'
-    yield f'<g transform="translate({board_width + side} 0 )rotate(90)">'
     for y in range(0, height + 1):
         yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
     for x in range(0, width + 1):
         yield f'<line class="grid_line" x1="{ind + x * side}" y1 = "{ind}" x2="{ind + x * side}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
     yield f'<line class="border_line" x1="{ind}" y1 = "{ind}" x2="{ind + width * side}" y2="{ind}" stroke-width="{line_width}"/>'
     yield f'<line class="border_line" x1="{ind}" y1 = "{ind + height * side}" x2="{ind + width * side}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind}" y1 = "{ind}" x2="{ind}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
-    yield f'<line class="border_line" x1="{ind + width * side}" y1 = "{ind}" x2="{ind + width * side}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
+    yield f'<line class="border_line" x1="{ind}" y1 = "{ind}" x2="{ind}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
+    yield f'<line class="border_line" x1="{ind}" y1 = "{ind + 7 * side}" x2="{ind}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
+    yield f'<line class="border_line" x1="{ind + width * side}" y1 = "{ind}" x2="{ind + width * side}" y2="{ind + 1 * side}" stroke-width="{line_width}"/>'
+    yield f'<line class="border_line" x1="{ind + width * side}" y1 = "{ind + 2 * side}" x2="{ind + width * side}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
     
-    #for a, b, c, d in data['board']:
-    #   yield f'<line class="border_line" x1="{ind + a * side}" y1 = "{ind + b * side}" x2="{ind + c * side}" y2="{ind + d * side}" stroke-width="{line_width}"/>'
+    for a, b, c in data['board']:
+        if a == 0:
+            yield f'<line class="inside_line" x1="{ind + b * side}" y1 = "{ind + c * side}" x2="{ind + (b + 1) * side}" y2="{ind + c * side}" stroke-width="{line_width}"/>'
+        else:
+            yield f'<line class="inside_line" x1="{ind + b * side}" y1 = "{ind + c * side}" x2="{ind + b * side}" y2="{ind + (c + 1) * side}" stroke-width="{line_width}"/>'
     yield '</svg>'
     yield '</div>'
 
