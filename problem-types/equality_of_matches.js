@@ -24,7 +24,6 @@ function dist(obj1, obj2) {
 	let rect2 = obj2.getBoundingClientRect()
 	let [x1, y1] = [(rect1.right + rect1.left) / 2, (rect1.bottom + rect1.top) / 2]
 	let [x2, y2] = [(rect2.right + rect2.left) / 2, (rect2.bottom + rect2.top) / 2]
-	console.log(x1, x2, y1, y2)
 	return (x2 - x1) ** 2 + (y1 - y2) ** 2
 }
 
@@ -72,7 +71,6 @@ function move(e) {
 	}
 	else 
 		update_best()
-	console.log($(obj).attr('pos'), $(obj).attr('num'))
 	autoscroll(e.clientX, e.clientY)
 }
 
@@ -108,7 +106,6 @@ function drop() {
 		$(obj).appendTo(`g.num[num=${num}]`)
 		$(obj).removeClass('targeted')
 
-		console.log(same)
 		if (!same) {
 			let url = new URL(window.location.href + 'xhr')
 			let solution = $('#problem_form')[0].outerHTML
