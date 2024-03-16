@@ -144,3 +144,5 @@ def validate(data, ans):
 		if set(translate[data['correct'][num]]) != set(map(int, ans[str(num)])):
 			tmp = False
 	return tmp
+
+WITHOUT_BUTTONS = True
