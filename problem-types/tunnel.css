@@ -22,7 +22,14 @@
 }
 
 .inside_line{
-	stroke:black;
 	stroke-linecap: square;
 	stroke-width: 2;
+}
+
+.not_choiced {
+	stroke:black;
+}
+
+.choiced {
+	stroke: grey;
 }
