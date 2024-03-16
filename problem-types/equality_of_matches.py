@@ -118,7 +118,13 @@ def entry_form(data, kwargs):
 			yield '</g>'
 			cur_dist += symb_pad + match_length
 	yield '</g>'
-	yield '</svg>'	
+	yield '</svg>'
+
+def steps(step_num, params, data):
+	if step_num > 1:
+		return {'answer': 'not_accepted'}	
+	else:
+		return {'answer': 'accepted', 'user_answer': json.dumps(params['ans']), 'answer_correct': validate(data, params['ans']), 'solution': params['solution']}
 
 def validate(data, ans):
 	translate = {
@@ -133,7 +139,6 @@ def validate(data, ans):
 		8: [0, 1, 2, 3, 4, 5, 6],
 		9: [0, 1, 2, 3, 5, 6]
 	}  # индексы num_grid для отрисовки всех цифр
-	ans = json.loads(ans)
 	tmp = True
 	for num in range(len(data['correct'])):
 		if set(translate[data['correct'][num]]) != set(map(int, ans[str(num)])):

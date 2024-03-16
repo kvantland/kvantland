@@ -79,7 +79,6 @@ function move(e) {
 function back_to_drag() {
 	let obj = $('.match.targeted:eq(0)')
 	let [pos, num] = [$(obj).attr('pos'), $(obj).attr('num')]
-	console.log(pos, num, $(obj).attr('x'), $(obj).attr('y'))
 	let rect = $(`rect[pos=${pos}][num=${num}]`)
 	$(obj).attr('x', $(rect).attr('x') - pad_)
 	$(obj).attr('y', $(rect).attr('y'))
@@ -93,38 +92,47 @@ function back_to_drag() {
 function drop() {
 	let obj = $('.targeted')
 	if ($('.best').length) {
+		let response = true
 		let rect = $('.best')
-		let num = $(rect).attr('num')
+		let [num, pos] = [$(rect).attr('num'), $(rect).attr('pos')]
+		let same = (num == $(obj).attr('num') && pos == $(obj).attr('pos'))
 		$(obj).attr({
 			'x': $(rect).attr('x') - pad_,
 			'y': $(rect).attr('y') - -rect_width * ($(rect).attr('direction') === 'hor'),
-			'pos': $(rect).attr('pos'),
-			'num': $(rect).attr('num'),
-		})
+			'pos': pos,
+			'num': num,
+			})
 		if ($(rect).attr('direction') === 'hor')
 			$(obj).attr('transform', `rotate(-90 ${$(rect).attr('x')} ${$(obj).attr('y')})`)
 		rect.removeClass('best')
 		$(obj).appendTo(`g.num[num=${num}]`)
+		$(obj).removeClass('targeted')
+
+		console.log(same)
+		if (!same) {
+			let url = new URL(window.location.href + 'xhr')
+			let solution = $('#problem_form')[0].outerHTML
+			$.post(url, JSON.stringify({'ans': get_answer(), 'solution': solution}), function(data){
+				if (data == 'accepted')
+					window.location.reload('true')
+				else
+					show_xhr('Больше перекладывать нельзя!')
+			})
+		}
 	}
-	else {
+	else 
 		back_to_drag()
-	}
 	$(obj).removeClass('targeted')
 	$(document).off('mousemove touchmove')
 }
 
-function send_answer(e) {
-	if (e.touches)
-		e.preventDefault();
+function get_answer() {
 	let ans = {}
 	$('g.num').each(function(ind){ans[$(this).attr('num')] = []})
-	console.log(ans)
 	$('.match.active').each(function(ind){
 		ans[$(this).attr('num')].push($(this).attr('pos'))
 	})
-	console.log(ans)
-	$('input[name="answer"]').attr('value', JSON.stringify(ans))
-	console.log($('input[name="answer"]').attr('value'))
+	return ans
 }
 
 const match_width = Math.min($('.match').attr('width'), $('.match').attr('height'))
@@ -135,5 +143,3 @@ const min_dist_ = 900 //квадрат расстояния между rect и m
 
 $('.match.active').on('mousedown touchstart', start_move)
 $('.match.active').on('mouseup touchend', drop)
-
-$('button.submit_button').on('click touchstart', send_answer)
