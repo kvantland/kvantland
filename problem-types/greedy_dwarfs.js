@@ -13,6 +13,8 @@ function change_obj(obj1, obj2) {
 	let rect2 = $(`rect[pos=${$(obj2).attr('pos')}][side=${$(obj2).attr('side')}]`)
 	$(obj1).attr({'pos': pos1, 'side': side1, 'x': $(rect2).attr('x'), 'y': $(rect2).attr('y')})
 	$(obj2).attr({'pos': pos2, 'side': side2, 'x': $(rect1).attr('x'), 'y': $(rect1).attr('y')})
+	$(obj1).appendTo(`g.obj[side=${$(obj1).attr('side')}]`)
+	$(obj2).appendTo(`g.obj[side=${$(obj2).attr('side')}]`)
 }
 
 function autoscroll(x, y) {
@@ -46,6 +48,7 @@ function update_best() {
 }
 
 function start_move(e) {
+	console.log('here')
 	if (e.touches)
 		e.preventDefault();
 	let obj = $(e.currentTarget)
@@ -91,7 +94,6 @@ function drop() {
 		else if ($('.best').attr('side') == $(obj).attr('side')) {
 			let obj2 = $(`image.active[pos=${$('.best').attr('pos')}][side=${$('.best').attr('side')}]`)
 			change_obj(obj, obj2)
-			$(obj).appendTo(`g.obj[side=${$('.best').attr('side')}]`)
 		}
 		else
 			back_to_drag()
@@ -114,6 +116,6 @@ function back_to_drag() {
 
 var min_dist_ = 9000 //квадрат расстояния между центрами для перемещения объекта
 
-$('.obj .active').on('mousedown touchstart', start_move)
-$('.obj .active').on('mouseup touchend', drop)
+$('image.active').on('mousedown touchstart', start_move)
+$('image.active').on('mouseup touchend', drop)
 

@@ -527,6 +527,26 @@ def CombiRepublic3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Футбольный турнир", desc, json.dumps(cont))	
 
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 1, 'greedy_dwarfs', "Жадные гномы")
+	for conf, remain_time, trip_time in [
+			[{'left': {'dwarf': 0, 'bag': 0},
+			'right': {'dwarf': 5, 'bag': 1}
+			}, 15, 5]
+			]:
+			desc = f"""После долгого путешествия на левом берегу реки остановились пять гномов, 
+			которые тащат с собой большой мешок с золотом. В их распоряжении имеется одна лодка 
+			грузоподъёмностью 70 кг, которая проплывает от одного берега до другого за 5 минут 
+			(вне зависимости от грузовой нагрузки). Известно, что каждый из гномов весит 20 кг, 
+			а мешок с золотом – 50 кг. Поскольку все гномы жадные, они начинают переживать и 
+			расстраиваться, если мешок с золотом находится вдалеке от них более 15 минут. Помогите 
+			гномам переправиться через реку так, чтобы никто не расстроился."""
+			cont = {
+				'conf': conf,
+				'remain_time': remain_time,
+				'trip_time': trip_time
+			}
+			variants_list = add_variant_to_list(variants_list, "Жадные гномы", desc, json.dumps(cont))	
+
 	add_list(problems_list, variants_list)
 
 
