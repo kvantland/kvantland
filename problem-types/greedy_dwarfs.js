@@ -101,7 +101,15 @@ async function drop() {
 		}
 		else if ($('.best').attr('side') == $(obj).attr('side')) {
 			let obj2 = $(`image.active[pos=${$('.best').attr('pos')}][side=${$('.best').attr('side')}]`)
-			change_obj(obj, obj2)
+			if (obj2.length)
+				change_obj(obj, obj2)
+			else {
+				$(obj).attr({'pos': $('.best').attr('pos'),
+							'side': $('.best').attr('side'),
+							'x': $('.best').attr('x'), 
+							'y': $('.best').attr('y')})
+				$(obj).appendTo(`g.obj[side=${$(obj).attr('side')}]`)
+			}
 		}
 		else
 			back_to_drag()
