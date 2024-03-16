@@ -48,9 +48,21 @@ svg {
 	z-index: 1;
 }
 
+image.boat {
+	opacity: 0;
+}
+
+.cur {
+	opacity: 1 !important;
+}
+
 @media(hover:hover) {
 	image.active:hover {
 		-webkit-filter: drop-shadow(0 0 0.3rem grey);
   		filter: drop-shadow(0 0 0.3rem grey);
 	}
+}
+
+.in_boat {
+	display: none;
 }

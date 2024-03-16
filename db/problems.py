@@ -528,10 +528,10 @@ def CombiRepublic3(cur):
 			variants_list = add_variant_to_list(variants_list, "Футбольный турнир", desc, json.dumps(cont))	
 
 	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 1, 'greedy_dwarfs', "Жадные гномы")
-	for conf, remain_time, trip_time in [
+	for conf, remain_time, trip_time, bag_weight, dwarf_weight, remain_weight, side in [
 			[{'left': {'dwarf': 0, 'bag': 0},
 			'right': {'dwarf': 5, 'bag': 1}
-			}, 15, 5]
+			}, 15, 5, 50, 20, 70, 'right']
 			]:
 			desc = f"""После долгого путешествия на левом берегу реки остановились пять гномов, 
 			которые тащат с собой большой мешок с золотом. В их распоряжении имеется одна лодка 
@@ -543,7 +543,11 @@ def CombiRepublic3(cur):
 			cont = {
 				'conf': conf,
 				'remain_time': remain_time,
-				'trip_time': trip_time
+				'trip_time': trip_time,
+				'bag_weight': bag_weight,
+				'dwarf_weight': dwarf_weight,
+				'remain_weight': remain_weight,
+				'side': side
 			}
 			variants_list = add_variant_to_list(variants_list, "Жадные гномы", desc, json.dumps(cont))	
 
