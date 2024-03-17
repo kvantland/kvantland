@@ -139,7 +139,8 @@ function move_boat(e) {
 			'side': side, 
 			'dwarf': $('.dwarf.in_boat').length, 
 			'bag': $('.bag.in_boat').length, 
-			'solution': $('#problem_form')[0].outerHTML}), function(data){
+			'type': 'go'
+			}), function(data){
 			
 			if (data == 'accept') {
 				remain_time -= 5
@@ -162,6 +163,10 @@ function move_boat(e) {
 							'dx': dx - add, 
 							'dy': dy, 
 							'transform': `translate(${dx - add} 0)`})
+						let sea_dx = $('.sea').attr('dx')
+						$('.sea').attr({
+							'dx': sea_dx - -add,
+							'transform':  `translate(${sea_dx - -add} 0)`})
 					}
 				}, 10)
 			}
@@ -215,20 +220,21 @@ function go_out(here=false) {
 		[side, add] = ['right', -2]
 	else
 		[side, add] = ['left', 2]
+	let url = new URL(window.location.href + 'xhr')
 	if (remain_time == 0)
-		window.location.reload('true')
+		$.post(url, JSON.stringify({'type': 'check', 'solution': $('#problem_form')[0].outerHTML}), function(data){window.location.reload('true')})
 }
 
 const min_dist_ = 9000 //квадрат расстояния между центрами для перемещения объекта
 var remain_time = $('#time')[0].innerHTML.split(': ')[1].split(':')[0]
 var remain_weight = 70
 var [boat_move, boat_move_tmp] = [0, 0]
-var [side_from, add] = [$('g.boat').attr('side'), 2] //откуда и как быстро плывет лодка
+var [side_from, add] = [$('g.boat').attr('side'), 0] //откуда и как быстро плывет лодка
 var side // куда плывет лодка
 if (side_from == 'left')
-	side = 'right'
+	[side, add] = ['right', -2]
 else
-	side = 'left'
+	[side, add] = ['left', 2]
 const stop_pos = {'left': $('g.shore[side="left"] image').attr('width') - $('rect.boat').attr('x'), 'right': 0}
 
 $('image.active').on('mousedown touchstart', start_move)
