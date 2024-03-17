@@ -1,10 +1,12 @@
 .field {
 	fill: white;
 	cursor: pointer;
+	opacity: 0;
 }
 
 .field.choiced {
 	fill: grey;
+	opacity: 100;
 }
 
 @media (hover:hover) {

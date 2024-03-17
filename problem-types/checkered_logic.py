@@ -19,9 +19,9 @@ def entry_form(data, kwargs):
 	for y in range(0, in_column):
 		for x in range(0, in_row):
 			if (data['correct'][y][x] == -1):
-				yield f'<image class="passive" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/question.png" />'
+				yield f'<image class="passive" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/house.png" />'
 			else:	
-				yield f'<rect class="field not_choiced" choiced="0" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
+				yield f'<image class="field not_choiced" choiced="0" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/dwarf.png"/>'
 	yield '</svg>'
 	yield '</div>'
 
