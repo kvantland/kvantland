@@ -115,7 +115,7 @@ def IslandOfLiars3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Шкатулки", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "За круглым столом")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "За круглым столом", image="liar.png")
 	for N, A in [
 			(12, 3),
 			(16, 4),
@@ -166,7 +166,7 @@ def Chiselburg3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Хороший стимул")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Хороший стимул", image="boy1.png")
 	for N, M, A in [
 			(5, 6, 7),
 			(6, 5, 8),
@@ -498,7 +498,7 @@ def CombiRepublic3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'integer', "Васин досуг")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'integer', "Васин досуг", image="boy2.png")
 	for a, b, c, d, A in [
 			(2, 4, 6, 3, 15),
 			(3, 5, 6, 4, 10),
@@ -513,7 +513,7 @@ def CombiRepublic3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Васин досуг", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'integer', "Футбольный турнир")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'integer', "Футбольный турнир", image="director.png")
 	for N, A in [
 			(65, 19),
 			(70, 14),
