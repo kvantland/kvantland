@@ -1,3 +1,5 @@
+import sys
+
 def entry_form(data, kwargs):
 	full_width, full_height = (1000, 600)
 	shore_width, shore_height = (200, 600)
@@ -21,10 +23,10 @@ def entry_form(data, kwargs):
 				xmlns:xlink="http://www.w3.org/1999/xlink">"""
 
 	yield f'<svg width="{sea_width}" height="{sea_height}" >'
-	yield f'<image class="sea" width={sea_width} height="{sea_height}" href="/static/problem_assets/sea.svg" />'
+	yield f'<image class="sea" height="{sea_height}" dx="{-sea_width}" dy="0" transform="translate({-sea_width} 0)" href="/static/problem_assets/sea.svg" />'
 	yield '</svg>'
 	boat_translate = {'left': shore_width - full_width + shore_width + boat_width, 'right': 0}
-	yield f'<g class="boat" dx="0" dy="0" side="{data["side"]}" transform="translate({boat_translate[data["side"]]} 0)">'
+	yield f'<g class="boat" dx="{boat_translate[data["side"]]}" dy="0" side="{data["side"]}" transform="translate({boat_translate[data["side"]]} 0)">'
 	yield f"""<rect class="boat grid" width={boat_width} height="{boat_height}"
 				side="{data["side"]}"
 				dwarf="0" bag="0"
@@ -114,31 +116,40 @@ def entry_form(data, kwargs):
 	yield '</div>'
 
 def steps(step_num, params, data):
-	if params['side'] == 'left':
-		side_from, side_to = ('right', 'left')
-	else:
-		side_from, side_to = ('left', 'right')
+	if 'type' in params.keys():
+		if params['type'] == 'go':
+			print('here1', file=sys.stderr)
+			if params['side'] == 'left':
+				side_from, side_to = ('right', 'left')
+			else:
+				side_from, side_to = ('left', 'right')
 
-	if data['remain_time'] <= 0:
-		return {'answer': 'no_time', 'user_answer': '', 'answer_correct': False, 'solution': params['solution']}
-	elif data['dwarf_weight'] * params['dwarf'] + data['bag_weight'] * params['bag'] > data['remain_weight']:
-		return {'answer': 'too_heavy'}
-	elif params['dwarf'] == 0:
-		return {'answer': 'no_dwarf'}
-	elif data['conf'][side_from]['dwarf'] < params['dwarf'] or data['conf'][side_from]['bag'] < params['bag']:
-		return {'answer': 'cheating'}
-	else:
-		resp = {}
-		data['conf'][side_from]['dwarf'] -= params['dwarf']
-		data['conf'][side_from]['bag'] -= params['bag']
-		data['conf'][side_to]['dwarf'] += params['dwarf']
-		data['conf'][side_to]['bag'] += params['bag']
-		data['remain_time'] -= data['trip_time']
-		data['side'] = side_to
-		if data['remain_time'] == 0:
-			return {'answer': 'accept', 'user_answer': '', 'answer_correct': validate(data, ''), 'solution': params['solution'], 'data_update': data}
+			if data['remain_time'] <= 0:
+				return {'answer': 'no_time'}
+			elif data['dwarf_weight'] * params['dwarf'] + data['bag_weight'] * params['bag'] > data['remain_weight']:
+				return {'answer': 'too_heavy'}
+			elif params['dwarf'] == 0:
+				return {'answer': 'no_dwarf'}
+			elif data['conf'][side_from]['dwarf'] < params['dwarf'] or data['conf'][side_from]['bag'] < params['bag']:
+				return {'answer': 'cheating'}
+			else:
+				resp = {}
+				data['conf'][side_from]['dwarf'] -= params['dwarf']
+				data['conf'][side_from]['bag'] -= params['bag']
+				data['conf'][side_to]['dwarf'] += params['dwarf']
+				data['conf'][side_to]['bag'] += params['bag']
+				data['remain_time'] -= data['trip_time']
+				data['side'] = side_to
+				return {'answer': 'accept', 'data_update': data}
+		elif params['type'] == 'check':
+			print('here2', file=sys.stderr)
+			return {'answer': '', 'solution': params['solution'], 'answer_correct': validate(data, ''), 'user_answer': ''}
 		else:
-			return {'answer': 'accept', 'data_update': data}
+			print('here4', file=sys.stderr)
+			return {'answer': ''}
+	else:
+		print('here3', file=sys.stderr)
+		return {'answer': ''}
 
 
 def validate(data, answer):
