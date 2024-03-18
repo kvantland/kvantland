@@ -25,14 +25,14 @@ def entry_form(data, kwargs):
 				yield f'<rect class="orange" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 			else:
 				yield f'<rect class="white" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
-	yield f'<image class="king passive" x="{(data["king_pos"][1] - 1) * side + line_width}" y="{(data["king_pos"][0] - 1) * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/king_w.png" />'
-	yield f'<image class="horse passive" x="{(data["horse_pos"][1] - 1) * side + line_width}" y="{(data["horse_pos"][0] - 1) * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/horse_b.png" />'
+	yield f'<image class="king passive" x="{(data["king_pos"][1] - 1) * side + line_width}" y="{(data["king_pos"][0] - 1) * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/chess/king_w.png" />'
+	yield f'<image class="horse passive" x="{(data["horse_pos"][1] - 1) * side + line_width}" y="{(data["horse_pos"][0] - 1) * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/chess/horse_b.png" />'
 	
-	yield f'<image class="horse passive drag" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/horse_b.png" />'
-	yield f'<image class="horse active" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/chess/horse_b.png" />'
+	yield f'<image class="horse passive drag" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/chess/horse_b.png" />'
+	yield f'<image class="horse active" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/chess/horse_b.png" />'
 	yield f'<text style="font-size: {inner_side * 0.2}px" textLength="{inner_side * 0.8}" x="{pad + board_width}" y="{inner_side * 1.2}">Осталось</text>'
 	yield f'<text class="amount" style="font-size: {inner_side * 0.2}px" textLength="{inner_side * 0.1}" x="{pad + board_width + inner_side * 0.9}" y="{inner_side * 1.2}"> 4</text>'
-	yield f'<image class="reload" x = "{pad + board_width}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/reload.png" />'
+	yield f'<image class="reload" x = "{pad + board_width}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/problem_assets/reload.png" />'
 	yield '</svg>'
 	yield '</div>'
 

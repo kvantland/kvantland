@@ -184,7 +184,7 @@ def show_question(db, variant, hint_mode):
 	elif hybrid:
 		yield '</div>'
 	if image:
-		yield f'<img class="picture" src="/static/problem_assets/{image}">'
+		yield f'<img class="picture" src="/static/problem_assets/integer_img/{image}">'
 	if hint_mode == HintMode.SHOW:
 		yield f'<div class="hint_wrapper">'
 		yield f'<div class="header">'

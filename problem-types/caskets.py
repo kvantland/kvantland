@@ -10,7 +10,7 @@ def entry_form(data, kwargs):
 	num = 1
 	for name in data['tmp']:
 		yield '<div class="column">'
-		yield f'<img class="casket" tmp="1" num="{num}" src="/static/casket/empty_1.png" />'
+		yield f'<img class="casket" tmp="1" num="{num}" src="/static/problem_assets/casket/empty_1.png" />'
 		yield f'<div class="name"> {names[name]} </div>'
 		yield '</div>'
 		num += 1

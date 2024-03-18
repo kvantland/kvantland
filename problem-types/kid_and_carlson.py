@@ -20,7 +20,7 @@ def entry_form(data, kwargs):
 		for x in range(0, in_row):
 			yield f'<rect class="cake not_choiced" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 			if data['field'][y][x] == 1:
-				yield f'<image class="point"  x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/cherry.svg" />'
+				yield f'<image class="point"  x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/cherry.svg" />'
 	yield '</svg>'
 	yield '</div>'
 
