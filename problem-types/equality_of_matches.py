@@ -1,26 +1,29 @@
 import json
+import sys
 
 def entry_form(data, kwargs):
-	match_length = 58  #длина спички
-	match_width = 7  #ширина спички
-	match_width_ = 10 #ширина картинки спички
+	match_length = 58  # длина спички
+	match_width = 7  # ширина спички
+	match_width_ = 10 # ширина картинки спички
 	pad_ = (match_width_ - match_width) / 2  # сдвиг между картинкой и тенью
 	match_length_ = 58 # длина картинки спички
 	full_match = match_length + match_width  # длина с отступом для удобства
 	full_match_ = match_length_ + match_width_  # длина картинки с отступом для удобства
-	num_height = match_length * 2 + match_width * 3  #высота цифр
-	num_width = match_length + match_width * 2  #ширина цифр
-	symb_pad = 25  #отступ между символами в выражении
-	margin = {'left': 20, 'top': 30, 'right': 20, 'bottom': 30}  #общие отступы
+	num_height = match_length * 2 + match_width * 3  # высота цифр
+	num_width = match_length + match_width * 2  # ширина цифр
+	symb_pad = 25  # отступ между символами в выражении
+	margin = {'left': 20, 'top': 30, 'right': 20, 'bottom': 30}  # общие отступы
 	num_amount = len(data['nums'])
 	sgn_amount = len(data['sgn'])
 	symb_amount = sgn_amount + num_amount
+	rel_width, rel_height = (50, 50)
 	view_box = {
 		'height': num_height + margin['top'] + margin['bottom'],
 		'width': num_width * num_amount + 
 				sgn_amount * match_length + 
 				symb_pad * (symb_amount - 1) + 
-				margin['left'] + margin['right']
+				margin['left'] + margin['right'] +
+				rel_width
 	}
 	grid = [
 		['hor', match_width, 0, match_length, match_width],
@@ -72,10 +75,14 @@ def entry_form(data, kwargs):
 		9: [0, 1, 2, 3, 5, 6]
 	}  # индексы num_grid для отрисовки всех цифр
 
-	yield '<input name="answer" type="hidden" />'
+	step = data['step']
+	if step == 0:
+		data = kwargs['default']
 
-	yield f'<svg version="1.1" width="{view_box["width"]}" height="{view_box["height"]}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield '<input name="answer" type="hidden" />'
 	
+	yield f'<svg version="1.1" width="{view_box["width"]}" height="{view_box["height"]}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+		
 	yield '<defs>'
 	yield '<filter id="sofGlow" height="110%" width="110%" x="-5%" y="-5%">'
 	yield '<feMorphology operator="dilate" radius="4" in="SourceAlpha" result="thicken" />'
@@ -96,15 +103,28 @@ def entry_form(data, kwargs):
 		cur_dist += symb_pad * (num_ind > 0) + num_width
 		for ind in range(len(grid)):
 			yield f'<rect direction="{grid[ind][0]}" pos="{ind}" num="{num_ind}" x="{grid[ind][1]}" y="{grid[ind][2]}" width="{grid[ind][3]}" height="{grid[ind][4]}" />'
-		for ind in translate[data['nums'][num_ind]]:
-			rect = num_grid[ind]
-			yield f"""<image class="match active" num="{num_ind}" pos="{ind}" href="/static/problem_assets/match.svg" 
-							direction="{rect["dir"]}"
-							x="{rect["x"]}" y="{rect["y"]}" 
-							width="{rect["width"]}" 
-							height="{rect["height"]}" 
-							preserveAspectRatio="none" 
-							transform="{rect["transform"]}"/>"""
+		
+		if 'cur_config' in data.keys():
+			print(data['cur_config'], file=sys.stderr)
+			for ind in json.loads(data['cur_config'])[str(num_ind)]:
+				rect = num_grid[int(ind)]
+				yield f"""<image class="match active" num="{num_ind}" pos="{ind}" href="/static/problem_assets/match.svg" 
+								direction="{rect["dir"]}"
+								x="{rect["x"]}" y="{rect["y"]}" 
+								width="{rect["width"]}" 
+								height="{rect["height"]}" 
+								preserveAspectRatio="none" 
+								transform="{rect["transform"]}"/>"""
+		else:
+			for ind in translate[data['nums'][num_ind]]:
+				rect = num_grid[ind]
+				yield f"""<image class="match active" num="{num_ind}" pos="{ind}" href="/static/problem_assets/match.svg" 
+								direction="{rect["dir"]}"
+								x="{rect["x"]}" y="{rect["y"]}" 
+								width="{rect["width"]}" 
+								height="{rect["height"]}" 
+								preserveAspectRatio="none" 
+								transform="{rect["transform"]}"/>"""
 		yield '</g>'
 		if (num_ind < sgn_amount):
 			yield f'<g class="sgn" type="{data["sgn"][num_ind]}" transform="translate({cur_dist + match_length / 2 + symb_pad} {num_height / 2})">'
@@ -117,14 +137,28 @@ def entry_form(data, kwargs):
 							transform="{rect["transform"]}"/>"""
 			yield '</g>'
 			cur_dist += symb_pad + match_length
+	if step == 0:
+		yield f'<rect class="hide_" style="display:none; fill:transparent" x="0" y="0" width="{view_box["width"] - rel_width}" height="{view_box["height"]}"/>'
+	else:
+		yield f'<rect class="hide_" style="display:block; fill:transparent" x="0" y="0" width="{view_box["width"] - rel_width}" height="{view_box["height"]}"/>'
 	yield '</g>'
+	yield f"""<image class="reload" href="/static/problem_assets/reload.png" 
+			width={rel_width} height={rel_height}
+			x={view_box["width"] - rel_width} y={view_box["height"] - rel_height - margin["bottom"]} />"""
 	yield '</svg>'
 
 def steps(step_num, params, data):
-	if step_num > 1:
-		return {'answer': 'not_accepted'}	
-	else:
-		return {'answer': 'accepted', 'user_answer': json.dumps(params['ans']), 'answer_correct': validate(data, params['ans']), 'solution': params['solution']}
+	if 'type' in params.keys():
+		if params['type'] == 'move':
+			if data['step'] > 1:
+				return {'answer': 'not_accepted'}	
+			else:
+				data['step'] = 1
+				data['cur_config'] = params['answer']
+				return {'answer': 'accepted', 'data_update': data}
+		elif params['type'] == 'reload':
+			data['step'] = 0
+			return {'answer': '', 'data_update': data}
 
 def validate(data, ans):
 	translate = {
@@ -140,9 +174,8 @@ def validate(data, ans):
 		9: [0, 1, 2, 3, 5, 6]
 	}  # индексы num_grid для отрисовки всех цифр
 	tmp = True
+	ans = json.loads(ans)
 	for num in range(len(data['correct'])):
 		if set(translate[data['correct'][num]]) != set(map(int, ans[str(num)])):
 			tmp = False
 	return tmp
-
-WITHOUT_BUTTONS = True

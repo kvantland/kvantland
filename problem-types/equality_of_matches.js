@@ -145,11 +145,11 @@ function drop() {
 		if (!same) {
 			let url = new URL(window.location.href + 'xhr')
 			let solution = $('#problem_form')[0].outerHTML
-			$.post(url, JSON.stringify({'ans': get_answer(), 'solution': solution}), function(data){
-				if (data == 'accepted')
-					window.location.reload('true')
-				else
+			$.post(url, JSON.stringify({'type': 'move', 'answer': get_answer()}), function(data){
+				if (data != 'accepted')
 					show_xhr('Больше перекладывать нельзя!')
+				else
+					$('.hide_').css('display', 'block')
 			})
 		}
 	}
@@ -165,7 +165,7 @@ function get_answer() {
 	$('.match.active').each(function(ind){
 		ans[$(this).attr('num')].push($(this).attr('pos'))
 	})
-	return ans
+	return JSON.stringify(ans)
 }
 
 const match_width = Math.min($('.match').attr('width'), $('.match').attr('height'))
@@ -179,3 +179,10 @@ $('body').append(scroll_p)
 
 $('.match.active').on('mousedown touchstart', start_move)
 $('.match.active').on('mouseup touchend', drop)
+
+let url = new URL(window.location.href + 'xhr')
+$('.reload').on('click touchstart', function(){
+	$.post(url, JSON.stringify({'type': 'reload'}), function(data){window.location.reload("true")})})
+
+$('button.submit_button').on('click touchstart', 
+	function(){$('input[name="answer"]').val(get_answer())})

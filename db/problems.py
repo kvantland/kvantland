@@ -489,6 +489,7 @@ def Golovolomsk3(cur):
 			'nums': nums,
 			'sgn': sgn,
 			'correct': correct,
+			'step': 0
 		}
 		variants_list = add_variant_to_list(variants_list, "Равенство из спичек", desc, json.dumps(cont))		
 	

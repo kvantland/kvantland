@@ -116,9 +116,9 @@ def show_question(db, variant, hint_mode):
 	(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
 	db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 	(step, curr, ), = db.fetchall()
+	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step, 'default': content}
 	if curr:
 		content = curr
-	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
 	typedesc = import_module(f'problem-types.{type_}')
 	script = try_read_file(f'problem-types/{type_}.js')
 	style = try_read_file(f'problem-types/{type_}.css')
