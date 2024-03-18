@@ -645,3 +645,19 @@ button {
 	display: flex;
 	justify-content: center;
 }
+
+svg {
+	z-index: 1;
+	user-select: none;
+	--webkit-user-select: none;
+}
+
+.scroll_div {
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	z-index: -1;
+	position: fixed;
+	top: 0;
+	left: 0;
+}

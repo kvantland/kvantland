@@ -1,16 +1,53 @@
 function autoscroll(x, y) {
-	let add = 40
-	let [x_diff, y_diff] = [0, 0]
-	let [bott, right] = [window.innerHeight, window.innerWidth]
-	if (x < add)
-		x_diff = x - add
-	if (y < add)
-		y_diff = y - add
-	if (y > bott - add)
-		y_diff = y - bott + add
-	if (x > right - add)
-		x_diff = x - right + add
-	scrollBy(x_diff, y_diff)
+	block_nav()
+	let [x_add, y_add] = [100, 100]
+	let [y_tmp, x_tmp] = ['no', 'no']
+	let dur = {'left': -1, 'right': 1, 'up': -1, 'down': 1, 'no': 0}
+	$(scroll_p).css({'left': x, 'top': y - -y_add})
+	if (!in_access_zone(scroll_p))
+		y_tmp = 'down'
+
+	$(scroll_p).css({'left': x, 'top': y - y_add})
+	if (!in_access_zone(scroll_p))
+		y_tmp = 'up'
+
+	$(scroll_p).css({'top': y, 'left': x - -x_add})
+	if (!in_access_zone(scroll_p))
+		x_tmp = 'right'
+
+	$(scroll_p).css({'top': y, 'left': x - x_add})
+	if (!in_access_zone(scroll_p))
+		x_tmp = 'left'
+
+	scrollBy(dur[x_tmp] * x_add / 2, dur[y_tmp] * y_add / 2)
+}
+
+function in_window(obj) {
+	let rect = $(obj)[0].getBoundingClientRect()
+	let [hor_add, vert_add] = [rect.width / 2, rect.height / 2]
+	if (rect.left + hor_add < 0 || rect.right - hor_add > $(window).width())
+		return false
+	if (rect.top + vert_add < 0 || rect.bottom - vert_add > $(window).height())
+		return false
+	return true
+}
+
+function is_intersect(obj1, obj2) {
+	let [rect1, rect2] = [$(obj1)[0].getBoundingClientRect(), $(obj2)[0].getBoundingClientRect()]
+	if (rect1.left > rect2.right || rect2.left > rect1.right) 
+		return false
+	if (rect1.bottom < rect2.top || rect2.bottom < rect1.top)
+		return false
+	return true
+}
+
+function in_access_zone(obj) {
+	let nav = $('nav.user_nav')
+	if (is_intersect(obj, nav))
+		return false
+	if (!in_window(obj))
+		return false
+	return true
 }
 
 function occupied(ind, only_horse = false) {
@@ -28,8 +65,7 @@ function move(e) {
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr('x', e.clientX - svg.left - side / 2).attr('y', e.clientY - svg.top - side / 2)
-	let [x, y] = [e.clientX, e.clientY]
-	if (x <= 0 || y <= 0 || y >= $(window).height() || x >= $(window).width()) {
+	if (!in_access_zone(obj)) {
 		back_to_drag()
 	}
 	autoscroll(e.clientX, e.clientY)
@@ -123,3 +159,6 @@ $('.submit_button').on('click touchstart', function(e){
 	})
 	$('input[name="answer"]').val(ans)
 })
+
+var scroll_p = $(document.createElement('div')).addClass('scroll_div')
+$('body').append(scroll_p)
