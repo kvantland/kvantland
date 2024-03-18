@@ -37,12 +37,12 @@ def entry_form(data, kwargs):
 			yield f"""<image class="boat {name} cur" width={boat_width} height="{boat_height}"
 						x="{full_width - shore_width - boat_width}"
 						y="{(full_height - boat_height) / 2}"
-						href="/static/problem_assets/boat_{name}.png" />"""
+						href="/static/problem_assets/boat_with_dwarf/boat_{name}.png" />"""
 		else:
 			yield f"""<image class="boat {name}" width={boat_width} height="{boat_height}"
 						x="{full_width - shore_width - boat_width}"
 						y="{(full_height - boat_height) / 2}"
-						href="/static/problem_assets/boat_{name}.png" />"""
+						href="/static/problem_assets/boat_with_dwarf/boat_{name}.png" />"""
 	yield '</g>'
 	yield '<g class="shore" side="left">'
 	yield f'<image height="{shore_height}" width="{shore_width}" href="/static/problem_assets/left_shore.svg" />'
