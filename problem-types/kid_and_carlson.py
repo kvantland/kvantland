@@ -18,7 +18,7 @@ def entry_form(data, kwargs):
 		yield f'<line class="grid_line" x1="{ind + x * side}" y1 = "{ind}" x2="{ind + x * side}" y2="{ind + in_column * side}" stroke-width="{line_width}"/>'
 	for y in range(0, in_column):
 		for x in range(0, in_row):
-			yield f'<rect class="cake not_choiced" choiced="0" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
+			yield f'<rect class="cake not_choiced" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" />'
 			if data['field'][y][x] == 1:
 				yield f'<image class="point"  x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/cherry.svg" />'
 	yield '</svg>'
