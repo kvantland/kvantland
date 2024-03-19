@@ -6,4 +6,10 @@ function scroll_to_answer() {
 	window.scrollBy(0, Y - add)
 }
 
+function block_nav() {
+	let nav = document.querySelector('.user_nav')
+	if (!nav.classList.contains('blocked'))
+		nav.classList.add('blocked')
+}
+
 document.addEventListener('DOMContentLoaded', scroll_to_answer)
