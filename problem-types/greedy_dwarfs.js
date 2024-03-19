@@ -180,7 +180,7 @@ function move_boat(e) {
 			}), function(data){
 			
 			if (data == 'accept') {
-				remain_time -= 5
+				remain_time -= 6
 				$('#time')[0].innerHTML = $('#time')[0].innerHTML.split(': ')[0] + ': ' + remain_time + ':00'
 				boat_move_tmp = 1
 				if (e.touches)
@@ -257,9 +257,6 @@ function go_out(here=false) {
 		[side, add] = ['right', -2]
 	else
 		[side, add] = ['left', 2]
-	let url = new URL(window.location.href + 'xhr')
-	if (remain_time == 0)
-		$.post(url, JSON.stringify({'type': 'check', 'solution': $('#problem_form')[0].outerHTML}), function(data){window.location.reload('true')})
 }
 
 const min_dist_ = 9000 //квадрат расстояния между центрами для перемещения объекта
@@ -282,3 +279,8 @@ $('image.active').on('mouseup touchend', drop)
 
 $('#go').on('click touchstart', move_boat)
 $('#clear').on('click touchstart', (e) => go_out(here=true))
+
+let url = new URL(window.location.href + 'xhr')
+$('.reload').on('click touchstart', function(){
+	$.post(url, JSON.stringify({'type': 'reload'}), 
+		function(data){window.location.reload('true')} )})

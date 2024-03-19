@@ -60,9 +60,17 @@ image.boat {
 	image.active:hover {
 		-webkit-filter: drop-shadow(0 0 0.3rem grey);
   		filter: drop-shadow(0 0 0.3rem grey);
+	};
+	.reload:hover {
+		-webkit-filter: drop-shadow(0 0 0.3rem grey);
+  		filter: drop-shadow(0 0 0.3rem grey);
 	}
 }
 
 .in_boat {
 	display: none;
+}
+
+.reload {
+	cursor: pointer;
 }

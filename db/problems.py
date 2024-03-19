@@ -529,26 +529,33 @@ def CombiRepublic3(cur):
 			variants_list = add_variant_to_list(variants_list, "Футбольный турнир", desc, json.dumps(cont))	
 
 	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 1, 'greedy_dwarfs', "Жадные гномы")
-	for conf, remain_time, trip_time, bag_weight, dwarf_weight, remain_weight, side in [
+	for start_conf, conf, start_time, remain_time, trip_time, bag_weight, dwarf_weight, remain_weight, start_weight, step, side, start_side in [
 			[{'left': {'dwarf': 0, 'bag': 0},
+			'right': {'dwarf': 5, 'bag': 1}},
+			{'left': {'dwarf': 0, 'bag': 0},
 			'right': {'dwarf': 5, 'bag': 1}
-			}, 15, 5, 50, 20, 70, 'right']
+			}, 30, 30, 6, 50, 20, 70, 70, 0, 'right', 'right']
 			]:
 			desc = f"""После долгого путешествия на левом берегу реки остановились пять гномов, 
 			которые тащат с собой большой мешок с золотом. В их распоряжении имеется одна лодка 
-			грузоподъёмностью 70 кг, которая проплывает от одного берега до другого за 5 минут 
-			(вне зависимости от грузовой нагрузки). Известно, что каждый из гномов весит 20 кг, 
-			а мешок с золотом – 50 кг. Поскольку все гномы жадные, они начинают переживать и 
-			расстраиваться, если мешок с золотом находится вдалеке от них более 15 минут. Помогите 
+			грузоподъёмностью {start_weight} кг, которая проплывает от одного берега до другого за {trip_time} минут 
+			(вне зависимости от грузовой нагрузки). Известно, что каждый из гномов весит {dwarf_weight}) кг, 
+			а мешок с золотом – {bag_weight} кг. Поскольку все гномы жадные, они начинают переживать и 
+			расстраиваться, если мешок с золотом находится вдалеке от них более {start_time} минут. Помогите 
 			гномам переправиться через реку так, чтобы никто не расстроился."""
 			cont = {
+				'start_conf': start_conf,
 				'conf': conf,
 				'remain_time': remain_time,
 				'trip_time': trip_time,
 				'bag_weight': bag_weight,
 				'dwarf_weight': dwarf_weight,
 				'remain_weight': remain_weight,
-				'side': side
+				'start_weight': start_weight,
+				'side': side,
+				'start_side': start_side,
+				'step': step,
+				'start_time': start_time,
 			}
 			variants_list = add_variant_to_list(variants_list, "Жадные гномы", desc, json.dumps(cont))	
 

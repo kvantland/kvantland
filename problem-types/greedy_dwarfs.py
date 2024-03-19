@@ -1,11 +1,12 @@
 import sys
 
 def entry_form(data, kwargs):
-	full_width, full_height = (1000, 600)
+	full_width, full_height = (1000, 600) # размеры поля без учета кнопки reload
 	shore_width, shore_height = (200, 600)
 	sea_width, sea_height = (1000, 600)
 	dwarf_width, dwarf_height = (80, 95)
 	bag_width, bag_height = (80, 95)
+	rel_width, rel_height = (50, 50) # размеры кнопки reload
 	shore_pad = {'left':(shore_width - dwarf_width * 2) // 4, 'top': 5}
 	add = 10 # прибавка к left_pad
 	obj_amount = 6 # количесто юнитов на берегу
@@ -16,13 +17,13 @@ def entry_form(data, kwargs):
 	yield '<input type="hidden" name="answer" />'
 	yield f"""<svg 
 				version="1.1" 
-				width="{full_width}" 
+				width="{full_width + rel_width}" 
 				height="{full_height}" 
 				overflow="visible" 
 				xmlns="http://www.w3.org/2000/svg" 
 				xmlns:xlink="http://www.w3.org/1999/xlink">"""
 
-	yield f'<svg width="{sea_width}" height="{sea_height}" >'
+	yield f'<svg width="{full_width}" height="{full_height}" >'
 	yield f'<image class="sea" height="{sea_height}" dx="{-sea_width}" dy="0" transform="translate({-sea_width} 0)" href="/static/problem_assets/sea.svg" />'
 	yield '</svg>'
 	boat_translate = {'left': shore_width - full_width + shore_width + boat_width, 'right': 0}
@@ -107,11 +108,15 @@ def entry_form(data, kwargs):
 		cur_height += bag_height
 	yield '</g>'
 	yield '</g>'
+
+	yield f"""<image class="reload" href="/static/problem_assets/reload.png" 
+					width="{rel_width}" height="{rel_height}" 
+					x="{full_width}" y="{full_height - rel_height}" />"""
 	yield '</svg>'
 	yield '<div class="UI for_dwarfs">'
 	yield '<div id="go" class="active"> Отправить лодку </div>'
 	yield f'<div id="time" class="passive"> Осталось времени: {data["remain_time"]}:00 </div>'
-	yield '<div id="clear" class="active"> Рестарт </div>'
+	yield '<div id="clear" class="active"> Очистить лодку </div>'
 	yield '</div>'
 	yield '</div>'
 
@@ -141,18 +146,15 @@ def steps(step_num, params, data):
 				data['remain_time'] -= data['trip_time']
 				data['side'] = side_to
 				return {'answer': 'accept', 'data_update': data}
-		elif params['type'] == 'check':
-			print('here2', file=sys.stderr)
-			return {'answer': '', 'solution': params['solution'], 'answer_correct': validate(data, ''), 'user_answer': ''}
-		else:
-			print('here4', file=sys.stderr)
-			return {'answer': ''}
+		elif params['type'] == 'reload':
+			data['remain_time'] = data['start_time']
+			data['conf'] = data['start_conf']
+			data['side'] = data['start_side']
+			data['remain_weight'] = data['start_weight']
+			return {'answer': '', 'type': 'reload', 'data_update': data}
 	else:
-		print('here3', file=sys.stderr)
 		return {'answer': ''}
 
 
 def validate(data, answer):
 	return data['conf']['right']['dwarf'] == 0 and data['conf']['right']['bag'] == 0 
-
-WITHOUT_BUTTONS = True
