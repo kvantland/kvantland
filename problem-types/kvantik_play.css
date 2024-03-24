@@ -1,18 +1,53 @@
-.grid_line{
-	stroke: black;
-	stroke-linecap: round;
-}
-.field {
-	fill: black;
-	cursor: pointer;
-	font-size:48px;
-}
 .plot_area {
 	margin-top: 20px;
 	display: flex;
 	justify-content: center;
 }
 
+.grid_line{
+	stroke: black;
+	stroke-linecap: round;
+}
+.field {
+	fill: black;
+	font-size:96px;
+	justify-content: center;
+	text-align: center;
+}
+
+.fieldinput {
+	font-size:96px;
+	stroke: black;
+}
+
 .point {
 	pointer-events: none;
+}
+
+.color0{
+	fill: #655d8a;
+}
+
+.color1{
+	fill: #7897ab;
+}
+
+.color2{
+	fill: #d885a3;
+}
+
+.color3{
+	fill: #fdceb9;
+}
+
+.color4{
+	fill: #7785a3;
+}
+
+.color5{
+	fill: #5097ab;
+}
+
+.color6{
+	fill: #655d8a;
 }
