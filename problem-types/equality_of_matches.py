@@ -105,7 +105,6 @@ def entry_form(data, kwargs):
 			yield f'<rect direction="{grid[ind][0]}" pos="{ind}" num="{num_ind}" x="{grid[ind][1]}" y="{grid[ind][2]}" width="{grid[ind][3]}" height="{grid[ind][4]}" />'
 		
 		if 'cur_config' in data.keys():
-			print(data['cur_config'], file=sys.stderr)
 			for ind in json.loads(data['cur_config'])[str(num_ind)]:
 				rect = num_grid[int(ind)]
 				yield f"""<image class="match active" num="{num_ind}" pos="{ind}" href="/static/problem_assets/match.svg" 
@@ -138,9 +137,9 @@ def entry_form(data, kwargs):
 			yield '</g>'
 			cur_dist += symb_pad + match_length
 	if step == 0:
-		yield f'<rect class="hide_" style="display:none; fill:transparent" x="0" y="0" width="{view_box["width"] - rel_width}" height="{view_box["height"]}"/>'
+		yield f'<rect class="hide_" style="display:none; fill:transparent" x="{-margin["left"]}" y="{-margin["top"]}" width="{view_box["width"] - rel_width}" height="{view_box["height"]}"/>'
 	else:
-		yield f'<rect class="hide_" style="display:block; fill:transparent" x="0" y="0" width="{view_box["width"] - rel_width}" height="{view_box["height"]}"/>'
+		yield f'<rect class="hide_" style="display:block; fill:transparent" x="{-margin["left"]}" y="{-margin["top"]}" width="{view_box["width"] - rel_width}" height="{view_box["height"]}"/>'
 	yield '</g>'
 	yield f"""<image class="reload" href="/static/problem_assets/reload.png" 
 			width={rel_width} height={rel_height}
@@ -150,10 +149,10 @@ def entry_form(data, kwargs):
 def steps(step_num, params, data):
 	if 'type' in params.keys():
 		if params['type'] == 'move':
-			if data['step'] > 1:
+			if data['step'] >= 1:
 				return {'answer': 'not_accepted'}	
 			else:
-				data['step'] = 1
+				data['step'] += 1
 				data['cur_config'] = params['answer']
 				return {'answer': 'accepted', 'data_update': data}
 		elif params['type'] == 'reload':

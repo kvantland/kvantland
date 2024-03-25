@@ -110,8 +110,8 @@ function move(e) {
 	autoscroll(e.clientX, e.clientY)
 }
 
-function back_to_drag() {
-	let obj = $('.match.targeted:eq(0)')
+function back_to_drag(obj=$('.match.targeted:eq(0)')) {
+	console.log($(obj).attr('num'))
 	let [pos, num] = [$(obj).attr('pos'), $(obj).attr('num')]
 	let rect = $(`rect[pos=${pos}][num=${num}]`)
 	$(obj).attr('x', $(rect).attr('x') - pad_)
@@ -128,6 +128,7 @@ function drop() {
 	if ($('.best').length) {
 		let response = true
 		let rect = $('.best')
+		let [prev_num, prev_pos] = [$(obj).attr('num'), $(obj).attr('pos')]
 		let [num, pos] = [$(rect).attr('num'), $(rect).attr('pos')]
 		let same = (num == $(obj).attr('num') && pos == $(obj).attr('pos'))
 		$(obj).attr({
@@ -146,14 +147,20 @@ function drop() {
 			let url = new URL(window.location.href + 'xhr')
 			let solution = $('#problem_form')[0].outerHTML
 			$.post(url, JSON.stringify({'type': 'move', 'answer': get_answer()}), function(data){
-				if (data != 'accepted')
+				if (data != 'accepted') {
 					show_xhr('Больше перекладывать нельзя!')
+					$(obj).attr({
+						'pos': prev_pos,
+						'num': prev_num,
+						})
+					back_to_drag($(obj))
+				}
 				else
 					$('.hide_').css('display', 'block')
 			})
 		}
 	}
-	else 
+	else
 		back_to_drag()
 	$(obj).removeClass('targeted')
 	$(document).off('mousemove touchmove')
