@@ -1,3 +1,7 @@
+.grass {
+	fill:lightgreen;
+}
+
 .field {
 	fill: white;
 	cursor: pointer;

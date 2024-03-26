@@ -18,6 +18,7 @@ def entry_form(data, kwargs):
 		yield f'<line class="grid_line" x1="{ind + x * side}" y1 = "{ind}" x2="{ind + x * side}" y2="{ind + in_column * side}" stroke-width="{line_width}"/>'
 	for y in range(0, in_column):
 		for x in range(0, in_row):
+			yield f'<rect class="grass" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}"/>'
 			if (data['correct'][y][x] == -1):
 				yield f'<image class="passive" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/house.png" />'
 			else:	
