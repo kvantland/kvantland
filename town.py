@@ -3,9 +3,13 @@
 import random
 from bottle import route, HTTPError
 from config import config
+
 import nav
 import user
 import footer
+from login import do_logout
+
+MODE = config['tournament']['mode']
 
 def require_user(db):
 	user_id = user.current_user(db)
@@ -18,10 +22,13 @@ def require_user(db):
 
 @route('/town/<town:int>/')
 def show_town(db, town):
-	user_id = require_user(db)
-	if not user_id:
-		redirect('/')
-
+	if MODE == 'private':
+		user_id = require_user(db)
+		if not user_id:
+			redirect('/')
+	elif MODE == 'public':
+		user_id = None
+		do_logout()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	db.execute('select name from Kvantland.Town where town = %s', (town,))
@@ -67,11 +74,13 @@ def show_town(db, town):
 		h -1237
 		a 20 20 0 0 0 -20 20
 		z" />'''
-
-	if user_id is not None:
-		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and student = %s and tournament = %s', (town, user_id, config["tournament"]["version"]))
-	else:
-		db.execute('select null, position, points, name, null from Kvantland.Problem where town = %s', (town,))
+	if MODE == 'private':
+		if user_id is not None:
+			db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and student = %s and tournament = %s', (town, user_id, config["tournament"]["version"]))
+		else:
+			db.execute('select null, position, points, name, null from Kvantland.Problem where town = %s', (town,))
+	elif MODE == 'public':
+		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and tournament = %s', (town, config["tournament"]["version"]))
 	for variant, position, points, name, ans_true in db.fetchall():
 		try:
 			x, y = position
@@ -84,7 +93,10 @@ def show_town(db, town):
 			True: 'solved',
 			False: 'failed',
 		}[ans_true]
-		link = f'/problem/{variant}/' if user_id is not None else f'/login?path=/town/{town}/'
+		if MODE == 'private':
+			link = f'/problem/{variant}/' if user_id is not None else f'/login?path=/town/{town}/'
+		elif MODE == 'public':
+			link = f'/problem/{variant}/'
 		yield f'<a xlink:href="{link}" class="level level_{status}" transform="translate({x} {y})"><title>{name}</title>'
 		yield f'<circle class="level-icon" r="0.65em" />'
 		yield f'<text class="level-value">{points}</text>'

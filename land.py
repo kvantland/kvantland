@@ -6,6 +6,9 @@ from bottle import route, redirect
 import nav
 import user
 import footer
+from login import do_logout
+
+MODE = config['tournament']['mode']
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -36,11 +39,16 @@ def require_user(db):
 
 @route('/land')
 def show_land(db):
-	user_id = require_user(db)
-	if not user_id:
-		redirect('/acc?empty=1')
-	if finished(db, user_id):
-		redirect("/final_page")
+	if MODE == 'private':
+		user_id = require_user(db)
+		if not user_id:
+			redirect('/acc?empty=1')
+		if finished(db, user_id):
+			redirect("/final_page")
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
+
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -93,9 +101,12 @@ def show_land(db):
 	yield '</defs>'
 
 	yield f'<image href="/static/map/land.png" width="1280" height="720" preserveAspectRatio="xMinYMin" clip-path="url(#map_border)" meet/>'
-	if user_id is not None:
-		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false and tournament = %s) from Kvantland.Town', (user_id, config["tournament"]["version"]))
-	else:
+	if MODE == 'private':
+		if user_id is not None:
+			db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false and tournament = %s) from Kvantland.Town', (user_id, config["tournament"]["version"]))
+		else:
+			db.execute('select town, name, position, true from Kvantland.Town')
+	elif MODE == 'public':
 		db.execute('select town, name, position, true from Kvantland.Town')
 
 	paths = [
@@ -138,9 +149,13 @@ def show_land(db):
 
 @route('/rules')
 def show_land(db):
-	user_id = require_user(db)
-	if not user_id:
-		redirect('/acc?empty=1')
+	if MODE == 'private':
+		user_id = require_user(db)
+		if not user_id:
+			redirect('/acc?empty=1')
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'

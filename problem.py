@@ -11,9 +11,10 @@ import psycopg
 import nav
 import user
 import footer
-
 from config import config
+from login import do_logout
 
+MODE = config['tournament']['mode']
 _key = config['keys']['cookie']
 
 result_text = {
@@ -109,20 +110,34 @@ def show_hint_button(*, hint_mode: HintMode, hint_cost: int, **kwargs):
 		yield '</button>'
 
 def show_question(db, variant, hint_mode):
-	user_id = require_user(db)
-	if user_id == None:
-		redirect('/')
+	step = 0
+	if MODE == 'private':
+		user_id = require_user(db)
+		if user_id == None:
+			redirect('/')
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
-	print(hint_cost, file=sys.stderr)
-	db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-	(step, curr, ), = db.fetchall()
-	if curr:
-		content = curr
+	if MODE == 'private':
+		db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+		(step, curr, ), = db.fetchall()
+		if curr:
+			content = curr
 	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
 	typedesc = import_module(f'problem-types.{type_}')
 	script = try_read_file(f'problem-types/{type_}.js')
 	style = try_read_file(f'problem-types/{type_}.css')
+
+	if MODE == 'public':
+		HAS_STEPS = True
+		try:
+			typedesc.steps
+		except AttributeError:
+			HAS_STEPS = False
+		if HAS_STEPS:
+			redirect(f'/town/{town}/')
 	try:
 		save_progress = typedesc.SAVE_PROGRESS
 	except AttributeError:
@@ -357,10 +372,11 @@ def show_question_old(db, variant, hint_mode):
 def check_answer(db, var_id, user_id, answer):
 	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, content), = db.fetchall()
-	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
-	(curr, ), = db.fetchall()
-	if curr:
-		content = curr
+	if MODE == 'private':
+		db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
+		(curr, ), = db.fetchall()
+		if curr:
+			content = curr
 	typedesc = import_module(f'problem-types.{type_}')
 	return typedesc.validate(content, answer)
 
@@ -520,33 +536,39 @@ def is_current_tournament(db, var_id):
 
 @route('/problem/<var_id:int>/')
 def problem_show(db, var_id):
-	user_id = require_user(db)
-	print(user_id, file=sys.stderr)
-	if user_id == None:
-		redirect('/')
 	if not is_current_tournament(db, var_id):
 		redirect('/')
-	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
-	if is_answer_correct is not None:
-		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
-		(answer, solution, ), = db.fetchall()
-		print(answer, solution, file=sys.stderr)
-		return _display_result(db, var_id, is_answer_correct, answer, solution)
+	hint_mode = HintMode.NONE
 
-	try:
-		db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
-		(hinted, ), = db.fetchall()
-	except ValueError:
-		redirect('/')
-	if hinted:
-		hint_mode = HintMode.SHOW
-	else:
-		db.execute('select score >= cost from Kvantland.Hint join Kvantland.Variant using (problem), Kvantland.Student where variant = %s and student = %s', (var_id, user_id))
+	if MODE == 'public':
+		do_logout()
+		user_id = None
+	elif MODE == 'private':
+		user_id = require_user(db)
+		if user_id == None:
+			redirect('/')
+		is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
+		if is_answer_correct is not None:
+			db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
+			(answer, solution, ), = db.fetchall()
+			print(answer, solution, file=sys.stderr)
+			return _display_result(db, var_id, is_answer_correct, answer, solution)
+
 		try:
-			(can_afford_hint, ), =db.fetchall()
-			hint_mode = HintMode.AFFORDABLE if can_afford_hint else HintMode.TOO_EXPENSIVE
+			db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
+			(hinted, ), = db.fetchall()
 		except ValueError:
-			hint_mode = HintMode.NONE
+			redirect('/')
+		if hinted:
+			hint_mode = HintMode.SHOW
+		else:
+			db.execute('select score >= cost from Kvantland.Hint join Kvantland.Variant using (problem), Kvantland.Student where variant = %s and student = %s', (var_id, user_id))
+			try:
+				(can_afford_hint, ), =db.fetchall()
+				hint_mode = HintMode.AFFORDABLE if can_afford_hint else HintMode.TOO_EXPENSIVE
+			except ValueError:
+				hint_mode = HintMode.NONE
+	
 	return show_question(db, var_id, hint_mode)
 
 @route('/problem/<var_id:int>/', method='POST')
@@ -554,12 +576,16 @@ def problem_answer(db, var_id):
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	type_ = db.fetchall()[0][0]
 	
-	user_id = require_user(db)
-	if user_id == None:
-		redirect('/')
-	is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
-	if is_answer_correct is not None:
-		redirect('')
+	if MODE == 'private':
+		user_id = require_user(db)
+		if user_id == None:
+			redirect('/')
+		is_answer_correct = get_past_answer_correctness(db, user_id, var_id)
+		if is_answer_correct is not None:
+			redirect('')
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
 
 	answer = request.forms.answer
 	solution = request.forms.progress
@@ -572,13 +598,14 @@ def problem_answer(db, var_id):
 		save_progress = True
 
 	is_answer_correct = check_answer(db, var_id, user_id, answer)
-	if save_progress:
-		db.execute('update Kvantland.AvailableProblem set answer_true=%s, solution=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, solution, answer, var_id, user_id))
-	else:
-		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, answer, var_id, user_id))
-	if is_answer_correct:
-		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (var_id, user_id))
-		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
+	if MODE == 'private':
+		if save_progress:
+			db.execute('update Kvantland.AvailableProblem set answer_true=%s, solution=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, solution, answer, var_id, user_id))
+		else:
+			db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, answer, var_id, user_id))
+		if is_answer_correct:
+			db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (var_id, user_id))
+			db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
 	
 	yield from _display_result(db, var_id, is_answer_correct, answer, solution)
 

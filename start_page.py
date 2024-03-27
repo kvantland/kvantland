@@ -4,12 +4,20 @@ from pathlib import Path
 import nav
 import user
 import footer
+from config import config
+from login import do_logout
+
+MODE = config['tournament']['mode']
 
 @route('/')
 def display_start_page(db):
-
-	user_id = user.current_user(db)
-	link = f'/rules' if user_id is not None else f'/login?path=/land'
+	if MODE == 'private':
+		user_id = user.current_user(db)
+		link = f'/rules' if user_id is not None else f'/login?path=/land'
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
+		link = '/land'
 
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'

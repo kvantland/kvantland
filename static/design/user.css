@@ -85,10 +85,17 @@
 }
 
 .user_nav .menu {
-	ustify-content: flex-start; 
+	justify-content: flex-start; 
 	align-items: center; 
 	gap: max(10px, min(40px, 2.6vw)); 
 	display: flex;
+}
+
+.user_nav .menu_cont.menu_cont_public {
+	display: inline-flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
 }
 
 .user_nav .menu .menu_item {
