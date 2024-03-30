@@ -9,21 +9,31 @@
 	stroke-linecap: round;
 }
 .field {
-	fill: black;
-	font-size:96px;
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+	fill: black; 
+	font-size:64px;
 	justify-content: center;
 	text-align: center;
+}
+
+.fieldwrap {
+	text-align:center
+}
+
+.fieldinput {
+	font-family: Montserrat Alternates;
+	font-weight: 400;
+	font-size:64px;
+	stroke: black;
+	display: block;
+    margin:auto;
 }
 
 text{
 	font-family: inherit;
 	text-anchor: middle;
 	dominant-baseline: central;
-}
-
-.fieldinput {
-	font-size:96px;
-	stroke: black;
 }
 
 .point {

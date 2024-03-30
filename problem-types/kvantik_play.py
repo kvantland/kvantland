@@ -1,7 +1,7 @@
 def entry_form(data, kwargs):
 	in_column = 2
 	in_row = 7
-	side = 105
+	side = 64
 	line_width = 2
 	ind = line_width / 2
 	inner_side = side - line_width 
@@ -22,8 +22,8 @@ def entry_form(data, kwargs):
 	for y in range(1, 2):
 		for x in range(0, in_row):	
 			yield f'<foreignObject x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}">'
-			yield f'<div xmlns="http://www.w3.org/1999/xhtml">'
-			yield f'<input class="fieldinput" type="text" min="0" max="9" maxlength="1" pattern="[0-9]{1}" title="Допускаются только цифры">'
+			yield f'<div class="fieldwrap" xmlns="http://www.w3.org/1999/xhtml">'
+			yield f'<input class="fieldinput" type="text" min="0" max="9" maxlength="1">'
 			yield f'</div>'
 			yield f'</foreignObject>'
 	yield '</svg>'
