@@ -423,8 +423,8 @@ function send(e) {
 	document.querySelector('input').value = ans.join(' ')
 }
 
-document.querySelector('#send').addEventListener("click", (e) => send(e))
-document.querySelector('#send').addEventListener("touchstart", (e) => send(e))
+document.querySelector('.submit_button').addEventListener("click", (e) => send(e))
+document.querySelector('.submit_button').addEventListener("touchstart", (e) => send(e))
 
 function show_weight_dialog(e) {
 	if (e.touches)
