@@ -12,10 +12,10 @@ def entry_form(data, kwargs):
 	yield '<input name="answer" type="hidden" />'
 	yield '<div class="plot_area">'
 	yield f'<svg version="1.1" width="{board_width}" height="{board_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
-	for y in range(1, in_column + 1):
+	for y in range(0, in_column + 1):
 		yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + in_row * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
 	for x in range(0, in_row + 1):
-		yield f'<line class="grid_line" x1="{ind + x * side}" y1 = "{ind + side}" x2="{ind + x * side}" y2="{ind + in_column * side}" stroke-width="{line_width}"/>'
+		yield f'<line class="grid_line" x1="{ind + x * side}" y1 = "{ind}" x2="{ind + x * side}" y2="{ind + in_column * side}" stroke-width="{line_width}"/>'
 	for y in range(0, 1):
 		for x in range(0, in_row):	
 			yield f'<text class="field color{x}" x="{x * side + side / 2}" y="{(y + 1) * side - side / 2}" width="{inner_side}" height="{inner_side}">{data['word'][x]}</text>'
@@ -23,7 +23,7 @@ def entry_form(data, kwargs):
 		for x in range(0, in_row):	
 			yield f'<foreignObject x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}">'
 			yield f'<div xmlns="http://www.w3.org/1999/xhtml">'
-			yield f'<input class="fieldinput" type="number" maxlength="1">'
+			yield f'<input class="fieldinput" type="text" min="0" max="9" maxlength="1" pattern="[0-9]{1}" title="Допускаются только цифры">'
 			yield f'</div>'
 			yield f'</foreignObject>'
 	yield '</svg>'
