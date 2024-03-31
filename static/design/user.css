@@ -91,6 +91,13 @@
 	display: flex;
 }
 
+.user_nav .menu_cont.menu_cont_public {
+	display: inline-flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
 .user_nav .menu .menu_item {
 	color: black; 
 	font-size: max(10px, min(16px, 1.25vw)); 
@@ -98,7 +105,7 @@
 	font-weight: 500;
 	border-radius: 20px;
 	padding: 5px 10px;
-	transition: 0.3s;
+	transition: 0.3s background;
 }
 
 @media(hover:hover) {

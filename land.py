@@ -6,6 +6,9 @@ from bottle import route, redirect
 import nav
 import user
 import footer
+from login import do_logout
+
+MODE = config['tournament']['mode']
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -36,11 +39,16 @@ def require_user(db):
 
 @route('/land')
 def show_land(db):
-	user_id = require_user(db)
-	if not user_id:
-		redirect('/acc?empty=1')
-	if finished(db, user_id):
-		redirect("/final_page")
+	if MODE == 'private':
+		user_id = require_user(db)
+		if not user_id:
+			redirect('/acc?empty=1')
+		if finished(db, user_id):
+			redirect("/final_page")
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
+
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -140,9 +148,13 @@ def show_land(db):
 
 @route('/rules')
 def show_land(db):
-	user_id = require_user(db)
-	if not user_id:
-		redirect('/acc?empty=1')
+	if MODE == 'private':
+		user_id = require_user(db)
+		if not user_id:
+			redirect('/acc?empty=1')
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
