@@ -1,13 +1,17 @@
-from bottle import route
+from bottle import route, response
 from pathlib import Path
 
 import nav
 import user
 import footer
-from login import do_logout
 from config import config
 
 MODE = config['tournament']['mode']
+
+def do_logout():
+	response.set_cookie('user', '', path='/', max_age=0, httponly=True, samesite='lax')
+	response.set_cookie('login', '', path='/', max_age=0, httponly=True, samesite='lax')
+	response.set_cookie('email', '', path='/', max_age=0, httponly=True, samesite='lax')
 
 @route('/')
 def display_start_page(db):

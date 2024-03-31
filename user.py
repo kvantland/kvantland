@@ -2,8 +2,6 @@
 from html import escape
 from urllib.parse import quote
 from bottle import route, request, response, redirect
-from config import config
-from login import current_user
 from config import config 
 
 MODE = config['tournament']['mode']
