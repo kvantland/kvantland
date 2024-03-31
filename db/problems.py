@@ -9,7 +9,7 @@ from pathlib import Path
 import json
 import psycopg
 import sys
-sys.path.insert(1, '../')
+sys.path.append('../')
 from config import config
 random.seed(1337)
 

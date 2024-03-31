@@ -10,7 +10,10 @@ MODE = config['tournament']['mode']
 
 def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
-	user = current_user(db)
+	if MODE == 'tournament':
+		user = current_user(db)
+	elif MODe == 'not_started':
+		user = None
 	yield '<nav class="user_nav">'
 	yield '<a href="/">'
 	yield '<div class="logo_area">'
