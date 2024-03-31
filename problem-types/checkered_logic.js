@@ -15,6 +15,6 @@ $('.submit_button').on('click touchstart', function(e){
 	if (e.touches)
 		e.preventDefault()
 	var ans = ''
-	$('.field').each(function(index){ans += $(this).attr('choiced') + ','})
+	$('.ground').each(function(index){ans += $(this).attr('choiced') + ','})
 	$('[name="answer"]').val(ans)
 })

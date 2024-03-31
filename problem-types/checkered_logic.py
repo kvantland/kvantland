@@ -20,9 +20,9 @@ def entry_form(data, kwargs):
 		for x in range(0, in_row):
 			yield f'<rect class="grass" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}"/>'
 			if (data['correct'][y][x] == -1):
-				yield f'<image class="passive" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/house.png" />'
+				yield f'<image class="ground" choiced="-1" x="{x * side + line_width}" y ="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/house.png" />'
 			else:	
-				yield f'<image class="field not_choiced" choiced="0" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/dwarf.png"/>'
+				yield f'<image class="ground field not_choiced" choiced="0" x="{x * side + line_width}" y="{y * side + line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/dwarf.png"/>'
 	yield '</svg>'
 	yield '</div>'
 
