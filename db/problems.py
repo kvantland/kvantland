@@ -274,6 +274,20 @@ def Geom3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Прямоугольный треугольник", desc, json.dumps(cont))
 
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 1, 'integer', "Часы со стрелкой", image="clock_with_hand.png")
+	for hour, minute, ans in [
+			(14, 20, 50),
+			(16, 40, 100),
+			(20, 50, 35),
+			(23, 10, 85),
+			]:
+			desc = f"""Какой угол образуют часовая и минутная стрелка ровно в {hour}:{minute}?
+					Ответ дайте в градусах."""
+			cont = {
+				'correct': ans,
+			}
+			variants_list = add_variant_to_list(variants_list, "Часы со стрелкой", desc, json.dumps(cont))
+
 	add_list(problems_list, variants_list)
 
 
