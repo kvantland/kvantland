@@ -532,3 +532,9 @@
 	z-index: 3;
 	background-color: rgba(0, 0, 0, 0.25)
 }
+
+.tournament_ended_text {
+	color: white;
+	font-size: 24px;
+	font-weight: 600;
+}

@@ -4,6 +4,9 @@ from urllib.parse import quote
 from bottle import route, request, response, redirect
 from config import config
 from login import current_user
+from config import config 
+
+MODE = config['tournament']['mode']
 
 def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
@@ -16,41 +19,43 @@ def display_banner(db):
 	yield '</div>'
 	yield '</a>'
 
-
+	yield f'<div class="menu_cont menu_cont_{MODE}">'
 	yield '<div class="menu">'
 	yield '<div class="menu_item" id="info"><div>О турнире</div></div>'
 	yield '<div class="menu_item" id="examples"><div>Примеры задач</div></div>'
 	yield '<div class="menu_item" id="team"><div>О нас</div></div>'
 	yield '<div class="menu_item" id="contacts"><div>Наши контакты</div></div>'
 	yield '</div>'
+	yield '</div>'
 
-	if user == None:
-		yield '<div class="button_area">'
-		yield '<a href="/login">'
-		yield '<div class="login_button"> Войти </div>'
-		yield '</a>'
-		'''
-		yield '<div class="lang_button">'
-		yield '<div> RU </div>'
-		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
-		yield '</div>'
-		'''
-		yield '</div>'
-	else:
-		yield '<div class="button_area">'
-		yield '<a href="/acc">'
-		yield '<div class="acc_cont">'
-		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
-		yield '</div>'
-		yield '</a>'
-		yield '<div class="logout_button"> Выйти </div>'
-		'''
-		yield '<div class="lang_button">'
-		yield '<div> RU </div>'
-		yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
-		yield '</div>'
-		'''
-		yield '</div>'
+	if MODE == 'tournament':
+		if user == None:
+			yield '<div class="button_area">'
+			yield '<a href="/login">'
+			yield '<div class="login_button"> Войти </div>'
+			yield '</a>'
+			'''
+			yield '<div class="lang_button">'
+			yield '<div> RU </div>'
+			yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
+			yield '</div>'
+			'''
+			yield '</div>'
+		else:
+			yield '<div class="button_area">'
+			yield '<a href="/acc">'
+			yield '<div class="acc_cont">'
+			yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
+			yield '</div>'
+			yield '</a>'
+			yield '<div class="logout_button"> Выйти </div>'
+			'''
+			yield '<div class="lang_button">'
+			yield '<div> RU </div>'
+			yield '<img id="lang_change" src="/static/design/icons/down_arrow.svg" />'
+			yield '</div>'
+			'''
+			yield '</div>'
 
 	yield '</nav>'
 
@@ -189,7 +194,10 @@ def display_banner_acc(db):
 
 def display_banner_policy(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
-	user = current_user(db)
+	if MODE == 'tournament':
+		user = current_user(db)
+	elif MODE == 'not_started':
+		user = None
 	yield '<nav class="user_nav">'
 
 	yield '<a href="/">'
@@ -199,36 +207,43 @@ def display_banner_policy(db):
 	yield '</div>'
 	yield '</a>'
 
-	if user == None:
+	if MODE == 'tournament':
+		if user == None:
+			yield '<div class="button_area">'
+			yield '<a href="/login">'
+			yield '<div class="login_button"> Войти </div>'
+			yield '</a>'
+			yield '<a href="javascript:history.back()">'
+			yield '<div class="back_button"> Назад </div>'
+			yield '</a>'
+		else:
+			yield '<div class="button_area">'
+			yield '<a href="/acc">'
+			yield '<div class="acc_cont">'
+			yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
+			yield '</div>'
+			yield '</a>'
+			yield '<div class="logout_button"> Выйти </div>'
+			yield '<a href="javascript:history.back()">'
+			yield '<div class="back_button"> Назад </div>'
+			yield '</a>'
+			yield '</div>'
+	elif MODE == 'not_started':
 		yield '<div class="button_area">'
-		yield '<a href="/login">'
-		yield '<div class="login_button"> Войти </div>'
-		yield '</a>'
 		yield '<a href="javascript:history.back()">'
 		yield '<div class="back_button"> Назад </div>'
 		yield '</a>'
-	else:
-		yield '<div class="button_area">'
-		yield '<a href="/acc">'
-		yield '<div class="acc_cont">'
-		yield '<img class="acc_button" src="/static/design/icons/acc.svg" />'
-		yield '</div>'
-		yield '</a>'
-		yield '<div class="logout_button"> Выйти </div>'
-		yield '<a href="javascript:history.back()">'
-		yield '<div class="back_button"> Назад </div>'
-		yield '</a>'
-		yield '</div>'
 	yield '</nav>'
 
-	yield '<div class="dialog out">'
-	yield '''<div class="content"> Вы уверены, что хотите выйти? <br/><br/> 
-			Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже </div>'''
-	yield '<div class="button_area">'
-	yield '<div class="button cancel"> Отмена </div>'
-	yield f'<a href="/logout?path={path_arg}">'
-	yield '<div class="button out"> Выйти </div>'
-	yield '</a>'
-	yield '</div>'
-	yield '</div>'
-	yield '</div>'
+	if MODE == 'tournament':
+		yield '<div class="dialog out">'
+		yield '''<div class="content"> Вы уверены, что хотите выйти? <br/><br/> 
+				Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже </div>'''
+		yield '<div class="button_area">'
+		yield '<div class="button cancel"> Отмена </div>'
+		yield f'<a href="/logout?path={path_arg}">'
+		yield '<div class="button out"> Выйти </div>'
+		yield '</a>'
+		yield '</div>'
+		yield '</div>'
+		yield '</div>'

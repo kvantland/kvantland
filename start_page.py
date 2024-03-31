@@ -4,12 +4,20 @@ from pathlib import Path
 import nav
 import user
 import footer
+from login import do_logout
+from config import config
+
+MODE = config['tournament']['mode']
 
 @route('/')
 def display_start_page(db):
 
-	user_id = user.current_user(db)
-	link = f'/rules' if user_id is not None else f'/login?path=/land'
+	if MODE == 'not_started':
+		do_logout()
+		user_id = None
+	elif MODE == 'tournament':
+		user_id = user.current_user(db)
+		link = f'/rules' if user_id is not None else f'/login?path=/land'
 
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
@@ -33,9 +41,12 @@ def display_start_page(db):
 	yield '<div class="text">Твоя возможность проявить себя!</div>'
 	yield '</div>'
 	yield '<div class="text">Тебя ждут задачи из самых разных областей математики:  Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</div>'
-	yield f'<a href={link}>'
-	yield '<div class="start_button"> Открыть турнир </div>'
-	yield '</a>'
+	if MODE == 'tournament':
+		yield f'<a href={link}>'
+		yield '<div class="start_button"> Открыть турнир </div>'
+		yield '</a>'
+	elif MODE == 'not_started':
+		yield '<div class="tournament_ended_text"> Турнир 2 завершен. <br/> Следите за анонсом турнира 3 в наших соцсетях.</div>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="history">'
