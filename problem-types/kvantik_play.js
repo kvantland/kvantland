@@ -6,7 +6,7 @@ $('.submit_button').on('click touchstart', function(e){
 	$('[name="answer"]').val(ans)
 })
 
-$('input[type="number"]').on('keypress', function (e) {
+$('input[type="text"]').on('keypress', function (e) {
     var maxlength = $(this).prop('maxlength');
     if (maxlength !== -1) {
         var length = $(this).val().trim().length;
