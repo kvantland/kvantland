@@ -61,7 +61,7 @@ def entry_form(data, kwargs):
 	for dwarf in range(data['conf']['left']['dwarf']):
 		yield f"""<image class="active dwarf" width="{dwarf_width}" height="{dwarf_height}"
 					pos="{pos}" side="left" 
-					xlink:href="/static/problem_assets/dwarf.png"
+					href="/static/problem_assets/dwarf.png"
 					x="{(pos % 2 == 1) * dwarf_width + shore_pad['left']}"
 					y="{cur_height + shore_pad['top']}"" />"""
 		pos += 1
@@ -69,7 +69,7 @@ def entry_form(data, kwargs):
 	for bag in range(data['conf']['left']['bag']):
 		yield f"""<image class="active bag" width="{bag_width}" height="{bag_height}" 
 					pos="{pos}" side="left" 
-					xlink:href="/static/problem_assets/money_bag.png"
+					href="/static/problem_assets/money_bag.png"
 					x="{(pos % 2 == 1) * bag_width + shore_pad['left']}"
 					y="{cur_height + shore_pad['top']}" />"""
 		pos += 1
@@ -93,7 +93,7 @@ def entry_form(data, kwargs):
 	for dwarf in range(data['conf']['right']['dwarf']):
 		yield f"""<image class="active dwarf" width="{dwarf_width}" height="{dwarf_height}" 
 					pos="{pos}" side="right"
-					xlink:href="/static/problem_assets/dwarf.png"
+					href="/static/problem_assets/dwarf.png"
 					x="{(pos % 2 == 1) * dwarf_width + shore_pad['left']}"
 					y="{cur_height + shore_pad['top']}" />"""
 		pos += 1
@@ -101,7 +101,7 @@ def entry_form(data, kwargs):
 	for bag in range(data['conf']['right']['bag']):
 		yield f"""<image class="active bag" width="{bag_width}" height="{bag_height}"
 					pos="{pos}" side="right"
-					xlink:href="/static/problem_assets/money_bag.png"
+					href="/static/problem_assets/money_bag.png"
 					x="{(pos % 2 == 1) * dwarf_width + shore_pad['left']}"
 					y="{cur_height + shore_pad['top']}" />"""
 		pos += 1

@@ -114,7 +114,7 @@ function move(e) {
 	autoscroll(e.clientX, e.clientY)
 }
 
-async function drop() {
+function drop() {
 	let obj = $('.targeted')
 	if ($('.best').length) {
 		if ($('.best').hasClass('boat') && $('.best').attr('side') == $(obj).attr('side')) {
@@ -131,10 +131,13 @@ async function drop() {
 			}
 			else 
 				show_xhr('Слишком большая масса лодки!')
-			back_to_drag()
 			let className = $('.best').attr('dwarf') + '_' + $('.best').attr('bag')
-			if (pref_className != className)
+			if (pref_className != className) {
+				console.log('here')
 				$(`image.boat.${className}`).addClass('cur')
+				console.log('here')
+			}
+			back_to_drag()
 		}
 		else if ($('.best').attr('side') == $(obj).attr('side')) {
 			let obj2 = $(`image.active[pos=${$('.best').attr('pos')}][side=${$('.best').attr('side')}]`)
@@ -273,6 +276,11 @@ const stop_pos = {'left': $('g.shore[side="left"] image').attr('width') - $('rec
 
 var scroll_p = $(document.createElement('div')).addClass('scroll_div')
 $('body').append(scroll_p)
+
+$('image.boat').not('.0_0').each(function(ind){
+	$(this).addClass('cur');
+	setTimeout(() => $(this).removeClass('cur'));
+})
 
 $('image.active').on('mousedown touchstart', start_move)
 $('image.active').on('mouseup touchend', drop)
