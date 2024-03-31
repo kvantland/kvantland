@@ -12,7 +12,7 @@ def display_banner(db):
 	path_arg = escape(quote('?'.join(request.urlparts[2:4]), safe=''))
 	if MODE == 'tournament':
 		user = current_user(db)
-	elif MODe == 'not_started':
+	elif MODE == 'not_started':
 		user = None
 	yield '<nav class="user_nav">'
 	yield '<a href="/">'
