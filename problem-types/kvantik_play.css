@@ -4,21 +4,30 @@
 	justify-content: center;
 }
 
-.grid_line{
-	stroke: black;
-	stroke-linecap: round;
-}
-.field {
-	font-family: Montserrat Alternates;
-	font-weight: 600;
-	fill: black; 
-	font-size:64px;
-	justify-content: center;
-	text-align: center;
+
+
+.flex_box{
+	display: inline-flex;
+	flex-direction: column;
+	border: 1px solid;
 }
 
-.fieldwrap {
-	text-align:center
+.row{
+	display: flex;
+	flex-direction: row;
+	height: 96px;
+}
+
+.field {
+	display: flex;
+	font-family: Montserrat Alternates;
+	font-weight: 600; 
+	font-size:64px;
+	border:1px black solid;
+	justify-content: center;
+	text-align: center;
+	width: 96px;
+	align-items: center;
 }
 
 .fieldinput {
@@ -28,6 +37,13 @@
 	stroke: black;
 	display: block;
     margin:auto;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+}
+
+.fieldinput:focus{
+	outline: none;
 }
 
 text{
@@ -36,34 +52,30 @@ text{
 	dominant-baseline: central;
 }
 
-.point {
-	pointer-events: none;
-}
-
 .color0{
-	fill: #655d8a;
+	color: #FF3D00;
 }
 
 .color1{
-	fill: #7897ab;
+	color: #0066FF;
 }
 
 .color2{
-	fill: #d885a3;
+	color: #703AC7;
 }
 
 .color3{
-	fill: #fdceb9;
+	color: #C414F0;
 }
 
 .color4{
-	fill: #7785a3;
+	color: #67C91A;
 }
 
 .color5{
-	fill: #5097ab;
+	color: #FF9900;
 }
 
 .color6{
-	fill: #655d8a;
+	color: #FF3D00;
 }
