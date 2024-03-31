@@ -120,13 +120,14 @@ def show_question(db, variant, hint_mode):
 		user_id = None
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
 	(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
+	default = content
 	if MODE == 'private':
 		db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 		(step, curr, ), = db.fetchall()
 		if curr:
 			content = curr
 
-	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step, 'default': content}
+	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step, 'default': default}
 	typedesc = import_module(f'problem-types.{type_}')
 	script = try_read_file(f'problem-types/{type_}.js')
 	style = try_read_file(f'problem-types/{type_}.css')
@@ -287,93 +288,6 @@ def show_question(db, variant, hint_mode):
 	if script:
 		yield f'<script type="text/ecmascript">{script}</script>'
 
-def show_question_old(db, variant, hint_mode):
-	user_id = require_user(db)
-	if user_id == None:
-		redirect('/')
-	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (variant,))
-	(town, town_name, type_, name, description, image, content, hint, hint_cost), = db.fetchall()
-	db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-	(step, curr, ), = db.fetchall()
-	if curr:
-		content = curr
-	kwargs = {'hint_mode': hint_mode, 'hint_cost': hint_cost, 'step': step}
-	typedesc = import_module(f'problem-types.{type_}')
-	script = try_read_file(f'problem-types/{type_}.js')
-	style = try_read_file(f'problem-types/{type_}.css')
-	yield '<!DOCTYPE html>'
-	yield f'<title>{name}</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
-	yield '<script type="module" src="/static/master.js"></script>'
-	yield '<script type="module" src="/static/design/user.js"></script>'
-	if style:
-		yield f'<style type="text/css">{style}</style>'
-	yield from user.display_banner_tournament(db)
-	yield from nav.display_breadcrumbs(('/land', 'Квантландия'), (f'/town/{town}/', town_name))
-	yield '<div class="content_wrapper">'
-	yield '<main>'
-	yield f'<h1>{name}</h1>'
-	yield f'<p class="description">{description}</p>'
-	if hint_mode == HintMode.SHOW:
-		yield '<section class="hint">'
-		yield '<h2>Подсказка</h2>'
-		yield f'<p>{hint}</p>'
-		yield '</section>'
-	try:
-		save_progress = typedesc.SAVE_PROGRESS
-	except AttributeError:
-		save_progress = True
-
-	try:
-		show_default_buttons = not typedesc.CUSTOM_BUTTONS
-	except AttributeError:
-		show_default_buttons = True
-
-	try:
-		hybrid = typedesc.HYBRID
-	except AttributeError:
-		hybrid = False
-
-	try:
-		without_buttons = typedesc.WITHOUT_BUTTONS
-	except AttributeError:
-		without_buttons = False
-
-	try:
-		hint_only = typedesc.HINT_ONLY
-	except AttributeError:
-		hint_only = False
-		
-	if save_progress:
-		if hybrid:
-			yield f'<div id="interactive_problem_form">'
-		else:
-			yield f'<form method="post" id="problem_form" class="problem answer_area answer_area_{type_}">'
-	yield from typedesc.entry_form(content, kwargs)
-	if save_progress and not hybrid:
-		yield '</form>'
-	elif hybrid:
-		yield '</div>'
-
-	if image:
-		yield f'<img class="picture" src="/static/problem/{image}">'
-	
-	if not without_buttons:
-		if hint_only:
-			yield from show_answer_area(content, 'hint_only', kwargs)
-		elif show_default_buttons:
-			yield from show_answer_area(content, 'without_input', kwargs)
-		else:
-			yield from show_answer_area(content, 'with_input', kwargs)
-	
-	yield '</main>'
-	yield '</div>'
-	yield '<script type="text/ecmascript" src="/static/save_hint_results.js"></script>'
-	if script:
-		yield f'<script type="text/ecmascript">{script}</script>'
-
 def check_answer(db, var_id, user_id, answer):
 	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, content), = db.fetchall()
@@ -456,58 +370,6 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</div>'
 	yield from footer.display_basement()
 	yield '<script type="text/ecmascript" src="/static/focus_on_answer.js"></script>'
-
-
-def _display_result_old(db, var_id, ok, answer=None, solution=None):
-	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
-	(type_, ), = db.fetchall()
-	db.execute('select town, Kvantland.Town.name, Kvantland.Problem.name, description, image from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Town using (town) where variant = %s', (var_id,))
-	(town, town_name, name, description, image), = db.fetchall()
-	
-	typedesc = import_module(f'problem-types.{type_}')
-	style = try_read_file(f'problem-types/{type_}.css')
-
-	try:
-		show_default_buttons = not typedesc.CUSTOM_BUTTONS
-	except AttributeError:
-		show_default_buttons = True
-
-	try:
-		save_progress = typedesc.SAVE_PROGRESS
-	except AttributeError:
-		save_progress = True
-
-	yield '<!DOCTYPE html>'
-	yield f'<title>{name}</title>'
-	yield '<link rel="stylesheet" type="text/css" href="/static/master.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/problem.css">'
-	yield '<script type="module" src="/static/design/user.js"></script>'
-	if style:
-		yield f'<style type="text/css">{style}</style>'
-	yield '<div class="content_wrapper">'
-	yield from user.display_banner_tournament(db)
-	yield from nav.display_breadcrumbs(('/', 'Квантландия'), (f'/town/{town}/', town_name))
-	yield '<main>'
-	yield f'<h1>{name}</h1>'
-	yield f'<p class="description">{description}</p>'
-	yield '<div class="save_zone_wrapper" style="z-index: -1">'
-	if save_progress:
-		yield '<div class="solution_hide">'
-		yield solution
-		yield '</div>'
-	if not show_default_buttons:
-		yield '<div class="answer_bar">'
-		yield 'Введите ответ:'
-		yield f'<input name="answer" type="number" value="{answer}" readonly/>'
-		yield '</div>'
-	yield '</div>'
-	yield f'<div class="result_area result_{ok}">'
-	yield result_text[ok]
-	yield '</div>'
-	if image:
-		yield f'<img class="picture" src="/static/problem/{image}">'
-	yield '</main>'
-	yield '</div>'
 
 def require_user(db):
 	user_id = user.current_user(db)
