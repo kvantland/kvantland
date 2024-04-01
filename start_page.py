@@ -147,7 +147,7 @@ def display_start_page(db):
 	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="body">'
-	yield '<span class="bold_text"> Ответ:</span> <span class="text"> 3 </span>'
+	yield '<span class="bold_text"> Ответ:</span> <span class="text"> 0 </span>'
 	yield '</div>'
 	yield '<div class="button solution"> Посмотреть решение </div>'
 	yield '</div>'
