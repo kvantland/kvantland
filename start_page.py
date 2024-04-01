@@ -29,9 +29,9 @@ def display_start_page(db):
 	yield f'<link rel="icon" href="/static/design/icons/logo.svg" type="image/svg+xml">'
 	yield f'<link rel="icon" href="/static/design/icons/favicon.ico" sizes="48x48">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css?v=2">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/footer.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/start_page.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/start_page.css?v=2">'
 	yield '<script type="module" src="/static/design/user.js"></script>'
 	yield """<script type="text/javascript" >
 	   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
