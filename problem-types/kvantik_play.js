@@ -7,6 +7,9 @@ $('.submit_button').on('click touchstart', function(e){
 })
 
 $('input[type="text"]').on('keypress', function (e) {
+	if (e.key.length === 1 && /\D/.test(e.key)) {
+    	e.preventDefault();
+    }
     var maxlength = $(this).prop('maxlength');
     if (maxlength !== -1) {
         var length = $(this).val().trim().length;
