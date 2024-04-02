@@ -8,9 +8,11 @@
 	-webkit-user-select:none;
 	user-select: none;
 }
-
+.grass {
+	fill:#9EC846;
+}
 .grid_line{
-	stroke: lightgray;
+	stroke: darkgrey;
 	stroke-linecap: square;
 	stroke-width: 1;
 }
