@@ -13,6 +13,13 @@ def entry_form(data, kwargs):
     yield '<input name="answer" type="hidden" />'
     yield '<div class="plot_area">'
     yield f'<svg version="1.1" width="{board_height}" height="{board_width}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield '<defs>'
+    yield '<linearGradient id="grassGradient" x1="0" x2="1" y1="1" y2="0">'
+    yield '<stop offset="0%" stop-color="#88a24b"/>'
+    yield '<stop offset="50%" stop-color="#d7de90"/>'
+    yield '<stop offset="100%" stop-color="#88a24b"/>'
+    yield '</linearGradient>'
+    yield '</defs>'
     yield f'<rect class="grass" width="{board_height}" height="{board_width}"/>'
     for y in range(0, height + 1):
         yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'

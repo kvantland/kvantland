@@ -9,10 +9,10 @@
 	user-select: none;
 }
 .grass {
-	fill:#9EC846;
+	fill: url(#grassGradient);
 }
 .grid_line{
-	stroke: darkgrey;
+	stroke: #91a359;
 	stroke-linecap: square;
 	stroke-width: 1;
 }
