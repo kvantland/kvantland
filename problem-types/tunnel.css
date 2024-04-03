@@ -22,7 +22,10 @@
 	stroke-linecap: square;
 	stroke-width: 2;
 }
-
+.cross {
+	pointer-events: none;
+	align-text:center;
+}
 .inside_line{
 	stroke-linecap: square;
 	stroke-width: 2;
