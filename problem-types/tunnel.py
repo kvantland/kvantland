@@ -51,29 +51,25 @@ def entry_form(data, kwargs):
     for y in range(0, width):
         if (y != 1):
             yield f'<image class="border_line" x = "{width * side - rect_height / 2}" y="{y * side + cube_width / 2}" height="{rect_width}" width="{rect_height}" href="/static/problem_assets/tiles/grass19x13.png"/>'
-
-    #yield f'<line class="border_line" x1="{ind}" y1 = "{ind}" x2="{ind + width * side}" y2="{ind}" stroke-width="{line_width}"/>'
-    #yield f'<line class="border_line" x1="{ind}" y1 = "{ind + height * side}" x2="{ind + width * side}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
-    #yield f'<line class="border_line" x1="{ind}" y1 = "{ind}" x2="{ind}" y2="{ind + 6 * side}" stroke-width="{line_width}"/>'
-    #yield f'<line class="border_line" x1="{ind}" y1 = "{ind + 7 * side}" x2="{ind}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
-    #yield f'<line class="border_line" x1="{ind + width * side}" y1 = "{ind}" x2="{ind + width * side}" y2="{ind + 1 * side}" stroke-width="{line_width}"/>'
-    #yield f'<line class="border_line" x1="{ind + width * side}" y1 = "{ind + 2 * side}" x2="{ind + width * side}" y2="{ind + height * side}" stroke-width="{line_width}"/>'
-    
-    for a, b, c in data['board']:
-        if a == 0:
-            if (b != 0):
-                yield f'<image class="cube" x = "{b * side - cube_width / 2}" y="{c * side - cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11.png"/>'
-            yield f'<image class="inside_line not_choiced" pos="{a}" column="{b}" row="{c}" x = "{b * side + cube_width / 2}" y="{c * side - rect_height / 2}" height="{rect_height}" width="{rect_width}" href="/static/problem_assets/tiles/rect13x19.png"/>'
-            if (b != width - 1):
-                yield f'<image class="cube" x = "{b * side + rect_width + cube_width / 2}" y="{c * side - cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11.png"/>'
-            #yield f'<line class="inside_line not_choiced" pos="{a}" column="{b}" row="{c}" x1="{ind + b * side}" y1 = "{ind + c * side}" x2="{ind + (b + 1) * side}" y2="{ind + c * side}" stroke-width="{line_width}"/>'
-        else:
-            if (c != 0):
-                yield f'<image class="cube" x = "{b * side - cube_width / 2}" y="{c * side - cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11.png"/>'
-            yield f'<image class="inside_line not_choiced" pos="{a}" column="{b}" row="{c}" x = "{b * side - rect_height / 2}" y="{c * side + cube_width / 2}" height="{rect_width}" width="{rect_height}" href="/static/problem_assets/tiles/rect19x13.png"/>'
-            if (c != height - 1):
-                yield f'<image class="cube" x = "{b * side - cube_width / 2}" y="{c * side + rect_width + cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11.png"/>'
-            #yield f'<line class="inside_line not_choiced" pos="{a}" column="{b}" row="{c}" x1="{ind + b * side}" y1 = "{ind + c * side}" x2="{ind + b * side}" y2="{ind + (c + 1) * side}" stroke-width="{line_width}"/>'
+ 
+    for y in range(0, width - 1):
+        for x in range (0, width - 1):
+            tmp = data['board'][y][x]
+            if (tmp // 10 == 1):
+                yield f'<image class="cube" x = "{(x + 1) * side - cube_width / 2}" y="{(y + 1) * side - cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11.png"/>'
+            elif (tmp // 10 == 2):
+                yield f'<image class="cube" x = "{(x + 1) * side - cube_width / 2}" y="{(y + 1) * side - cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11_shade.png"/>'
+            elif (tmp // 10 == 3):
+                yield f'<image class="cube" x = "{(x + 1) * side - cube_width / 2}" y="{(y + 1) * side - cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11_cornerleft.png"/>'
+            elif (tmp // 10 == 4):
+                yield f'<image class="cube" x = "{(x + 1) * side - cube_width / 2}" y="{(y + 1) * side - cube_width / 2}" height="{cube_width}" width="{cube_width}" href="/static/problem_assets/tiles/block11x11_corner.png"/>'
+            if (tmp % 10 == 1):
+                yield f'<image class="inside_line not_choiced" pos="{0}" column="{x + 1}" row="{y + 1}" x = "{(x + 1) * side + cube_width / 2}" y="{(y + 1) * side - rect_height / 2}" height="{rect_height}" width="{rect_width}" href="/static/problem_assets/tiles/rect13x19.png"/>'
+            elif (tmp % 10 == 2):
+                yield f'<image class="inside_line not_choiced" pos="{1}" column="{x + 1}" row="{y + 1}" x = "{(x + 1) * side - rect_height / 2}" y="{(y + 1) * side + cube_width / 2}" height="{rect_width}" width="{rect_height}" href="/static/problem_assets/tiles/rect19x13.png"/>'
+            elif (tmp % 10 == 3):
+                yield f'<image class="inside_line not_choiced" pos="{0}" column="{x + 1}" row="{y + 1}" x = "{(x + 1) * side + cube_width / 2}" y="{(y + 1) * side - rect_height / 2}" height="{rect_height}" width="{rect_width}" href="/static/problem_assets/tiles/rect13x19.png"/>'
+                yield f'<image class="inside_line not_choiced" pos="{1}" column="{x + 1}" row="{y + 1}" x = "{(x + 1) * side - rect_height / 2}" y="{(y + 1) * side + cube_width / 2}" height="{rect_width}" width="{rect_height}" href="/static/problem_assets/tiles/rect19x13.png"/>'
     yield '</svg>'
     yield '</div>'
 
