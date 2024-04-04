@@ -17,7 +17,8 @@ def entry_form(data, kwargs):
 	yield '<input type="hidden" name="answer" />'
 	yield f"""<svg 
 				version="1.1" 
-				width="{full_width + rel_width}" 
+				preserveAspectRatio="xMidYMid meet" 
+				viewBox="0 0 {full_width + rel_width} {full_height}" 
 				height="{full_height}" 
 				overflow="visible" 
 				xmlns="http://www.w3.org/2000/svg" 

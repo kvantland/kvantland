@@ -50,6 +50,12 @@ function in_access_zone(obj) {
 	return true
 }
 
+function getSVGCoordinates(event) {
+	let coordinatePoint = new DOMPoint(event.clientX, event.clientY)
+	let svg = document.querySelector('svg')
+	return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+}
+
 function occupied(rect) {
 	let [pos, num] = [$(rect).attr('pos'), $(rect).attr('num')]
 	let match = $(`.match.active[pos=${pos}][num=${num}]`)
@@ -86,8 +92,8 @@ function start_move(e) {
 	$('svg').append(obj)
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr({
-			'x': e.clientX - svg.left - match_width / 2, 
-			'y': e.clientY - svg.top - match_length / 2,
+			'x': getSVGCoordinates(e).x - match_width / 2, 
+			'y': getSVGCoordinates(e).y - match_length / 2,
 			'transform': 'rotate(0)'})
 	$(obj).addClass('targeted')
 	update_best()
@@ -100,8 +106,8 @@ function move(e) {
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr({
-			'x': e.clientX - svg.left - match_width / 2,
-			'y': e.clientY - svg.top - match_length / 2})
+			'x': getSVGCoordinates(e).x - match_width / 2,
+			'y': getSVGCoordinates(e).y - match_length / 2})
 	let [x, y] = [e.clientX, e.clientY]
 	if (!in_access_zone(obj))
 		drop()

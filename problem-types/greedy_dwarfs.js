@@ -69,6 +69,12 @@ function in_access_zone(obj) {
 	return true
 }
 
+function getSVGCoordinates(event) {
+	let coordinatePoint = new DOMPoint(event.clientX, event.clientY)
+	let svg = document.querySelector('svg')
+	return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+}
+
 function update_best() {
 	$('rect').removeClass('best')
 	let obj = $('.targeted')[0]
@@ -91,8 +97,8 @@ function start_move(e) {
 	$('svg:eq(0)').append(obj)
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr({
-			'x': e.clientX - svg.left - $(obj).attr('width') / 2, 
-			'y': e.clientY - svg.top - $(obj).attr('height') / 2,
+			'x': getSVGCoordinates(e).x - $(obj).attr('width') / 2, 
+			'y': getSVGCoordinates(e).y - $(obj).attr('height') / 2,
 			})
 	$(obj).addClass('targeted')
 	update_best()
@@ -105,8 +111,8 @@ function move(e) {
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr({
-			'x': e.clientX - svg.left - $(obj).attr('width') / 2,
-			'y': e.clientY - svg.top - $(obj).attr('height') / 2})
+			'x': getSVGCoordinates(e).x - $(obj).attr('width') / 2,
+			'y': getSVGCoordinates(e).y - $(obj).attr('height') / 2})
 	if (!in_access_zone(obj)) 
 		drop()
 	else 
