@@ -14,7 +14,7 @@ def entry_form(data, kwargs):
 	yield '<div class="flex_box">'
 	yield '<div class="row">'
 	for x in range(0, in_row):
-		yield f'<div class="field color{x}">{data['word'][x]}</div>'
+		yield f'<div class="field color{x}">{data["word"][x]}</div>'
 	yield '</div>'
 	yield '<div class="row">'
 	for x in range(0, in_row):
