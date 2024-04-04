@@ -1,13 +1,13 @@
 .row {
-	margin-top: 140px;
+	margin-top: 40px;
 	width: 100%;
 	display: inline-flex;
-	gap: 80px;
+	gap: 5%;
 	justify-content: center;
 }
 
 .row .column {
-	width: 120px;
+	width: 13%;
 	display: inline-flex;
 	flex-direction: column;
 	gap: 20px;
@@ -23,8 +23,5 @@
 }
 
 .casket {
-	position: absolute;
-	transform: scale(0.5) translate(-50%, -150%);
-	margin-top: -10px;
 	cursor: pointer;
 }
