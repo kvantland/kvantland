@@ -98,8 +98,8 @@ button {
 
 .content_box {
 	align-self: stretch;
-	padding-left: min(5vw, 80px);
-	padding-right: min(5vw, 80px);
+	padding-left: max(40px, min(5vw, 80px));
+	padding-right: max(40px, min(5vw, 80px));
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;

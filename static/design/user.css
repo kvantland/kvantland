@@ -32,7 +32,7 @@
 	width: 100%;
 	box-sizing: border-box;
 	position: fixed;
-	padding: 30px min(5vw, 80px);
+	padding: 30px max(40px, min(5vw, 80px));
 	justify-content: space-between; 
 	align-items: center; 
 	display: inline-flex;
