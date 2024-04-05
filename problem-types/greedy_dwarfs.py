@@ -19,7 +19,7 @@ def entry_form(data, kwargs):
 				version="1.1" 
 				preserveAspectRatio="xMidYMid meet" 
 				viewBox="0 0 {full_width + rel_width} {full_height}" 
-				height="{full_height}" 
+				width="{full_width + rel_width}"
 				overflow="visible" 
 				xmlns="http://www.w3.org/2000/svg" 
 				xmlns:xlink="http://www.w3.org/1999/xlink">"""
