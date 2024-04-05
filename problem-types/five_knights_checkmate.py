@@ -14,7 +14,13 @@ def entry_form(data, kwargs):
 	plot_height = board_height
 	yield '<input name="answer" type="hidden" />'
 	yield '<div class="plot_area">'
-	yield f'<svg version="1.1" width="{plot_width}" height="{plot_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield f"""<svg version="1.1" 
+					preserveAspectRatio="xMidYMid meet" 
+					viewBox="0 0 {plot_width} {plot_height}" 
+					width="{plot_width}"
+					overflow="visible" 
+					xmlns="http://www.w3.org/2000/svg" 
+					xmlns:xlink="http://www.w3.org/1999/xlink">"""
 	for y in range(0, height + 1):
 		yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + width * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
 	for x in range(0, width + 1):
@@ -30,8 +36,8 @@ def entry_form(data, kwargs):
 	
 	yield f'<image class="horse passive drag" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/chess/horse_b.png" />'
 	yield f'<image class="horse active" x="{pad + board_width}" y="{line_width}" width="{inner_side}" height="{inner_side}" href="/static/problem_assets/chess/horse_b.png" />'
-	yield f'<text style="font-size: {inner_side * 0.2}px" textLength="{inner_side * 0.8}" x="{pad + board_width}" y="{inner_side * 1.2}">Осталось</text>'
-	yield f'<text class="amount" style="font-size: {inner_side * 0.2}px" textLength="{inner_side * 0.1}" x="{pad + board_width + inner_side * 0.9}" y="{inner_side * 1.2}"> 4</text>'
+	yield f'<text style="font-size: {inner_side * 0.18}px" textLength="{inner_side * 0.8}" x="{pad + board_width}" y="{inner_side * 1.2}">Осталось</text>'
+	yield f'<text class="amount" style="font-size: {inner_side * 0.18}px" textLength="{inner_side * 0.1}" x="{pad + board_width + inner_side * 0.9}" y="{inner_side * 1.2}"> 4</text>'
 	yield f'<image class="reload" x = "{pad + board_width}" y="{plot_height - inner_side}" height="{inner_side}" width="{inner_side}" href="/static/problem_assets/reload.png" />'
 	yield '</svg>'
 	yield '</div>'

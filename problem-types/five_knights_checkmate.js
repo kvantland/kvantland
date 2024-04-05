@@ -50,6 +50,12 @@ function in_access_zone(obj) {
 	return true
 }
 
+function getSVGCoordinates(event) {
+	let coordinatePoint = new DOMPoint(event.clientX, event.clientY)
+	let svg = document.querySelector('svg')
+	return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+}
+
 function occupied(ind, only_horse = false) {
 	let [x, y] = [$(`rect:eq(${ind})`).attr('x'), $(`rect:eq(${ind})`).attr('y')]
 	let tmp = 0
@@ -64,7 +70,8 @@ function move(e) {
 		e.preventDefault()
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
-	$(obj).attr('x', e.clientX - svg.left - side / 2).attr('y', e.clientY - svg.top - side / 2)
+	$(obj).attr({'x': getSVGCoordinates(e).x - side / 2,
+				'y': getSVGCoordinates(e).y - side / 2})
 	if (!in_access_zone(obj)) {
 		back_to_drag()
 	}
@@ -103,7 +110,8 @@ function start_move(e) {
 	}
 	$('svg').append(obj)
 	let svg = $('svg')[0].getBoundingClientRect()
-	$(obj).attr('x', e.clientX - svg.left - side / 2).attr('y', e.clientY - svg.top - side / 2)
+	$(obj).attr({'x': getSVGCoordinates(e).x - side / 2,
+				'y': getSVGCoordinates(e).y - side / 2})
 	$(obj).addClass('targeted')
 	$(document).on('mousemove touchmove', move)
 	update_status()
