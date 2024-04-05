@@ -11,7 +11,13 @@ def entry_form(data, kwargs):
 
 	yield '<input name="answer" type="hidden" />'
 	yield '<div class="plot_area">'
-	yield f'<svg version="1.1" width="{board_width}" height="{board_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+	yield f"""<svg version="1.1" 
+					preserveAspectRatio="xMidYMid meet" 
+					viewBox="0 0 {board_width} {board_height}" 
+					width="{board_width}"  
+					overflow="visible" 
+					xmlns="http://www.w3.org/2000/svg" 
+					xmlns:xlink="http://www.w3.org/1999/xlink">"""
 	for y in range(0, in_column + 1):
 		yield f'<line class="grid_line" x1="{ind}" y1 = "{ind + y * side}" x2="{ind + in_row * side}" y2="{ind + y * side}" stroke-width="{line_width}"/>'
 	for x in range(0, in_row + 1):
