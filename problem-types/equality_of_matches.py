@@ -12,11 +12,12 @@ def entry_form(data, kwargs):
 	num_height = match_length * 2 + match_width * 3  # высота цифр
 	num_width = match_length + match_width * 2  # ширина цифр
 	symb_pad = 25  # отступ между символами в выражении
-	margin = {'left': 20, 'top': 30, 'right': 20, 'bottom': 30}  # общие отступы
+	margin = {'left': 120, 'top': 30, 'right': 120, 'bottom': 30}  # общие отступы
 	num_amount = len(data['nums'])
 	sgn_amount = len(data['sgn'])
 	symb_amount = sgn_amount + num_amount
 	rel_width, rel_height = (50, 50)
+	rel_pad = 50
 	view_box = {
 		'height': num_height + margin['top'] + margin['bottom'],
 		'width': num_width * num_amount + 
@@ -149,7 +150,7 @@ def entry_form(data, kwargs):
 	yield '</g>'
 	yield f"""<image class="reload" href="/static/problem_assets/reload.png" 
 			width={rel_width} height={rel_height}
-			x={view_box["width"] - rel_width} y={view_box["height"] - rel_height - margin["bottom"]} />"""
+			x={view_box["width"] - rel_width - margin['right'] + rel_pad} y={view_box["height"] - rel_height - margin["bottom"]} />"""
 	yield '</svg>'
 
 def steps(step_num, params, data):
