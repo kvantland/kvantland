@@ -15,7 +15,7 @@
 .row{
 	display: flex;
 	flex-direction: row;
-	height: 96px;
+	height: max(60px, min(8vw, 96px));;
 }
 
 .field {
@@ -26,7 +26,7 @@
 	border:1px black solid;
 	justify-content: center;
 	text-align: center;
-	width: 96px;
+	width: max(60px, min(8vw, 96px));
 	align-items: center;
 }
 
@@ -37,19 +37,14 @@
 	stroke: black;
 	display: block;
     margin:auto;
-    width: 64px;
-    height: 64px;
+    width: 80%;
+    height: 80%;
     text-align: center;
+    background: none;
 }
 
 .fieldinput:focus{
 	outline: none;
-}
-
-text{
-	font-family: inherit;
-	text-anchor: middle;
-	dominant-baseline: central;
 }
 
 .color0{
