@@ -325,7 +325,7 @@ button {
 	box-shadow: 7px 7px 7px #1A5866;
 	text-align: center;
 	color: black;
-	font-size: max(18px, min(2.5vw, 24px));
+	font-size: max(20px, min(2.7vw, 24px));
 	font-family: Montserrat;
 	font-weight: 600;
 	word-wrap: break-word;
