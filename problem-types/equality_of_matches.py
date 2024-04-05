@@ -84,7 +84,7 @@ def entry_form(data, kwargs):
 	yield f"""<svg version="1.1" 
 				preserveAspectRatio="xMidYMid meet" 
 				viewBox="0 0 {view_box["width"]} {view_box["height"]}" 
-				height="{view_box["height"]}" 
+				width="{view_box["width"]}" 
 				overflow="visible" 
 				xmlns="http://www.w3.org/2000/svg" 
 				xmlns:xlink="http://www.w3.org/1999/xlink">"""
