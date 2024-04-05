@@ -122,6 +122,8 @@
 }
 
 .basement .confidentiality {
+	display: inline-block;
+	width: min-content;
 	font-size: 16px;
 	font-family: Montserrat Alternates;
 	font-weight: 500;
