@@ -51,9 +51,16 @@ function in_access_zone(obj) {
 }
 
 function getSVGCoordinates(event) {
-	let coordinatePoint = new DOMPoint(event.clientX, event.clientY)
-	let svg = document.querySelector('svg')
-	return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+	if (event.touches) {
+		let coordinatePoint = new DOMPoint(event.touches[0].clientX, event.touches[0].clientY)
+		let svg = document.querySelector('svg')
+		return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+	}
+	else {
+		let coordinatePoint = new DOMPoint(event.clientX, event.clientY)
+		let svg = document.querySelector('svg')
+		return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+	}
 }
 
 function occupied(ind, only_horse = false) {
@@ -66,8 +73,6 @@ function occupied(ind, only_horse = false) {
 	return tmp == 1
 }
 function move(e) {
-	if (e.touches)
-		e.preventDefault()
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr({'x': getSVGCoordinates(e).x - side / 2,
@@ -100,8 +105,6 @@ function back_to_drag() {
 }
 
 function start_move(e) {
-	if (e.touches)
-		e.preventDefault()
 	let obj = $(e.currentTarget) 
 	if (!$(obj).hasClass('choiced')) {
 		remain -= 1
