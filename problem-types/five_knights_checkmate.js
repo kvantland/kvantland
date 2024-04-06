@@ -79,6 +79,7 @@ function move(e) {
 				'y': getSVGCoordinates(e).y - side / 2})
 	if (!in_access_zone(obj)) {
 		back_to_drag()
+		update_status()
 	}
 	autoscroll(e.clientX, e.clientY)
 }
