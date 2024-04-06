@@ -98,8 +98,6 @@ function update_best() {
 }
 
 function start_move(e) {
-	if (e.touches)
-		e.preventDefault();
 	let obj = $(e.currentTarget)
 	$('svg:eq(0)').append(obj)
 	let svg = $('svg')[0].getBoundingClientRect()
@@ -113,8 +111,6 @@ function start_move(e) {
 }
 
 function move(e) {
-	if (e.touches)
-		e.preventDefault();
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr({
@@ -199,8 +195,6 @@ function move_boat(e) {
 				remain_time -= 6
 				$('#time')[0].innerHTML = $('#time')[0].innerHTML.split(': ')[0] + ': ' + remain_time + ':00'
 				boat_move_tmp = 1
-				if (e.touches)
-					e.preventDefault();
 				$('g.boat rect').attr('side', side)
 
 				boat_move = setInterval(function(){

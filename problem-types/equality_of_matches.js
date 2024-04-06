@@ -93,8 +93,6 @@ function update_best() {
 }
 
 function start_move(e) {
-	if (e.touches)
-		e.preventDefault();
 	let obj = $(e.currentTarget)
 	$('svg').append(obj)
 	let svg = $('svg')[0].getBoundingClientRect()
@@ -108,8 +106,6 @@ function start_move(e) {
 }
 
 function move(e) {
-	if (e.touches)
-		e.preventDefault();
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
 	$(obj).attr({
