@@ -51,9 +51,16 @@ function in_access_zone(obj) {
 }
 
 function getSVGCoordinates(event) {
-	let coordinatePoint = new DOMPoint(event.clientX, event.clientY)
-	let svg = document.querySelector('svg')
-	return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+	if (event.touches) {
+		let coordinatePoint = new DOMPoint(event.touches[0].clientX, event.touches[0].clientY)
+		let svg = document.querySelector('svg')
+		return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+	}
+	else {
+		let coordinatePoint = new DOMPoint(event.clientX, event.clientY)
+		let svg = document.querySelector('svg')
+		return coordinatePoint.matrixTransform(svg.getScreenCTM().inverse())
+	}
 }
 
 function occupied(rect) {
