@@ -14,7 +14,7 @@ def display_banner(db):
 	yield f'<nav class="user_nav user_nav_{MODE}">'
 	yield '<a href="/">'
 	yield '<div class="logo_area">'
-	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<img class="logo" loading="lazy" src="/static/design/icons/logo.svg" />'
 	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
 	yield '</div>'
 	yield '</a>'
@@ -78,7 +78,7 @@ def display_banner_tournament(db):
 
 	yield '<a href="/">'
 	yield '<div class="logo_area">'
-	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<img class="logo" loading="lazy" src="/static/design/icons/logo.svg" />'
 	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
 	yield '</div>'
 	yield '</a>'
@@ -142,7 +142,7 @@ def display_banner_empty():
 
 	yield '<a href="/">'
 	yield '<div class="logo_area">'
-	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<img class="logo" loading="lazy" src="/static/design/icons/logo.svg" />'
 	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
 	yield '</div>'
 	yield '</a>'
@@ -165,7 +165,7 @@ def display_banner_acc(db):
 
 	yield '<a href="/">'
 	yield '<div class="logo_area">'
-	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<img class="logo" loading="lazy" src="/static/design/icons/logo.svg" />'
 	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
 	yield '</div>'
 	yield '</a>'
@@ -215,7 +215,7 @@ def display_banner_policy(db):
 
 	yield '<a href="/">'
 	yield '<div class="logo_area">'
-	yield '<img class="logo" src="/static/design/icons/logo.svg" />'
+	yield '<img class="logo" loading="lazy" src="/static/design/icons/logo.svg" />'
 	yield '<div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>'
 	yield '</div>'
 	yield '</a>'

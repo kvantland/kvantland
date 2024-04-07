@@ -26,7 +26,7 @@ def display_start_page(db):
 
 	yield '<div class="tournament">'
 	yield '<div class="curr_tournament">'
-	yield '<img class="map" src="/static/map/land.png" />'
+	yield '<img class="map" loading="lazy" src="/static/map/land.png" />'
 	yield '<div class="text_container">'
 	yield '<div>'
 	yield '<div class="header">Турнир</div>'
@@ -79,21 +79,21 @@ def display_start_page(db):
 
 	yield '<div class="content_row">'
 	yield '<div class="content_box">'
-	yield '<img class="icon" src="/static/design/icons/screen.svg" />'
+	yield '<img class="icon" loading="lazy" src="/static/design/icons/screen.svg" />'
 	yield '<div>'
 	yield '<span class="bold_text"> Многие задачи интерактивны <br/></span>'
 	yield '<span class="text"> <br/>Для их решения потребуется компьютер с мышкой или тачпадом, чтобы перетаскивать объекты и выделять клетки</span>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
-	yield '<img class="icon" src="/static/design/icons/clock.svg" />'
+	yield '<img class="icon" loading="lazy" src="/static/design/icons/clock.svg" />'
 	yield '<div>'
 	yield '<span class="bold_text"> В турнире встречаются задачи разной сложности <br/> </span>'
 	yield '<span class="text"> <br/> Для решения задач рекомендуем выделить примерно 60 - 90 минут </span>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
-	yield '<img class="icon" src="/static/design/icons/calendar.svg" />'
+	yield '<img class="icon" loading="lazy" src="/static/design/icons/calendar.svg" />'
 	yield '<div>'
 	yield '<span class="bold_text"> Турнир проходит в течение месяца <br/> </span>'
 	yield '<span class="text">  <br/>В любое время до закрытия турнира можно войти/зарегистрироваться и поучаствовать </span>'
@@ -103,7 +103,7 @@ def display_start_page(db):
 
 	yield '<div class="content_row">'
 	yield '<div class="content_box">'
-	yield '<img class="icon" src="/static/design/icons/planet.svg" />'
+	yield '<img class="icon" loading="lazy" src="/static/design/icons/planet.svg" />'
 	yield '<div>'
 	yield '<span class="text"> Примерно </span>'
 	yield '<span class="bold_text"> 1300 детей и взрослых из разных стран </span>'
@@ -111,14 +111,14 @@ def display_start_page(db):
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
-	yield '<img class="icon" src="/static/design/icons/gift.svg" />'
+	yield '<img class="icon" loading="lazy" src="/static/design/icons/gift.svg" />'
 	yield '<div>'
 	yield '<span class="text"> Турнир индивидуальный и рассчитан на школьников 7-9 классов и младше. Победители по итогам сезона (несколько турниров) получат </span>'
 	yield '<span class="bold_text">  призы от журнала "Квантик" </span>'
 	yield '</div>'
 	yield '</div>'
 	yield '<div class="content_box">'
-	yield '<img class="icon" src="/static/design/icons/medal.svg" />'
+	yield '<img class="icon" loading="lazy" src="/static/design/icons/medal.svg" />'
 	yield '<div>'
 	yield '<span class="bold_text"> В зачёт идут 3 лучших результата из 4 <br/> </span>'
 	yield '<span class="text"> <br/>Взрослые тоже могут участвовать, но в отдельном зачёте (с призами для победителей) </span>'
@@ -133,10 +133,10 @@ def display_start_page(db):
 	yield '<div class="dialog answer" num="0">'
 	yield '<div class="head">'
 	yield '<div> Раздел участка </div>'
-	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '<div> <img class="cross" loading="lazy" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="body">'
-	yield '<img class="ans" src="/static/design/answer/fields.png" />'
+	yield '<img class="ans" loading="lazy" src="/static/design/answer/fields.png" />'
 	yield '</div>'
 	yield '<div class="button solution"> Посмотреть решение </div>'
 	yield '</div>'
@@ -144,7 +144,7 @@ def display_start_page(db):
 	yield '<div class="dialog answer" num="1">'
 	yield '<div class="head">'
 	yield '<div> Кони-невидимки </div>'
-	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '<div> <img class="cross" loading="lazy" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="body">'
 	yield '<span class="bold_text"> Ответ:</span> <span class="text"> 0 </span>'
@@ -155,7 +155,7 @@ def display_start_page(db):
 	yield '<div class="dialog answer" num="2">'
 	yield '<div class="head">'
 	yield '<div> Как такое возможно? </div>'
-	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '<div> <img class="cross" loading="lazy" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="body">'
 	yield '<span class="bold_text"> Ответ:</span> <span class="text"> 800 </span>'
@@ -179,7 +179,7 @@ def display_start_page(db):
 	yield '<div class="dialog solution" num="1">'
 	yield '<div class="head">'
 	yield '<div> Кони-невидимки </div>'
-	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '<div> <img class="cross" loading="lazy" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="body">' 
 	yield '''<iframe loading="lazy" width="560" height="315" class="video"
@@ -192,7 +192,7 @@ def display_start_page(db):
 	yield '<div class="dialog solution" num="2">'
 	yield '<div class="head">'
 	yield '<div> Как такое возможно? </div>'
-	yield '<img class="cross" src="/static/design/icons/cross.svg" />'
+	yield '<img class="cross" loading="lazy" src="/static/design/icons/cross.svg" />'
 	yield '</div>'
 	yield '<div class="body">' 
 	yield '''<iframe loading="lazy" width="560" height="315"
@@ -218,7 +218,7 @@ def display_start_page(db):
 	yield '<span class="bold_text"> Помогите им это сделать (выделите клетки участка одного из братьев). </span>'
 	yield '</div>'
 	yield '</div>'
-	yield '<img class="image" src="/static/design/problem_img/fields.png" />'
+	yield '<img class="image" loading="lazy" src="/static/design/problem_img/fields.png" />'
 	yield '</div>'
 
 	yield '<div class="button_area">'
@@ -242,7 +242,7 @@ def display_start_page(db):
 	yield '<span class="bold_text"> Какое целое число должно стоять в центре доски? </span>'
 	yield '</div>'
 	yield '</div>'
-	yield '<img class="image" src="/static/design/problem_img/invisible_horses.png" />'
+	yield '<img class="image" loading="lazy" src="/static/design/problem_img/invisible_horses.png" />'
 	yield '</div>'
 
 	yield '<div class="button_area">'
@@ -266,7 +266,7 @@ def display_start_page(db):
 	yield '<span class="bold_text"> Какова была цена книги? </span>'
 	yield '</div>'
 	yield '</div>'
-	yield '<img class="image" src="/static/design/problem_img/how_possible.png" />'
+	yield '<img class="image" loading="lazy" src="/static/design/problem_img/how_possible.png" />'
 	yield '</div>'
 
 	yield '<div class="button_area">'
@@ -294,7 +294,7 @@ def display_start_page(db):
 
 	yield '<div class="content_row">'
 	yield '<div class="content_box">'
-	yield '<img class="photo" src="/static/design/photo/M_Evdokimov.png" />'
+	yield '<img class="photo" loading="lazy" src="/static/design/photo/M_Evdokimov.png" />'
 	yield '<div class="name"> Михаил Евдокимов </div>'
 	yield '''<div> 
 		Автор многих олимпиадных 
@@ -309,7 +309,7 @@ def display_start_page(db):
 	yield '</div>'
 
 	yield '<div class="content_box">'
-	yield '<img class="photo" src="/static/design/photo/A_Shapovalov.png" />'
+	yield '<img class="photo" loading="lazy" src="/static/design/photo/A_Shapovalov.png" />'
 	yield '<div class="name"> Александр Шаповалов </div>'
 	yield '''<div> 
 		Автор дюжины книг по 
@@ -323,7 +323,7 @@ def display_start_page(db):
 	yield '</div>'
 
 	yield '<div class="content_box">'
-	yield '<img class="photo" src="/static/design/photo/A_Gribalco.png" />'
+	yield '<img class="photo" loading="lazy" src="/static/design/photo/A_Gribalco.png" />'
 	yield '<div class="name"> Александр Грибалко </div>'
 	yield '''<div> 
 		Автор многих олимпиадных 
@@ -339,7 +339,7 @@ def display_start_page(db):
 
 	yield '<div class="content_row">'
 	yield '<div class="content_box">'
-	yield '<img class="photo" src="/static/design/photo/E_Bakaev.png" />'
+	yield '<img class="photo" loading="lazy" src="/static/design/photo/E_Bakaev.png" />'
 	yield '<div class="name"> Егор Бакаев </div>'
 	yield '''<div> 
 		Автор многих олимпиадных 
@@ -353,7 +353,7 @@ def display_start_page(db):
 	yield '</div>'
 
 	yield '<div class="content_box">'
-	yield '<img class="photo" src="/static/design/photo/B_Butyrin.png" />'
+	yield '<img class="photo" loading="lazy" src="/static/design/photo/B_Butyrin.png" />'
 	yield '<div class="name"> Богдан Бутырин </div>'
 	yield '''<div> 
 		Автор олимпиадных задач 
