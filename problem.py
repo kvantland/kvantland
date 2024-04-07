@@ -348,7 +348,7 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 		yield solution
 		yield '</div>'
 	if image:
-		yield f'<img class="picture" src="/static/problem/{image}">'
+		yield f'<img class="picture" src="/static/problem_assets/integer_img/{image}">'
 	yield '</div>'
 	yield '<div class="answer_box">'
 	yield '<div class="result_box">'
