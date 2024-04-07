@@ -454,12 +454,15 @@ def send_reg_confirm_message(db, info, only_send=False):
 				update_email_amount(db, info)
 				if not only_send:
 					yield from show_send_message(info)
+					return
 			else:
 				yield from show_send_message(info, limit_err=True)
+				return
 		except:
 			if not only_send:
 				info['email'] = ''
 				yield from display_registration_form(info, err={'email': 'Адреса не существует'})
+				return
 		finally:
 			server.quit()	
 	except ValueError:
