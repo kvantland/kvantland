@@ -277,7 +277,7 @@ def Geom3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Прямоугольный треугольник", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 1, 'integer', "Часы со стрелкой", image="clock_with_hand.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Часы со стрелкой", image="clock_with_hand.png")
 	for hour, minute, ans in [
 			(14, 20, 50),
 			(16, 40, 100),
@@ -308,7 +308,7 @@ def Golovolomsk3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'kid_and_carlson', "Малыш и Карлсон")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 4, 'kid_and_carlson', "Малыш и Карлсон")
 	for field, correct in [
 			([
 			[0, 1, 0, 1, 0, 0],
@@ -413,7 +413,7 @@ def Golovolomsk3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Малыш и Карлсон", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'five_knights_checkmate', "Мат пятью конями")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'five_knights_checkmate', "Мат пятью конями")
 	for king_pos, horse_pos, correct in [
 	([5, 4], [8, 2], 
 		[[
@@ -503,7 +503,7 @@ def Golovolomsk3(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Мат пятью конями", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 1, 'equality_of_matches', "Равенство из спичек")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'equality_of_matches', "Равенство из спичек")
 	for nums, sgn, correct in [
 		([8, 4, 6, 8], ['*', '+', '='], [0, 4, 8, 8]),
 		([2, 9, 8, 7], ['*', '-', '='], [2, 8, 9, 7]),
@@ -554,7 +554,7 @@ def CombiRepublic3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Футбольный турнир", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 1, 'greedy_dwarfs', "Жадные гномы")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'greedy_dwarfs', "Жадные гномы")
 	for start_conf, conf, start_time, remain_time, trip_time, bag_weight, dwarf_weight, remain_weight, start_weight, step, side, start_side in [
 			[{'left': {'dwarf': 0, 'bag': 0},
 			'right': {'dwarf': 5, 'bag': 1}},
