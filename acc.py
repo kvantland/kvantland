@@ -112,15 +112,34 @@ def to_roman_number(num):
 		div /= 10 
 	return res
 
-def get_score(db, tournament):
+def get_tournament_amount(db, tournament, season):
+	db.execute('select tournament from Kvantland.Season where season=%s', (season, ))
+	tournaments = db.fetchall()
+	print(tournaments, file=sys.stderr)
+	return len(tournaments)
+
+def get_score_text(db, tournament):
 	if tournament == config['tournament']['version']:
 		return "Идёт сейчас"
 	db.execute('select score from Kvantland.Score where student=%s and tournament=%s', (current_user(db), tournament, ))
 	try:
 		(score, ), = db.fetchall()
 	except ValueError:
-		score = 'Не принимал участия'
-	return f'Счёт: {score}'
+		return "Не принимал участия"
+	db.execute('select sum(points) from Kvantland.Problem where tournament=%s', (tournament, ))
+	total_score = db.fetchall()
+	return f'Счёт: {score}/{total_score} {lang_form(score)}'
+
+def lang_form(score):
+	if score % 100 >= 10 and score % 100 < 20:
+		return 'квантиков'
+	else:
+		if score % 10 in [2, 3, 4]:
+			return 'квантика'
+		elif score % 10 == 1:
+			return 'квантик'
+		else:
+			return 'квантиков'
 
 
 
@@ -186,12 +205,13 @@ def display_pers_acc_start_page(db):
 	yield '<hr/>'
 
 	yield '<div class="header"> Ваши результаты </div>'
-	for tournament in range(config['tournament']['version'], 0, -1):
-		yield f'<div class="tournament_result" num="{tournament}">'
+	tournament_amount = get_tournament_amount(db, config['tournament']['version'], config['tournament']['season'])
+	for tournament in range(0, tournament_amount):
+		yield f'<div class="tournament_result" num="{tournament_amount - tournament}">'
 		yield '<img class="win_cup" src="static/design/icons/win_cup.svg" />'
 		yield '<div class="text_content">'
-		yield f'<div class="tournament_number"> {to_roman_number(tournament)} Турнир </div>'
-		yield f'<div class="score"> {get_score(db, tournament)} </div>'
+		yield f'<div class="tournament_number"> {to_roman_number(tournament_amount - tournament)} Турнир </div>'
+		yield f'<div class="score"> {get_score_text(db, config["tournament"]["version"] - tournament)} </div>'
 		yield '</div>'
 		yield '</div>'
 
