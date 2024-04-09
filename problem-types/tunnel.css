@@ -8,6 +8,11 @@
 	-webkit-user-select:none;
 	user-select: none;
 }
+
+.gate{
+	font-size: 40px;
+}
+
 .grass {
 	fill: url(#grassGradient);
 }
