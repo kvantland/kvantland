@@ -300,7 +300,7 @@ def check_answer(db, var_id, user_id, answer):
 	return typedesc.validate(content, answer)
 
 
-def _display_result(db, var_id, ok, answer=None, solution=None):
+def _display_result(db, var_id, answer_is_correct, answer=None, solution=None):
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()
 	db.execute('select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s', (var_id,))
@@ -318,6 +318,11 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 		save_progress = typedesc.SAVE_PROGRESS
 	except AttributeError:
 		save_progress = True
+
+	try:
+		hybrid = typedesc.HYBRID
+	except AttributeError:
+		hybrid = False
 
 	yield '<!DOCTYPE html>'
 	yield f'<title>{name}</title>'
@@ -352,13 +357,13 @@ def _display_result(db, var_id, ok, answer=None, solution=None):
 	yield '</div>'
 	yield '<div class="answer_box">'
 	yield '<div class="result_box">'
-	if ok:
-		yield f'<div class="result_text_true">{result_text[ok]}</div>'
-		if type_ == 'integer':
+	if answer_is_correct:
+		yield f'<div class="result_text_true">{result_text[answer_is_correct]}</div>'
+		if type_ == 'integer' or hybrid:
 			yield f'<div>Ваш ответ: {answer}</div>'
 	else:
-		yield f'<div class="result_text_false">{result_text[ok]}</div>'
-		if type_ == 'integer':
+		yield f'<div class="result_text_false">{result_text[answer_is_correct]}</div>'
+		if type_ == 'integer' or hybrid:
 			yield f'<div>Ваш ответ: {answer}</div>'
 	yield '</div>'
 	yield '</div>'
