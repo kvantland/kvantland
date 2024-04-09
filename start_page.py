@@ -166,11 +166,11 @@ def display_start_page(db):
 	yield '<div class="dialog solution" num="0">'
 	yield '<div class="head">'
 	yield '<div> Раздел участка </div>'
-	yield '<div> <img class="cross" src="/static/design/icons/cross.svg" /> </div>'
+	yield '<div> <img class="cross" loading="lazy" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="body">' 
 	yield '''<iframe loading="lazy" width="560" height="315"
-			src="https://www.youtube.com/embed/88lOJeuaHDw?enablejapi=1"
+			src="https://www.youtube.com/embed/88lOJeuaHDw?enablejsapi=1"
 			frameborder="0"  allowfullscreen></iframe>'''
 	yield '</div>'
 	yield '<div class="button answer"> Посмотреть ответ </div>'
@@ -182,7 +182,7 @@ def display_start_page(db):
 	yield '<div> <img class="cross" loading="lazy" src="/static/design/icons/cross.svg" /> </div>'
 	yield '</div>'
 	yield '<div class="body">' 
-	yield '''<iframe loading="lazy" width="560" height="315" class="video"
+	yield '''<iframe loading="lazy" width="560" height="315"
 			src="https://www.youtube.com/embed/vqlC9c2LTV4?enablejsapi=1" 
 			frameborder="0" allowfullscreen></iframe>'''
 	yield '</div>'
@@ -196,7 +196,7 @@ def display_start_page(db):
 	yield '</div>'
 	yield '<div class="body">' 
 	yield '''<iframe loading="lazy" width="560" height="315"
-			src="https://www.youtube.com/embed/m7lA9CoOq_g?enablejsapi=1&origin=http://localhost:8080" 
+			src="https://www.youtube.com/embed/m7lA9CoOq_g?enablejsapi=1" 
 			frameborder="0" allowfullscreen></iframe>'''
 	yield '</div>'
 	yield '<div class="button answer"> Посмотреть ответ </div>'
