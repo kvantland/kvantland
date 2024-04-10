@@ -16,7 +16,8 @@ $('.inside_line').on('click touchstart', function(e){
 	var cross = document.createElementNS(svgNS, 'text');
 	cross.innerHTML = '&#x274C;';
 	cross.setAttribute('x', $(cur).attr('x') - -($(cur).attr('width') / 2));
-	cross.setAttribute('y', $(cur).attr('y') - -(2 * $(cur).attr('height') / 3));
+	cross.setAttribute('y', $(cur).attr('y') - -($(cur).attr('height') / 2));
+	cross.setAttribute('dominant-baseline','middle')
 	cross.setAttribute('text-anchor', 'middle');
 	cross.classList.add('cross');
 	svg_box.appendChild(cross);

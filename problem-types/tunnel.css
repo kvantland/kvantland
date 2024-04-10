@@ -32,7 +32,6 @@
 }
 .cross {
 	pointer-events: none;
-	align-text:center;
 }
 .inside_line{
 	stroke-linecap: square;
