@@ -13,7 +13,12 @@ def entry_form(data, kwargs):
     board_height = line_width + height * side + ind
     yield '<input name="answer" type="hidden" />'
     yield '<div class="plot_area">'
-    yield f'<svg version="1.1" width="{board_height + rect_height + side * 2}" height="{board_width + rect_height}" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">'
+    yield f'''<svg version="1.1" 
+                preserveAspectRatio="xMidYMid meet" 
+                viewBox="0 0 {board_height + rect_height + side * 2} {board_width + rect_height}" 
+                width="{board_height + rect_height + side * 2}" height="{board_width + rect_height}" 
+                overflow="visible" xmlns="http://www.w3.org/2000/svg" 
+                xmlns:xlink="http://www.w3.org/1999/xlink">'''
     yield '<defs>'
     yield '<linearGradient id="grassGradient" x1="0" x2="1" y1="1" y2="0">'
     yield '<stop offset="0%" stop-color="#88a24b"/>'
