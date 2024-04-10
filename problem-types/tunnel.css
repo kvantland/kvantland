@@ -11,6 +11,9 @@
 
 .gate{
 	font-size: 40px;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
 }
 
 .grass {

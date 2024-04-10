@@ -57,7 +57,7 @@ def entry_form(data, kwargs):
     for y in range(0, width):
         if (y != 1):
             yield f'<image class="border_line" x = "{width * side - rect_height / 2 + ind2 + side}" y="{y * side + cube_width / 2 + ind2}" height="{rect_width}" width="{rect_height}" href="/static/problem_assets/tiles/grass19x13.png"/>'
-    yield f'<text class="gate" x="{ind2 + cube_width}" y="{ind2 + 7 * side - ind2}" width="{side}" height="{side}">A</text>'
+    yield f'<text class="gate" x="{ind2 + cube_width - 5 * ind}" y="{ind2 + 7 * side - ind2}" width="{side}" height="{side}">A</text>'
     yield f'<text class="gate" x="{ind2 + 9 * side + ind2}" y="{ind2 + 2 * side - ind2}" width="{side}" height="{side}">B</text>'
     for y in range(0, width - 1):
         for x in range (0, width - 1):
