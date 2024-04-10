@@ -99,7 +99,8 @@ def IslandOfLiars3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'caskets', "Шкатулки")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'caskets', "Шкатулки", hint_cost=1, hint="""Выберите шкатулку и предположите, что там находится приз. Если оказалось, 
+		что есть более одного истинного утверждения на записках, то приза в выбранной шкатулке быть не может.""")
 	for tmp, ans in [
 			[['here', 'near', 'near', 'near', 'no'], 5],
 			[['here', 'near', 'no', 'near', 'near'], 2],
@@ -115,7 +116,7 @@ def IslandOfLiars3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Шкатулки", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "За круглым столом", image="liar.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "За круглым столом", image="liar.png", hint_cost=1, hint="""Выберите рыцаря и посмотрите на трёх человек, сидящих за ним по часовой стрелке, а также на следующего за ними человека.""")
 	for N, A in [
 			(12, 3),
 			(16, 4),
@@ -129,7 +130,7 @@ def IslandOfLiars3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "За круглым столом", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'checkered_logic', "Гномы на клетках")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'checkered_logic', "Гномы на клетках", hint_cost=1, hint="""Поставьте гномов по циклу (у каждого ровно два соседа) так, чтобы ни у какой свободной клетки не было двух соседних свободных.""")
 	for A in [
 			([[0,-1, 1, 1, 1, 0],
 			  [1, 1, 1, 0, 1, 1],
@@ -166,7 +167,8 @@ def Chiselburg3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Хороший стимул", image="boy1.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Хороший стимул", image="boy1.png", hint_cost=1, hint="""Пусть Вовочка в итоге получил n двоек, m троек и k пятёрок. 
+		Тогда среднее равно (2n + 3m + 5k)/(n + m + k). Нужно, чтобы это число было не меньше 3,5.""")
 	for N, M, A in [
 			(5, 6, 7),
 			(6, 5, 8),
@@ -183,7 +185,8 @@ def Chiselburg3(cur):
 			variants_list = add_variant_to_list(variants_list, "Хороший стимул", desc, json.dumps(cont))	
 
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'kvantik_play', "Ноутик и Квантик развлекаются")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'kvantik_play', "Ноутик и Квантик развлекаются", hint_cost=1, hint="""Произведение цифр делится на 25, и среди цифр нет нуля. 
+		Значит, первая и последняя цифра – пятёрки.""")
 	for N, A in [
 			(5400, 5943215),
 			(4800, 5843215),
@@ -198,7 +201,7 @@ def Chiselburg3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Ноутик и Квантик развлекаются", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 4, 'sums_on_cube', "Равные суммы на кубе")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 4, 'sums_on_cube', "Равные суммы на кубе", hint_cost=1, hint="""Рассмотрите возможные остатки при делении на 3 чисел на невидимых гранях.""")
 	for a, b, c, ans in [
 			[12, 8, 22, 75],
 			[17, 13, 21, 72],
@@ -222,7 +225,7 @@ def Geom3(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'tunnel', "Как построить тоннель?")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'tunnel', "Как построить тоннель?", hint_cost=1, hint="""Кратчайший путь представляет собой цепочку из 13 клеток.""")
 	for f, A in [
 		([	
 		[33, 21, 21, 42, 33, 21, 21],
@@ -265,7 +268,7 @@ def Geom3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Как построить тоннель?", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Прямоугольный треугольник", image="geoma3_3.svg")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Прямоугольный треугольник", image="geoma3_3.svg", hint_cost=1, hint="""Докажите, что треугольник DCE равнобедренный.""")
 	for x, y, z, A in [
 			(40, 10, 5, 85),
 			(39, 12, 6, 84),
@@ -278,7 +281,8 @@ def Geom3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Прямоугольный треугольник", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Часы со стрелкой", image="clock_with_hand.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Часы со стрелкой", image="clock_with_hand.png", hint_cost=1, hint="""Сектор в один час – это 360/12 = 30 градусов. Если минутная стрелка смещается на 10 минут (то есть 1/6 часа), 
+		то часовая поворачивается на 30/6 = 5 градусов.""")
 	for hour, minute, ans in [
 			(14, 20, 50),
 			(16, 40, 100),
@@ -309,7 +313,8 @@ def Golovolomsk3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 4, 'kid_and_carlson', "Малыш и Карлсон")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 4, 'kid_and_carlson', "Малыш и Карлсон", hint_cost=1, hint="""Одна из частей должна переходить в другую при повороте на 180 градусов относительно центра торта. 
+		Поэтому если в какой-то клетке есть вишенка, то симметричная ей относительно центра клетка должна достаться Малышу.""")
 	for field, correct in [
 			([
 			[0, 1, 0, 1, 0, 0],
@@ -414,7 +419,8 @@ def Golovolomsk3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Малыш и Карлсон", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'five_knights_checkmate', "Мат пятью конями")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 3, 'five_knights_checkmate', "Мат пятью конями", hint_cost=1, hint="""Кони должны атаковать все 9 клеток квадрата 3×3, в центре которого стоит король. При этом каждый из них может атаковать максимум две из этих клеток. 
+		Стоящий на доске конь атакует только одну клетку, поэтому все остальные кони должны атаковать по две клетки.""")
 	for king_pos, horse_pos, correct in [
 	([5, 4], [8, 2], 
 		[[
@@ -503,7 +509,8 @@ def Golovolomsk3(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Мат пятью конями", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'equality_of_matches', "Равенство из спичек")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'equality_of_matches', "Равенство из спичек", hint_cost=1, hint="""Ваше действие должно изменить один из сомножителей. Подумайте, как его можно поменять, чтобы получилась другая цифра.
+Запас, который пока сложнее реализовать: 2×8 − 5 = 5 (Решение: 2×0 + 5 = 5)""")
 	for nums, sgn, correct in [
 		([8, 4, 6, 8], ['*', '+', '='], [0, 4, 8, 8]),
 		([2, 9, 8, 7], ['*', '-', '='], [2, 8, 9, 7]),
@@ -525,7 +532,8 @@ def CombiRepublic3(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'integer', "Васин досуг", image="boy2.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 3, 'integer', "Васин досуг", image="boy2.png", hint_cost=1, hint="""Подсчитайте, какое наименьшее количество раз мог Вася играть в футбол при таких условиях. 
+		После этого попробуйте понять, какие два занятия он выбирал в те дни, когда теоретически мог бы заниматься тремя делами.""")
 	for a, b, c, d, A in [
 			(2, 4, 6, 3, 15),
 			(3, 5, 6, 4, 10),
@@ -540,7 +548,8 @@ def CombiRepublic3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Васин досуг", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'integer', "Футбольный турнир", image="director.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'integer', "Футбольный турнир", image="director.png", hint_cost=1, hint="""В каждой игре команды набирают в сумме либо 2, либо 3 очка. А всего n команд проводят в однокруговом турнире n(n − 1)/2 игр. 
+		Учитывая это, подумайте, сколько команд принимало участие в турнире.""")
 	for N, A in [
 			(65, 19),
 			(70, 14),
@@ -554,7 +563,7 @@ def CombiRepublic3(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Футбольный турнир", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'greedy_dwarfs', "Жадные гномы")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'greedy_dwarfs', "Жадные гномы", hint_cost=1, hint="""Первым действием переправляются 3 гнома, потом один из них возвращается.""")
 	for start_conf, conf, start_time, remain_time, trip_time, bag_weight, dwarf_weight, remain_weight, start_weight, step, side, start_side in [
 			[{'left': {'dwarf': 0, 'bag': 0},
 			'right': {'dwarf': 5, 'bag': 1}},
