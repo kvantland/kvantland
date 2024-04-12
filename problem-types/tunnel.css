@@ -32,6 +32,8 @@
 }
 .cross {
 	pointer-events: none;
+	dominant-baseline: central;
+	text-anchor: middle;
 }
 .inside_line{
 	stroke-linecap: square;
