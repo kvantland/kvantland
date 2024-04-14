@@ -115,7 +115,6 @@ def to_roman_number(num):
 def get_tournament_amount(db, tournament, season):
 	db.execute('select tournament from Kvantland.Season where season=%s', (season, ))
 	tournaments = db.fetchall()
-	print(tournaments, file=sys.stderr)
 	return len(tournaments)
 
 def get_score_text(db, tournament):
@@ -127,7 +126,7 @@ def get_score_text(db, tournament):
 	except ValueError:
 		return "Не принимал участия"
 	db.execute('select sum(points) from Kvantland.Problem where tournament=%s', (tournament, ))
-	total_score = db.fetchall()
+	(total_score, ), = db.fetchall()
 	return f'Счёт: {score}/{total_score} {lang_form(score)}'
 
 def lang_form(score):
