@@ -19,7 +19,7 @@ def entry_form(data, kwargs):
 	yield '<div class="row">'
 	for x in range(0, in_row):
 		yield f'<div class="field">'
-		yield f'<input class="fieldinput" type="text" min="0" max="9" maxlength="1">'
+		yield f'<input class="fieldinput" type="text" min="0" max="9" maxlength="1" value="">'
 		yield f'</div>'
 	yield '</div>'
 	yield '</div>'

@@ -16,3 +16,7 @@ $('input[type="text"]').on('keypress', function (e) {
         if (length + 1 > maxlength) e.preventDefault();
     }
 });
+
+$('input[type="text"]').on('keyup', function (e) {
+	$(this).attr("value", $(this).val())
+});
