@@ -142,9 +142,7 @@ function drop() {
 				show_xhr('Слишком большая масса лодки!')
 			let className = $('.best').attr('dwarf') + '_' + $('.best').attr('bag')
 			if (pref_className != className) {
-				console.log('here')
 				$(`image.boat.${className}`).addClass('cur')
-				console.log('here')
 			}
 			back_to_drag()
 		}
