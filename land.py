@@ -42,7 +42,7 @@ def show_land(db):
 	if MODE == 'private':
 		user_id = require_user(db)
 		if not user_id:
-			redirect('/acc?empty=1')
+			redirect('/acc?page=dataPage&empty=1')
 		if finished(db, user_id):
 			redirect("/final_page")
 	elif MODE == 'public':
@@ -151,7 +151,7 @@ def show_land(db):
 	if MODE == 'private':
 		user_id = require_user(db)
 		if not user_id:
-			redirect('/acc?empty=1')
+			redirect('/acc?page=dataPage&empty=1')
 	elif MODE == 'public':
 		do_logout()
 		user_id = None

@@ -146,9 +146,9 @@ def lang_form(score):
 def display_pers_acc(db):
 	if current_user(db) == None:
 		redirect('/')
-	if request.query:
-		page = request.query.page
-	else:
+	try:
+		page = request.query['page']
+	except KeyError:
 		redirect('/acc?page=startPage')
 	if page == 'startPage':
 		yield from display_pers_acc_start_page(db)
