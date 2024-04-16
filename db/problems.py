@@ -3,14 +3,17 @@
 import math
 import random
 import base64
-import os
-import sys
 from pathlib import Path
 import json
 import psycopg
+
+import os
 import sys
-sys.path.append('../')
+current_path = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_path)
+sys.path.append(project_root)
 from config import config
+
 random.seed(1337)
 
 def read_file(name):
