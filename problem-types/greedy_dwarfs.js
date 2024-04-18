@@ -283,8 +283,10 @@ var scroll_p = $(document.createElement('div')).addClass('scroll_div')
 $('body').append(scroll_p)
 
 $('image.boat').not('.0_0').each(function(ind){
+	if (!$(this).hasClass('cur')) {
 	$(this).addClass('cur');
 	setTimeout(() => $(this).removeClass('cur'));
+	}
 })
 
 $('image.active').on('mousedown touchstart', start_move)
