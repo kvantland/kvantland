@@ -138,6 +138,8 @@ def steps(step_num, params, data):
 				return {'answer': 'no_dwarf'}
 			elif data['conf'][side_from]['dwarf'] < params['dwarf'] or data['conf'][side_from]['bag'] < params['bag']:
 				return {'answer': 'cheating'}
+			elif data['conf'][side_from]['dwarf'] == params['dwarf'] and data['conf'][side_from]['bag']:
+				return {'answer': 'bag_without_dwarfs'}
 			else:
 				resp = {}
 				data['conf'][side_from]['dwarf'] -= params['dwarf']

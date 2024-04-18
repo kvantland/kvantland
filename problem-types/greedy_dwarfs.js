@@ -225,6 +225,10 @@ function move_boat(e) {
 				show_xhr('Лодкой некому управлять!')
 			else if (data == 'cheating')
 				show_xhr('Решайте задачу честно!')
+			else if (data == 'bag_without_dwarfs') {
+				show_xhr('Мешок не может остаться без присмотра!')
+				go_out(here=true)
+			}
 			else {
 				show_xhr('Невозможно совершить перевозку!')
 				go_out(here=true)
