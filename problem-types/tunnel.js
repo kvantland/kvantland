@@ -1,4 +1,3 @@
-var cur = null
 var width = $('.inside_line').attr('width')
 var height = $('.inside_line').attr('height')
 var svg_box = document.querySelector('svg');
@@ -6,17 +5,14 @@ var svg_box = document.querySelector('svg');
 $('.inside_line').on('click touchstart', function(e){
 	if (e.touches)
 		e.preventDefault()
-	if (cur != null) {
-		$(cur).toggleClass('choiced not_choiced')
-		$('.cross').remove()
-	}
+	$('.choiced').toggleClass('choiced not_choiced')
+	$('.cross').remove()
 	$(this).toggleClass('choiced not_choiced')
-	cur = this
 	svgNS = "http://www.w3.org/2000/svg"
 	var cross = document.createElementNS(svgNS, 'text');
 	cross.innerHTML = '&#x274C;';
-	cross.setAttribute('x', $(cur).attr('x') - -($(cur).attr('width') / 2));
-	cross.setAttribute('y', $(cur).attr('y') - -($(cur).attr('height') / 2));
+	cross.setAttribute('x', $(this).attr('x') - -($(this).attr('width') / 2));
+	cross.setAttribute('y', $(this).attr('y') - -($(this).attr('height') / 2));
 	cross.classList.add('cross');
 	svg_box.appendChild(cross);
 })
