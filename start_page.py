@@ -38,36 +38,29 @@ def display_start_page(db):
 	yield '</a>'
 	yield '</div>'
 	yield '</div>'
+
+	tournament_history = [
+		{'event_name': 'Старт Турнира 1', 'event_date': '05.12.2023'},
+		{'event_name': 'Финиш Турнира 1', 'event_date': '31.03.2024'},
+		{'event_name': 'Старт Турнира 2', 'event_date': '24.02.2024'},
+		{'event_name': 'Финиш Турнира 2', 'event_date': '31.03.2024'},
+		{'event_name': 'Старт Турнира 3', 'event_date': '21.04.2024'},
+		{'event_name': 'Финиш Турнира 3', 'event_date': '31.05.2024'}
+		]
+	tournament_amount = len(tournament_history)
+
 	yield '<div class="history">'
 	yield '<div class="content">'
-	yield '<div class="item">'
-	yield '<div class="text_cont">'
-	yield '<div class="header"> 24.02.2024 </div>'
-	yield '<div class="text"> Старт Турнира 2 </div>'
-	yield '</div>'
-	yield '<div class="rect"> </div>'
-	yield '</div>'
-	yield '<div class="item">'
-	yield '<div class="text_cont">'
-	yield '<div class="header"> 31.03.2024 </div>'
-	yield '<div class="text"> Финиш Турнира 2 </div>'
-	yield '</div>'
-	yield '<div class="rect"> </div>'
-	yield '</div>'
-	yield '<div class="item">'
-	yield '<div class="text_cont">'
-	yield '<div class="header"> 21.04.2024 </div>'
-	yield '<div class="text"> Старт Турнира 3 </div>'
-	yield '</div>'
-	yield '<div class="rect"> </div>'
-	yield '</div>'
-	yield '<div class="item">'
-	yield '<div class="text_cont">'
-	yield '<div class="header"> 31.05.2024 </div>'
-	yield '<div class="text"> Финиш Турнира 3 </div>'
-	yield '</div>'
-	yield '<div class="rect"> </div>'
-	yield '</div>'
+	
+	for tournament_ind in range(tournament_amount - 4, tournament_amount):
+		yield '<div class="item">'
+		yield '<div class="text_cont">'
+		yield f'<div class="header"> {tournament_history[tournament_ind]["event_date"]} </div>'
+		yield f'<div class="text"> {tournament_history[tournament_ind]["event_name"]} </div>'
+		yield '</div>'
+		yield '<div class="rect"> </div>'
+		yield '</div>'
+
 	yield '</div>'
 	yield '<hr size="2" color="white" noshade />'
 	yield '</div>'
