@@ -88,5 +88,6 @@ create table Mail (
 );
 
 create table CurrentTournament (
-	tournament int
+	tournament int,
+	season int
 );

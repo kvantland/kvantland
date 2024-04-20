@@ -13,6 +13,7 @@ from config import config
 
 
 current_tournament = config['tournament']['version']
+current_season = config['tournament']['season']
 
 db = 'postgres://kvantland:quant@127.0.0.1'
 if len(sys.argv) > 1:
@@ -20,4 +21,4 @@ if len(sys.argv) > 1:
 with psycopg.connect(db) as con:
 	with con.transaction():
 		with con.cursor() as cur:
-			cur.execute('insert into Kvantland.CurrentTournament values(%s)', (current_tournament, ))
+			cur.execute('insert into Kvantland.CurrentTournament values(%s, %s)', (current_tournament, current_season))
