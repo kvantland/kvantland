@@ -86,3 +86,7 @@ create table Mail (
 	, remainig_mails int not null default 10 check(remainig_mails >= 0)
 	, first_mail int
 );
+
+create table CurrentTournament (
+	tournament int
+);
