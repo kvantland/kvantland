@@ -44,7 +44,7 @@ def display_start_page(db):
 		{'event_name': 'Финиш Турнира 1', 'event_date': '31.03.2024'},
 		{'event_name': 'Старт Турнира 2', 'event_date': '24.02.2024'},
 		{'event_name': 'Финиш Турнира 2', 'event_date': '31.03.2024'},
-		{'event_name': 'Старт Турнира 3', 'event_date': '21.04.2024'},
+		{'event_name': 'Старт Турнира 3', 'event_date': '22.04.2024'},
 		{'event_name': 'Финиш Турнира 3', 'event_date': '31.05.2024'}
 		]
 	tournament_amount = len(tournament_history)
