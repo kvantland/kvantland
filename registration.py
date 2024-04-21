@@ -429,7 +429,7 @@ def send_reg_confirm_message(db, info, only_send=False):
 				font-weight: 600;
 				box-sizing: border-box;
 				font-family: Montserrat, Arial !important;">
-			Нажмите здесь для подверждения
+			Нажмите здесь для подтверждения
 			</div>
 			</a>
 			</div>
