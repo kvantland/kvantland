@@ -39,3 +39,7 @@ image.match.active {
 .reload {
 	cursor: pointer;
 }
+
+.passive {
+	filter: hue-rotate(-44.14deg) saturate(106.54%) brightness(94.9%);
+}
