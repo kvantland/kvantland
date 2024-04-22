@@ -127,6 +127,7 @@ def get_score_text(db, tournament):
 		return "Не принимал участия"
 	db.execute('select sum(points) from Kvantland.Problem where tournament=%s', (tournament, ))
 	(total_score, ), = db.fetchall()
+	total_score += 10 # вынести в config!
 	return f'Счёт: {score}/{total_score} {lang_form(score)}'
 
 def lang_form(score):
