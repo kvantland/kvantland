@@ -113,7 +113,7 @@ def display_start_page(db):
 	yield '<div class="content_box">'
 	yield '<img class="icon" loading="lazy" src="/static/design/icons/medal.svg" />'
 	yield '<div>'
-	yield '<span class="bold_text"> В зачёт идут 3 лучших результата из 4 <br/> </span>'
+	yield '<span class="bold_text"> В зачёт идут 2 лучших результата из 4 <br/> </span>'
 	yield '<span class="text"> <br/>Взрослые тоже могут участвовать, но в отдельном зачёте (с призами для победителей) </span>'
 	yield '</div>'
 	yield '</div>'
