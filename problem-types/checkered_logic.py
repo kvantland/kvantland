@@ -28,13 +28,21 @@ def entry_form(data, kwargs):
 
 def validate(data, answer):
 	ans = list(map(int, answer[:-1].split(',')))
-	var = data['correct']
-	cnt, tmp = (0, 1)
-	for i in range(len(var)):
-		for j in range(len(var[0])):
-			if ans[cnt] != var[i][j]:
-				tmp = 0
-			cnt += 1
-	if tmp:
-		return True
-	return False
+	print(ans)
+	a = [ans[0:6], ans[6:12], ans[12:18], ans[18:24], ans[24:]]
+	for x in range(len(a)):
+		for y in range(len(a[0])):
+			cnt = 0
+			if (y > 0 and a[x][y] == a[x][y-1]):
+				cnt += 1
+			if (y + 1 < len(a[0]) and a[x][y] == a[x][y+1]):
+				cnt += 1
+			if (x > 0 and a[x][y] == a[x-1][y]):
+				cnt += 1
+			if (x + 1 < len(a) and a[x][y] == a[x+1][y]):
+				cnt += 1
+			if (a[x][y] == 1 and cnt != 2):
+				return False
+			if (a[x][y] == 0 and cnt ==2):
+				return False
+	return True
