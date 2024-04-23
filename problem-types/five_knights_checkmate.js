@@ -76,8 +76,6 @@ function occupied(ind, only_horse = false) {
 function move(e) {
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
-	$(obj).attr({'x': getSVGCoordinates(e).x - side / 2,
-				'y': getSVGCoordinates(e).y - side / 2})
 	if (!in_access_zone(obj)) {
 		back_to_drag()
 		update_status()
