@@ -20,6 +20,7 @@ function autoscroll(x, y) {
 		x_tmp = 'left'
 
 	scrollBy(dur[x_tmp] * x_add / 2, dur[y_tmp] * y_add / 2)
+
 }
 
 function in_window(obj) {
@@ -82,6 +83,8 @@ function move(e) {
 		update_status()
 	}
 	autoscroll(e.clientX, e.clientY)
+	$(obj).attr({'x': getSVGCoordinates(e).x - side / 2,
+				'y': getSVGCoordinates(e).y - side / 2})
 }
 
 function create_new_horse() {
