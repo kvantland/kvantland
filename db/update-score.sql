@@ -1,2 +1,2 @@
-insert into Kvantland.Score (student, tournament, score) (select student, 3, 10 from Kvantland.Student ORDER BY student ASC);
+insert into Kvantland.Score (student, tournament, score) (select student, select tournament from Kvantland.CurrentTournament, 10 from Kvantland.Student ORDER BY student ASC);
 update Kvantland.Student set score = 10;
