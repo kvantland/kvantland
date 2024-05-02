@@ -1,0 +1,1 @@
+insert into Kvantland.Season ("tournament", "season") select tournament, season from Kvantland.CurrentTournament;
