@@ -1,7 +1,5 @@
-insert into ДоступнаяЗадача (ученик, вариант)
-	select distinct on (ученик, задача)
-		ученик, вариант
-		from Ученик, Вариант
-		order by ученик, задача, random();
-
--- kate: syntax SQL (PostgreSQL);
+insert into Kvantland.AvailableProblem (student, variant)
+	select distinct on (student, problem)
+		student, variant
+		from Kvantland.Student, Kvantland.Variant join Kvantland.Problem using (problem) where tournament = 3
+		order by student, problem, random();

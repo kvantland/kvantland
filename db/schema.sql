@@ -1,67 +1,88 @@
-drop schema if exists Квантландия cascade;
-create schema Квантландия;
+drop schema if exists Kvantland cascade;
+create schema Kvantland;
+set search_path to Kvantland, public;
 
-set search_path to Квантландия, public;
-
-create table Тип (
-	тип int primary key generated always as identity
-	, код text not null unique
+create table Type_ (
+	type_ int primary key generated always as identity
+	, code text not null unique
 );
 
-create table Город (
-	город int primary key generated always as identity
-	, название text not null unique
-	, положение point
+create table Town (
+	town int primary key generated always as identity
+	, name text not null unique
+	, position point
 );
 
-create table Задача (
-	задача int primary key generated always as identity
-	, город int not null references Город on delete cascade
-	, тип int not null references Тип on delete restrict
-	, название text not null unique
-	, положение point
-	, баллы int not null
-	, изображение text
+create table Problem (
+	problem int primary key generated always as identity
+	, town int not null references Town on delete cascade
+	, type_ int not null references Type_ on delete restrict
+	, name text not null unique
+	, position point
+	, points int not null
+	, image text
+	, tournament int not null
 );
 
-create table Подсказка (
-	задача int not null references Задача on delete cascade,
-	текст text not null,
-	стоимость int not null,
-	primary key (задача)
+create table Hint (
+	problem int not null references Problem on delete cascade,
+	content text not null,
+	cost int not null,
+	primary key (problem)
 );
 
-create table Вариант (
-	вариант int primary key generated always as identity
-	, задача int not null references Задача on delete cascade
-	, описание text not null
-	, содержание jsonb not null
+create table Variant (
+	variant int primary key generated always as identity
+	, problem int not null references Problem on delete cascade
+	, description text not null
+	, content jsonb not null
 );
 
-create table Ученик (
-	ученик int primary key generated always as identity
-	, логин text not null unique
-	, пароль text
-	, имя text
-	, фамилия text
-	, школа text 
-  	, класс text
-  	, город text
-  	, почта text
-  	, закончил bool not null default false
-	, счёт int not null default 10 check (счёт >= 0)
+create table Student (
+	student int primary key generated always as identity
+	, login text not null unique
+	, password text
+	, name text
+	, surname text
+	, school text 
+  	, clas text
+  	, town text
+  	, email text
+  	, is_finished bool not null default false
+	, score int not null default 10 check (score >= 0)
 );
 
-create table ДоступнаяЗадача (
-	ученик int not null references Ученик on delete cascade,
-	вариант int not null references Вариант on delete restrict,
-	ответ_верен bool null,
-	ответ_дан bool generated always as (ответ_верен is not null) stored,
-	подсказка_взята bool not null default false,
+create table AvailableProblem (
+	student int not null references Student on delete cascade,
+	variant int not null references Variant on delete restrict,
+	answer_true bool null,
+	answer_given bool generated always as (answer_true is not null) stored,
+	hint_taken bool not null default false,
 	xhr_amount int not null default 0,
-	ответ text,
-	решение text,
-	primary key (ученик, вариант)
+	answer text,
+	solution text,
+	curr jsonb,
+	primary key (student, variant)
 );
 
--- kate: syntax SQL (PostgreSQL);
+create table Score (
+	student int not null references Student on delete cascade,
+	tournament int not null,
+	score int not null default 10 check(score >= 0)
+);
+
+create table Season (
+	season int not null,
+	tournament int not null
+);
+
+create table Previousmail (
+	student int not null references Student on delete cascade,
+	email text
+);
+
+create table Mail (
+	mail text
+	, remainig_mails int not null default 10 check(remainig_mails >= 0)
+	, first_mail int
+);

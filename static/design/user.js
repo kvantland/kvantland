@@ -50,6 +50,12 @@ function hide_out_dialog(e) {
 	cancel_button.removeEventListener('touchstart', hide_out_dialog)
 }
 
+function block_nav() {
+	let nav = document.querySelector('.user_nav')
+	if (!nav.classList.contains('blocked'))
+		nav.classList.add('blocked')
+}
+
 var out_button = nav.querySelector('.logout_button')
 if (out_button) {
 	out_button.addEventListener('click', show_out_dialog)

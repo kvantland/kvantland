@@ -6,6 +6,9 @@ from bottle import route, redirect
 import nav
 import user
 import footer
+from login import do_logout
+
+MODE = config['tournament']['mode']
 
 def lang_form(score):
 	if score % 100 >= 10 and score % 100 < 20:
@@ -36,11 +39,16 @@ def require_user(db):
 
 @route('/land')
 def show_land(db):
-	user_id = require_user(db)
-	if not user_id:
-		redirect('/acc?empty=1')
-	if finished(db, user_id):
-		redirect("/final_page")
+	if MODE == 'private':
+		user_id = require_user(db)
+		if not user_id:
+			redirect('/acc?page=dataPage&empty=1')
+		if finished(db, user_id):
+			redirect("/final_page")
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
+
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'
@@ -118,10 +126,12 @@ def show_land(db):
 		if not opened:
 			clazz += " town_completed"
 		yield f'<a class="{clazz}" transform="translate({x} {y})" xlink:href="/town/{town}/">'
-		yield f'<image href="/static/icon/icon-{town}.png" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />'
+		yield f'<image href="/static/town-icon/icon-{town}.png" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />'
 		yield f'<circle class="town-icon" r="33px" />'
+		yield '<g class="town-name">'
 		yield f'<path class="town-name" num="{cnt}" d="{paths[cnt]}" transform="translate({trans[cnt]})" style="filter:url(#dropshadow)"/>'
 		yield f'<text class="town-name" style="font-family:Montserrat Alternates" num="{cnt}" y="-60">{name}</text>'
+		yield '</g>'
 		yield f'</a>'
 		cnt += 1
 	yield '</svg>'
@@ -138,9 +148,13 @@ def show_land(db):
 
 @route('/rules')
 def show_land(db):
-	user_id = require_user(db)
-	if not user_id:
-		redirect('/acc?empty=1')
+	if MODE == 'private':
+		user_id = require_user(db)
+		if not user_id:
+			redirect('/acc?page=dataPage&empty=1')
+	elif MODE == 'public':
+		do_logout()
+		user_id = None
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru">'  # TODO поместить в общий шаблон
 	yield f'<title>Правила — Квантландия</title>'
@@ -168,7 +182,7 @@ def show_land(db):
 	yield '<div class="span_wrapper"><span class="span_text">Можно свободно возвращаться к карте города или страны. Но если вы уже давали ответ на задачу, то задача становится неактивной и пройти ее повторно нельзя. <br/><br/></span><span>Поэтому не торопитесь и внимательно проверяйте, прежде чем отправить ответ. </span></div>'
 	yield '<div class="span_wrapper"><span class="span_text">Обратите внимание, что некоторые задачи интерактивны. В них требуется произвести действия, которые описаны в условии, чтобы получить нужный результат. <br/><br/></span><span>Читайте условия внимательно! </span></div>'
 	yield f'<div class="span_wrapper"><span class="span_text">Для решения задач вам понадобится компьютер и компьютерная мышь или ноутбук с тачпадом (не планшет), чтобы перетаскивать и выделять объекты. <br/><br/></span><span>Если возникла техническая проблема, то можно написать в техподдержку </span><u><a class="mail_link" href="mailto:{config["contacts"]["support_email"]}">{config["contacts"]["support_email"]}</a></u><span> с описанием проблемы и скриншотом компьютера.</span></div>'
-	yield '<div class="span_wrapper span_text">Выберите время в течение месяца, чтобы вас ничего не отвлекало. Итоги соревнования подводятся по числу квантиков, которое у вас на счету к концу игры. Это число всегда отображается в правом вверху экрана. Удачи!</div>'
+	yield '<div class="span_wrapper span_text">Выберите время в любой день до окончания турнира, чтобы вас ничего не отвлекало. Итоги соревнования подводятся по числу квантиков, которое у вас на счету к концу игры. Это число всегда отображается в вверху экрана по центру. Удачи!</div>'
 	yield '</div>'
 	yield '<div class="conformation_box">'
 	yield '<div class="conformation_wrapper">'

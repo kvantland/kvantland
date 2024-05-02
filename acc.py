@@ -13,6 +13,7 @@ from email.message import EmailMessage
 import smtplib
 from config import config
 import time
+import math
 
 import urllib.parse
 import json
@@ -72,15 +73,165 @@ def req_query(params):
 		query.append(f'{key}={val}')
 	return '&'.join(query)
 
+def to_roman_number(num):
+	romansDict = {
+			1: "I",
+			5: "V",
+			10: "X",
+			50: "L",
+			100: "C",
+			500: "D",
+			1000: "M",
+			5000: "G",
+			10000: "H"
+		}
+	div = 1
+	while num >= div:
+		div *= 10
+
+	div /= 10
+
+	res = ""
+
+	while num:
+		lastNum = int(num / div)
+
+		if lastNum <= 3:
+			res += (romansDict[div] * lastNum)
+		elif lastNum == 4:
+			res += (romansDict[div] +
+					romansDict[div * 5])
+		elif 5 <= lastNum <= 8:
+			res += (romansDict[div * 5] +
+					(romansDict[div] * (lastNum - 5)))
+		elif lastNum == 9:
+			res += (romansDict[div] +
+					romansDict[div * 10])
+ 
+		num = math.floor(num % div)	
+		div /= 10 
+	return res
+
+def get_tournament_amount(db, tournament, season):
+	db.execute('select tournament from Kvantland.Season where season=%s', (season, ))
+	tournaments = db.fetchall()
+	return len(tournaments)
+
+def get_score_text(db, tournament):
+	if tournament == config['tournament']['version']:
+		return "Идёт сейчас"
+	db.execute('select score from Kvantland.Score where student=%s and tournament=%s', (current_user(db), tournament, ))
+	try:
+		(score, ), = db.fetchall()
+	except ValueError:
+		return "Не принимал участия"
+	db.execute('select sum(points) from Kvantland.Problem where tournament=%s', (tournament, ))
+	(total_score, ), = db.fetchall()
+	total_score += 10 # вынести в config!
+	return f'Счёт: {score}/{total_score} {lang_form(score)}'
+
+def lang_form(score):
+	if score % 100 >= 10 and score % 100 < 20:
+		return 'квантиков'
+	else:
+		if score % 10 in [2, 3, 4]:
+			return 'квантика'
+		elif score % 10 == 1:
+			return 'квантик'
+		else:
+			return 'квантиков'
+
+
+
 @route('/acc')
-def display_pers_acc(db, err={}, user_info=empty_user_info()):
+def display_pers_acc(db):
 	if current_user(db) == None:
 		redirect('/')
+	try:
+		page = request.query['page']
+	except KeyError:
+		redirect('/acc?page=startPage')
+	if page == 'startPage':
+		yield from display_pers_acc_start_page(db)
+	elif page == 'dataPage':
+		yield from display_pers_acc_data_page(db)
+
+def display_pers_acc_start_page(db):
+	db.execute('select name, surname, town, school from Kvantland.Student where student=%s', (current_user(db), ))
+	(name, surname, town, school, ), = db.fetchall()
+	user_info = {
+		'name': name,
+		'surname': surname,
+		'town': town,
+		'school': school,
+	}
+
+	for field in user_info:
+		if user_info[field] == None:
+			if field == 'surname':
+				user_info[field] = ''
+			else:
+				user_info[field] = 'Не указано'
+
 	yield '<!DOCTYPE html>'
 	yield '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
 	yield '<title> Личный кабинет — Квантландия </title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/accStartPage.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/approv.css">'
+
+	yield from user.display_banner_acc(db)
+	yield '<div class="content_wrapper">'
+	yield '<div class="acc_form">'
+	yield '<div class="header"> Личный кабинет </div>'
+
+	yield '<div class="data_preview">'
+	yield '<img class="avatar_img" src="/static/design/icons/userAvatar.png" />'
+
+	yield '<div class="text_data">'
+	yield '<div class="name_with_edit">'
+	yield f'<div class="name"> {user_info["name"]} {user_info["surname"]} </div>'
+	yield '<a href="/acc?page=dataPage">'
+	yield '<img class="edit" src="/static/design/icons/edit.svg" />'
+	yield '</a>'
+	yield '</div>'
+
+	yield f'<div class="city"> {user_info["town"]} </div>'
+	yield f'<div class="school"> {user_info["school"]} </div>'
+	yield '</div>'
+	yield '</div>'
+
+	yield '<hr/>'
+
+	yield '<div class="header"> Ваши результаты </div>'
+	tournament_amount = get_tournament_amount(db, config['tournament']['version'], config['tournament']['season'])
+	for tournament in range(0, tournament_amount):
+		yield f'<div class="tournament_result" num="{tournament_amount - tournament}">'
+		yield '<img class="win_cup" src="static/design/icons/win_cup.svg" />'
+		yield '<div class="text_content">'
+		yield f'<div class="tournament_number"> {to_roman_number(tournament_amount - tournament)} Турнир </div>'
+		yield f'<div class="score"> {get_score_text(db, config["tournament"]["version"] - tournament)} </div>'
+		yield '</div>'
+		yield '</div>'
+
+	yield '<hr/>'
+
+	yield f'<a href="javascript:history.back()"><div class="back_button"> Назад </div></a>'
+
+	yield '</div>'
+	yield '</div>'
+	yield '</div>'
+
+	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
+
+
+def display_pers_acc_data_page(db, err={}, user_info=empty_user_info()):
+	yield '<!DOCTYPE html>'
+	yield '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
+	yield '<title> Личный кабинет — Квантландия </title>'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/accDataPage.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/approv.css">'
 
@@ -171,7 +322,8 @@ def display_pers_acc(db, err={}, user_info=empty_user_info()):
 	yield from approv.display_confirm_window()
 
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
-	yield '<script type="text/javascript" src ="/static/design/acc.js"></script>'
+	yield '<script type="text/javascript" src ="/static/design/accDataPage.js"></script>'
+
 
 def get_user(db, user):
 	db.execute('select name, surname, school, town, clas, score, email from Kvantland.Student where student= %s', (user, ))
@@ -184,6 +336,7 @@ def get_user(db, user):
 				'score': user_list[5],
 				'email': user_list[6]}
 	return user_info
+
 
 def check_format(user_info):
 	err_dict = {}
@@ -247,7 +400,7 @@ def check_new_params(db):
 			redirect('/')
 	else:
 		user_info = update_info(user_info, err_dict)
-		yield from display_pers_acc(db, err_dict, user_info)
+		yield from display_pers_acc_data_page(db, err_dict, user_info)
 
 
 def new_mail(db, info):
@@ -277,7 +430,7 @@ def show_send_message(info, db, limit_err=False):
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/master.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/mail_timer.css">'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
-	yield '<link rel="stylesheet" type="text/css" href="/static/design/acc.css">'
+	yield '<link rel="stylesheet" type="text/css" href="/static/design/accDataPage.css">'
 	yield from user.display_banner_acc(db)
 	yield '<div class="content_wrapper">'
 	yield '<div class="advert_form">'
@@ -417,13 +570,13 @@ def send_reg_confirm_message(db, info, only_send = False):
 		except:
 			if not only_send:
 				info['email'] = ''
-				yield from display_pers_acc(db, {'email':'Адреса не существует'}, info)
+				yield from display_pers_acc_data_page(db, {'email':'Адреса не существует'}, info)
 		finally:
 			server.quit()	
 	except ValueError:
 		if not only_send:
 			info['email'] = ''
-			yield from display_pers_acc(db, {'email':'Неверный адрес электронной почты'}, info)
+			yield from display_pers_acc_data_page(db, {'email':'Неверный адрес электронной почты'}, info)
 			return
 
 def update_user(db, info):

@@ -67,6 +67,8 @@ send_again = 60
 
 [tournament]
 version = 1
+season = 1
+mode = 'private'
 
 [mail_check]
 allowed_period = 86400

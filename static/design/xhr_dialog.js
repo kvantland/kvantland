@@ -14,10 +14,11 @@ function show_xhr(desc) {
 }
 
 function close_xhr() {
-	let zone = document.querySelector('.shadow')
-	if (!zone)
+	let zones = document.querySelectorAll('.shadow')
+	if (!zones)
 		return;
-	zone.remove()
+	for (let zone of zones)
+		zone.remove()
 	let dialog = document.querySelector('.xhr_notification')
 	dialog.classList.remove('show')
 }

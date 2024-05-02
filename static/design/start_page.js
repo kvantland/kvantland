@@ -1,7 +1,7 @@
 function stopVideo() {
 	let num = document.querySelector('.problem.active').getAttribute('num')
 	let video = document.querySelector(`.dialog.solution[num="${num}"] iframe`)
-	video.src = video.src
+	video.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*')
 }
 
 

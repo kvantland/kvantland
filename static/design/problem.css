@@ -1,3 +1,8 @@
+html {
+	min-width: 700px;
+	width: 100%;
+}
+
 @charset "utf-8";
 @import "../biolinum/font.css";
 @font-face {
@@ -88,12 +93,13 @@ button {
 	gap: 40px;
 	display: inline-flex;
 	padding-bottom: 80px;
+	width: 100%;
 }
 
 .content_box {
 	align-self: stretch;
-	padding-left: min(5vw, 80px);
-	padding-right: min(5vw, 80px);
+	padding-left: max(40px, min(5vw, 80px));
+	padding-right: max(40px, min(5vw, 80px));
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-start;
@@ -125,14 +131,11 @@ button {
 
 .problem_desc {
 	align-self: stretch;
-	flex: 1 1 0;
-	padding-left: 60px;
-	padding-right: 60px;
-	padding-top: 40px;
-	padding-bottom: 40px;
+	padding: 40px 60px;
+	display: inline-flex;
+	flex-direction: column;
 	background: #1E8B93;
 	border-radius: 20px;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	gap: 40px;
@@ -154,22 +157,20 @@ button {
 
 .header_text {
 	color: white; 
-	font-size: max(30px, min(40px, 2.6vw));
+	font-size: max(25px, min(40px, 2.6vw));
 	font-family: Montserrat Alternates; 
 	font-weight: 500;
-	white-space: nowrap;
 }
 
 .problem_cost {
-	height: 29px; 
-	padding: 10px 50px 10px 50px;
+	padding: 10px 50px;
+	text-align: center;
 	border-radius: 10px; 
 	border: 2px white solid; 
-	justify-content: space-between; 
-	align-items: flex-start; 
+	align-items: center;
 	display: inline-flex;
 	color: white; 
-	font-size: 24px; 
+	font-size: max(15px, min(24px, 1.8vw)); 
 	font-family: Montserrat Alternates; 
 	font-weight: 500;
 	white-space: nowrap;
@@ -228,6 +229,7 @@ button {
 	align-items: center;
 	gap: 20px;
 	display: flex;
+	width: 100%;
 }
 
 .input_text {
@@ -314,15 +316,16 @@ button {
 }
 
 .submit_button {
-	align-self: stretch;
+	align-self: center;
 	padding: 10px 0;
 	border-radius: 10px;
 	width:200px;
+	height: 50px;
 	background: linear-gradient(180deg, #FCFCFC 16%, white 20%, #FFFFFF 55%, #EFEFEF 80%);
 	box-shadow: 7px 7px 7px #1A5866;
 	text-align: center;
 	color: black;
-	font-size: 24px;
+	font-size: max(20px, min(2.7vw, 24px));
 	font-family: Montserrat;
 	font-weight: 600;
 	word-wrap: break-word;
@@ -638,5 +641,32 @@ button {
 }
 
 .problem_desc img.picture {
+	max-height: 512px;
+    width: 100%;
+    display: block;
+ 	margin-left: auto;
+  	margin-right: auto;
+    object-fit: contain;
+}
+
+#problem_form {
+	display: flex;
+	justify-content: center;
+}
+
+svg {
 	width: 100%;
+	z-index: 1;
+	user-select: none;
+	--webkit-user-select: none;
+}
+
+.scroll_div {
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	z-index: -1;
+	position: fixed;
+	top: 0;
+	left: 0;
 }
