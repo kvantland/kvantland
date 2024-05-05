@@ -77,12 +77,13 @@ function move(e) {
 	let obj = $('.targeted')
 	let svg = $('svg')[0].getBoundingClientRect()
 	if (!in_access_zone(obj)) {
-		back_to_drag()
-		update_status()
+		end_move(in_access=false)
 	}
-	autoscroll(e.clientX, e.clientY)
-	$(obj).attr({'x': getSVGCoordinates(e).x - side / 2,
-				'y': getSVGCoordinates(e).y - side / 2})
+	else {
+		autoscroll(e.clientX, e.clientY)
+		$(obj).attr({'x': getSVGCoordinates(e).x - side / 2,
+					'y': getSVGCoordinates(e).y - side / 2})
+	}
 }
 
 function create_new_horse() {
@@ -102,7 +103,6 @@ function create_new_horse() {
 function back_to_drag() {
 	$(document).off('mousemove touchmove')
 	$('.targeted').remove()
-	if (remain == 0) create_new_horse()
 	remain += 1
 }
 
@@ -110,8 +110,6 @@ function start_move(e) {
 	let obj = $(e.currentTarget) 
 	if (!$(obj).hasClass('choiced')) {
 		remain -= 1
-		if (remain > 0)
-			create_new_horse()
 	}
 	$('svg').append(obj)
 	let svg = $('svg')[0].getBoundingClientRect()
@@ -122,7 +120,7 @@ function start_move(e) {
 	update_status()
 }
 
-function end_move() {
+function end_move(in_access=true) {
 	let obj = $('.targeted')
 	let [best_ind, min_dist] = [0, Math.sqrt(2) * side]
 	$('rect').each(function(index){
@@ -130,7 +128,7 @@ function end_move() {
 		if (min_dist >= dist)
 			[best_ind, min_dist] = [index, dist]
 	})
-	if (best_ind == '' || occupied(best_ind)) {
+	if (best_ind == '' || occupied(best_ind) || !in_access) {
 		back_to_drag()
 	}
 	else {
@@ -139,6 +137,7 @@ function end_move() {
 		$(obj).addClass('choiced')
 		$(obj).removeClass('targeted')
 	}
+	if (remain > 0) create_new_horse()
 	update_status()
 }
 
