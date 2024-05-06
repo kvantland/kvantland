@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+@font-face {
+	font-family: "Linux Biolinum";
+	src: local("Linux Biolinum"),
+		url("LinBiolinum_R.woff") format("woff");
+}
+
+@font-face {
+	font-family: "Linux Biolinum";
+	font-weight: bold;
+	src: local("Linux Biolinum Bold"),
+		url("LinBiolinum_RB.woff") format("woff");
+}
+
+@font-face {
+	font-family: "Linux Biolinum";
+	font-style: italic;
+	src: local("Linux Biolinum Italic"),
+		url("LinBiolinum_RI.woff") format("woff");
+}
