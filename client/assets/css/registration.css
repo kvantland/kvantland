@@ -1,0 +1,383 @@
+@keyframes show {
+	0% {
+		opacity: 0
+	}
+	100% {
+		opacity: 1
+	}
+}
+
+body {
+	background-color: #D2E8E9;
+}
+
+.content_wrapper {
+	width: 100%;
+	margin-top: 152px;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	display: inline-flex;
+}
+
+.content_wrapper * {
+	font-family: Montserrat;
+	word-wrap: break-word;
+}
+
+.reg_form {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 40px;
+	gap: 21px;
+	background: white;
+	box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.10); border-radius: 20px;
+	align-items: center;
+	margin: 0 auto;
+}
+
+.reg_form .header{
+	display: inline-flex;
+	justify-content: center;
+	gap: 20px;
+	font-weight: 700;
+	font-size: 16px;
+	text-transform: uppercase;
+}
+
+.reg_form .header .dark {
+	color: black;
+}
+
+.reg_form .header .light {
+	color: rgba(0, 0, 0, 0.30);
+}
+
+#reg {
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 21px;
+}
+
+#reg .fields {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+#reg .fields .full_field {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: stretch;
+}
+
+#reg .fields .field .content {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 2px;
+	width: 100%;
+}
+
+#reg .fields .field .info {
+	display: flex;
+	align-items: center;
+}
+
+#reg .fields .field .info img {
+	width: 16px;
+	height: 16px;
+}
+
+#reg .full_field .err {
+	padding: 0 20px;
+	align-self: flex-start;
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.shown {
+	animation: show 0.2s 1;
+}
+
+#reg .fields .field {
+	display: inline-flex;
+	justify-content: space-between;
+	padding: 10px 20px;
+	background: rgba(26.35, 88.38, 102, 0.10);
+	border-radius: 6px;
+	width: 280px;
+	gap: 2px;
+}
+
+#reg .field .placeholder {
+	color: rgba(0, 0, 0, 0.60);
+	font-size: 10px;
+	font-weight: 400;
+}
+
+#reg .field input {
+	font-size: 12px;
+	font-weight: 600;
+	background-color: transparent;
+	border: none;
+}
+
+#reg .field input[type="password"] {
+	font-weight: 400;
+}
+
+#reg .field input:focus {
+	outline: none;
+}
+
+#reg .field input:-webkit-autofill {
+	background: none;
+}
+
+#reg .full_field .select_line {
+	cursor: pointer;
+}
+
+#reg .full_field .select_line input {
+	appearance: none;
+	cursor: inherit;
+}
+
+#reg .full_field .select_line {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-family: Montserrat Alternates;
+}
+
+#reg .full_field .arrow {
+	width: 10px;
+	height: 5.84px;
+}
+
+#reg .full_field .select_box {
+	z-index: 1;
+	position: absolute;
+	transform: translate(-5%, -60%);
+	align-self: flex-end;
+	box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.20);
+	padding: 10px 0;
+	border-radius: 10px;
+	background-color: white;
+	display: inline-flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+#reg .full_field .select_box .option {
+	padding: 4px 20px;
+	font-family: Montserrat Alternates;
+	font-size: 14px;
+	font-weight: 500;
+	width: 160px;
+	cursor: pointer;
+}
+
+@media(min-width:961px) {
+	#reg .full_field .select_box .option:hover {
+		background-color: rgba(26.35, 88.38, 102, 0.10);
+	}
+}
+
+#reg .full_field .select_box .option.selected{
+	background-color: #E8EEF0;
+}
+
+#reg .g-recaptcha {
+	position: relative;
+	left: 3px;
+	display: inline-flex;
+	justify-content: center;
+	align-self: center;
+}
+
+#reg .g-recaptcha-outer {
+	background-color: #F9F9F9;
+	border: 1px #99BBFF solid;
+	border-radius: 5px;
+	width: 320px;
+	height: 76px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#reg .g-recaptcha-inner {
+	width: 296px;
+	height: 70px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+#reg .check_cont {
+	display: inline-flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.60);
+	font-weight: 500;
+	width: 320px;
+}
+
+#reg .check_cont input.checkbox {
+	-webkit-appearance: none;
+	appearance: none;
+	border: 1px #99BBFF solid;
+	border-radius: 4px;
+	background: #FBFBFD;
+	width: 28px;
+	height: 28px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+#reg .check_cont input.checkbox:checked {
+}
+
+#reg .check_cont input.checkbox:checked:after {
+	content: '✔️';
+	color:white;
+}
+
+#reg .check_cont .label {
+	width: 270px;
+}
+
+#reg .check_cont span.underline {
+	cursor: pointer;
+}
+
+#reg button.reg_button {
+	cursor: pointer;
+	height: 50px;
+	border: none;
+	align-self: stretch;
+	background: #1E8B93;
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+	border-radius: 6px;
+	color: white;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+#reg .check_cont a {
+	text-decoration: underline;
+}
+
+#reg .check_cont span.underline {
+	text-decoration: underline;
+}
+
+.shadow {
+	position: fixed;
+	top: 0;
+	left: 0	;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	background-color: rgba(0, 0, 0, 0.25)
+}
+
+.advert_form {
+	-webkit-user-select: none;
+	user-select: none;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 40px;
+	gap: 21px;
+	background: white;
+	box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.10); 
+	border-radius: 20px;
+	margin: 0 auto;
+}
+
+.advert_form .header {
+	text-align: center;
+	color: black;
+	font-size: 16px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.advert_form .description {
+	color: black;
+	align-self: stretch;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.advert_form .limit_info {
+	align-self: stretch;
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.advert_form .limit_info .err {
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 500;
+}
+
+#advert {
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 21px;
+}
+
+#advert .full_field {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: stretch;
+}
+
+#advert .field {
+	display: inline-flex;
+	justify-content: space-between;
+	padding: 10px 20px;
+	background: rgba(26.35, 88.38, 102, 0.10);
+	border-radius: 6px;
+	gap: 2px;
+}
+
+#advert .field .content {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 2px;
+	width: 100%;
+}
+
+#advert .field .placeholder {
+	color: rgba(0, 0, 0, 0.60);
+	font-size: 10px;
+	font-weight: 400;
+}
+
+#advert .field .input {
+	font-size: 12px;
+	font-weight: 600;
+	background-color: transparent;
+	border: none;
+}
