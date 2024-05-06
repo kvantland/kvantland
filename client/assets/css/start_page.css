@@ -150,7 +150,7 @@
 	justify-content: flex-start; 
 	align-items: flex-start; 
 	gap: 40px; 
-	display: flex
+	display: flex;
 }
 
 .page_header {
@@ -161,18 +161,14 @@
 }
 
 .info_container .content {
-	height: 894px; 
-	justify-content: space-between; 
-	align-items: center; 
-	display: inline-flex;
-    flex-wrap: wrap;
-    align-self: stretch;
-    gap: max(15px, min(30px, 2vw));
+	display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 40px;
+    row-gap: 30px;
 }
 
 .info_container .content_box {
     height: 432px;
-	width: 31.5%;
     align-self: stretch;
 	padding: 40px; 
 	background: white; 
@@ -361,26 +357,18 @@
 }
 
 .team_container .content {
-	flex-direction: column;
-  	justify-content: center;
-  	align-items: center;
-  	gap: 30px;
-  	display: inline-flex;
-}
-
-.team_container .content_row {
-	justify-content: space-between;
-  	align-items: flex-start;
-  	gap: 25px;
-  	display: inline-flex;
+	display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 25px;
+    row-gap: 30px;
 }
 
 .team_container .content_box {
 	display: inline-flex;
 	flex-direction: column;
+    align-self: stretch;
 	gap: 20px;
 	padding: 30px;
-	width: 410px;
 	height: 516px;
 	align-items: center;
 	box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25); 
