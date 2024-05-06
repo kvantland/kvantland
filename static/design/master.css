@@ -1,8 +1,8 @@
+@charset "UTF-8";
+
 html {
 	min-width: 916px;
 }
-
-@charset "utf-8";
 
 @font-face {
 	font-family: "Montserrat";
@@ -36,7 +36,7 @@ html {
 
 @font-face {
 	font-family: "Montserrat Alternates";
-	font-weight: 300
+	font-weight: 300;
 	src: url("montserrat/MontserratAlternates-Light.ttf") format("truetype");
 }
 

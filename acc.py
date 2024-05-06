@@ -525,7 +525,7 @@ def send_reg_confirm_message(db, info, only_send = False):
 			<div style="font-family: Montserrat, Arial !important;">
 			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
 			<div style="margin-top: 20px"> 
-				 Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
+				Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
 				Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
 			</div>
 			<div style="width: 640px;

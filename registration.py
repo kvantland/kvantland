@@ -414,7 +414,7 @@ def send_reg_confirm_message(db, info, only_send=False):
 				font-weight: 500;">
 			<div style="font-family: Montserrat, Arial !important;">
 			<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
-			<div style="margin-top: 20px">  Спасибо за регистрацию в <a href="{config['server']['host']}:{config['server']['port']}">Квантландии</a>. 
+			<div style="margin-top: 20px"> Спасибо за регистрацию в <a href="{config['server']['host']}:{config['server']['port']}">Квантландии</a>. 
 			Для подтверждения регистрации нажмите на кнопку ниже: </div>
 			</div>
 			<div style="width: 640px;
