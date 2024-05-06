@@ -137,7 +137,7 @@ function end_move(in_access=true) {
 		$(obj).addClass('choiced')
 		$(obj).removeClass('targeted')
 	}
-	if (remain > 0) create_new_horse()
+	if (remain > 0 && $('.active').not('.choiced').length == 0) create_new_horse()
 	update_status()
 }
 
