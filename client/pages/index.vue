@@ -40,6 +40,19 @@
                 <TeamInfoCard v-for="card in teamInfoCards" :cardInfo="card" :key="card.id"/>
             </div>
         </div>
+        <div class="contacts_area">
+            <p class="page_header"> Будем на связи </p>
+            <p class="text"> В наших социальных сетях мы регулярно публикуем 
+                            интересные новости о проекте, анонсы ближайших событий и 
+                            нестандартные задачки для всех!  </br></br>  
+                            Присоединяйтесь и будете всегда в курсе событий! </p>
+            <div class="button_area">
+                <ContactButton v-for="contact in contacts" :contactInfo="contact" :key="contact.id"/>
+            </div>
+                <p> Адрес техподдержки: 
+                    <a  :href="supportEmail.link" target="_blank"> {{ supportEmail.title }} </a>
+                </p>
+        </div>
     </div>
 </template>
 
@@ -57,11 +70,13 @@
             const infoCardsData = await $axios.$get('/info_cards')
             const probleExamplesData = await $axios.$get('/problem_examples')
             const teamInfoCardsData = await $axios.$get('/team_cards')
+            const contactsData = await $axios.$get('/contacts')
             return {
                 tournamentHistory: tournamentHistoryData,
                 infoCards: infoCardsData,
                 problemExamples: probleExamplesData,
                 teamInfoCards: teamInfoCardsData,
+                contacts: contactsData,
             };
         },
 
@@ -74,7 +89,14 @@
         computed: {
             problemAmount() {
                 return this.problemExamples.length;
-            }
+            },
+            supportEmail() {
+                let supportEmailLink = this.contacts.filter(
+                    (contact) => contact.id == 'email')[0].source_link
+                let supportEmail = supportEmailLink.split(':')[1]
+
+                return {'title': supportEmail, 'link': supportEmailLink}
+            },
         },
     };
 </script>

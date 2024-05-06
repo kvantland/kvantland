@@ -5,6 +5,8 @@ import nav
 import user
 import footer
 import json
+from config import config
+
 
 @route('/tournament_history')
 def get_tournament_history():
@@ -19,6 +21,7 @@ def get_tournament_history():
 	events_amount = 4
 	first_event = max(0, len(tournament_history) - events_amount)
 	return json.dumps(tournament_history[first_event:])
+
 
 @route('/info_cards')
 def get_common_info_cards():
@@ -56,6 +59,7 @@ def get_common_info_cards():
 										
     ]
 	return json.dumps(info_cards)
+
 
 @route('/problem_examples')
 def get_problem_examples():
@@ -185,6 +189,46 @@ def get_team_cards():
 		
     ]
 	return json.dumps(team_cards)
+
+
+@route('/contacts')
+def get_contacts():
+	contacts = [
+		{
+			'id': "vk",
+			'image': "vk.svg",
+			'source_link': config['contacts']['vk_link']
+        },
+		
+        {
+			'id': "telegram",
+			'image': "tg.svg",
+			'source_link': config['contacts']['tg_link']
+        },
+		
+        {
+			'id': "youtube",
+			'image': "play.svg",
+			'source_link': config['contacts']['youtube_link']
+        },
+		
+        {
+			'id': "email",
+			'image': "email.svg",
+			'source_link': "mailto:" + config['contacts']['support_email']
+        }
+    ]
+	
+	return json.dumps(contacts)
+
+
+@route('/support_email')
+def get_support_email():
+	return json.dumps({
+		'email': config['contacts']['support_email'], 
+		'email_link': "mailto:" + config['contacts']['support_email']
+		})
+	
 
 @route('/')
 def display_start_page(db):
