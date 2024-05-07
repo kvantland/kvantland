@@ -15,6 +15,15 @@
 
 <script>
 export default {
-    props: ['tournamentHistory']
+    data() {
+        return {
+            tournamentHistory: {}
+        }
+    },
+
+    async fetch() {
+        const tournamentHistoryData = await this.$axios.$get('/tournament_history')
+        this.tournamentHistory = tournamentHistoryData
+    },
 };
 </script>

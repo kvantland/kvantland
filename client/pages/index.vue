@@ -1,58 +1,10 @@
 <template>
     <div class="content_wrapper">
-        <div class="tournament">
-            <div class="curr_tournament">
-                <img class="map" loading="lazy" src="/map_img/land.png" />
-                <div class="text_container">
-                    <div>
-                        <p class="header">Турнир</p>
-                        <p class="text">Твоя возможность проявить себя!</p>
-                    </div>
-                    <p class="text">Тебя ждут задачи из самых разных областей математики:  
-                        Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</p>
-                    <NuxtLink to="/rules">
-                        <div class="start_button"> Открыть турнир </div>
-                    </NuxtLink>
-                </div>
-            </div>
-            <TournamentHistory :tournamentHistory="tournamentHistory"/>
-        </div>
-        <div class="info_container">
-            <div class="page_header">О турнире</div>
-                <div class="content">
-                    <CommonInfoCard :cardImage="infoCard.image" :cardDescription="infoCard.desc" 
-                                v-for="(infoCard, key) in infoCards" :key="key" />
-                </div>
-        </div>
-        <div class="examples_container">
-            <div class="page_header"> Примеры задач </div>
-            <div class="content">
-                <ProblemExample v-for="(problem, num) in problemExamples" 
-                v-if="num == currentExampleProblemNum" :problemInfo="problem" 
-                :key="problem.title" :num="num" @showDialog="displayDialog" />
-            </div>
-            <ProblemExampleNav :pageAmount="problemAmount" 
-            :selectedNum="currentExampleProblemNum" @changeProblem="updateCurrentProblemNum"/>
-        </div>
-        <div class="team_container">
-            <p class="page_header"> Примеры задач </p>
-            <div class="content">
-                <TeamInfoCard v-for="card in teamInfoCards" :cardInfo="card" :key="card.id"/>
-            </div>
-        </div>
-        <div class="contacts_area">
-            <p class="page_header"> Будем на связи </p>
-            <p class="text"> В наших социальных сетях мы регулярно публикуем 
-                            интересные новости о проекте, анонсы ближайших событий и 
-                            нестандартные задачки для всех!  </br></br>  
-                            Присоединяйтесь и будете всегда в курсе событий! </p>
-            <div class="button_area">
-                <ContactButton v-for="contact in contacts" :contactInfo="contact" :key="contact.id"/>
-            </div>
-                <p> Адрес техподдержки: 
-                    <a  :href="supportEmail.link" target="_blank"> {{ supportEmail.title }} </a>
-                </p>
-        </div>
+        <TournamentInfo />
+        <CommonInfo />
+        <ProblemExamples @showDialog="displayDialog" />
+        <TeamInfo />
+        <ContactsArea />
         <Dialog v-if="activeDialog" :dialogType="dialogType" 
             :dialogData="dialogData" @closeDialog="hideDialog" 
             @changeDialog="displayDialog" />
@@ -61,10 +13,12 @@
 
 
 <script>
-import CommonInfoCard from '~/components/CommonInfoCard.vue';
-import ContactButton from '~/components/ContactButton.vue';
-import ProblemExample from '~/components/ProblemExample.vue';
-import TeamInfoCard from '~/components/TeamInfoCard.vue';
+import TournamentInfo from '../modules/index-page/TournamentInfo/TournamentInfo.vue'
+import CommonInfo from '../modules/index-page/CommonInfo/CommonInfo.vue';
+import ContactsArea from '../modules/index-page/ContactsArea/ContactsArea.vue';
+import ProblemExamples from '../modules/index-page/ProblemExamples/ProblemExamples.vue';
+import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
+import Dialog from '../UI/Dialog.vue'
 
     export default {
         head() {
@@ -73,19 +27,13 @@ import TeamInfoCard from '~/components/TeamInfoCard.vue';
             };
         },
 
-        async asyncData({$axios}) {
-            const tournamentHistoryData = await $axios.$get('/tournament_history')
-            const infoCardsData = await $axios.$get('/info_cards')
-            const probleExamplesData = await $axios.$get('/problem_examples')
-            const teamInfoCardsData = await $axios.$get('/team_cards')
-            const contactsData = await $axios.$get('/contacts')
-            return {
-                tournamentHistory: tournamentHistoryData,
-                infoCards: infoCardsData,
-                problemExamples: probleExamplesData,
-                teamInfoCards: teamInfoCardsData,
-                contacts: contactsData,
-            };
+        components: {
+            CommonInfo,
+            ContactsArea,
+            ProblemExamples,
+            TeamInfo,
+            TournamentInfo,
+            Dialog,
         },
 
         data() {

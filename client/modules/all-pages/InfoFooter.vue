@@ -20,5 +20,5 @@
 </template>
 
 <style>
-@import "../assets/css/footer.css";
+@import "../../assets/css/footer.css";
 </style>
