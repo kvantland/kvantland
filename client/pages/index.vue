@@ -29,7 +29,7 @@
             <div class="content">
                 <ProblemExample v-for="(problem, num) in problemExamples" 
                 v-if="num == currentExampleProblemNum" :problemInfo="problem" 
-                :key="problem.title" :num="num" />
+                :key="problem.title" :num="num" @showDialog="displayDialog" />
             </div>
             <ProblemExampleNav :pageAmount="problemAmount" 
             :selectedNum="currentExampleProblemNum" @changeProblem="updateCurrentProblemNum"/>
@@ -53,12 +53,20 @@
                     <a  :href="supportEmail.link" target="_blank"> {{ supportEmail.title }} </a>
                 </p>
         </div>
+        <Dialog v-if="activeDialog" :dialogType="dialogType" :dialogData="dialogData" @closeDialog="hideDialog" />
     </div>
+    
 </template>
 
 
 <script>
+import CommonInfoCard from '~/components/CommonInfoCard.vue';
+import ContactButton from '~/components/ContactButton.vue';
+import ProblemExample from '~/components/ProblemExample.vue';
+import TeamInfoCard from '~/components/TeamInfoCard.vue';
+
     export default {
+
         head() {
             return {
                 title: 'Квантландия'
@@ -82,7 +90,10 @@
 
         data() {
             return {
-                currentExampleProblemNum: 0
+                currentExampleProblemNum: 0,
+                activeDialog: false,
+                dialogType: null,
+                dialogData: null,
             };
         },
 
@@ -102,7 +113,17 @@
         methods: {
             updateCurrentProblemNum(currentNum) {
                 this.currentExampleProblemNum = currentNum
-            }
+            },
+            displayDialog(dialogType, dialogData) {
+                this.activeDialog = true
+                this.dialogType = dialogType
+                this.dialogData = dialogData
+            },
+            hideDialog() {
+                this.activeDialog = false
+                this.dialogType = null
+                this.dialogData = null
+            },
         },
     };
 </script>

@@ -13,8 +13,8 @@
         </div>
 
         <div class="button_area">
-            <div class="button answer"> Посмотреть ответ </div>
-            <div class="button solution"> Посмотреть решение </div>
+            <div class="button answer" @click="showAnswer"> Посмотреть ответ </div>
+            <div class="button solution" @click="showSolution"> Посмотреть решение </div>
 	    </div>
 	 </div>
 </template>
@@ -22,5 +22,14 @@
 <script>
 export default {
     props: ["problemInfo", "num"],
+
+    methods: {
+        showAnswer() {
+            this.$emit('showDialog', 'answer', {'num': this.num, 'problemInfo': this.problemInfo})
+        },
+        showSolution() {
+            this.$emit('showDialog', 'solution', {'num': this.num, 'problemInfo': this.problemInfo})
+        },
+    }
 };
 </script>

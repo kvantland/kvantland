@@ -426,10 +426,10 @@
 	gap: 40px;
 	border-radius: 20px;
 	background: #1E8B93;
-	display: none;
 	flex-direction: column;
 	justify-content: flex-start;
 	z-index: 4;
+    display: inline-flex;
 }
 
 .dialog .body {
@@ -458,7 +458,7 @@
 	font-weight: 600;
 }
 
-.dialog .head div {
+.dialog .head p {
 	font-family: Montserrat Alternates;
 }
 
