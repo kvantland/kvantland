@@ -4,10 +4,7 @@
             <hr size="1" color="#1E8B93" noshade />
             <div class="content">
                 <NuxtLink to="/">
-                    <div class="logo_area">
-                    <img class="logo" loading="lazy" src="/icons/logo.svg" />
-                    <div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>
-                    </div>
+                   <Logo />
                 </NuxtLink>
 
             <div class="confidentiality">
@@ -19,6 +16,15 @@
     </footer>
 </template>
 
+<script>
+import Logo from "../../UI/Logo.vue"
+export default {
+    components: {
+        Logo,
+    }
+}
+</script>
+
 <style>
-@import "../../assets/css/footer.css";
+@import "../../assets/css/footer.css"
 </style>
