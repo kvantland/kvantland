@@ -97,19 +97,23 @@ function create_new_horse() {
 	        height: $(obj).attr('height'),
 	        href: $(obj).attr('href')
 	    });
+        $(new_horse).on('mousedown touchstart', start_move)
+	    $(new_horse).on('mouseup touchend', end_move)
 	    $('svg').append(new_horse)
 }
 
 function back_to_drag() {
-	$(document).off('mousemove touchmove')
+    $('.targeted').off('mousedown touchstart')
+	$('.targeted').off('mouseup touchend')
 	$('.targeted').remove()
-	remain += 1
 }
 
 function start_move(e) {
+    if (e.touches) e.preventDefault();
 	let obj = $(e.currentTarget) 
+    let amount = remain
 	if (!$(obj).hasClass('choiced')) {
-		remain -= 1
+		amount -= 1
 	}
 	$('svg').append(obj)
 	let svg = $('svg')[0].getBoundingClientRect()
@@ -117,11 +121,12 @@ function start_move(e) {
 				'y': getSVGCoordinates(e).y - side / 2})
 	$(obj).addClass('targeted')
 	$(document).on('mousemove touchmove', move)
-	update_status()
+    $('text.amount')[0].innerHTML = Math.min(4, Math.max(0, amount))
 }
 
 function end_move(in_access=true) {
 	let obj = $('.targeted')
+    $(document).off('mousemove touchmove')
 	let [best_ind, min_dist] = [0, Math.sqrt(2) * side]
 	$('rect').each(function(index){
 		let dist = Math.hypot(($(obj).attr('x') - $(this).attr('x')), ($(obj).attr('y') - $(this).attr('y')))
@@ -132,20 +137,16 @@ function end_move(in_access=true) {
 		back_to_drag()
 	}
 	else {
-		$(document).off('mousemove touchmove')
 		$(obj).attr('x', $(`rect:eq(${best_ind})`).attr('x')).attr('y', $(`rect:eq(${best_ind})`).attr('y'))
 		$(obj).addClass('choiced')
 		$(obj).removeClass('targeted')
 	}
+    update_status()
 	if (remain > 0 && $('.active').not('.choiced').length == 0) create_new_horse()
-	update_status()
 }
 
 function update_status() {
-	$('.horse.active').off('mousedown touchstart')
-	$('.horse.active').off('mouseup touchend')
-	$('.horse.active').on('mousedown touchstart', start_move)
-	$('.horse.active').on('mouseup touchend', end_move)
+    remain = 4 - $('.horse.choiced').length
 	$('text.amount')[0].innerHTML = remain
 }
 
