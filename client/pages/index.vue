@@ -10,9 +10,9 @@
                     </div>
                     <p class="text">Тебя ждут задачи из самых разных областей математики:  
                         Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</p>
-                    <a href={/start}>
-                <div class="start_button"> Открыть турнир </div>
-                    </a>
+                    <NuxtLink to="/rules">
+                        <div class="start_button"> Открыть турнир </div>
+                    </NuxtLink>
                 </div>
             </div>
             <TournamentHistory :tournamentHistory="tournamentHistory"/>
@@ -67,7 +67,6 @@ import ProblemExample from '~/components/ProblemExample.vue';
 import TeamInfoCard from '~/components/TeamInfoCard.vue';
 
     export default {
-
         head() {
             return {
                 title: 'Квантландия'
