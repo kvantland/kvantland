@@ -38,30 +38,13 @@ import Dialog from '../UI/Dialog.vue'
 
         data() {
             return {
-                currentExampleProblemNum: 0,
                 activeDialog: false,
                 dialogType: null,
                 dialogData: null,
             };
         },
 
-        computed: {
-            problemAmount() {
-                return this.problemExamples.length;
-            },
-            supportEmail() {
-                let supportEmailLink = this.contacts.filter(
-                    (contact) => contact.id == 'email')[0].source_link
-                let supportEmail = supportEmailLink.split(':')[1]
-
-                return {'title': supportEmail, 'link': supportEmailLink}
-            },
-        },
-
         methods: {
-            updateCurrentProblemNum(currentNum) {
-                this.currentExampleProblemNum = currentNum
-            },
             displayDialog(dialogType, dialogData) {
                 this.activeDialog = true
                 this.dialogType = dialogType
