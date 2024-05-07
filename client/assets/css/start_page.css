@@ -430,6 +430,7 @@
 	justify-content: flex-start;
 	z-index: 4;
     display: inline-flex;
+    animation: show 0.2s;
 }
 
 .dialog .body {
@@ -472,11 +473,6 @@
 
 .dialog img.ans {
 	height: 298px;
-}
-
-.show {
-	animation: show 0.2s 1;
-	display: inline-flex;
 }
 
 .dialog .button{

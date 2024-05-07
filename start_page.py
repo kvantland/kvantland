@@ -83,7 +83,7 @@ def get_problem_examples():
 			            клетке не более одного. На некоторых клетках написали, сколько всего 
 						коней бьют данную клетку (см. рисунок).<br/><br/> <span class="bold_text"> 
 						Какое целое число должно стоять в центре доски? </span>""",
-			'answer': '0',
+			'answer': "0",
 			'solution_video_link': "https://www.youtube.com/embed/vqlC9c2LTV4?enablejsapi=1",
 			'cost': "3 квантика",
         },
@@ -97,7 +97,7 @@ def get_problem_examples():
 						Маше предоставили скидку 10%. Маша была крайне удивлена, обнаружив, что 
 						она заплатила на 170 рублей больше, чем Ваня. 
 						<span class="bold_text"> Какова была цена книги? </span>""",
-			'answer': '800',
+			'answer': "800",
 			'solution_video_link': "https://www.youtube.com/embed/m7lA9CoOq_g?enablejsapi=1",
 			'cost': "3 квантика",
         },
@@ -220,14 +220,6 @@ def get_contacts():
     ]
 	
 	return json.dumps(contacts)
-
-
-@route('/support_email')
-def get_support_email():
-	return json.dumps({
-		'email': config['contacts']['support_email'], 
-		'email_link': "mailto:" + config['contacts']['support_email']
-		})
 	
 
 @route('/')

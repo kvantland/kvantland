@@ -53,9 +53,10 @@
                     <a  :href="supportEmail.link" target="_blank"> {{ supportEmail.title }} </a>
                 </p>
         </div>
-        <Dialog v-if="activeDialog" :dialogType="dialogType" :dialogData="dialogData" @closeDialog="hideDialog" />
+        <Dialog v-if="activeDialog" :dialogType="dialogType" 
+            :dialogData="dialogData" @closeDialog="hideDialog" 
+            @changeDialog="displayDialog" />
     </div>
-    
 </template>
 
 
