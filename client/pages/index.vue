@@ -32,7 +32,7 @@
                 :key="problem.title" :num="num" />
             </div>
             <ProblemExampleNav :pageAmount="problemAmount" 
-            :selectedNum="currentExampleProblemNum" />
+            :selectedNum="currentExampleProblemNum" @changeProblem="updateCurrentProblemNum"/>
         </div>
         <div class="team_container">
             <p class="page_header"> Примеры задач </p>
@@ -97,6 +97,12 @@
 
                 return {'title': supportEmail, 'link': supportEmailLink}
             },
+        },
+
+        methods: {
+            updateCurrentProblemNum(currentNum) {
+                this.currentExampleProblemNum = currentNum
+            }
         },
     };
 </script>

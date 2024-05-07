@@ -251,6 +251,7 @@
 }
 
 .problem img {
+    align-self: center;
 	max-height: 298px;
 	max-width: 40% !important;
 }
@@ -263,7 +264,8 @@
 	 justify-content: center; 
 	 align-items: center; 
 	 gap: 40px; 
-	 display: inline-flex
+	 display: inline-flex;
+     min-height: 298px;
 }
 
 .problem .body .text_container {
