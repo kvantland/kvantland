@@ -11,7 +11,7 @@ def display_problem():
 def display_starter():
 	yield '<div class="contacts_area">'
 	yield '<div class="page_header">Будем на связи</div>'
-	yield '<div class="text">В наших социальных сетях мы регулярно публикуем интересные новости о проекте, анонсы ближайших событий и нестандартные задачки для всех!    </br></br>  Присоединяйтесь и будете всегда в курсе событий!</div>'
+	yield '<div class="text">В наших социальных сетях мы регулярно публикуем интересные новости о проекте, анонсы ближайших событий и нестандартные задачки для всех!  </br></br>  Присоединяйтесь и будете всегда в курсе событий!</div>'
 	yield '<div class="button_area">'
 	yield f'<a class="contact_button" href="{config["contacts"]["vk_link"]}" target="_blank"> <img class="contact_icon" loading="lazy" src="/static/design/icons/vk.svg" /> </a>'
 	yield f'<a class="contact_button" href="{config["contacts"]["tg_link"]}" target="_blank"> <img class="contact_icon" loading="lazy" src="/static/design/icons/tg.svg" /> </a>'

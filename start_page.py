@@ -5,6 +5,8 @@ import nav
 import user
 import footer
 import json
+from config import config
+
 
 @route('/tournament_history')
 def get_tournament_history():
@@ -19,6 +21,7 @@ def get_tournament_history():
 	events_amount = 4
 	first_event = max(0, len(tournament_history) - events_amount)
 	return json.dumps(tournament_history[first_event:])
+
 
 @route('/info_cards')
 def get_common_info_cards():
@@ -53,9 +56,10 @@ def get_common_info_cards():
 		    'desc': """<span class="bold_text">В зачёт идут 2 лучших результата из 4</span> <br/> 
 			            <br/> Взрослые тоже могут участвовать, но в отдельном зачёте (с призами 
 						для победителей)"""},
-						
+										
     ]
 	return json.dumps(info_cards)
+
 
 @route('/problem_examples')
 def get_problem_examples():
@@ -79,7 +83,7 @@ def get_problem_examples():
 			            клетке не более одного. На некоторых клетках написали, сколько всего 
 						коней бьют данную клетку (см. рисунок).<br/><br/> <span class="bold_text"> 
 						Какое целое число должно стоять в центре доски? </span>""",
-			'answer': '0',
+			'answer': "0",
 			'solution_video_link': "https://www.youtube.com/embed/vqlC9c2LTV4?enablejsapi=1",
 			'cost': "3 квантика",
         },
@@ -93,7 +97,7 @@ def get_problem_examples():
 						Маше предоставили скидку 10%. Маша была крайне удивлена, обнаружив, что 
 						она заплатила на 170 рублей больше, чем Ваня. 
 						<span class="bold_text"> Какова была цена книги? </span>""",
-			'answer': '800',
+			'answer': "800",
 			'solution_video_link': "https://www.youtube.com/embed/m7lA9CoOq_g?enablejsapi=1",
 			'cost': "3 квантика",
         },
@@ -101,6 +105,122 @@ def get_problem_examples():
     ]
 	return json.dumps(problem_examples)
 
+
+# type "personal" used for personal cards, "list" - for cards with listed members
+@route('/team_cards')
+def get_team_cards():
+	team_cards = [
+		{
+			'type': "personal",
+			'id': "M_Evdokimov",
+			'name': "Михаил Евдокимов",
+			'desc': """Автор многих олимпиадных задач по математике: Турнир Городов, 
+			            Московская олимпиада, Всероссийская, Матпраздник и других.<br/><br/>
+						Автор книг «Сто граней математики» и «От задачек к задачам», один из 
+						авторов журнала «Квантик».""",
+			'image': "M_Evdokimov.png",
+        },
+		
+        {
+			'type': "personal",
+			'id': "A_Shapovalov",
+			'name': "Александр Шаповалов",
+			'desc': """Автор дюжины книг по кружковой и олимпиадной математике, автор 
+			            около 1000 олимпиадных задач.<br/><br/> Преподаватель летних 
+						школ и онлайн-кружков, ответственный редактор серии «Школьные 
+						математические кружки».""",
+			'image': "A_Shapovalov.png",
+        },
+		
+        {
+			'type': "personal",
+			'id': "A_Gribalco",
+			'name': "Александр Грибалко",
+			'desc': """Автор многих олимпиадных задач по математике: Турнир Городов, 
+			            Московская олимпиада, Матпраздник и других.<br/><br/>Председатель 
+						жюри турнира математических боев имени А.П. Савина. Автор трех 
+						книг по материалам турнира.""",
+			'image': "A_Gribalco.png",
+        },
+		
+        {
+			'type': "personal",
+			'id': "E_Bakaev",
+			'name': "Егор Бакаев",
+			'desc': """Автор многих олимпиадных задач по математике: Турнир Городов, 
+			            Московская олимпиада, Всероссийская, Матпраздник и других олимпиад.
+						<br/><br/>Преподаватель кружков по олимпиадной математике в ведущих 
+						школах Москвы. Редактор журнала “Квант”.""",
+			'image': "E_Bakaev.png",
+        },
+		
+        {
+			'type': "personal",
+			'id': "B_Butyrin",
+			'name': "Богдан Бутырин",
+			'desc': """Автор олимпиадных задач по математике: Турнир Городов, Московская 
+			            олимпиада. Призёр Всероссийской олимпиады.<br/><br/>Автор Youtube-канала 
+						MathOlymp, студент ФКН ВШЭ.""",
+			'image': "B_Butyrin.png",
+        },
+		
+        {
+			'type': "list",
+			'id': "DevTeam",
+			'desc': [
+				{
+                    'title': "Редакторы",
+                    'team_members': ["С. Дориченко", "Г. Мерзон", "Т. Корчемкина", "М. Прасолов"]
+                },
+				{
+					'title': "IT",
+					'team_members': ["Д. Чертоляс", "В. Аксенов", "Д. Миронов", "В. Лобачевский"]
+                },
+				{
+					'title': "Дизайнер",
+					'team_members': ["А.Москаленко"]
+                },
+				{
+					'title': "Художник",
+					'team_members': ["А.Вайнер"]
+                },
+            ]
+        },
+		
+    ]
+	return json.dumps(team_cards)
+
+
+@route('/contacts')
+def get_contacts():
+	contacts = [
+		{
+			'id': "vk",
+			'image': "vk.svg",
+			'source_link': config['contacts']['vk_link']
+        },
+		
+        {
+			'id': "telegram",
+			'image': "tg.svg",
+			'source_link': config['contacts']['tg_link']
+        },
+		
+        {
+			'id': "youtube",
+			'image': "play.svg",
+			'source_link': config['contacts']['youtube_link']
+        },
+		
+        {
+			'id': "email",
+			'image': "email.svg",
+			'source_link': "mailto:" + config['contacts']['support_email']
+        }
+    ]
+	
+	return json.dumps(contacts)
+	
 
 @route('/')
 def display_start_page(db):
