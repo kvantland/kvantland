@@ -1,5 +1,5 @@
 <template>
-    <div class="tournament">
+    <div class="tournament section">
         <div class="curr_tournament">
             <img class="map" loading="lazy" src="/map_img/land.png" />
             <div class="text_container">
