@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import Logo from '../../../UI/Logo.vue'
 
 export default {
     data(){
@@ -13,10 +12,6 @@ export default {
             topScrolled: 0,
             blocked: true,
         }
-    },
-
-    components: {
-        Logo,
     },
 
     methods: {

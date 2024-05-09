@@ -14,15 +14,6 @@
     </footer>
 </template>
 
-<script>
-import Logo from "../../UI/Logo.vue"
-export default {
-    components: {
-        Logo,
-    }
-}
-</script>
-
 <style>
 @import "../../assets/css/footer.css"
 </style>
