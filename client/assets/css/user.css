@@ -85,7 +85,7 @@
 }
 
 .user_nav .menu {
-	ustify-content: flex-start; 
+	justify-content: flex-start; 
 	align-items: center; 
 	gap: max(10px, min(40px, 2.6vw)); 
 	display: flex;

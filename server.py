@@ -1,18 +1,12 @@
 #!/usr/bin/python3
 
 from pathlib import Path
-from bottle import route, run, static_file, install
+from bottle import route, run, static_file, install, response, request
 
 import db
 import nav
 import land, town, problem, login, loginvk, registration, acc, start_page, pw_recovery, policy, icon
 from config import config, ROOT
-
-cfg_static = config.get('static')
-if cfg_static:
-	@route('/static/<path:path>')
-	def static(path: str):
-		return static_file(path, root=ROOT / cfg_static['root'])
 
 install(db.Plugin(url=config['db']['url']))
 run(**config['server'])

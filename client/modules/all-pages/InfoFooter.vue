@@ -3,9 +3,7 @@
         <div class="basement">
             <hr size="1" color="#1E8B93" noshade />
             <div class="content">
-                <NuxtLink to="/">
                    <Logo />
-                </NuxtLink>
 
             <div class="confidentiality">
                 <NuxtLink to="/policy"> Политика конфиденциальности </NuxtLink>

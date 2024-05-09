@@ -1,6 +1,6 @@
 <template>
-    <div class="team_container">
-        <p class="page_header"> Примеры задач </p>
+    <div class="team_container" id="teamInfo">
+        <p class="page_header"> Авторы и команда </p>
         <div class="content">
             <TeamInfoCard v-for="card in teamInfoCards" :cardInfo="card" :key="card.id"/>
         </div>

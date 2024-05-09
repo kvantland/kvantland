@@ -1,8 +1,10 @@
 <template>
-    <div class="logo_area">
-        <img class="logo" loading="lazy" src="/icons/logo.svg" />
-        <div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>
-    </div>
+    <NuxtLink to="/">
+        <div class="logo_area">
+            <img class="logo" loading="lazy" src="/icons/logo.svg" />
+            <div class="logo_name"> КВАНТ<br/>ЛАНДИЯ </div>
+        </div>
+    </NuxtLink>
 </template>
 
 <style>

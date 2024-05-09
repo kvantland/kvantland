@@ -1,6 +1,6 @@
 <template>
-    <div class="examples_container">
-        <div class="page_header"> Примеры задач </div>
+    <div class="examples_container" id="problemExamples">
+        <p class="page_header"> Примеры задач </p>
         <div class="content">
             <ProblemExample v-for="(problem, num) in problemExamples" 
             v-if="num == currentExampleProblemNum" :problemInfo="problem" 
