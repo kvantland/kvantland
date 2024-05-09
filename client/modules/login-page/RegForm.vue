@@ -15,11 +15,8 @@
 
 
 <script>
-import SubmitButton from '../../../UI/SubmitButton.vue'
-import FormField from '../../../UI/FormField/FormField.vue'
-import Captcha from '../../../UI/Captcha.vue'
-import FormHeader from '../components/FormHeader'
-import UserAgreement from '../components/UserAgreement'
+import FormHeader from './components/FormHeader'
+import UserAgreement from './components/UserAgreement'
 
 export default {
     data() {
@@ -31,10 +28,7 @@ export default {
     props: ['regFields'],
 
     components: {
-        SubmitButton,
-        FormField,
         FormHeader,
-        Captcha,
         UserAgreement,
     },
 

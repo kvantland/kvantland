@@ -11,7 +11,6 @@ export default {
 
     methods: {
         select(event) {
-            event.currentTarget.classList.add('selected')
             this.$emit('hideSelectedList', event.currentTarget.innerHTML)
         }
     }

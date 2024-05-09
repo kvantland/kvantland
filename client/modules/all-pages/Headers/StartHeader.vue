@@ -12,7 +12,6 @@
 import StartPageNav from "./components/StartPageNav.vue"
 import ButtonArea from "./components/ButtonArea.vue"
 import LogButton from "./components/LogButton.vue"
-import Logo from "../../../UI/Logo.vue"
 
 export default {
     data(){
@@ -23,7 +22,6 @@ export default {
     },
 
     components: {
-        Logo,
         StartPageNav,
         ButtonArea,
         LogButton,

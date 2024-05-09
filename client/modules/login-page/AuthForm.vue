@@ -16,10 +16,7 @@
 </template>
 
 <script>
-import SubmitButton from '../../../UI/SubmitButton.vue'
-import FormField from '../../../UI/FormField/FormField.vue'
-import FormHeader from '../components/FormHeader'
-import VkAuthButton from '../../../UI/VkAuthButton.vue'
+import FormHeader from './components/FormHeader'
 
 export default {
     props: ['loginFields'],
@@ -31,9 +28,6 @@ export default {
     },
 
     components: {
-        SubmitButton,
-        FormField,
-        VkAuthButton,
         FormHeader,
     },
 

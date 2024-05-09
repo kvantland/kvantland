@@ -10,12 +10,8 @@
 </template>
 
 <script>
-import SelectList from '../../SelectList.vue'
 
 export default {
-    components: {
-        SelectList,
-    },
 
     data() {
         return {

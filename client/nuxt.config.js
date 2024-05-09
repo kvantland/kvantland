@@ -32,7 +32,7 @@ export default {
             }
           }
         }
-      }
+      },
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -42,7 +42,15 @@ export default {
   plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: false,
+  components: {
+    dirs: [
+        '~components',
+        {
+            path: '~UI/',
+            prefix: false,
+        }
+    ] 
+    },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
