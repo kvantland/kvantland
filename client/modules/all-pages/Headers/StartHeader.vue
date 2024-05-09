@@ -47,9 +47,12 @@ export default {
         },
     },
 
-    beforeMount() {
+    mounted() {
         window.addEventListener('scroll', this.scrollHeader)
     },
+    destroyed() {
+        window.removeEventListener('scroll', this.scrollHeader)
+    }
 }
 </script>
 

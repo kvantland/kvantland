@@ -6,10 +6,12 @@
 </template>
 
 <script>
-import AuthForm from "../../modules/login-page/AuthForm/AuthForm.vue"
-import RegForm from "../../modules/login-page/RegForm/RegForm.vue"
+import AuthForm from "../modules/login-page/AuthForm/AuthForm.vue"
+import RegForm from "../modules/login-page/RegForm/RegForm.vue"
 
 export default {
+    layout: 'forms',
+    
     components: {
         AuthForm,
         RegForm,
@@ -64,9 +66,5 @@ form {
     justify-content: center;
     align-items: flex-start;
     display: inline-flex;
-    background-color: #D2E8E9;
-}
-body {
-    background-color: #D2E8E9;
 }
 </style>
