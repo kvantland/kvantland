@@ -1,7 +1,7 @@
 <template>
     <div class="select_box" :name="name">
         <div v-for="optionName in options" :class="optionName == selectedOption ? 'option selected' : 'option'" 
-        @click="select">{{ optionName }}</div>
+        @click="select(optionName)">{{ optionName }}</div>
     </div>
 </template>
 
@@ -10,10 +10,10 @@ export default {
     props: ['name', 'options', 'selectedOption'],
 
     methods: {
-        select(event) {
-            this.$emit('hideSelectedList', event.currentTarget.innerHTML)
-        }
-    }
+        select(optionName) {
+            this.$emit('hideSelectedList', optionName)
+        },
+    },
 }
 </script>
 

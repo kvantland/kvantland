@@ -27,7 +27,6 @@ export default {
             this.showSelectList = true
         },
         hideSelect(selectedOption) {
-            console.log(selectedOption)
             this.showSelectList = false
             this.selectedOption = selectedOption
         }
