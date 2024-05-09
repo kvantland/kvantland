@@ -1,6 +1,6 @@
 <template>
     <div class="formBody">
-        <FormHeader mode="auth" @changeMode="changeMode" />
+        <FormHeader mode="auth" @changeHeaderMode="changeHeaderMode" />
         <form method="post" id="id">
             <FormField v-for="field in loginFields" :fieldInfo="field" :key="field.name"/>
         </form>
@@ -32,8 +32,8 @@ export default {
     },
 
     methods: {
-        changeMode(modeToChange) {
-            this.$emit('changeMode', modeToChange)
+        changeHeaderMode(modeToChange) {
+            this.$emit('changeHeaderMode', modeToChange)
         }
     }
 }

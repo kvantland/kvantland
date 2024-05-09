@@ -1,7 +1,7 @@
 <template>
     <div class="formBackground">
-        <AuthForm v-if="mode=='auth'" @changeMode="changeMode" :loginFields="loginFields" />
-        <RegForm v-else-if="mode=='reg'" @changeMode="changeMode" :regFields="regFields" />
+        <AuthForm v-if="mode=='auth'" @changeHeaderMode="changeHeaderMode" :loginFields="loginFields" />
+        <RegForm v-else-if="mode=='reg'" @changeHeaderMode="changeHeaderMode" :regFields="regFields" />
     </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
     },
 
     methods: {
-        changeMode(modeToChange) {
+        changeHeaderMode(modeToChange) {
             console.log(modeToChange)
             this.mode = modeToChange
         }

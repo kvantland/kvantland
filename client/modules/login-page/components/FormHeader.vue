@@ -1,7 +1,7 @@
 <template>
      <div class="header">
-        <span :class="mode=='auth' ? 'dark' : 'light'" @click="changeMode('auth')"> ВХОД </span>
-        <span :class="mode=='reg' ? 'dark' : 'light'" @click="changeMode('reg')"> РЕГИСТРАЦИЯ </span>
+        <span :class="mode=='auth' ? 'dark' : 'light'" @click="changeHeaderMode('auth')"> ВХОД </span>
+        <span :class="mode=='reg' ? 'dark' : 'light'" @click="changeHeaderMode('reg')"> РЕГИСТРАЦИЯ </span>
 	 </div>
 </template>
 
@@ -10,8 +10,8 @@ export default {
     props: ['mode'],
 
     methods: {
-        changeMode(modeToChange) {
-            this.$emit('changeMode', modeToChange)
+        changeHeaderMode(modeToChange) {
+            this.$emit('changeHeaderMode', modeToChange)
         }
     },
 }

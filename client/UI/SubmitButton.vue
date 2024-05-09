@@ -1,5 +1,5 @@
 <template>
-    <button class="submit_button" type="submit" form="form">
+    <button class="submit_button" type="submit" :form="id" @click.prevent="onClick">
         <slot />
     </button>
 </template>
@@ -7,7 +7,13 @@
 
 <script>
 export default {
-    props: ['form']
+    props: ['id'],
+
+    methods: {
+        onClick(){
+            this.$emit('onClick')
+        }
+    }
 }
 </script>
 

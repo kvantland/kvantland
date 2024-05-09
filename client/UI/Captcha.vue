@@ -1,7 +1,7 @@
 <template>
      <div class="g-recaptcha-outer">
         <div class="g-recaptcha-inner">
-            <div class="g-recaptcha" :data-sitekey="sitekey"></div>
+            <recaptcha />
         </div>
 	 </div>
 </template>

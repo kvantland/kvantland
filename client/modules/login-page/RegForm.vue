@@ -1,14 +1,14 @@
 <template>
     <div class="formBody">
-        <FormHeader mode="reg" @changeMode="changeMode" />
-        <form method="post" id="id">
+        <FormHeader mode="reg" @changeMode="changeHeaderMode" />
+        <form method="post" id="id" @submit.prevent="onSubmitRegForm">
             <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name"/>
         </form>
         <div class="buttonArea">
             <UserAgreement />
             <Captcha />
             <hr size="1" style="border-width: 1px"/>
-            <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
+            <SubmitButton :form="id" @onClick="checkCaptcha"> Зарегистрироваться </SubmitButton>
         </div>
     </div>
 </template>
@@ -33,8 +33,18 @@ export default {
     },
 
     methods: {
-        changeMode(modeToChange) {
-            this.$emit('changeMode', modeToChange)
+        changeHeaderMode(modeToChange) {
+            this.$emit('changeHeaderMode', modeToChange)
+        },
+        async checkCaptcha() {
+            try {
+                const token = await this.$recaptcha.getResponce()
+                console.log('ReCaptcha token:', token)
+                await this.$recaptcha.reset()
+            }
+            catch (error) {
+                console.log('Login error', error)
+            }
         }
     }
 }

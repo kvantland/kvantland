@@ -35,6 +35,13 @@ export default {
       },
   },
 
+  publicRuntimeConfig: {
+    recaptcha: {
+        siteKey: process.env.RECAPTCHA_SITE_KEY,
+        version: 2,
+    }
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["@assets/css/master.css"],
 
@@ -50,7 +57,7 @@ export default {
             prefix: false,
         }
     ] 
-    },
+  },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -63,6 +70,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/auth',
+    '@nuxtjs/recaptcha', 
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
