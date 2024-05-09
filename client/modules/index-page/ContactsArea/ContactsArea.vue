@@ -30,8 +30,13 @@ export default {
 
     computed: {
         supportEmail() {
-            let email = this.contacts.filter((contact) => contact.id == 'email')[0].source_link
-            return { link: email, title: email.split(':')[1]}
+            try {
+                let email = this.contacts.filter((contact) => contact.id == 'email')[0].source_link
+                return { link: email, title: email.split(':')[1]}
+            }
+            catch {
+                return { link: '', title: '' }
+            }
         },
     },
 

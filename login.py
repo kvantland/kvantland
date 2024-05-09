@@ -4,6 +4,7 @@ from html import escape
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
 import urllib.parse
+import json
 
 from config import config
 import user
@@ -15,6 +16,28 @@ redirect_uri = config['vk']['redirect_uri']
 auth_url = config['vk']['auth_url']
 
 params = {'client_id': 	client_id, 'redirect_uri': redirect_uri, 'response_type': 'code'}
+
+@route('/login_fields')
+def get_login_fields():
+	fields = [
+		{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
+		{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"}
+    ]
+	return json.dumps(fields)
+
+@route('/registration_fields')
+def get_registration_fields():
+	fields = [
+		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
+			{'type': "input", 'inputType': "text", 'name': "surname", 'placeholder': "Фамилия"},
+			{'type': "input", 'inputType': "email", 'name': "email", 'placeholder': "E-mail"},
+			{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
+			{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"},
+			{'type': "input", 'inputType': "text", 'name': "city", 'placeholder': "Город"},
+			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
+			{'type': "select", 'options': [str(i) for i in range(1, 12)] + ['Другое'], 'name': "clas", 'placeholder': "Класс"},
+		]
+	return json.dumps(fields)
 
 @route('/login')
 def login_form(db):
