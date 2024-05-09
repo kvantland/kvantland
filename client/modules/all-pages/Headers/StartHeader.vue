@@ -57,26 +57,5 @@ export default {
 </script>
 
 <style>
-header {
-	-webkit-user-select: none;
-	user-select: none;
-	background-color: white;
-	width: 100%;
-	box-sizing: border-box;
-	position: fixed;
-	padding: 30px max(40px, min(5vw, 80px));
-	justify-content: space-between; 
-	align-items: center; 
-	display: inline-flex;
-	z-index: 2;
-	box-shadow: 0 1px 5px #C2C2C2;
-    transition: transform 0.3s;
-}
-header.up {
-	transform: none;
-}
-
-header.down {
-	transform: translate(0, -100%);
-}
+@import "../../../assets/css/header.css"
 </style>
