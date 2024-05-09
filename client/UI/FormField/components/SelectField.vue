@@ -18,7 +18,7 @@ export default {
         return {
             showSelectList: false,
             selectedOption: '',
-            canHideSelectList: 0,
+            canHideSelectList: 0, //на 2-й клик можно скрывать!
         }
     },
 
@@ -34,7 +34,8 @@ export default {
             this.canHideSelectList = 0
         },
         changeHideAbility() {
-            this.canHideSelectList += 1
+            if (this.canHideSelectList < 2)
+                this.canHideSelectList += 1
         }
     },
 
