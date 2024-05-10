@@ -1,8 +1,6 @@
 <template>
-    <div class="formBackground">
-        <AuthForm v-if="mode=='auth'" @changeHeaderMode="changeHeaderMode" :loginFields="loginFields" />
-        <RegForm v-else-if="mode=='reg'" @changeHeaderMode="changeHeaderMode" :regFields="regFields" />
-    </div>
+    <AuthForm v-if="mode=='auth'" @changeHeaderMode="changeHeaderMode" :loginFields="loginFields" />
+    <RegForm v-else-if="mode=='reg'" @changeHeaderMode="changeHeaderMode" :regFields="regFields" />
 </template>
 
 <script>
@@ -36,35 +34,3 @@ export default {
     }
 }
 </script>
-
-<style>
-form {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-}
-.formBody {
-    -webkit-user-select: none;
-    user-select: none;
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 40px;
-    gap: 21px;
-    background: white;
-    box-shadow: -4px -4px 10px rgba(0, 0, 0, 0.10);
-    border-radius: 20px;
-    align-items: center;
-    margin: 0 auto;
-    margin-bottom: 100px;
-}
-.formBackground{
-    width: 100%;
-    margin-top: 152px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    display: inline-flex;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-    <button class="submit_button" type="submit" :form="id" @click.prevent="onClick">
+    <button class="submit_button" type="submit" :form="id" @click="onClick">
         <slot />
     </button>
 </template>

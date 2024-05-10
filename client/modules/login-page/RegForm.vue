@@ -1,16 +1,16 @@
 <template>
-    <div class="formBody">
+    <Form>
         <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
         <form method="post" id="id" @submit.prevent="onSubmitRegForm">
-            <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name"/>
-        </form>
-        <div class="buttonArea">
+            <FieldsArea>
+                <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name"/>
+            </FieldsArea>
             <UserAgreement />
             <Captcha />
             <hr size="1" style="border-width: 1px"/>
             <SubmitButton :form="id" @onClick="checkCaptcha"> Зарегистрироваться </SubmitButton>
-        </div>
-    </div>
+        </form>
+    </Form>
 </template>
 
 
