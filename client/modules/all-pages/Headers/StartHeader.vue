@@ -1,14 +1,15 @@
 <template>
-    <header>
+    <HeaderContainer ref="Header">
         <Logo />
         <StartPageNav @scrollToSection="blockHeader" />
         <ButtonArea>
             <LogButton />
         </ButtonArea>
-    </header>
+    </HeaderContainer>
 </template>
 
 <script>
+import HeaderContainer from './HeaderContainer.vue'
 import StartPageNav from "./components/StartPageNav.vue"
 import ButtonArea from "./components/ButtonArea.vue"
 import LogButton from "./components/LogButton.vue"
@@ -16,12 +17,12 @@ import LogButton from "./components/LogButton.vue"
 export default {
     data(){
         return {
-            topScrolled: 0,
-            blocked: true,
+            blockedHeader: false,
         }
     },
 
     components: {
+        HeaderContainer,
         StartPageNav,
         ButtonArea,
         LogButton,
@@ -29,28 +30,9 @@ export default {
 
     methods: {
         blockHeader() {
-            console.log('blocked!')
-            this.blocked = true
-        },
-        scrollHeader(){
-            if (!this.blocked) {
-                if (this.topScrolled < document.documentElement.scrollTop && !this.blocked)
-                    document.querySelector('header').classList = ['down']
-                else if (this.topScrolled > document.documentElement.scrollTop && !this.blocked)
-                    document.querySelector('header').classList = ['up']
-            }
-            if (this.blocked)
-                this.blocked = false
-            this.topScrolled = document.documentElement.scrollTop
+            this.$refs['Header'].blocked = true
         },
     },
-
-    mounted() {
-        window.addEventListener('scroll', this.scrollHeader)
-    },
-    destroyed() {
-        window.removeEventListener('scroll', this.scrollHeader)
-    }
 }
 </script>
 

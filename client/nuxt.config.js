@@ -55,6 +55,10 @@ export default {
         {
             path: '~UI/',
             prefix: false,
+        },
+        {
+            path: '~UI/Form',
+            prefix: false,
         }
     ] 
   },

@@ -29,7 +29,7 @@
 }
 .formBackground{
     width: 100%;
-    margin-top: 80px;
+    margin-top: 150px;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
