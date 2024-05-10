@@ -1,6 +1,6 @@
 <template>
     <div class="formBody">
-        <FormHeader mode="reg" @changeMode="changeHeaderMode" />
+        <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
         <form method="post" id="id" @submit.prevent="onSubmitRegForm">
             <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name"/>
         </form>
@@ -38,13 +38,22 @@ export default {
         },
         async checkCaptcha() {
             try {
-                const token = await this.$recaptcha.getResponce()
+                const token = await this.$recaptcha.getResponse()
                 console.log('ReCaptcha token:', token)
                 await this.$recaptcha.reset()
             }
             catch (error) {
                 console.log('Login error', error)
             }
+        }
+    },
+
+    async mounted() {
+        try {
+            await this.$recaptcha.init()
+        }
+        catch(e) {
+            console.log(e)
         }
     }
 }
