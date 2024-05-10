@@ -8,7 +8,7 @@
             <UserAgreement />
             <Captcha />
             <hr size="1" style="border-width: 1px"/>
-            <SubmitButton :form="id" @onClick="checkCaptcha"> Зарегистрироваться </SubmitButton>
+            <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
         </form>
     </Form>
 </template>
@@ -36,7 +36,7 @@ export default {
         changeHeaderMode(modeToChange) {
             this.$emit('changeHeaderMode', modeToChange)
         },
-        async checkCaptcha() {
+        async onSubmitRegForm() {
             try {
                 const token = await this.$recaptcha.getResponse()
                 console.log('ReCaptcha token:', token)

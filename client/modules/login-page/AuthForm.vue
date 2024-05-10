@@ -1,7 +1,7 @@
 <template>
     <Form>
         <FormHeader mode="auth" @changeHeaderMode="changeHeaderMode" />
-        <form method="post" id="id">
+        <form method="post" id="id" @submit.prevent="onSubmitAuthForm">
             <FieldsArea>
                 <FormField v-for="field in loginFields" :fieldInfo="field" :key="field.name"/>
             </FieldsArea>
@@ -34,6 +34,9 @@ export default {
     methods: {
         changeHeaderMode(modeToChange) {
             this.$emit('changeHeaderMode', modeToChange)
+        },
+        onSubmitAuthForm() {
+            
         }
     }
 }
