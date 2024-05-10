@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import HeaderContainer from './HeaderContainer.vue'
+import HeaderContainer from '.components/HeaderContainer.vue'
 import StartPageNav from "./components/StartPageNav.vue"
 import ButtonArea from "./components/ButtonArea.vue"
 import LogButton from "./components/LogButton.vue"

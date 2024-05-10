@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HeaderContainer from './HeaderContainer.vue'
+import HeaderContainer from '.components/HeaderContainer.vue'
 
 export default {
     components: {
