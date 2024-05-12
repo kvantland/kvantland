@@ -6,7 +6,7 @@ import json
 import footer
 
 
-@route('/policy_pars')
+@route('/api/policy_pars')
 def get_policy_pars():
 	policy_pars = [
 		{   'header': "1. Общие положения",

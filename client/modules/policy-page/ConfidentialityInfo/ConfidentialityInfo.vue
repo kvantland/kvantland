@@ -21,7 +21,7 @@ export default {
     },
 
     async fetch() {
-        const policyParsData = await this.$axios.$get('/policy_pars')
+        const policyParsData = await this.$axios.$get('/api/policy_pars')
         this.policyPars = policyParsData
     },
 }
