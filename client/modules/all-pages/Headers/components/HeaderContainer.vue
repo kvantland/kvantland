@@ -29,7 +29,6 @@ export default {
     },
 
     mounted() {
-        console.log(this.blockedHeader)
         window.addEventListener('scroll', this.scrollHeader)
     },
     destroyed() {

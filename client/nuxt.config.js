@@ -71,7 +71,7 @@ export default {
 
   auth: {
     redirect: {
-        login: '/login',
+        login: '/',
         logout: '/',
         home: '/',
     },
@@ -87,9 +87,9 @@ export default {
           autoFetch: false,
         },
         endpoints: {
-          login: { url: '/check_login', method: 'post' },
+          login: { url: '/api/check_login', method: 'post' },
           logout: false,
-          user: { url: '/acc', method: 'get' }
+          user: false,
         }
       }
     }

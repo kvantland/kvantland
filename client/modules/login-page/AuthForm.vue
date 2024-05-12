@@ -38,6 +38,7 @@ export default {
             this.$emit('changeHeaderMode', modeToChange)
         },
         async onSubmitAuthForm() {
+            console.log('auth!')
             await this.$auth.loginWith('local', {data:this.fields})
             .then((res) => {
                 this.$auth.setUserToken(res.data.tokens.access_token, res.data.tokens.refresh_token)
