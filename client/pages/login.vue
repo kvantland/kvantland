@@ -21,8 +21,8 @@ export default {
     },
 
     async asyncData({$axios}) {
-        const loginFieldsData = await $axios.$get('/login_fields')
-        const regFieldsData = await $axios.$get('/registration_fields')
+        const loginFieldsData = await $axios.$get('/api/login_fields')
+        const regFieldsData = await $axios.$get('/api/registration_fields')
         return { loginFields: loginFieldsData, regFields: regFieldsData }
     },
 

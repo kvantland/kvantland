@@ -1,9 +1,10 @@
 <template>
     <Form>
         <FormHeader mode="auth" @changeHeaderMode="changeHeaderMode" />
-        <form method="post" id="id" @submit.prevent="onSubmitAuthForm">
+        <form method="post" :id="id" @submit.prevent="onSubmitAuthForm">
             <FieldsArea>
-                <FormField v-for="field in loginFields" :fieldInfo="field" :key="field.name"/>
+                <FormField v-for="field in loginFields" :fieldInfo="field" 
+                :key="field.name" v-model="fields[field.name]" />
             </FieldsArea>
             <SubmitButton :form="id"> Войти </SubmitButton>
         </form>
@@ -24,6 +25,7 @@ export default {
     data() {
         return {
             id: 'login',
+            fields: {},
         }
     },
 
@@ -35,9 +37,13 @@ export default {
         changeHeaderMode(modeToChange) {
             this.$emit('changeHeaderMode', modeToChange)
         },
-        onSubmitAuthForm() {
-
-        }
+        async onSubmitAuthForm() {
+            await this.$auth.loginWith('local', {data:this.fields})
+            .then((res) => {
+                this.$auth.setUserToken(res.data.tokens.access_token, res.data.tokens.refresh_token)
+                this.$auth.setUser(res.data.user)
+            })
+        },
     }
 }
 </script>

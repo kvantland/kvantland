@@ -8,7 +8,7 @@ import json
 from config import config
 
 
-@route('/tournament_history')
+@route('/api/tournament_history')
 def get_tournament_history():
 	tournament_history = [
 		{'event_name': 'Старт Турнира 1', 'event_date': '05.12.2023'},
@@ -23,7 +23,7 @@ def get_tournament_history():
 	return json.dumps(tournament_history[first_event:])
 
 
-@route('/info_cards')
+@route('/api/info_cards')
 def get_common_info_cards():
 	info_cards = [
 		{   'image': "screen.svg",
@@ -61,7 +61,7 @@ def get_common_info_cards():
 	return json.dumps(info_cards)
 
 
-@route('/problem_examples')
+@route('/api/problem_examples')
 def get_problem_examples():
 	problem_examples = [
 		{   
@@ -107,7 +107,7 @@ def get_problem_examples():
 
 
 # type "personal" used for personal cards, "list" - for cards with listed members
-@route('/team_cards')
+@route('/api/team_cards')
 def get_team_cards():
 	team_cards = [
 		{
@@ -191,7 +191,7 @@ def get_team_cards():
 	return json.dumps(team_cards)
 
 
-@route('/contacts')
+@route('/api/contacts')
 def get_contacts():
 	contacts = [
 		{

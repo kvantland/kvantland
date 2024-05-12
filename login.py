@@ -5,6 +5,7 @@ from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
 import urllib.parse
 import json
+import hmac
 
 from config import config
 import user
@@ -17,7 +18,7 @@ auth_url = config['vk']['auth_url']
 
 params = {'client_id': 	client_id, 'redirect_uri': redirect_uri, 'response_type': 'code'}
 
-@route('/login_fields')
+@route('/api/login_fields')
 def get_login_fields():
 	fields = [
 		{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
@@ -25,7 +26,7 @@ def get_login_fields():
     ]
 	return json.dumps(fields)
 
-@route('/registration_fields')
+@route('/api/registration_fields')
 def get_registration_fields():
 	fields = [
 		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
@@ -38,6 +39,35 @@ def get_registration_fields():
 			{'type': "select", 'options': [str(i) for i in range(1, 12)] + ['Другое'], 'name': "clas", 'placeholder': "Класс"},
 		]
 	return json.dumps(fields)
+
+@route('/check_login', method="POST")
+def check_login_request(db):
+	user_data = json.loads(request.body.read())['data']
+	resp = {
+		'user': {
+			'name': '',
+			'email': '',
+        },
+		'tokens': {
+			'access_token',
+			'refresh_token',
+        }
+    }
+	try:
+		login = user_data.login
+		password = user_data.password
+		db.execute('select student, password, name, email from Kvantland.Student where login = %s', (login, ))
+		(user, password_hash, name, email), = db.fetchall()
+		if pwhash.verify(password, password_hash):
+			access_key = config['keys']['access_key']
+			refresh_key = config['keys']['refresh_key']
+			resp['user']['name'] = name
+			resp['user']['email'] = email
+			resp['user']['access_token'] = hmac.new(access_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest()
+			resp['user']['refresh_token'] = hmac.new(refresh_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest()
+		return resp 
+	except:
+		return resp # Неполная информация или отсутствует пользователь
 
 @route('/login')
 def login_form(db):

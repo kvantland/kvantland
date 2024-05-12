@@ -22,7 +22,7 @@ export default {
     },
 
     async fetch() {
-        const tournamentHistoryData = await this.$axios.$get('/tournament_history')
+        const tournamentHistoryData = await this.$axios.$get('/api/tournament_history')
         this.tournamentHistory = tournamentHistoryData
     },
 };

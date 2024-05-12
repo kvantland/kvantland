@@ -2,8 +2,9 @@
     <div class="field">
         <div class="content">
             <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
-            <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" required />
-            <SelectField v-else-if="fieldInfo.type=='select'" :fieldInfo="fieldInfo" />
+            <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
+            @input="$emit('input', $event.target.value)" required />
+            <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" :fieldInfo="fieldInfo" />
         </div>
     </div>
 </template>
@@ -15,7 +16,12 @@ export default {
     components: {
         SelectField,
     },
-    props: ['fieldInfo']
+    props: ['fieldInfo'],
+    methods: {
+        selectOption(option){
+            this.$emit('input', option)
+        }
+    }
 }
 </script>
 

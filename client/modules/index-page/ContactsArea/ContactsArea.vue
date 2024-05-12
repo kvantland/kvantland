@@ -41,7 +41,7 @@ export default {
     },
 
     async fetch() {
-        const contactsData = await this.$axios.$get('/contacts')
+        const contactsData = await this.$axios.$get('/api/contacts')
         this.contacts = contactsData
     }
 }

@@ -1,11 +1,11 @@
 <template>
     <Form>
         <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
-        <form method="post" id="id" @submit.prevent="onSubmitRegForm">
+        <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
             <FieldsArea>
-                <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name"/>
+                <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" v-model="fields[field.name]" />
             </FieldsArea>
-            <UserAgreement />
+            <UserAgreement v-model="fields['approval']" />
             <Captcha />
             <hr size="1" style="border-width: 1px"/>
             <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
@@ -22,6 +22,7 @@ export default {
     data() {
         return {
             id: 'reg',
+            fields: {},
         }
     },
 
@@ -37,15 +38,18 @@ export default {
             this.$emit('changeHeaderMode', modeToChange)
         },
         async onSubmitRegForm() {
+            let token
             try {
-                const token = await this.$recaptcha.getResponse()
+                token = await this.$recaptcha.getResponse()
                 console.log('ReCaptcha token:', token)
                 await this.$recaptcha.reset()
             }
             catch (error) {
                 console.log('Login error', error)
             }
-        }
+            this.field.recaptcha_token = token
+            this.$axios.post('/api/checkout_reg', this.fields)
+        },
     },
 
     async mounted() {
@@ -55,6 +59,6 @@ export default {
         catch(e) {
             console.log(e)
         }
-    }
+    },
 }
 </script>

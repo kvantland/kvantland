@@ -1,11 +1,32 @@
 <template>
 	<div class="check_cont">
-        <input class="checkbox" type="checkbox" name="approval" id="approval" required />
+        <input class="checkbox" type="checkbox" name="approval"
+            id="approval" v-model="check"required />
         <div class="label"> Я принимаю условия <NuxtLink to="/policy"> <span class="underline">Политики конфиденциальности</span> </NuxtLink> и даю <span class="underline approval"> согласие
             на обработку своих персональных данных</span>
         </div>
 	</div>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            value: false,
+        }
+    },
+    computed: {
+        check: {
+            get() {
+                return this.value
+            },
+            set(val) {
+                this.$emit('input', val)
+            }
+        }
+    }
+}
+</script>
 
 <style>
 .check_cont {

@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="select_line" @click="showSelect">
-            <input name="fieldInfo.name" readonly required :value="selectedOption" /> 
+            <input name="fieldInfo.name" :value="selectedOption"
+            readonly required/> 
             <img class="arrow" src="/icons/down_arrow.svg" />
         </div>
         <SelectList ref="SelectList" v-if="showSelectList" :options="fieldInfo.options" 
@@ -36,7 +37,7 @@ export default {
         changeHideAbility() {
             if (this.canHideSelectList < 2)
                 this.canHideSelectList += 1
-        }
+        },
     },
 
     watch: {
@@ -49,7 +50,10 @@ export default {
         canHideSelectList(newValue) {
             if (newValue == 2) 
                 window.addEventListener('click', this.hideSelect(this.selectedOption))
-        }
+        },
+        selectedOption(newValue) {
+            this.$emit('selectOption', newValue)
+        },
     }
 }
 </script>
