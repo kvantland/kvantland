@@ -83,13 +83,13 @@ export default {
           type: 'Bearer'
         },
         user: {
-          property: false,
-          autoFetch: false,
+          property: 'user',
+          autoFetch: true,
         },
         endpoints: {
           login: { url: '/api/check_login', method: 'post' },
-          logout: false,
-          user: false,
+          logout: { url: '/api/logout', method: 'post'},
+          user: { url: '/api/user', method: 'get'},
         }
       }
     }

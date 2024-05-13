@@ -3,7 +3,10 @@
         <Logo />
         <StartPageNav @scrollToSection="blockHeader" />
         <ButtonArea>
-            <LogoutButton v-if="$auth.user" />
+            <template v-if="$auth.loggedIn">
+                <AccButton />
+                <LogoutButton />
+            </template>
             <LogButton v-else />
         </ButtonArea>
     </HeaderContainer>
@@ -13,8 +16,9 @@
 import HeaderContainer from './components/HeaderContainer.vue'
 import StartPageNav from "./components/StartPageNav.vue"
 import ButtonArea from "./components/ButtonArea.vue"
-import LogButton from "./components/LogButton.vue"
+import LogButton from "./components/LoginButton.vue"
 import LogoutButton  from './components/LogoutButton.vue'
+import AccButton from './components/AccButton.vue'
 
 export default {
     data(){
@@ -29,6 +33,7 @@ export default {
         ButtonArea,
         LogButton,
         LogoutButton,
+        AccButton,
     },
 
     methods: {

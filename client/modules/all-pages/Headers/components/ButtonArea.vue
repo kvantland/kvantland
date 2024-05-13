@@ -5,7 +5,7 @@
 </template>
 
 <style>
-    .user_nav .button_area {
+    .button_area {
 	justify-content: flex-start; 
 	align-items: center; 
 	gap: 20px; 

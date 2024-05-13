@@ -18,6 +18,19 @@ import math
 import urllib.parse
 import json
 
+@route('/api/tournament_results')
+def get_tournament_results(db):
+	tournament_results = []
+	tournament_amount = get_tournament_amount(db, config['tournament']['version'], config['tournament']['season'])
+	for tournament in range(0, tournament_amount):
+		tournament_results.append(
+			{
+				'title': f'{to_roman_number(tournament_amount - tournament)} Турнир',
+				'score': get_score_text(db, config["tournament"]["version"] - tournament),
+            }
+        )
+	return json.dumps(tournament_results)
+
 _key = config['keys']['mail_confirm']
 
 all_info = [['name', 'text', 'Имя'],

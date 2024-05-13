@@ -47,10 +47,6 @@ def check_login_request(db):
 	user_data = json.loads(request.body.read())
 	print(user_data, file=sys.stderr)
 	resp = {
-		'user': {
-			'name': '',
-			'email': '',
-        },
 		'tokens': {
 			'access_token': '',
 			'refresh_token': '',
@@ -59,20 +55,49 @@ def check_login_request(db):
 	try:
 		login = user_data['login']
 		password = user_data['password']
-		db.execute('select student, password, name, email from Kvantland.Student where login = %s', (login, ))
-		(user, password_hash, name, email), = db.fetchall()
+		db.execute('select student, password from Kvantland.Student where login = %s', (login, ))
+		(user, password_hash), = db.fetchall()
 		if pwhash.verify(password, password_hash):
 			access_key = config['keys']['access_key']
 			refresh_key = config['keys']['refresh_key']
-			resp['user']['name'] = name
-			resp['user']['email'] = email
-			resp['tokens']['access_token'] = hmac.new(access_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest()
-			resp['tokens']['refresh_token'] = hmac.new(refresh_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest()
+			resp['tokens']['access_token'] = hmac.new(access_key.encode('utf-8'), login.encode('utf-8'), 'sha256').hexdigest()
+			resp['tokens']['refresh_token'] = hmac.new(refresh_key.encode('utf-8'), login.encode('utf-8'), 'sha256').hexdigest()
+			do_login(user, login)
 		print(resp, file=sys.stderr)
 		return json.dumps(resp) 
 	except:
 		print(resp, file=sys.stderr)
 		return json.dumps(resp) # Неполная информация или отсутствует пользователь
+	
+@route('/api/user')
+def get_user_info(db):
+	resp = {
+		'user': {
+			'name': '',
+			'email': '',
+			'surname': '',
+			'school': '',
+			'clas': '',
+			'town': '',
+        }
+    }
+	print(current_user(db), file=sys.stderr)
+	if current_user(db):
+		print('current user:', current_user(db), file=sys.stderr)
+		db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where student = %s', (current_user(db), ))
+		(name, email, surname, school, clas, town, score), = db.fetchall()
+		resp['user']['name'] = name
+		resp['user']['email'] = email
+		resp['user']['surname'] = surname
+		resp['user']['school'] = school
+		resp['user']['clas'] = clas
+		resp['user']['town'] = town
+		resp['user']['score'] = score
+	return json.dumps(resp) 
+
+@route('/api/logout', method="POST")
+def logout():
+	do_logout()
 
 @route('/login')
 def login_form(db):
