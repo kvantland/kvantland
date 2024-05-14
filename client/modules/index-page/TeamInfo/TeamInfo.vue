@@ -22,7 +22,7 @@ export default {
     },
 
     async fetch() {
-        const teamInfoCards = await this.$axios.$get('/team_cards')
+        const teamInfoCards = await this.$axios.$get('/api/team_cards')
         this.teamInfoCards = teamInfoCards
     },
 }

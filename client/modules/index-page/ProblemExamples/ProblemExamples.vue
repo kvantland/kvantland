@@ -37,7 +37,7 @@ export default {
     },
 
     async fetch() {
-        const problemExamplesData = await this.$axios.$get('/problem_examples')
+        const problemExamplesData = await this.$axios.$get('/api/problem_examples')
         this.problemExamples = problemExamplesData
     },
 

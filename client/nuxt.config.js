@@ -14,6 +14,13 @@ export default {
     link: [{ rel: 'icon', type: 'image/svg', href: '/favicon.svg' }],
   },
 
+  publicRuntimeConfig: {
+    recaptcha: {
+        siteKey: process.env.RECAPTCHA_SITE_KEY,
+        version: 2,
+    }
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["@assets/css/master.css"],
 
@@ -21,7 +28,19 @@ export default {
   plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: false,
+  components: {
+    dirs: [
+        '~components',
+        {
+            path: '~UI/',
+            prefix: false,
+        },
+        {
+            path: '~UI/Form',
+            prefix: false,
+        }
+    ] 
+  },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -33,12 +52,47 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '@nuxtjs/recaptcha', 
+    '@nuxtjs/proxy',
   ],
 
+  proxy: {
+    '/api/': {
+        target: process.env.API,
+    }
+  },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
+    proxy: true,
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://127.0.0.1:8080/',
+    baseURL: process.env.API,
+  },
+
+  auth: {
+    redirect: {
+        login: '/',
+        logout: '/',
+        home: '/',
+    },
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          global: true,
+          type: 'Bearer'
+        },
+        user: {
+          property: false,
+          autoFetch: false,
+        },
+        endpoints: {
+          login: { url: '/api/check_login', method: 'post' },
+          logout: false,
+          user: false,
+        }
+      }
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

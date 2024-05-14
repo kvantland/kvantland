@@ -1,79 +1,44 @@
 <template>
-    <header>
+    <HeaderContainer ref="Header">
         <Logo />
         <StartPageNav @scrollToSection="blockHeader" />
         <ButtonArea>
-            <LogButton />
+            <LogoutButton v-if="$auth.user" />
+            <LogButton v-else />
         </ButtonArea>
-    </header>
+    </HeaderContainer>
 </template>
 
 <script>
+import HeaderContainer from './components/HeaderContainer.vue'
 import StartPageNav from "./components/StartPageNav.vue"
 import ButtonArea from "./components/ButtonArea.vue"
 import LogButton from "./components/LogButton.vue"
-import Logo from "../../../UI/Logo.vue"
+import LogoutButton  from './components/LogoutButton.vue'
 
 export default {
     data(){
         return {
-            topScrolled: 0,
-            blocked: true,
+            blockedHeader: false,
         }
     },
 
     components: {
-        Logo,
+        HeaderContainer,
         StartPageNav,
         ButtonArea,
         LogButton,
+        LogoutButton,
     },
 
     methods: {
         blockHeader() {
-            console.log('blocked!')
-            this.blocked = true
+            this.$refs['Header'].blocked = true
         },
-        scrollHeader(){
-            if (!this.blocked) {
-                if (this.topScrolled < document.documentElement.scrollTop && !this.blocked)
-                    document.querySelector('header').classList = ['down']
-                else if (this.topScrolled > document.documentElement.scrollTop && !this.blocked)
-                    document.querySelector('header').classList = ['up']
-            }
-            if (this.blocked)
-                this.blocked = false
-            this.topScrolled = document.documentElement.scrollTop
-        },
-    },
-
-    beforeMount() {
-        window.addEventListener('scroll', this.scrollHeader)
     },
 }
 </script>
 
 <style>
-header {
-	-webkit-user-select: none;
-	user-select: none;
-	background-color: white;
-	width: 100%;
-	box-sizing: border-box;
-	position: fixed;
-	padding: 30px max(40px, min(5vw, 80px));
-	justify-content: space-between; 
-	align-items: center; 
-	display: inline-flex;
-	z-index: 2;
-	box-shadow: 0 1px 5px #C2C2C2;
-    transition: transform 0.3s;
-}
-header.up {
-	transform: none;
-}
-
-header.down {
-	transform: translate(0, -100%);
-}
+@import "../../../assets/css/header.css"
 </style>

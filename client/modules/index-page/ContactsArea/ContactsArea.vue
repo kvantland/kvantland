@@ -30,13 +30,18 @@ export default {
 
     computed: {
         supportEmail() {
-            let email = this.contacts.filter((contact) => contact.id == 'email')[0].source_link
-            return { link: email, title: email.split(':')[1]}
+            try {
+                let email = this.contacts.filter((contact) => contact.id == 'email')[0].source_link
+                return { link: email, title: email.split(':')[1]}
+            }
+            catch {
+                return { link: '', title: '' }
+            }
         },
     },
 
     async fetch() {
-        const contactsData = await this.$axios.$get('/contacts')
+        const contactsData = await this.$axios.$get('/api/contacts')
         this.contacts = contactsData
     }
 }
