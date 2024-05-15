@@ -4,7 +4,9 @@
         <div class="text_data">
             <div class="name_with_edit">
                 <p class="name"> {{ userInfo.name }} {{ userInfo.surname }} </p>
-                <img class="edit" @click="changeToEditMode" src="/icons/edit.svg" />
+                <NuxtLink to="/acc/editInfo">
+                    <img class="edit" src="/icons/edit.svg" />
+                </NuxtLink>
             </div>
 
             <p class="city"> {{ userInfo.town }} </p>
@@ -16,12 +18,6 @@
 <script>
 export default {
     props: ['userInfo'],
-
-    methods: {
-        changeToEditMode() {
-            this.$emit('changeToEditMode')
-        }
-    }
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink to="/acc">
+    <NuxtLink to="/acc/previewInfo">
         <div class="acc_button_container">
         <img class="acc_button_image" src="/icons/acc.svg" />
         </div>

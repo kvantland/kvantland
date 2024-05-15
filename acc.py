@@ -5,7 +5,7 @@ from bottle import route, request, response, redirect
 import nav
 import user
 import sys
-from login import current_user, do_login
+from login import current_user, do_login, check_token
 import approv
 import hmac
 import email.message
@@ -31,6 +31,86 @@ def get_tournament_results(db):
         )
 	return json.dumps(tournament_results)
 
+@route('/api/acc_fields')
+def get_acc_fields():
+	fields = [
+		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
+			{'type': "input", 'inputType': "text", 'name': "surname", 'placeholder': "Фамилия"},
+			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
+			{'type': "input", 'inputType': "text", 'name': "town", 'placeholder': "Город"},
+			{'type': "input", 'inputType': "email", 'name': "email", 'placeholder': "Почта"},
+			{'type': "select", 'options': [str(i) for i in range(1, 12)] + ['Другое'], 'name': "clas", 'placeholder': "Класс"},
+		]
+	return json.dumps(fields)
+
+def is_new_email(db, new_email, login):
+	try:
+		db.execute("select email from Kvantland.Student where login = %s", (login, ))
+		(prev_email, ), = db.fetchall()
+		print(prev_email, new_email, file=sys.stderr)
+		if prev_email != new_email:
+			return True
+	except:
+		return False
+	return False
+
+@route('/api/update_user_info', method="POST")
+def update_user_info(db):
+	resp = {
+		'status': "updated",
+		'email_changed': False,
+    }
+	update_info = json.loads(request.body.read())
+	check_token_status = check_token(request)
+	if check_token_status['error']:
+		response.status = 400
+		return json.dumps({'error': check_token_status['error']})
+	else:
+		user = check_token_status['login']
+	try:
+		db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, clas=%s, town=%s where login=%s', 
+			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
+	            user))
+	except:
+		resp['status'] = "rejected"
+		
+	if 'email' in update_info.keys():
+		if is_new_email(db, update_info['email'], user):
+			resp['email_changed'] = True
+	print(resp, file=sys.stderr)
+	return json.dumps(resp)
+
+
+@route('/api/check_email_amount', method="POST")
+def check_user_email_amount(db):
+	check_token_status = check_token(request)
+	if check_token_status['error']:
+		response.status = 400
+		return json.dumps({'error': check_token_status['error']})
+	else:
+		user = check_token_status['login']
+		
+	email = json.loads(request.body.read())['email']
+	print(email, file=sys.stderr)
+	
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (email, ))
+	first_ = db.fetchall()
+	if len(first_) > 0:
+		(first_email, ), = first_
+	else:
+		first_email = time.time()
+		db.execute('insert into Kvantland.Mail (mail, first_mail) values(%s, %s)', (email, first_email))
+	print(first_email, file=sys.stderr)
+	if time.time() - first_email > config['mail_check']['allowed_period']:
+		return json.dumps({'status': True})
+	else:
+		db.execute('select remainig_mails from Kvantland.Mail where mail = %s', (email, ))
+		(remainig_mails, ), = db.fetchall()
+		if remainig_mails > 0:
+			return json.dumps({'status': True})
+	return json.dumps({'status': False, 'error': "Not enough time passed"})
+
+		
 _key = config['keys']['mail_confirm']
 
 all_info = [['name', 'text', 'Имя'],

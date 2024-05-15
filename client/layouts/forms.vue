@@ -1,5 +1,5 @@
 <template>
-    <div style="background-color: #D2E8E9;">
+    <div class="background" style="background-color: #D2E8E9;">
         <EmptyHeader />
         <Nuxt />
         <InfoFooter/>

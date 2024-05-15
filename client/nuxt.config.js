@@ -88,7 +88,7 @@ export default {
         },
         endpoints: {
           login: { url: '/api/check_login', method: 'post' },
-          logout: { url: '/api/logout', method: 'post'},
+          logout: false,
           user: { url: '/api/user', method: 'get'},
         }
       }

@@ -3,20 +3,28 @@
         <div class="content">
             <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
             <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
-            @input="$emit('input', $event.target.value)" required />
-            <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" :fieldInfo="fieldInfo" />
+            @input="$emit('input', $event.target.value)" :value="value" required :readonly="readonly"/>
+            <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
+                :fieldInfo="fieldInfo" :selectedOption="value" />
         </div>
     </div>
 </template>
 
 <script>
+import { readonly } from 'vue';
 import SelectField from './components/SelectField.vue'
 
 export default {
     components: {
         SelectField,
     },
-    props: ['fieldInfo'],
+
+    props: {
+        fieldInfo:{},
+        value:{},
+        readonly:{default: false}
+    },
+
     methods: {
         selectOption(option){
             this.$emit('input', option)
@@ -32,7 +40,7 @@ export default {
     padding: 10px 20px;
     background: rgba(26.35, 88.38, 102, 0.10);
     border-radius: 6px;
-    width: 280px;
+    min-width: 280px;
     gap: 2px;
 }
 .field .placeholder {

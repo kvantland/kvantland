@@ -18,12 +18,16 @@ export default {
     data() {
         return {
             showSelectList: false,
-            selectedOption: '',
             canHideSelectList: 0, //на 2-й клик можно скрывать!
         }
     },
 
-    props: ['fieldInfo'],
+    props: {
+        fieldInfo:{},
+        selectedOption: {
+            default: '',
+        }
+    },
 
     methods: {
         showSelect() {

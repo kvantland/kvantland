@@ -16,7 +16,6 @@
 
 <script>
 import FormHeader from './components/FormHeader'
-import UserAgreement from './components/UserAgreement'
 
 export default {
     data() {
@@ -30,7 +29,6 @@ export default {
 
     components: {
         FormHeader,
-        UserAgreement,
     },
 
     methods: {

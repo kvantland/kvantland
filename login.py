@@ -6,6 +6,7 @@ from passlib.hash import pbkdf2_sha256 as pwhash
 import urllib.parse
 import json
 import hmac
+import jwt
 import sys
 
 from config import config
@@ -35,7 +36,7 @@ def get_registration_fields():
 			{'type': "input", 'inputType': "email", 'name': "email", 'placeholder': "E-mail"},
 			{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
 			{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"},
-			{'type': "input", 'inputType': "text", 'name': "city", 'placeholder': "Город"},
+			{'type': "input", 'inputType': "text", 'name': "town", 'placeholder': "Город"},
 			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
 			{'type': "select", 'options': [str(i) for i in range(1, 12)] + ['Другое'], 'name': "clas", 'placeholder': "Класс"},
 		]
@@ -55,22 +56,43 @@ def check_login_request(db):
 	try:
 		login = user_data['login']
 		password = user_data['password']
-		db.execute('select student, password from Kvantland.Student where login = %s', (login, ))
-		(user, password_hash), = db.fetchall()
+		db.execute('select password from Kvantland.Student where login = %s', (login, ))
+		(password_hash, ), = db.fetchall()
+		print(password_hash, file=sys.stderr)
 		if pwhash.verify(password, password_hash):
 			access_key = config['keys']['access_key']
 			refresh_key = config['keys']['refresh_key']
-			resp['tokens']['access_token'] = hmac.new(access_key.encode('utf-8'), login.encode('utf-8'), 'sha256').hexdigest()
-			resp['tokens']['refresh_token'] = hmac.new(refresh_key.encode('utf-8'), login.encode('utf-8'), 'sha256').hexdigest()
-			do_login(user, login)
+			resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
+			resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
 		print(resp, file=sys.stderr)
 		return json.dumps(resp) 
 	except:
 		print(resp, file=sys.stderr)
 		return json.dumps(resp) # Неполная информация или отсутствует пользователь
 	
+def check_token(req):
+	auth_header = request.get_header('Authorization')
+	if auth_header is None:
+		return {'error': "Incorrect request format", 'login': ""}
+	if 'Bearer' not in auth_header:
+		return {'error': "No Bearer in header", 'login': ""}
+	token = auth_header.replace('Bearer ', '')
+	try:
+		payload = jwt.decode(jwt=token, key=config['keys']['access_key'], algorithms=['HS256'])
+	except:
+		return {'error': "Not correct token", 'login': ""}
+	user_login = payload['login']
+	return {'error': None, 'login': user_login}
+
 @route('/api/user')
-def get_user_info(db):
+def get_user_info(db):	
+	token_check_status = check_token(request)
+	if token_check_status['error']:
+		response.status = 400
+		return json.dumps({'error': token_check_status['error']})
+	else:
+		user = token_check_status['login']
+		
 	resp = {
 		'user': {
 			'name': '',
@@ -81,10 +103,13 @@ def get_user_info(db):
 			'town': '',
         }
     }
-	print(current_user(db), file=sys.stderr)
-	if current_user(db):
+	if user:
 		print('current user:', current_user(db), file=sys.stderr)
-		db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where student = %s', (current_user(db), ))
+		try:
+			db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where login = %s', (user, ))
+		except:
+			response.status = 400
+			return json.dumps({'error': "No such user!"})
 		(name, email, surname, school, clas, town, score), = db.fetchall()
 		resp['user']['name'] = name
 		resp['user']['email'] = email
@@ -94,10 +119,6 @@ def get_user_info(db):
 		resp['user']['town'] = town
 		resp['user']['score'] = score
 	return json.dumps(resp) 
-
-@route('/api/logout', method="POST")
-def logout():
-	do_logout()
 
 @route('/login')
 def login_form(db):

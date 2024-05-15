@@ -7,7 +7,7 @@
             <ProblemExamples @showDialog="displayDialog" />
             <TeamInfo />
             <ContactsArea />
-            <Dialog v-if="activeDialog" :dialogType="dialogType" 
+            <ProblemExampleDialog v-if="activeDialog" :dialogType="dialogType" 
                 :dialogData="dialogData" @closeDialog="hideDialog" 
                 @changeDialog="displayDialog" />
         </div>
@@ -21,7 +21,6 @@ import CommonInfo from '../modules/index-page/CommonInfo/CommonInfo.vue';
 import ContactsArea from '../modules/index-page/ContactsArea/ContactsArea.vue';
 import ProblemExamples from '../modules/index-page/ProblemExamples/ProblemExamples.vue';
 import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
-import Dialog from '../UI/Dialog.vue'
 import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
 
     export default {
@@ -37,7 +36,6 @@ import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
             ProblemExamples,
             TeamInfo,
             TournamentInfo,
-            Dialog,
             StartHeader,
         },
 
