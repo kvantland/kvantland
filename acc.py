@@ -14,6 +14,7 @@ import smtplib
 from config import config
 import time
 import math
+import jwt
 
 import urllib.parse
 import json
@@ -59,6 +60,7 @@ def update_user_info(db):
 	resp = {
 		'status': "updated",
 		'email_changed': False,
+		'errors': {},
     }
 	update_info = json.loads(request.body.read())
 	check_token_status = check_token(request)
@@ -67,6 +69,22 @@ def update_user_info(db):
 		return json.dumps({'error': check_token_status['error']})
 	else:
 		user = check_token_status['login']
+	check_user_info_status = check_format(update_info)
+	resp['errors'].update(check_user_info_status) # неверный формат полей за исключением почты
+	
+	db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие значения
+	(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
+	prev_info = {
+		'name': prev_name,
+		'surname': prev_surname,
+		'school': prev_school, 
+		'clas': prev_clas,
+		'town': prev_town,
+    }
+	
+	for field in update_info:
+		if field in resp['errors']:
+			update_info[field] = prev_info[field]
 	try:
 		db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, clas=%s, town=%s where login=%s', 
 			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
@@ -76,10 +94,88 @@ def update_user_info(db):
 		
 	if 'email' in update_info.keys():
 		if is_new_email(db, update_info['email'], user):
-			resp['email_changed'] = True
+			send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'])
+			if send_status['status']:
+				resp['email_changed'] = True
+			resp['errors']['email'] = send_status['error']
 	print(resp, file=sys.stderr)
 	return json.dumps(resp)
 
+def send_acc_confirm_message(name, login, email):
+	token = jwt.encode(payload={'login': login}, key=config['keys']['acc_confirm'], algorithm='HS256')
+	print(token, file=sys.stderr)
+	link = f"{config['recovery']['acc_confirm_uri']}?{token}"
+	localhost = config['recovery']['localhost']
+	host = config['recovery']['host']
+	port = config['recovery']['port']
+	sender_login = config['recovery']['login']
+	sender_password = config['recovery']['password']
+	sender = config['recovery']['sender']
+	
+	server = smtplib.SMTP_SSL(host, port,  local_hostname=localhost, timeout=120)
+	email_content =  f'''
+        <!DOCTYPE html>
+        <head>
+        <link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Подтверждение почты</title>
+        </head>
+        <body style="padding: 80px;
+            font-family: Montserrat, Arial !important;
+            word-wrap: break-word;
+            font-size: 20px;
+            font-weight: 500;">
+        <div style="font-family: Montserrat, Arial !important;">
+        <div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+        <div style="margin-top: 20px"> 
+            Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
+            Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
+        </div>
+        <div style="width: 640px;
+            margin: 80px auto; 
+            background: #1E8B93; 
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+            border-radius: 6px;">
+        <a href="{link}" style="text-decoration: none">
+        <div style="text-align: center;
+            padding: 10px 0;
+            color: white; 
+            font-weight: 600;
+            box-sizing: border-box;
+            font-family: Montserrat, Arial !important;">
+        Нажмите здесь для подтверждения
+        </div>
+        </a>
+        </div>
+        <div>
+        <div style="font-family: Montserrat, Arial !important;"> Если вам не нужно подтверждать адрес электронной почты, 
+        просто проигнорируйте данное сообщение.</div>
+        <div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+        </div>
+        </body>
+        </html>'''
+	
+	msg = EmailMessage()
+	msg['Subject'] = 'Подтверждение почты'
+	msg['From'] = sender
+	msg['To'] = email
+	msg.set_content(email_content, subtype='html')
+	print('content set', file=sys.stderr)
+	
+	server.login(str(sender_login), str(sender_password))
+	print('logged in server', file=sys.stderr)
+	
+	resp = {'status': False, 'error': ''}
+	try:
+		resp['status'] = True
+		server.sendmail(sender, [email], msg.as_string())
+	except:
+		resp['status'] = False
+		resp['error'] = 'Неверный адрес почты'
+	finally:
+		server.quit()
+		return resp
 
 @route('/api/check_email_amount', method="POST")
 def check_user_email_amount(db):
@@ -91,7 +187,6 @@ def check_user_email_amount(db):
 		user = check_token_status['login']
 		
 	email = json.loads(request.body.read())['email']
-	print(email, file=sys.stderr)
 	
 	db.execute('select first_mail from Kvantland.Mail where mail = %s', (email, ))
 	first_ = db.fetchall()
@@ -100,15 +195,26 @@ def check_user_email_amount(db):
 	else:
 		first_email = time.time()
 		db.execute('insert into Kvantland.Mail (mail, first_mail) values(%s, %s)', (email, first_email))
-	print(first_email, file=sys.stderr)
 	if time.time() - first_email > config['mail_check']['allowed_period']:
+		update_user_email_amount(db, email)
 		return json.dumps({'status': True})
 	else:
 		db.execute('select remainig_mails from Kvantland.Mail where mail = %s', (email, ))
 		(remainig_mails, ), = db.fetchall()
 		if remainig_mails > 0:
+			update_user_email_amount(db, email)
 			return json.dumps({'status': True})
 	return json.dumps({'status': False, 'error': "Not enough time passed"})
+
+
+def update_user_email_amount(db, email):
+	db.execute('select first_mail from Kvantland.Mail where mail = %s', (email, ))
+	(first_email, ), = db.fetchall()
+	if time.time() - first_email < config['mail_check']['allowed_period']:
+		db.execute('update Kvantland.Mail set remainig_mails = remainig_mails - 1 where mail = %s', (email, ))
+	else:
+		db.execute('update Kvantland.Mail set first_mail = %s, remainig_mails = %s where mail = %s', (time.time(), config['mail_check']['allowed_amount'], email))
+
 
 		
 _key = config['keys']['mail_confirm']
@@ -118,7 +224,7 @@ all_info = [['name', 'text', 'Имя'],
 			['school', 'text', 'Школа'],
 			['town', 'text', 'Город'],
 			['email', 'email', 'Почта'],
-			['clas', 'select', 'Класс', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
+			['clas', 'select', 'Класс', ['1', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
 
 alph_en = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 alph_ru = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя'
@@ -435,6 +541,8 @@ def check_format(user_info):
 	err_dict = {}
 
 	for field in user_info:
+		if field == 'score':
+			continue
 		try:
 			min_size = config['acc']['min_' + field + '_size']
 		except:
@@ -443,9 +551,8 @@ def check_format(user_info):
 			max_size = config['acc']['max_' + field + '_size']
 		except:
 			max_size = 500
-		name = placeholder_info[field]
 
-		if type_info[field] == "select":
+		if field in option_info.keys():
 			if not(user_info[field] in option_info[field]):
 				err_dict[field] = "Значение не из списка"
 
@@ -453,7 +560,6 @@ def check_format(user_info):
 			err_dict[field] = "Слишком мало символов в поле, <br /> должно быть минимум " + str(min_size)
 		if len(user_info[field]) > max_size:
 			err_dict[field] = "Слишком много символов"
-
 	return err_dict
 
 def update_info(user_info, err_dict):

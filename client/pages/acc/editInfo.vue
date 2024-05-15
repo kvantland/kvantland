@@ -35,9 +35,9 @@ export default {
     },
 
     async fetch() {
-        const fieldsTypeInfoData = await this.$axios.$get('/api/acc_fields')
+        let fieldsTypeInfoData = await this.$axios.$get('/api/acc_fields')
+        fieldsTypeInfoData.map((field) => {field.error=""})
         this.fieldsTypeInfo = fieldsTypeInfoData
-        console.log(this.fieldsTypeInfo)
     },
 
     computed: {
@@ -46,7 +46,6 @@ export default {
             for (let key in this.$auth.user) {
                 fieldsValueInfo[key] = this.$auth.user[key]
             }
-            console.log(fieldsValueInfo)
             return fieldsValueInfo
         }
     },
@@ -55,12 +54,16 @@ export default {
         async submitAccForm() {
             let requestBody = this.fieldsValueInfo
             let emailChanged = false
+            let errors = {}
             await this.$axios.post('/api/update_user_info', requestBody)
                 .then((res) => {
                     if (res.data.email_changed)
                         emailChanged = true
+                    errors = res.data.errors
                 })
             this.checkEmailMode = emailChanged
+            this.fieldsTypeInfo.map((field) => field.error = errors[field.name] ? errors[field.name] : '')
+            console.log(this.fieldsTypeInfo)
         }
     }
 

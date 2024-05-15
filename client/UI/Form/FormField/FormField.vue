@@ -1,12 +1,16 @@
 <template>
-    <div class="field">
-        <div class="content">
-            <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
-            <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
-            @input="$emit('input', $event.target.value)" :value="value" required :readonly="readonly"/>
-            <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
-                :fieldInfo="fieldInfo" :selectedOption="value" />
+    <div class="fieldWithError">
+        <div class="field">
+            <div class="content">
+                <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
+                <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
+                @input="$emit('input', $event.target.value)" :value="value" required :readonly="readonly"/>
+                <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
+                    :fieldInfo="fieldInfo" :selectedOption="value" />
+            </div>
+            <img v-if="fieldInfo.error" class="error_img" src="/icons/info.svg" />
         </div>
+        <p class="error" v-if="fieldInfo.error"> {{ fieldInfo.error }} </p>
     </div>
 </template>
 
@@ -22,18 +26,23 @@ export default {
     props: {
         fieldInfo:{},
         value:{},
-        readonly:{default: false}
+        readonly:{default: false},
     },
 
     methods: {
         selectOption(option){
             this.$emit('input', option)
         }
-    }
+    },
 }
 </script>
 
 <style>
+.fieldWithError {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+}
 .field {
     display: inline-flex;
     justify-content: space-between;
@@ -69,5 +78,17 @@ input:-webkit-autofill {
 }
 .field input:focus {
 	outline: none;
+}
+.error{
+    padding: 0 20px;
+	align-self: flex-start;
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.error_img img {
+	width: 16px;
+	height: 16px;
 }
 </style>

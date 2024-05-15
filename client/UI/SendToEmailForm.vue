@@ -38,7 +38,7 @@ export default {
                 'placeholder': "Почта",
             },
             readonly: true,
-            remainedTimeToSend: 2,
+            remainedTimeToSend: 60,
         }
     },
 
@@ -58,6 +58,7 @@ export default {
     },
 
     async mounted() {
+        console.log(this.remainedTimeToSend)
         setTimeout(function(){this.remainedTimeToSend -= 1}.bind(this), 1000)
     },
 

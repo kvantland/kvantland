@@ -95,6 +95,7 @@ def get_user_info(db):
 		
 	resp = {
 		'user': {
+			'login': '',
 			'name': '',
 			'email': '',
 			'surname': '',
@@ -118,6 +119,7 @@ def get_user_info(db):
 		resp['user']['clas'] = clas
 		resp['user']['town'] = town
 		resp['user']['score'] = score
+		resp['user']['login'] = user
 	return json.dumps(resp) 
 
 @route('/login')
