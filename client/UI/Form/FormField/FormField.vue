@@ -4,9 +4,9 @@
             <div class="content">
                 <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
                 <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
-                @input="$emit('input', $event.target.value)" :value="value" required :readonly="readonly"/>
+                @input="changeValue($event.target.value)" :value="value" required :readonly="readonly" />
                 <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
-                    :fieldInfo="fieldInfo" :selectedOption="value" />
+                    :fieldInfo="fieldInfo" :selectedOption="currentValue" />
             </div>
             <img v-if="fieldInfo.error" class="error_img" src="/icons/info.svg" />
         </div>
@@ -25,13 +25,25 @@ export default {
 
     props: {
         fieldInfo:{},
-        value:{},
+        value:{default: ""},
         readonly:{default: false},
+    },
+
+    computed: {
+        currentValue(){
+            return this.value
+        }
     },
 
     methods: {
         selectOption(option){
+            this.fieldInfo.error=""
+            this.currentValue = option
             this.$emit('input', option)
+        },
+        changeValue(newValue){
+            this.fieldInfo.error = ""
+            this.$emit('input', newValue)
         }
     },
 }
@@ -87,7 +99,8 @@ input:-webkit-autofill {
 	font-weight: 600;
 }
 
-.error_img img {
+.error_img {
+    align-self: center;
 	width: 16px;
 	height: 16px;
 }

@@ -47,6 +47,11 @@ import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
             };
         },
 
+        mounted() {
+            if (this.$route.query.email_confirm_token)
+                this.$axios.$post('/api/email_update', this.$route.query.email_confirm_token)
+        },
+
         methods: {
             displayDialog(dialogType, dialogData) {
                 this.activeDialog = true

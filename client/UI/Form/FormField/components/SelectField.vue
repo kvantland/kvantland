@@ -35,7 +35,7 @@ export default {
         },
         hideSelect(selectedOption) {
             this.showSelectList = false
-            this.selectedOption = selectedOption
+            this.$emit('selectOption', selectedOption)
             this.canHideSelectList = 0
         },
         changeHideAbility() {
@@ -54,9 +54,6 @@ export default {
         canHideSelectList(newValue) {
             if (newValue == 2) 
                 window.addEventListener('click', this.hideSelect(this.selectedOption))
-        },
-        selectedOption(newValue) {
-            this.$emit('selectOption', newValue)
         },
     }
 }

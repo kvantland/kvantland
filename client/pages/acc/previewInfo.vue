@@ -29,18 +29,11 @@ export default {
         AccTournamentResults,
     },
 
-    data() {
-        return {
-            previewInfo: {},
-            tournamentResults: [],
-        }
-    },
-
-    async fetch() {
-        const tournamentResultsData = await this.$axios.$get('/api/tournament_results')
-        this.previewInfo = this.$auth.user
-        console.log(this.previewInfo)
-        this.tournamentResults = tournamentResultsData
+    async asyncData({$axios, $auth}) {
+        const tournamentResultsData = await $axios.$get('/api/tournament_results')
+        await $auth.fetchUser()
+        const previewInfoData = $auth.user
+        return {previewInfo: previewInfoData, tournamentResults: tournamentResultsData}
     },
 }
 </script>

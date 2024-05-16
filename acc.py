@@ -82,9 +82,10 @@ def update_user_info(db):
 		'town': prev_town,
     }
 	
-	for field in update_info:
+	for field in update_info: # поля с ошибками остаются прежними
 		if field in resp['errors']:
-			update_info[field] = prev_info[field]
+			if resp['errors'][field]:
+				update_info[field] = prev_info[field]
 	try:
 		db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, clas=%s, town=%s where login=%s', 
 			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
@@ -94,17 +95,18 @@ def update_user_info(db):
 		
 	if 'email' in update_info.keys():
 		if is_new_email(db, update_info['email'], user):
-			send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'])
+			origin = request.get_header('Origin')
+			send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'], origin=origin)
 			if send_status['status']:
 				resp['email_changed'] = True
 			resp['errors']['email'] = send_status['error']
 	print(resp, file=sys.stderr)
 	return json.dumps(resp)
 
-def send_acc_confirm_message(name, login, email):
-	token = jwt.encode(payload={'login': login}, key=config['keys']['acc_confirm'], algorithm='HS256')
+def send_acc_confirm_message(name, login, email, origin):
+	token = jwt.encode(payload={'login': login, 'email': email}, key=config['keys']['email_confirm'], algorithm='HS256')
 	print(token, file=sys.stderr)
-	link = f"{config['recovery']['acc_confirm_uri']}?{token}"
+	link = f"{origin}?email_confirm_token={token}"
 	localhost = config['recovery']['localhost']
 	host = config['recovery']['host']
 	port = config['recovery']['port']
@@ -215,6 +217,13 @@ def update_user_email_amount(db, email):
 	else:
 		db.execute('update Kvantland.Mail set first_mail = %s, remainig_mails = %s where mail = %s', (time.time(), config['mail_check']['allowed_amount'], email))
 
+@route('/api/email_update', method="POST")
+def email_update(db):
+	request_data = json.loads(request.body.read())
+	decoded_data = jwt.decode(jwt=request_data, key=config['keys']['email_confirm'], algorithms=['HS256'])
+	print(decoded_data, file=sys.stderr)
+	db.execute('update Kvantland.Student set email=%s where login=%s', (decoded_data['email'], decoded_data['login']))
+	return json.dumps({'status': True})
 
 		
 _key = config['keys']['mail_confirm']
@@ -224,7 +233,7 @@ all_info = [['name', 'text', 'Имя'],
 			['school', 'text', 'Школа'],
 			['town', 'text', 'Город'],
 			['email', 'email', 'Почта'],
-			['clas', 'select', 'Класс', ['1', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
+			['clas', 'select', 'Класс', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Другое']]]
 
 alph_en = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 alph_ru = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя'

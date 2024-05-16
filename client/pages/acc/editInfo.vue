@@ -30,6 +30,7 @@ export default {
     data() {
         return {
             fieldsTypeInfo: [],
+            fieldsValueInfo: [],
             checkEmailMode: false
         }
     },
@@ -40,14 +41,12 @@ export default {
         this.fieldsTypeInfo = fieldsTypeInfoData
     },
 
-    computed: {
-        fieldsValueInfo(){
-            let fieldsValueInfo = {}
-            for (let key in this.$auth.user) {
-                fieldsValueInfo[key] = this.$auth.user[key]
-            }
-            return fieldsValueInfo
+    mounted() {
+        let fieldsValueInfo = {}
+        for (let key in this.$auth.user) {
+            fieldsValueInfo[key] = this.$auth.user[key]
         }
+        this.fieldsValueInfo = fieldsValueInfo
     },
 
     methods: {
@@ -63,7 +62,6 @@ export default {
                 })
             this.checkEmailMode = emailChanged
             this.fieldsTypeInfo.map((field) => field.error = errors[field.name] ? errors[field.name] : '')
-            console.log(this.fieldsTypeInfo)
         }
     }
 
