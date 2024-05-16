@@ -37,6 +37,17 @@ def require_user(db):
 			return None
 	return user_id
 
+@route('/api/rules_cards')
+def get_rules_info_cards():
+	rules_cards = [
+		{   'desc':  """<span class="bold_text">Многие задачи интерактивны</span> <br/><br/>Для их
+                        решения потребуется компьютер с мышкой или тачпадом,
+                        чтобы перетаскивать объекты и выделять клетки"""},
+						
+										
+    ]
+	return json.dumps(rules_cards)
+
 @route('/land')
 def show_land(db):
 	if MODE == 'private':

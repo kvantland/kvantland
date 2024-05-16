@@ -2,29 +2,29 @@
     <div>
         <StartHeader />
         <div class="content_wrapper">
-            <ConfidentialityInfo />
+            <RulesInfo />
         </div>
     </div>
 </template>
 
 
 <script>
-import StartHeader from '../../modules/all-pages/Headers/StartHeader.vue'
-import ConfidentialityInfo from '../../modules/policy-page/ConfidentialityInfo/ConfidentialityInfo.vue'
+import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
+import RulesInfo from '../modules/rules-page/RulesInfo.vue'
     export default {
         head() {
             return {
-                title: 'Квантландия'
+                title: 'Правила — Квантландия'
             };
         },
 
         components: {
             StartHeader,
-            ConfidentialityInfo,
+            RulesInfo,
         },
     };
 </script>
 
 <style>
-@import "../../assets/css/rules.css";
+@import "../assets/css/rules.css";
 </style>
