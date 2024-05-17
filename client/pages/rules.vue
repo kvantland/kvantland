@@ -17,7 +17,7 @@ import RulesInfo from '../modules/rules-page/RulesInfo.vue'
                 title: 'Правила — Квантландия'
             };
         },
-
+        middleware: 'auth',
         components: {
             StartHeader,
             RulesInfo,

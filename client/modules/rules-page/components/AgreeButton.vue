@@ -3,11 +3,11 @@
     <div class="conformation_wrapper">
     <div class="conformation_text">С правилами ознакомился(-лась) и готов(а) приступить!</div>
     <div class="start_button_border">
-    <a href="/land">
+    <NuxtLink  to="/land" target="_blank">
     <div class ="start_button">
     <div class="start_button_text"> Открыть турнир </div>
     </div>
-    </a>
+    </NuxtLink>
     </div>
     </div>
     </div>
