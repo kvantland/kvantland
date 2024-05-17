@@ -30,8 +30,11 @@ export default {
     },
 
     computed: {
-        currentValue(){
-            return this.value
+        currentValue: {
+            get() {
+                return this.value
+            },
+            set(newValue) {}
         }
     },
 

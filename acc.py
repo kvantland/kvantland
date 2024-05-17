@@ -48,7 +48,6 @@ def is_new_email(db, new_email, login):
 	try:
 		db.execute("select email from Kvantland.Student where login = %s", (login, ))
 		(prev_email, ), = db.fetchall()
-		print(prev_email, new_email, file=sys.stderr)
 		if prev_email != new_email:
 			return True
 	except:
@@ -100,12 +99,10 @@ def update_user_info(db):
 			if send_status['status']:
 				resp['email_changed'] = True
 			resp['errors']['email'] = send_status['error']
-	print(resp, file=sys.stderr)
 	return json.dumps(resp)
 
 def send_acc_confirm_message(name, login, email, origin):
-	token = jwt.encode(payload={'login': login, 'email': email}, key=config['keys']['email_confirm'], algorithm='HS256')
-	print(token, file=sys.stderr)
+	token = jwt.encode(payload={'login': login, 'email': email, 'time': time.time()}, key=config['keys']['email_confirm'], algorithm='HS256')
 	link = f"{origin}?email_confirm_token={token}"
 	localhost = config['recovery']['localhost']
 	host = config['recovery']['host']
@@ -163,10 +160,8 @@ def send_acc_confirm_message(name, login, email, origin):
 	msg['From'] = sender
 	msg['To'] = email
 	msg.set_content(email_content, subtype='html')
-	print('content set', file=sys.stderr)
 	
 	server.login(str(sender_login), str(sender_password))
-	print('logged in server', file=sys.stderr)
 	
 	resp = {'status': False, 'error': ''}
 	try:
@@ -220,8 +215,7 @@ def update_user_email_amount(db, email):
 @route('/api/email_update', method="POST")
 def email_update(db):
 	request_data = json.loads(request.body.read())
-	decoded_data = jwt.decode(jwt=request_data, key=config['keys']['email_confirm'], algorithms=['HS256'])
-	print(decoded_data, file=sys.stderr)
+	decoded_data = jwt.decode(jwt=request_data['email_confirm_token'], key=config['keys']['email_confirm'], algorithms=['HS256'])
 	db.execute('update Kvantland.Student set email=%s where login=%s', (decoded_data['email'], decoded_data['login']))
 	return json.dumps({'status': True})
 

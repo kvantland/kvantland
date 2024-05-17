@@ -44,9 +44,7 @@ def get_registration_fields():
 
 @route('/api/check_login', method="POST")
 def check_login_request(db):
-	print('check login:', file=sys.stderr)
 	user_data = json.loads(request.body.read())
-	print(user_data, file=sys.stderr)
 	resp = {
 		'tokens': {
 			'access_token': '',
@@ -58,19 +56,16 @@ def check_login_request(db):
 		password = user_data['password']
 		db.execute('select password from Kvantland.Student where login = %s', (login, ))
 		(password_hash, ), = db.fetchall()
-		print(password_hash, file=sys.stderr)
 		if pwhash.verify(password, password_hash):
 			access_key = config['keys']['access_key']
 			refresh_key = config['keys']['refresh_key']
 			resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
 			resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
-		print(resp, file=sys.stderr)
 		return json.dumps(resp) 
 	except:
-		print(resp, file=sys.stderr)
 		return json.dumps(resp) # Неполная информация или отсутствует пользователь
 	
-def check_token(req):
+def check_token(request):
 	auth_header = request.get_header('Authorization')
 	if auth_header is None:
 		return {'error': "Incorrect request format", 'login': ""}
@@ -105,7 +100,6 @@ def get_user_info(db):
         }
     }
 	if user:
-		print('current user:', current_user(db), file=sys.stderr)
 		try:
 			db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where login = %s', (user, ))
 		except:
