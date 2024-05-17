@@ -26,5 +26,19 @@ import ConfidentialityInfo from '../../modules/policy-page/ConfidentialityInfo/C
 </script>
 
 <style>
-@import "../../assets/css/policy.css";
+.content_wrapper {
+    width: 100%;
+    padding: 0 80px 80px 80px;
+    margin-top: 130px;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: center;
+    display: inline-flex;
+}
+
+.content_wrapper * {
+    font-family: Montserrat;
+    word-wrap: break-word;
+    text-align: justify;
+}
 </style>

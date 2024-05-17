@@ -1,12 +1,35 @@
 <template>
     <div class="par">
-        <div class="header" v-html="parHeader"></div>
+        <p class="header">{{ num + 1 }}. {{ parHeader }}</p>
         <div class="content" v-html="parDescription"> </div>
 	</div>
 </template>
 
 <script>
 export default {
-    props: ['parHeader', 'parDescription']
+    props: ['parHeader', 'parDescription', 'num']
 }
 </script>
+<style>
+.par {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.par .header {
+    color: black;
+    text-transform: none;
+    font-family: Montserrat;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.par .content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 400;
+}
+</style>
