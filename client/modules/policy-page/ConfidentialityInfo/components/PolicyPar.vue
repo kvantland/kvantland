@@ -2,7 +2,7 @@
     <div class="par">
         <p class="header">{{ num + 1 }}. {{ parHeader }}</p>
         <div class="content">
-            <div v-for="(item, index) in parDescription" v-html="item">{{ index + 1 }}. {{item}}</div>
+            <div v-for="(item, index) in parDescription" v-html="item">{{ index + 1 }}. </div>
         </div>
 	</div>
 </template>
