@@ -19,39 +19,6 @@ import jwt
 
 import sys
 
-@route('/api/checkout_reg', method="POST")
-def checkout_reg(db):
-	resp = {
-		'status': False,
-		'errors': {},
-    }
-	data = json.loads(request.body.read())
-	user_info = data['user']
-	resp['errors'] = check_format(user_info)
-	try:
-		captcha_token = data['captcha']
-		if check_captcha(captcha_token):
-			resp['errors']['captcha'] = check_captcha(captcha_token)
-	except:
-		resp['errors']['captcha'] = "Заполните капчу!"
-		
-	if 'login' in user_info.keys():
-		if check_login(db, user_info['login']):
-			resp['errors']['login'] = "Логин уже используется"
-			
-	'''if 'email' in user_info.keys():
-		if check_email(db, user_info['email']):
-			resp['errors']['email'] = 'Почта уже используется'''
-			
-	if not resp['errors']:
-		if check_email_amount(user_info['email']):
-			resp['status'] = True
-			send_registration_confirm_message(user_info, request.get_header('Origin'))
-		else:
-			resp['email'] = "Превышен лимит писем за день!"
-	print(resp, file=sys.stderr)
-	return json.dumps(resp)
-
 def check_login(db, login):
 	db.execute("select student from Kvantland.Student where login = %s", (login,))
 	try:
@@ -61,7 +28,6 @@ def check_login(db, login):
 	return user
 
 def check_email(db, email):
-	print(email, file=sys.stderr)
 	db.execute("select student from Kvantland.Student where email = %s", (email,))
 	try:
 		(user,) = db.fetchall()
@@ -82,6 +48,46 @@ def check_captcha(token):
 		return ""
 	else:
 		return "Капча не пройдена"
+
+@route('/api/checkout_reg', method="POST")
+def checkout_reg(db, required_captcha=True):
+	resp = {
+		'status': False,
+		'errors': {},
+    }
+	data = json.loads(request.body.read())
+	user_info = data['user']
+	print(data, file=sys.stderr)
+	resp['errors'] = check_format(user_info)
+	if required_captcha:
+		try:
+			captcha_token = data['captcha']
+			if check_captcha(captcha_token):
+				resp['errors']['captcha'] = check_captcha(captcha_token)		
+		except:
+			resp['errors']['captcha'] = "Заполните капчу!"
+		
+	if 'login' in user_info.keys():
+		if check_login(db, user_info['login']):
+			resp['errors']['login'] = "Логин уже используется"
+			
+	if 'email' in user_info.keys():
+		if check_email(db, user_info['email']):
+			resp['errors']['email'] = 'Почта уже используется'
+			
+	if not resp['errors']:
+		if check_email_amount(db, user_info):
+			resp['status'] = True
+			update_email_amount(db, user_info)
+			send_registration_confirm_message(user_info, request.get_header('Origin'))
+		else:
+			resp['errors']['email'] = "Превышен лимит писем за день!"
+	print(resp, file=sys.stderr)
+	return json.dumps(resp)
+
+@route('/api/send_reg_message_again', method="POST")
+def send_again(db):
+	return checkout_reg(db, required_captcha=False)
 
 def send_registration_confirm_message(user_info, origin):
 	user_info['time'] = time.time()

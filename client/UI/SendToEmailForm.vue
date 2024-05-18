@@ -3,26 +3,18 @@
         <div class="advert_form">
             <div class="header"> {{ title }} </div>
             <template v-if="canSend">
-                <p class="description">
-                    Письмо для подтверждения адреса
-                    электронной почты,</br> 
-                    привязанной	к Вашему аккаунту, успешно отправлено!</br>
-                    Для подтверждения адреса, перейдите по ссылке в</br>
-                    письме, которое придёт Вам на почту
-                </p>
-                <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" />
+                <p class="description" v-html="description" />
+                <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" :errorProp="error" />
                 <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
-                <SubmitButton v-else-if="remainedTimeToSend == 0" @click="sendAgain"> Отправить еще раз </SubmitButton>
+                <button v-else-if="remainedTimeToSend == 0" @click="sendAgain"> Отправить еще раз </button>
             </template>
         </div>
     </div>
 </template>
 
 <script>
-import SubmitButton from './Form/SubmitButton.vue';
-
 export default {
-    props: ['title', 'email'],
+    props: ['title', 'email', 'description', 'formData', 'apiRequestUrl'],
 
     data() {
         return {
@@ -34,7 +26,8 @@ export default {
                 'placeholder': "Почта",
             },
             readonly: true,
-            remainedTimeToSend: 60,
+            remainedTimeToSend: 3,
+            error: "",
         }
     },
 
@@ -51,10 +44,23 @@ export default {
     },
 
     methods: {
-        sendAgain() {
-
+        async sendAgain() { 
+            let status = ""
+            await this.$axios.$post(this.apiRequestUrl, this.formData)
+            .then((resp) => {
+                console.log(resp)
+                if (!resp.status){
+                    console.log(resp.errors)
+                    if (resp.errors.email == "Превышен лимит писем за день!")
+                        status = "Превышен лимит писем за день!"
+                    else
+                        status = "Проверка не пройдена"
+                    }
+                })
+            console.log(status)
+            this.error = status
         },
-    }
+    },
 }
 </script>
 

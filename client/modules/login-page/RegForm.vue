@@ -1,6 +1,7 @@
 <template>
     <div>
-        <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fields.email" />
+        <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fields.email"
+            :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
         <Form v-else>
             <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
             <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
@@ -27,6 +28,12 @@ export default {
             id: 'reg',
             fields: {},
             checkEmailMode: false,
+            sendEmailDescription: `Письмо для подтверждения регистрации</br> успешно 
+                                    отправлено на Ваш адрес!</br> Для подтверджения адреса 
+                                    перейдите</br> по ссылке в письме, которое придёт 
+                                    Вам<br/> на почту`,
+            sendEmailData: {},
+            sendEMailRequestUrl: "/api/send_reg_message_again",
         }
     },
 
@@ -52,17 +59,20 @@ export default {
             catch (error) {
                 console.log('Login error:', error)
             }
-            let errors, status, infoFields
+            let errors, status, infoFields, sendEmailData
             infoFields = this.fields
             this.regFields.forEach((field) => {if (!infoFields[field.name]) infoFields[field.name] = ""})
-            await this.$axios.post('/api/checkout_reg', {'user': infoFields, 'captcha': token})
+            sendEmailData = {'user': infoFields, 'captcha': token}
+            await this.$axios.post('/api/checkout_reg', sendEmailData)
                 .then((res) => {
                         errors = res.data.errors
                         status = res.data.status
                     })
-            console.log(errors)
             this.$emit('updateErrors', errors)
-            if (status) this.checkEmailMode = true
+            if (status) {
+                this.checkEmailMode = true
+                this.sendEmailData = sendEmailData
+            }
         },
     },
 

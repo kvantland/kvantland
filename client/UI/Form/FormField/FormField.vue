@@ -110,7 +110,7 @@ input:-webkit-autofill {
 }
 
 .error_img {
-    align-self: center;
+    align-self: center !important;
 	width: 16px;
 	height: 16px;
 }
