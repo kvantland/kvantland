@@ -1,12 +1,13 @@
 <template>
     <div>
-        <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fieldsValueInfo.email" />
+        <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fieldsValueInfo.email" 
+            :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
         <Form v-else>
             <p class="header"> Личный кабинет </p>
             <form method="post" id="acc" @submit.prevent="submitAccForm">
                 <FieldsArea>
                     <FormField v-for="fieldInfo in fieldsTypeInfo" :fieldInfo="fieldInfo" 
-                        :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :error="fieldsErrors[fieldInfo.name]" />
+                        :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :errorProp="fieldsErrors[fieldInfo.name]" />
                 </FieldsArea>
                 <UserAgreement />
                 <SubmitButton> Сохранить </SubmitButton>
@@ -33,7 +34,14 @@ export default {
             fieldsTypeInfo: [],
             fieldsValueInfo: [],
             fieldsErrors: {},
-            checkEmailMode: false
+            checkEmailMode: false,
+            sendEmailDescription: `Письмо для подтверждения адреса
+                                    электронной почты,</br> 
+                                    привязанной	к Вашему аккаунту, успешно отправлено!</br>
+                                    Для подтверждения адреса, перейдите по ссылке в</br>
+                                    письме, которое придёт Вам на почту`,
+            sendEmailData: {},
+            sendEMailRequestUrl: "/api/send_acc_message_again",
         }
     },
 
@@ -53,16 +61,23 @@ export default {
     methods: {
         async submitAccForm() {
             let requestBody = this.fieldsValueInfo
+            this.fieldsTypeInfo.forEach((field) => {if (!requestBody[field.name]) requestBody[field.name] = ""})
             let emailChanged = false
             let errors = {}
-            await this.$axios.post('/api/update_user_info', requestBody)
+            let status = false
+            await this.$axios.$post('/api/update_user_info', requestBody)
                 .then((res) => {
-                    if (res.data.email_changed)
+                    console.log(res)
+                    status = res.status
+                    if (res.email_changed)
                         emailChanged = true
-                    errors = res.data.errors
+                    errors = res.errors
                 })
             this.fieldsErrors = errors
-            this.checkEmailMode = emailChanged
+            if (status) {
+                this.checkEmailMode = emailChanged
+                this.sendEmailData = requestBody
+            }
         }
     }
 

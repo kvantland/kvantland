@@ -56,23 +56,24 @@ def is_new_email(db, new_email, login):
 	return False
 
 @route('/api/update_user_info', method="POST")
-def update_user_info(db):
+def update_user_info(db, send_again=False):
 	resp = {
-		'status': "updated",
+		'status': True,
 		'email_changed': False,
 		'errors': {},
     }
 	update_info = json.loads(request.body.read())
 	check_token_status = check_token(request)
 	if check_token_status['error']:
-		response.status = 400
-		return json.dumps({'error': check_token_status['error']})
+		resp['status'] = False
+		resp['errors']['token'] = check_token_status['error']
+		return json.dumps(resp)
 	else:
 		user = check_token_status['login']
 	check_user_info_status = check_format(update_info)
 	resp['errors'].update(check_user_info_status) # неверный формат полей за исключением почты
 	
-	db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие значения
+	db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие зн  ачения
 	(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
 	prev_info = {
 		'name': prev_name,
@@ -91,16 +92,29 @@ def update_user_info(db):
 			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
 	            user))
 	except:
-		resp['status'] = "rejected"
+		resp['status'] = False
 		
 	if 'email' in update_info.keys():
-		if is_new_email(db, update_info['email'], user):
-			origin = request.get_header('Origin')
-			send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'], origin=origin)
-			if send_status['status']:
-				resp['email_changed'] = True
-			resp['errors']['email'] = send_status['error']
+		if is_new_email(db, update_info['email'], user) or send_again:
+			if not check_email(db, update_info['email']):
+				origin = request.get_header('Origin')
+				send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'], origin=origin)
+				if send_status['status']:
+					resp['email_changed'] = True
+				else:
+					resp['errors']['email'] = send_status['error']
+			else:
+				resp['errors']['email'] = "Почта уже используется"
+			
+	if resp['errors']:
+		resp['status'] = False
+		
 	return json.dumps(resp)
+
+@route('/api/send_acc_message_again', method="POST")
+def send_acc_message_again(db):
+	return update_user_info(db, send_again=True)
+
 
 def send_acc_confirm_message(name, login, email, origin):
 	user_info = {'login': login, 'email': email, 'send_time': time.time()}
@@ -150,7 +164,7 @@ def send_acc_confirm_message(name, login, email, origin):
         </body>
         </html>'''
 	
-	return send_mail(email_content=email_content, email=email)
+	return send_mail(email_content=email_content, email=email, subject="Подтверждение почты")
 
 @route('/api/check_email_amount', method="POST")
 def check_user_email_amount(db):

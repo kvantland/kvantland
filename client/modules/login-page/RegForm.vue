@@ -1,6 +1,6 @@
 <template>
     <div>
-        <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fields.email"
+        <SendToEmailForm v-if="checkEmailMode" :title="'Регистрация'" :email="fields.email"
             :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
         <Form v-else>
             <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />

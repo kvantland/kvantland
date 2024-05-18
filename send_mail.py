@@ -2,7 +2,7 @@ from config import config
 import smtplib
 from email.message import EmailMessage
 
-def send_mail(email_content, email):
+def send_mail(email_content, email, subject):
     localhost = config['recovery']['localhost']
     host = config['recovery']['host']
     port = config['recovery']['port']
@@ -13,7 +13,7 @@ def send_mail(email_content, email):
     server = smtplib.SMTP_SSL(host, port,  local_hostname=localhost, timeout=120)
 
     msg = EmailMessage()
-    msg['Subject'] = 'Подтверждение регистрации'
+    msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = email
     msg.set_content(email_content, subtype='html')

@@ -48,9 +48,7 @@ export default {
             let status = ""
             await this.$axios.$post(this.apiRequestUrl, this.formData)
             .then((resp) => {
-                console.log(resp)
                 if (!resp.status){
-                    console.log(resp.errors)
                     if (resp.errors.email == "Превышен лимит писем за день!")
                         status = "Превышен лимит писем за день!"
                     else

@@ -73,7 +73,7 @@ def checkout_reg(db, required_captcha=True):
 			
 	if 'email' in user_info.keys():
 		if check_email(db, user_info['email']):
-			resp['errors']['email'] = 'Почта уже используется'
+			resp['errors']['email'] = "Почта уже используется"
 			
 	if not resp['errors']:
 		if check_email_amount(db, user_info):
@@ -136,7 +136,7 @@ def send_registration_confirm_message(user_info, origin):
         </body>
         </html>'''
 
-	return send_mail(email_content=email_content, email=user_info['email'])
+	return send_mail(email_content=email_content, email=user_info['email'], subject="Подтверждение регистрации")
 
 @route('/api/registration', method="POST")
 def registration(db):
