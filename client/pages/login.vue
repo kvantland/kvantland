@@ -1,6 +1,8 @@
 <template>
-    <AuthForm v-if="mode=='auth'" @changeHeaderMode="changeHeaderMode" :loginFields="loginFields" />
-    <RegForm v-else-if="mode=='reg'" @changeHeaderMode="changeHeaderMode" :regFields="regFields" />
+    <AuthForm v-if="mode=='auth'" @changeHeaderMode="changeHeaderMode" 
+        @updateErrors="updateLoginInfo" :loginFields="loginFields" :errors="loginErrors" />
+    <RegForm v-else-if="mode=='reg'" @changeHeaderMode="changeHeaderMode" 
+        @updateErrors="updateRegInfo" :regFields="regFields" :errors="regErrors"/>
 </template>
 
 <script>
@@ -16,7 +18,9 @@ export default {
     },
     data() {
         return {
-            mode: 'auth'
+            mode: 'auth',
+            regErrors: "",
+            loginErrors: "",
         }
     },
 
@@ -30,6 +34,13 @@ export default {
         changeHeaderMode(modeToChange) {
             console.log(modeToChange)
             this.mode = modeToChange
+        },
+        updateLoginInfo(info) {
+            this.loginErrors = info
+        },
+        updateRegInfo(info) {
+            this.regErrors = info
+            console.log(this.regErrors)
         }
     }
 }

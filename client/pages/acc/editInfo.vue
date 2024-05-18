@@ -6,7 +6,7 @@
             <form method="post" id="acc" @submit.prevent="submitAccForm">
                 <FieldsArea>
                     <FormField v-for="fieldInfo in fieldsTypeInfo" :fieldInfo="fieldInfo" 
-                        :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" />
+                        :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :error="fieldsErrors[fieldInfo.name]" />
                 </FieldsArea>
                 <UserAgreement />
                 <SubmitButton> Сохранить </SubmitButton>
@@ -20,6 +20,7 @@
 <script>
 export default {
     layout: "forms",
+    middleware: "auth",
 
     head() {
         return {
@@ -31,13 +32,13 @@ export default {
         return {
             fieldsTypeInfo: [],
             fieldsValueInfo: [],
+            fieldsErrors: {},
             checkEmailMode: false
         }
     },
 
     async fetch() {
         let fieldsTypeInfoData = await this.$axios.$get('/api/acc_fields')
-        fieldsTypeInfoData.map((field) => {field.error=""})
         this.fieldsTypeInfo = fieldsTypeInfoData
     },
 
@@ -60,8 +61,8 @@ export default {
                         emailChanged = true
                     errors = res.data.errors
                 })
+            this.fieldsErrors = errors
             this.checkEmailMode = emailChanged
-            this.fieldsTypeInfo.map((field) => field.error = errors[field.name] ? errors[field.name] : '')
         }
     }
 

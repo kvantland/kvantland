@@ -7,7 +7,7 @@ from passlib.hash import pbkdf2_sha256 as pwhash
 import user
 import json
 import hmac
-import email.message
+from send_mail import send_mail
 from email.message import EmailMessage
 import smtplib
 from html import escape
@@ -15,8 +15,103 @@ from config import config
 import urllib.request as urllib2
 import urllib.parse
 import time
+import jwt
 
 import sys
+
+@route('/api/checkout_reg', method="POST")
+def checkout_reg(db):
+	resp = {
+		'status': False,
+		'errors': {},
+    }
+	data = json.loads(request.body.read())
+	user_info = data['user']
+	resp['errors'] = check_format(user_info)
+	try:
+		captcha_token = data['captcha']
+		resp['errors']['captcha'] = check_captcha(captcha_token)
+	except:
+		resp['errors']['captcha'] = "Заполните капчу!"
+		
+	if 'login' in user_info.keys():
+		if check_login(db, user_info['login']):
+			resp['errors']['login'] = 'Логин уже используется'
+			
+	if 'email' in user_info.keys():
+		if check_email(db, user_info['login']):
+			resp['errors']['email'] = 'Почта уже используется'
+			
+	if not resp['errors']:
+		resp['status'] = True
+		send_registration_confirm_message(user_info, request.get_header('Origin'))
+	return json.dumps(resp)
+
+def check_captcha(token):
+	not_robot = False
+	params = {
+        "secret": config['reg']['secret'],
+        "response": token,
+    }
+	out = config['reg']['reg_url'] + '?' + urllib.parse.urlencode(params)
+	cont = urllib2.urlopen(out)
+	not_robot = json.loads(cont.read())['success']
+	if not_robot:
+		return ""
+	else:
+		return "Капча не пройдена"
+
+def send_registration_confirm_message(user_info, origin):
+	user_info['time'] = time.time()
+	token = jwt.encode(payload=user_info,  key=config['keys']['email_confirm'], algorithm='HS256')
+	link = f"{origin}?email_confirm_token={token}"
+	
+	email_content = f'''
+        <!DOCTYPE html>
+        <head>
+        <link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Регистрация</title>
+        </head>
+        <body style="padding: 80px;
+            font-family: Montserrat, Arial !important;
+            word-wrap: break-word;
+            font-size: 20px;
+            font-weight: 500;">
+        <div style="font-family: Montserrat, Arial !important;">
+        <div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {user_info['name']}! </div>
+        <div style="margin-top: 20px"> Спасибо за регистрацию в <a href="{config['server']['host']}:{config['server']['port']}">Квантландии</a>. 
+        Для подтверждения регистрации нажмите на кнопку ниже: </div>
+        </div>
+        <div style="width: 640px;
+            margin: 80px auto; 
+            background: #1E8B93; 
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+            border-radius: 6px;">
+        <a href="{link}" style="text-decoration: none">
+        <div style="text-align: center;
+            padding: 10px 0;
+            color: white; 
+            font-weight: 600;
+            box-sizing: border-box;
+            font-family: Montserrat, Arial !important;">
+        Нажмите здесь для подтверждения
+        </div>
+        </a>
+        </div>
+        <div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> 
+            Данные для входа:<br/><br/>
+            <span style="font-weight:700">Логин:</span> {user_info['login']}<br/>
+            <span style="font-weight:700">Пароль:</span> {user_info['password']}<br/><br/>
+            С уважением, команда Kvantland </div>
+        </body>
+        </html>'''
+
+	return send_mail(email_content=email_content, email=user_info['email'])
+	
+	
+	
 
 secret = config['reg']['secret']
 reg_url = config['reg']['reg_url']
@@ -34,6 +129,7 @@ all_info = [['name', 'text', 'Имя'],
 			['login', 'text', 'Логин'],
 			['password', 'password', 'Пароль'],
 			['city', 'text', 'Город'],
+			['town', 'text', 'Город'],
 			['school', 'text', 'Школа'],
 			['clas', 'select', 'Класс', [str(i) for i in range(1, 12)] + ['Другое']]]
 

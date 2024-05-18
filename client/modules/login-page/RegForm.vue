@@ -1,16 +1,20 @@
 <template>
-    <Form>
-        <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
-        <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
-            <FieldsArea>
-                <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" v-model="fields[field.name]" />
-            </FieldsArea>
-            <UserAgreement v-model="fields['approval']" />
-            <Captcha />
-            <hr size="1" style="border-width: 1px"/>
-            <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
-        </form>
-    </Form>
+    <div>
+        <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fields.email" />
+        <Form v-else>
+            <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
+            <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
+                <FieldsArea>
+                    <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" 
+                        v-model="fields[field.name]" :error="errors[field.name]"/>
+                </FieldsArea>
+                <UserAgreement />
+                <Recaptcha />
+                <hr size="1" style="border-width: 1px"/>
+                <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
+            </form>
+        </Form>
+    </div>
 </template>
 
 
@@ -22,10 +26,14 @@ export default {
         return {
             id: 'reg',
             fields: {},
+            checkEmailMode: false,
         }
     },
 
-    props: ['regFields'],
+    props: {
+        regFields: {},
+        errors: {default: {}},
+    },
 
     components: {
         FormHeader,
@@ -45,8 +53,14 @@ export default {
             catch (error) {
                 console.log('Login error', error)
             }
-            this.field.recaptcha_token = token
-            this.$axios.post('/api/checkout_reg', this.fields)
+            let errors = {}
+            await this.$axios.post('/api/checkout_reg', {'user': this.fields, 'captcha': token})
+                .then((res) => {
+                        errors = res.data.errors
+                    })
+            console.log(errors)
+            this.$emit('updateErrors', errors)
+            this.checkEmailMode = true
         },
     },
 
@@ -60,3 +74,6 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+</style>

@@ -8,9 +8,9 @@
                 <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
                     :fieldInfo="fieldInfo" :selectedOption="currentValue" />
             </div>
-            <img v-if="fieldInfo.error" class="error_img" src="/icons/info.svg" />
+            <img v-if="error" class="error_img" src="/icons/info.svg" />
         </div>
-        <p class="error" v-if="fieldInfo.error"> {{ fieldInfo.error }} </p>
+        <p class="error" v-if="error"> {{ error }} </p>
     </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
         fieldInfo:{},
         value:{default: ""},
         readonly:{default: false},
+        error:{default: ""},
     },
 
     computed: {
@@ -40,12 +41,12 @@ export default {
 
     methods: {
         selectOption(option){
-            this.fieldInfo.error=""
+            this.error=""
             this.currentValue = option
             this.$emit('input', option)
         },
         changeValue(newValue){
-            this.fieldInfo.error = ""
+            this.error = ""
             this.$emit('input', newValue)
         }
     },

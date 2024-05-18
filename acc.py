@@ -6,6 +6,7 @@ import nav
 import user
 import sys
 from login import current_user, do_login, check_token
+from send_mail import send_mail
 import approv
 import hmac
 import email.message
@@ -102,16 +103,10 @@ def update_user_info(db):
 	return json.dumps(resp)
 
 def send_acc_confirm_message(name, login, email, origin):
-	token = jwt.encode(payload={'login': login, 'email': email, 'time': time.time()}, key=config['keys']['email_confirm'], algorithm='HS256')
+	user_info = {'login': login, 'email': email, 'send_time': time.time()}
+	token = jwt.encode(payload=user_info, key=config['keys']['email_confirm'], algorithm='HS256')
 	link = f"{origin}?email_confirm_token={token}"
-	localhost = config['recovery']['localhost']
-	host = config['recovery']['host']
-	port = config['recovery']['port']
-	sender_login = config['recovery']['login']
-	sender_password = config['recovery']['password']
-	sender = config['recovery']['sender']
 	
-	server = smtplib.SMTP_SSL(host, port,  local_hostname=localhost, timeout=120)
 	email_content =  f'''
         <!DOCTYPE html>
         <head>
@@ -155,24 +150,7 @@ def send_acc_confirm_message(name, login, email, origin):
         </body>
         </html>'''
 	
-	msg = EmailMessage()
-	msg['Subject'] = 'Подтверждение почты'
-	msg['From'] = sender
-	msg['To'] = email
-	msg.set_content(email_content, subtype='html')
-	
-	server.login(str(sender_login), str(sender_password))
-	
-	resp = {'status': False, 'error': ''}
-	try:
-		resp['status'] = True
-		server.sendmail(sender, [email], msg.as_string())
-	except:
-		resp['status'] = False
-		resp['error'] = 'Неверный адрес почты'
-	finally:
-		server.quit()
-		return resp
+	return send_mail(email_content=email_content, email=email)
 
 @route('/api/check_email_amount', method="POST")
 def check_user_email_amount(db):
