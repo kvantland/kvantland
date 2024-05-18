@@ -18,7 +18,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .header {
     display: inline-flex;
     justify-content: center;

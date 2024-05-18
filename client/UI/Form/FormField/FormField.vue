@@ -4,18 +4,17 @@
             <div class="content">
                 <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
                 <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
-                @input="changeValue($event.target.value)" :value="value" required :readonly="readonly" />
+                @input="changeValue($event.target.value)" :value="value" :readonly="readonly" />
                 <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
                     :fieldInfo="fieldInfo" :selectedOption="currentValue" />
             </div>
             <img v-if="error" class="error_img" src="/icons/info.svg" />
         </div>
-        <p class="error" v-if="error"> {{ error }} </p>
+        <p class="error" v-if="error" v-html="error"> </p>
     </div>
 </template>
 
 <script>
-import { readonly } from 'vue';
 import SelectField from './components/SelectField.vue'
 
 export default {
@@ -27,15 +26,22 @@ export default {
         fieldInfo:{},
         value:{default: ""},
         readonly:{default: false},
-        error:{default: ""},
+        errorProp:{default: ""},
     },
 
-    computed: {
-        currentValue: {
-            get() {
-                return this.value
-            },
-            set(newValue) {}
+    data() {
+        return {
+            error: this.errorProp,
+            currentValue: this.value,
+        }
+    },
+
+    watch: {
+        errorProp(newValue) {
+            this.error = newValue
+        },
+        value(newValue) {
+            this.currentValue = newValue
         }
     },
 

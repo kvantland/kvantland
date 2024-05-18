@@ -30,22 +30,44 @@ def checkout_reg(db):
 	resp['errors'] = check_format(user_info)
 	try:
 		captcha_token = data['captcha']
-		resp['errors']['captcha'] = check_captcha(captcha_token)
+		if check_captcha(captcha_token):
+			resp['errors']['captcha'] = check_captcha(captcha_token)
 	except:
 		resp['errors']['captcha'] = "Заполните капчу!"
 		
 	if 'login' in user_info.keys():
 		if check_login(db, user_info['login']):
-			resp['errors']['login'] = 'Логин уже используется'
+			resp['errors']['login'] = "Логин уже используется"
 			
-	if 'email' in user_info.keys():
-		if check_email(db, user_info['login']):
-			resp['errors']['email'] = 'Почта уже используется'
+	'''if 'email' in user_info.keys():
+		if check_email(db, user_info['email']):
+			resp['errors']['email'] = 'Почта уже используется'''
 			
 	if not resp['errors']:
-		resp['status'] = True
-		send_registration_confirm_message(user_info, request.get_header('Origin'))
+		if check_email_amount(user_info['email']):
+			resp['status'] = True
+			send_registration_confirm_message(user_info, request.get_header('Origin'))
+		else:
+			resp['email'] = "Превышен лимит писем за день!"
+	print(resp, file=sys.stderr)
 	return json.dumps(resp)
+
+def check_login(db, login):
+	db.execute("select student from Kvantland.Student where login = %s", (login,))
+	try:
+		(user,) = db.fetchall()
+	except ValueError:
+		return None
+	return user
+
+def check_email(db, email):
+	print(email, file=sys.stderr)
+	db.execute("select student from Kvantland.Student where email = %s", (email,))
+	try:
+		(user,) = db.fetchall()
+	except ValueError:
+		return None
+	return user
 
 def check_captcha(token):
 	not_robot = False
@@ -64,7 +86,7 @@ def check_captcha(token):
 def send_registration_confirm_message(user_info, origin):
 	user_info['time'] = time.time()
 	token = jwt.encode(payload=user_info,  key=config['keys']['email_confirm'], algorithm='HS256')
-	link = f"{origin}?email_confirm_token={token}"
+	link = f"{origin}?email_confirm_token={token}&request=registration"
 	
 	email_content = f'''
         <!DOCTYPE html>
@@ -109,7 +131,32 @@ def send_registration_confirm_message(user_info, origin):
         </html>'''
 
 	return send_mail(email_content=email_content, email=user_info['email'])
-	
+
+@route('/api/registration', method="POST")
+def registration(db):
+	resp = {
+        'login': "",
+        'password': "",
+    }
+	token = json.loads(request.body.read())['email_confirm_token']
+	user_info = jwt.decode(jwt=token, key=config['keys']['email_confirm'], algorithms=['HS256'])
+	add_new_user(db, user_info)
+	resp['login'] = user_info['login']
+	resp['password'] = user_info['password']
+	print(resp, file=sys.stderr)
+	return json.dumps(resp)
+		
+def add_new_user(db, info):
+	db.execute("select student from Kvantland.Student where login = %s", (info['login'], ))
+	try:
+		(user, ), = db.fetchall()
+	except:
+		db.execute("insert into Kvantland.Student (login, password, name, surname, school, clas, town, email) values (%s, %s, %s, %s, %s, %s, %s, %s) returning student", 
+			(info['login'], pwhash.hash(info['password']), info['name'], info['surname'], info['school'], info['clas'], info['town'], info['email']))
+		(user, ), = db.fetchall()
+		db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
+		db.execute("insert into Kvantland.Score (student, tournament) values (%s, %s)", (user, config["tournament"]["version"]))
+	return int(user)
 	
 	
 
@@ -283,22 +330,6 @@ def add_user(db, info):
 		db.execute("insert into Kvantland.Score (student, tournament) values (%s, %s)", (user, config["tournament"]["version"]))
 	return int(user)
 
-def check_login(db, login):
-	db.execute("select student from Kvantland.Student where login = %s", (login,))
-	try:
-		(user,) = db.fetchall()
-	except ValueError:
-		return None
-	return user
-
-def check_email(db, email):
-	db.execute("select student from Kvantland.Student where email = %s", (email,))
-	try:
-		(user,) = db.fetchall()
-	except ValueError:
-		return None
-	return user
-
 def empty_user_info():
 	user_info = dict()
 	for field in all_info:
@@ -318,7 +349,6 @@ def check_format(user_info):
 			max_size = config['reg']['max_' + field + '_size']
 		except:
 			max_size = 500
-		name = placeholder_info[field]
 
 		if type_info[field] == "select":
 			if not(user_info[field] in option_info[field]):
@@ -348,7 +378,10 @@ def check_format(user_info):
 				err_dict[field] = "Пароль должен содержать заглавные и </br> строчные буквы, а также цифры"
 
 		if len(user_info[field]) < min_size:
-			err_dict[field] = "Минимум " + str(min_size) + ' ' + lang_form(min_size)
+			if len(user_info[field]) == 0:
+				err_dict[field] = "Поле обязательно для заполнения"
+			else:
+				err_dict[field] = "Минимум " + str(min_size) + ' ' + lang_form(min_size)
 		if len(user_info[field]) > max_size:
 			err_dict[field] = "Слишком много символов"
 

@@ -14,10 +14,6 @@
                 <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
                 <SubmitButton v-else-if="remainedTimeToSend == 0" @click="sendAgain"> Отправить еще раз </SubmitButton>
             </template>
-            <div v-else class="limit_info">
-                <img src="/icons/info.svg" />
-                <p class="err"> Превышен лимит писем за день! </p>
-            </div>
         </div>
     </div>
 </template>
@@ -42,14 +38,6 @@ export default {
         }
     },
 
-    async fetch() {
-        const newEmail = this.email
-        let status = true
-        this.$axios.$post('/api/check_email_amount', {'email': newEmail})
-            .then((res) => {status = res.status})
-        this.canSend = status
-    },
-
     watch: {
         async remainedTimeToSend(newValue) {
             if (newValue > 0)
@@ -70,7 +58,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .content_wrapper {
 	width: 100%;
 	margin-top: 152px;

@@ -105,7 +105,7 @@ def update_user_info(db):
 def send_acc_confirm_message(name, login, email, origin):
 	user_info = {'login': login, 'email': email, 'send_time': time.time()}
 	token = jwt.encode(payload=user_info, key=config['keys']['email_confirm'], algorithm='HS256')
-	link = f"{origin}?email_confirm_token={token}"
+	link = f"{origin}?email_confirm_token={token}&request=update_acc"
 	
 	email_content =  f'''
         <!DOCTYPE html>
@@ -156,10 +156,7 @@ def send_acc_confirm_message(name, login, email, origin):
 def check_user_email_amount(db):
 	check_token_status = check_token(request)
 	if check_token_status['error']:
-		response.status = 400
 		return json.dumps({'error': check_token_status['error']})
-	else:
-		user = check_token_status['login']
 		
 	email = json.loads(request.body.read())['email']
 	

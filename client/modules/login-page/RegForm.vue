@@ -6,10 +6,10 @@
             <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
                 <FieldsArea>
                     <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" 
-                        v-model="fields[field.name]" :error="errors[field.name]"/>
+                        v-model="fields[field.name]" :errorProp="errors[field.name]"/>
                 </FieldsArea>
                 <UserAgreement />
-                <Recaptcha />
+                <Captcha :error="errors['captcha']"/>
                 <hr size="1" style="border-width: 1px"/>
                 <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
             </form>
@@ -47,20 +47,22 @@ export default {
             let token
             try {
                 token = await this.$recaptcha.getResponse()
-                console.log('ReCaptcha token:', token)
                 await this.$recaptcha.reset()
             }
             catch (error) {
-                console.log('Login error', error)
+                console.log('Login error:', error)
             }
-            let errors = {}
-            await this.$axios.post('/api/checkout_reg', {'user': this.fields, 'captcha': token})
+            let errors, status, infoFields
+            infoFields = this.fields
+            this.regFields.forEach((field) => {if (!infoFields[field.name]) infoFields[field.name] = ""})
+            await this.$axios.post('/api/checkout_reg', {'user': infoFields, 'captcha': token})
                 .then((res) => {
                         errors = res.data.errors
+                        status = res.data.status
                     })
             console.log(errors)
             this.$emit('updateErrors', errors)
-            this.checkEmailMode = true
+            if (status) this.checkEmailMode = true
         },
     },
 
