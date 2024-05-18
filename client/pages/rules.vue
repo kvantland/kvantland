@@ -1,7 +1,7 @@
 <template>
     <div>
         <StartHeader />
-        <div class="content_wrapper">
+        <div class="content_wrapper_rules">
             <RulesInfo />
         </div>
     </div>
