@@ -1,6 +1,6 @@
 <template>
     <div class="conf_content" id="confidentialityInfo">
-        <div class="page_header">Политика конфиденциальности</div>
+        <p class="page_header">Политика конфиденциальности</p>
             <PolicyPar :parHeader="policyPar.header" :parDescription="policyPar.desc" :num="key"
                         v-for="(policyPar, key) in policyPars" :key="key" />
     </div>
