@@ -1,18 +1,25 @@
 <template>
-	<div class="check_cont">
-        <input class="checkbox" type="checkbox" name="approval"
-            id="approval" v-model="check"required />
-        <div class="label"> Я принимаю условия <NuxtLink to="/policy"> <span class="underline">Политики конфиденциальности</span> </NuxtLink> и даю <span class="underline approval"> согласие
-            на обработку своих персональных данных</span>
+    <div>
+        <UserAgreementDialog v-if="showDialogMode==true" @closeDialog="closeDialog" />
+        <div class="check_cont">
+            <input class="checkbox" type="checkbox" name="approval"
+                id="approval" v-model="check" required />
+            <div class="label"> Я принимаю условия 
+                <NuxtLink to="/policy"> <span class="underline">Политики конфиденциальности</span> </NuxtLink> и даю 
+                <span class="underline approval" @click="showDialog"> согласие на обработку своих персональных данных</span>
+            </div>
         </div>
-	</div>
+    </div>
 </template>
 
 <script>
+import UserAgreementDialog from '../UserAgreementDialog.vue';
+
 export default {
     data() {
         return {
             value: false,
+            showDialogMode: false,
         }
     },
     computed: {
@@ -23,6 +30,15 @@ export default {
             set(val) {
                 this.$emit('input', val)
             }
+        }
+    },
+    methods: {
+        showDialog(){
+            console.log('show!')
+            this.showDialogMode = true
+        },
+        closeDialog(){
+            this.showDialogMode = false
         }
     }
 }

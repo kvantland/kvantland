@@ -7,7 +7,7 @@
             <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
                 <FieldsArea>
                     <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" 
-                        v-model="fields[field.name]" :errorProp="errors[field.name]"/>
+                        @clearError="clearRegError" v-model="fields[field.name]" :error="errors[field.name]"/>
                 </FieldsArea>
                 <UserAgreement />
                 <Captcha :error="errors['captcha']"/>
@@ -50,6 +50,12 @@ export default {
         changeHeaderMode(modeToChange) {
             this.$emit('changeHeaderMode', modeToChange)
         },
+        clearRegError(name) {
+            let errors = this.errors ? this.errors : {}
+            console.log(this.errors)
+            errors[name] = ""
+            this.$emit('updateErrors', errors)
+        },
         async onSubmitRegForm() {
             let token
             try {
@@ -63,10 +69,10 @@ export default {
             infoFields = this.fields
             this.regFields.forEach((field) => {if (!infoFields[field.name]) infoFields[field.name] = ""})
             sendEmailData = {'user': infoFields, 'captcha': token}
-            await this.$axios.post('/api/checkout_reg', sendEmailData)
+            await this.$axios.$post('/api/checkout_reg', sendEmailData)
                 .then((res) => {
-                        errors = res.data.errors
-                        status = res.data.status
+                        errors = res.errors
+                        status = res.status
                     })
             this.$emit('updateErrors', errors)
             if (status) {

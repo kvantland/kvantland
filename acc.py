@@ -62,7 +62,16 @@ def update_user_info(db, send_again=False):
 		'email_changed': False,
 		'errors': {},
     }
-	update_info = json.loads(request.body.read())
+	data = json.loads(request.body.read())
+	update_info = data['user_info']
+	
+	approval = data['approval']
+	if not approval:
+		resp['errors']['approval'] = "Поставьте галочку"
+		
+	for key in update_info.keys():
+		update_info[key] = str(update_info[key]).strip()
+
 	check_token_status = check_token(request)
 	if check_token_status['error']:
 		resp['status'] = False
@@ -73,7 +82,7 @@ def update_user_info(db, send_again=False):
 	check_user_info_status = check_format(update_info)
 	resp['errors'].update(check_user_info_status) # неверный формат полей за исключением почты
 	
-	db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие зн  ачения
+	db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие значения
 	(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
 	prev_info = {
 		'name': prev_name,
@@ -549,7 +558,10 @@ def check_format(user_info):
 				err_dict[field] = "Значение не из списка"
 
 		if len(user_info[field]) < min_size:
-			err_dict[field] = "Слишком мало символов в поле, <br /> должно быть минимум " + str(min_size)
+			if len(user_info[field]) == 0:
+				err_dict[field] = "Поле обязательно для заполнения"
+			else:
+				err_dict[field] = "Слишком мало символов в поле, <br /> должно быть минимум " + str(min_size)
 		if len(user_info[field]) > max_size:
 			err_dict[field] = "Слишком много символов"
 	return err_dict

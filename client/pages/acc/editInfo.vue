@@ -6,10 +6,10 @@
             <p class="header"> Личный кабинет </p>
             <form method="post" id="acc" @submit.prevent="submitAccForm">
                 <FieldsArea>
-                    <FormField v-for="fieldInfo in fieldsTypeInfo" :fieldInfo="fieldInfo" 
-                        :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :errorProp="fieldsErrors[fieldInfo.name]" />
+                    <FormField v-for="fieldInfo in fieldsTypeInfo" :fieldInfo="fieldInfo" @clearError="clearError"
+                        :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :error="fieldsErrors[fieldInfo.name]" />
                 </FieldsArea>
-                <UserAgreement />
+                <UserAgreement :error="fieldsErrors.approval" v-model="fieldsValueInfo['approval']" />
                 <SubmitButton> Сохранить </SubmitButton>
                 <hr size="1">
                 <BackButton />
@@ -59,26 +59,31 @@ export default {
     },
 
     methods: {
+        clearError(name) {
+            this.fieldsErrors[name] = ""
+        },
         async submitAccForm() {
-            let requestBody = this.fieldsValueInfo
-            this.fieldsTypeInfo.forEach((field) => {if (!requestBody[field.name]) requestBody[field.name] = ""})
+            let userInfo = this.fieldsValueInfo
+            this.fieldsTypeInfo.forEach((field) => {if (!userInfo[field.name]) userInfo[field.name] = ""})
+            const approvalValue = this.fieldsTypeInfo.approval ? this.fieldsTypeInfo.approval : false
+            const requestBody = {'user_info': userInfo, 'approval': approvalValue}
             let emailChanged = false
             let errors = {}
             let status = false
             await this.$axios.$post('/api/update_user_info', requestBody)
                 .then((res) => {
-                    console.log(res)
                     status = res.status
                     if (res.email_changed)
                         emailChanged = true
                     errors = res.errors
                 })
+            console.log(errors)
             this.fieldsErrors = errors
             if (status) {
                 this.checkEmailMode = emailChanged
                 this.sendEmailData = requestBody
             }
-        }
+        },
     }
 
 }

@@ -26,20 +26,16 @@ export default {
         fieldInfo:{},
         value:{default: ""},
         readonly:{default: false},
-        errorProp:{default: ""},
+        error:{default: ""},
     },
 
     data() {
         return {
-            error: this.errorProp,
             currentValue: this.value,
         }
     },
 
     watch: {
-        errorProp(newValue) {
-            this.error = newValue
-        },
         value(newValue) {
             this.currentValue = newValue
         }
@@ -52,7 +48,7 @@ export default {
             this.$emit('input', option)
         },
         changeValue(newValue){
-            this.error = ""
+            this.$emit('clearError', this.fieldInfo.name)
             this.$emit('input', newValue)
         }
     },

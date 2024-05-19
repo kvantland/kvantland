@@ -5,7 +5,7 @@ from bottle import route, run, static_file, install, response, request
 
 import db
 import nav
-import land, town, problem, login, loginvk, registration, acc, start_page, pw_recovery, policy, icon
+import land, town, problem, login, loginvk, registration, acc, start_page, pw_recovery, policy, icon, approv
 from config import config, ROOT
 
 class EnableCors(object):

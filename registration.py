@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from login import do_login, current_user, do_logout
-import approv
+from approv import display_confirm_window
 from bottle import route, request, response, redirect
 from passlib.hash import pbkdf2_sha256 as pwhash
 import user
@@ -318,7 +318,7 @@ def display_registration_form(user_info, err=None):
 	yield '</form>'
 	yield '</div>'
 
-	yield from approv.display_confirm_window()
+	yield from display_confirm_window()
 
 	yield '<script type="text/javascript" src="/static/design/user.js"></script>'
 	yield '<script type="text/javascript" src ="/static/dialog.js"></script>'
