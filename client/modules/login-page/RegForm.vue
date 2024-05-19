@@ -9,7 +9,7 @@
                     <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" 
                         @clearError="clearRegError" v-model="fields[field.name]" :error="errors[field.name]"/>
                 </FieldsArea>
-                <UserAgreement />
+                <UserAgreement :error="errors.approval" v-model="fields.approval" @clearError="clearRegError"/>
                 <Captcha :error="errors['captcha']"/>
                 <hr size="1" style="border-width: 1px"/>
                 <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
@@ -65,8 +65,11 @@ export default {
                 console.log('Login error:', error)
             }
             let errors, status, infoFields, sendEmailData
+
             infoFields = this.fields
             this.regFields.forEach((field) => {if (!infoFields[field.name]) infoFields[field.name] = ""})
+            if (!infoFields['approval']) infoFields['approval'] = false
+
             sendEmailData = {'user': infoFields, 'captcha': token}
             await this.$axios.$post('/api/checkout_reg', sendEmailData)
                 .then((res) => {

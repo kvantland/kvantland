@@ -61,7 +61,9 @@ def checkout_reg(db, required_captcha=True):
 	for key in user_info.keys():
 		user_info[key] = str(user_info[key]).strip()
 		
+	print(user_info, file=sys.stderr)
 	resp['errors'] = check_format(user_info)
+	
 	if required_captcha:
 		try:
 			captcha_token = data['captcha']
@@ -358,6 +360,11 @@ def check_format(user_info):
 			max_size = config['reg']['max_' + field + '_size']
 		except:
 			max_size = 500
+			
+		if field == 'approval':
+			if str(user_info[field]) == 'False':
+				err_dict[field] = "Поставьте галочку"
+			continue
 
 		if type_info[field] == "select":
 			if not(user_info[field] in option_info[field]):

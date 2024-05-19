@@ -64,10 +64,6 @@ def update_user_info(db, send_again=False):
     }
 	data = json.loads(request.body.read())
 	update_info = data['user_info']
-	
-	approval = data['approval']
-	if not approval:
-		resp['errors']['approval'] = "Поставьте галочку"
 		
 	for key in update_info.keys():
 		update_info[key] = str(update_info[key]).strip()
@@ -552,6 +548,11 @@ def check_format(user_info):
 			max_size = config['acc']['max_' + field + '_size']
 		except:
 			max_size = 500
+			
+		if field == 'approval':
+			if str(user_info[field]) == 'False':
+				err_dict[field] = "Поставьте галочку"
+			continue
 
 		if field in option_info.keys():
 			if not(user_info[field] in option_info[field]):

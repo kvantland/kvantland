@@ -55,7 +55,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .fieldWithError {
     display: inline-flex;
     flex-direction: column;

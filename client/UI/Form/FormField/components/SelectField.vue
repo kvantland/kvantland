@@ -75,4 +75,17 @@ export default {
     width: 10px;
     height: 5.84px;
 }
+input {
+    font-size: 12px;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    font-family: Montserrat;
+}
+input:-webkit-autofill {
+    background: none;
+}
+.field input:focus {
+	outline: none;
+}
 </style>

@@ -9,7 +9,7 @@
                     <FormField v-for="fieldInfo in fieldsTypeInfo" :fieldInfo="fieldInfo" @clearError="clearError"
                         :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :error="fieldsErrors[fieldInfo.name]" />
                 </FieldsArea>
-                <UserAgreement :error="fieldsErrors.approval" v-model="fieldsValueInfo['approval']" />
+                <UserAgreement :error="fieldsErrors.approval" v-model="fieldsValueInfo['approval']" @clearError="clearError" />
                 <SubmitButton> Сохранить </SubmitButton>
                 <hr size="1">
                 <BackButton />
@@ -65,8 +65,8 @@ export default {
         async submitAccForm() {
             let userInfo = this.fieldsValueInfo
             this.fieldsTypeInfo.forEach((field) => {if (!userInfo[field.name]) userInfo[field.name] = ""})
-            const approvalValue = this.fieldsTypeInfo.approval ? this.fieldsTypeInfo.approval : false
-            const requestBody = {'user_info': userInfo, 'approval': approvalValue}
+            if (!userInfo['approval']) userInfo['approval'] = false
+            const requestBody = {'user_info': userInfo}
             let emailChanged = false
             let errors = {}
             let status = false
