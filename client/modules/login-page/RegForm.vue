@@ -52,7 +52,6 @@ export default {
         },
         clearRegError(name) {
             let errors = this.errors ? this.errors : {}
-            console.log(this.errors)
             errors[name] = ""
             this.$emit('updateErrors', errors)
         },
@@ -74,6 +73,7 @@ export default {
                         errors = res.errors
                         status = res.status
                     })
+            console.log(errors)
             this.$emit('updateErrors', errors)
             if (status) {
                 this.checkEmailMode = true

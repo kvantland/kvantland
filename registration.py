@@ -57,7 +57,10 @@ def checkout_reg(db, required_captcha=True):
     }
 	data = json.loads(request.body.read())
 	user_info = data['user']
-	print(data, file=sys.stderr)
+	
+	for key in user_info.keys():
+		user_info[key] = str(user_info[key]).strip()
+		
 	resp['errors'] = check_format(user_info)
 	if required_captcha:
 		try:
