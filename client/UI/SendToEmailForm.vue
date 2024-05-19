@@ -6,7 +6,7 @@
                 <p class="description" v-html="description" />
                 <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" :errorProp="error" />
                 <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
-                <button v-else-if="remainedTimeToSend == 0" @click="sendAgain"> Отправить еще раз </button>
+                <button v-else-if="remainedTimeToSend == 0" class="send_again" @click="sendAgain"> Отправить еще раз </button>
             </template>
         </div>
     </div>
@@ -26,7 +26,8 @@ export default {
                 'placeholder': "Почта",
             },
             readonly: true,
-            remainedTimeToSend: 3,
+            timeToSendAgain: 60,
+            remainedTimeToSend: 60,
             error: "",
         }
     },
@@ -55,8 +56,8 @@ export default {
                         status = "Проверка не пройдена"
                     }
                 })
-            console.log(status)
             this.error = status
+            this.remainedTimeToSend = this.timeToSendAgain
         },
     },
 }
@@ -123,5 +124,20 @@ export default {
 	font-size: 14px;
 	text-align: center;
 	align-self: stretch;
+}
+
+.send_again {
+    cursor: pointer;
+    align-self: stretch;
+    padding: 0 20px;
+    height: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #1E8B93;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    color: white;
+    border: none;
+    font-family: Montserrat;
 }
 </style>
