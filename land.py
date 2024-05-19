@@ -2,7 +2,7 @@
 
 from config import config
 from bottle import route, redirect
-
+import json
 import nav
 import user
 import footer
@@ -37,16 +37,14 @@ def require_user(db):
 			return None
 	return user_id
 
-@route('/api/rules_cards')
-def get_rules_info_cards():
-	rules_cards = [
-		{   'desc':  """<span class="bold_text">Многие задачи интерактивны</span> <br/><br/>Для их
-                        решения потребуется компьютер с мышкой или тачпадом,
-                        чтобы перетаскивать объекты и выделять клетки"""},
-						
-										
-    ]
-	return json.dumps(rules_cards)
+@route('/api/rules_crumbs')
+def get_rules_breadcrumbs():
+	rules_crumbs = [
+		{   'name': "Квантландия",
+            'link':  "/"},
+        {   'name': "Правила",
+            'link':  "/rules"},]
+	return json.dumps(rules_crumbs)
 
 @route('/land')
 def show_land(db):

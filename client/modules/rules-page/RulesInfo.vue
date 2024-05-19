@@ -14,16 +14,16 @@
     <div class="span_wrapper"><span class="span_text">Для решения задач вам понадобится компьютер и компьютерная мышь или ноутбук с тачпадом (не планшет), чтобы перетаскивать и выделять объекты. <br/><br/></span><span>Если возникла техническая проблема, то можно написать в техподдержку </span><u><NuxtLink  to="supportEmail.link" target="_blank">{{ supportEmail.title }}</NuxtLink></u><span> с описанием проблемы и скриншотом компьютера.</span></div>
     <div class="span_wrapper span_text">Выберите время в любой день до окончания турнира, чтобы вас ничего не отвлекало. Итоги соревнования подводятся по числу квантиков, которое у вас на счету к концу игры. Это число всегда отображается в вверху экрана по центру. Удачи!</div>
     </div>
-    <AgreeButton/>
+    <AgreeContainer/>
     </div>
     </div>
 </template>
 
 <script>
-import AgreeButton from "./components/AgreeButton.vue"
+import AgreeContainer from "./components/AgreeContainer.vue"
 export default {
    components: {
-        AgreeButton,
+        AgreeContainer,
     },
 
     data() {
@@ -50,3 +50,62 @@ export default {
     }
 }
 </script>
+<style>
+.rules_box {
+    align-self: stretch;
+    padding: 40px;
+    border-radius: 40px;
+    border: 3px #1E8B93 solid;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    display: flex;
+    color: black;
+    font-size: 20px;
+    font-family: Montserrat;
+    font-weight: 600;
+    word-wrap: break-word
+}
+
+
+.header_page {
+    align-self: stretch;
+    height: 49px;
+    color: #1E8B93;
+    font-size: 40px;
+    font-family: Montserrat Alternates;
+}
+
+.rules_content {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 40px;
+    display: flex
+}
+
+.rules_wrapper {
+    align-self: stretch;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    display: inline-flex;
+}
+
+.span_position {
+    flex: 1 1 0;
+    text-align: justify;
+}
+.span_wrapper {
+    align-self: stretch; text-align: justify
+}
+.span_text {
+    font-weight: 400;
+}
+
+.mail_link {
+    text-decoration: underline;
+}
+</style>
