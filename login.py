@@ -79,6 +79,15 @@ def check_token(request):
 	user_login = payload['login']
 	return {'error': None, 'login': user_login}
 
+@route('/api/user', method="OPTIONS")
+def resp():
+	response.iter_headers(
+		('Allow', 'POST'),
+		('Access-Control-Allow-Origin', 'http://localhost:3000'),
+		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
+    )
+	response.status = 200
+	
 @route('/api/user')
 def get_user_info(db):	
 	token_check_status = check_token(request)

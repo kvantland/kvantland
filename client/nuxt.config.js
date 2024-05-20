@@ -74,6 +74,7 @@ export default {
         login: '/login',
         logout: '/',
         home: '/',
+        callback: '/login'
     },
     strategies: {
       local: {
@@ -92,6 +93,36 @@ export default {
           user: { url: '/api/user', method: 'get'},
         },
         autoFetchUser: true,
+      },
+      vk: {
+        scheme: '~auth-schemes/localAuthO',
+        endpoints: {
+            authorization: 'http://oauth.vk.com/authorize',
+            apiLogin: `${process.env.API}/api/vk_auth`,
+            userInfo: `${process.env.API}/api/user`
+        },
+        userId: {
+            property: 'user_id',
+        },
+        token: {
+            property: 'access_token',
+        },
+        accessToken: {
+            property: 'access_token',
+        },
+        refreshToken: {
+            property: 'refresh_token',
+        },
+        user: {
+            property: 'user',
+        },
+        responseType: 'token',
+        scope: [],
+        clientId: 51749604,
+        codeChallengeMethod: '',
+        accessType: 'offline',
+        redirectUri: 'http://localhost:3000/login',
+        state: 'VK',
       }
     }
   },

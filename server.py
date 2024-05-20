@@ -17,7 +17,7 @@ class EnableCors(object):
             # set CORS headers
             response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
             response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
-            response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+            response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token, Authorization'
 
             if request.method != 'OPTIONS':
                 # actual request; reply with the actual response

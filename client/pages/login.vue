@@ -42,6 +42,6 @@ export default {
             this.regErrors = info
             console.log(this.regErrors)
         }
-    }
+    },
 }
 </script>
