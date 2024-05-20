@@ -1,12 +1,12 @@
 <template>
 <nav class="breadcrumbs">
-    <div v-for="item in crumbs">
+    <template v-for="item in crumbs">
         <NuxtLink :to="item.link" target="_blank"> {{ item.name }} </NuxtLink>
         <div class="between">
             <img src="/icons/breadcrumbs.svg" />
             <img src="/icons/breadcrumbs.svg" />
         </div>
-    </div>
+    </template>
 </nav>
 </template>
 

@@ -1,18 +1,16 @@
 <template>
-    <div class="conformation_box">
+<div class="conformation_box">
     <div class="conformation_wrapper">
-    <div class="conformation_text">С правилами ознакомился(-лась) и готов(а) приступить!</div>
-    <div class="start_button_border">
-    <NuxtLink  to="/land" target="_blank">
-    <div class ="start_button">
-    <div class="start_button_text"> Открыть турнир </div>
+        <p class="conformation_text">С правилами ознакомился(-лась) и готов(а) приступить!</p>
+        <div class="start_button_border">
+            <NuxtLink  to="/land" target="_blank">
+                <div class ="start_button"> Открыть турнир </div>
+            </NuxtLink>
+        </div>
     </div>
-    </NuxtLink>
-    </div>
-    </div>
-    </div>
+</div>
 </template>
-<style>
+<style scoped>
 .conformation_box {
     align-self: stretch;
     padding-left: 40px;
@@ -60,10 +58,6 @@
     align-items: center;
     gap: 10px;
     display: flex;
-}
-
-.start_button_text {
-    flex: 1 1 0;
     text-align: center;
     color: black;
     font-size: max(17px, min(24px, 1.8vw));
