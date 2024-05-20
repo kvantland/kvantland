@@ -31,11 +31,7 @@ def resp():
 
 @route('/api/vk_auth', method=["POST"])
 def vk_auth(db):
-	print('vk auth attemp', file=sys.stderr)
-	print(request.body.read().decode('utf-8'), file=sys.stderr)
 	data =  json.loads(request.body.read().decode('utf-8'))
-	print('OK', file=sys.stderr)
-	print(data, file=sys.stderr)
 	access_token = data['token']
 	user_id = data['user_id']
 
@@ -49,23 +45,17 @@ def vk_auth(db):
 
 	login = 'vk#' + str(user['id'])
 	password, name, surname, city, school = ('some', None, None, None, None)
-	try:
+	if 'first_name' in user.keys():
 		name = user['first_name']
-	except KeyError:
-		pass
-	try:
+	if 'last_name' in user.keys():
 		surname = user['last_name']
-	except KeyError:
-		pass
-	try:
-		city = user['city']['title']
-	except KeyError:
-		pass
-	if user['schools']:
-		try:
+	if 'city' in user.keys():
+		if 'title' in user['city'].keys():
+			city = user['city']['title']
+	if 'schools' in user.keys():
+		if len(user['schools']) > 0:
 			school = user['schools'][0]['name']
-		except KeyError:
-			pass
+			
 	if (user := vk_check_login(db, login)) == None:	
 		user = add_user(login, name, surname, city, school, password, db)
 
@@ -73,7 +63,6 @@ def vk_auth(db):
 	refresh_key = config['keys']['refresh_key']
 	resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
 	resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
-	print(resp, file=sys.stderr)
 
 	return json.dumps(resp)
 

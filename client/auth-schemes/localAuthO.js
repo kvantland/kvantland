@@ -20,6 +20,7 @@ function encodeQuery(opts) {
 
 export default class LocalOauth2Scheme extends Oauth2Scheme {
     async login({state, params, nonce} = {}){ 
+        console.log('login!')
         const opts = {
             protocol: 'oauth2',
             response_type: this.options.responseType,
@@ -53,7 +54,18 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
         this.$auth.setUser(response.data[this.options.user.property])
     }
 
-    async _handleCallback() {       
+    async _handleCallback() {
+        console.log('handle!')
+        if (this.check().valid)
+            return
+        console.log('first!')
+        // Handle callback only for specified route
+        if (
+            this.$auth.options.redirect &&
+            this.$auth.ctx.route.path != this.$auth.options.redirect.callback
+        ) {
+            return
+        }
         // Callback flow is not supported in server side
         if (process.server) {
           return
@@ -85,6 +97,12 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 
         this.token.set(resp.data.tokens[this.options.accessToken.property])
         this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])
+
+        if (this.$auth.options.watchLoggedIn) {
+            await this.fetchUser()
+            this.$auth.redirect('home', true)
+            return true // True means a redirect happened
+        }
     }
 
     updateTokens(response) {
