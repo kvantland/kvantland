@@ -10,9 +10,11 @@ import sys
 import email.message
 from pathlib import Path
 from email.message import EmailMessage
+from send_mail import send_mail
 import smtplib
 from html import escape
 import time
+import jwt
 
 from login import do_login, current_user
 from config import config
@@ -24,6 +26,111 @@ num = '0123456789'
 
 _key = config['keys']['recovery']
 
+@route('/api/pw_recovery', method="POST")
+def pw_recovery(db):
+	resp = {
+		'status': False,
+		'errors': {},
+    }
+	user_info = json.loads(request.body.read())
+	print(user_info, file=sys.stderr)
+	if not('email' in user_info.keys()):
+		resp['errors']['email'] = 'Не указана почта'
+		return json.dumps(resp)
+	if not user_info['email']:
+		resp['errors']['email'] = 'Не указана почта'
+		return json.dumps(resp)
+	
+	user_add_info = user_exists(db, user_info['email'])
+	print(user_add_info, file=sys.stderr)
+	if not(user_add_info['status']):
+		resp['errors']['email'] = 'Неверный адрес почты'
+	else:
+		user_info['name'] = user_add_info['name']
+		user_info['login'] = user_add_info['login']
+		
+	if not(resp['errors']):
+		print('here!')
+		if check_email_amount(db, user_info['email']):
+			resp['status'] = True
+			update_email_amount(db, user_info['email'])
+			send_pw_recovery_message(user_info, request.get_header('Origin'))
+		else:
+			resp['errors']['email'] = "Превышен лимит писем за день!"
+
+	return json.dumps(resp)
+
+
+def user_exists(db, email):
+	resp = {
+		'login': None,
+		'name': None,
+		'status': False,
+	}
+	db.execute('select login, name from Kvantland.Student where email=%s', (email, ))
+	if len(arr := db.fetchall()):
+		(login, name, ), = arr
+		resp['login'] = login
+		resp['name'] = name
+		resp['status'] = True
+	else:
+		db.execute('select login, name from Kvantland.Previousmail join Kvantland.Student using (student) where Kvantland.Previousmail.email=%s', (email, ))
+		if len(arr := db.fetchall()):
+			(login, name, ), = arr
+			resp['login'] = login
+			resp['name'] = name
+			resp['status'] = True
+	return resp
+	
+	
+def send_pw_recovery_message(user_info, origin):
+	user_info['time'] = time.time()
+	token = jwt.encode(payload=user_info,  key=config['keys']['email_confirm'], algorithm='HS256')
+	link = f"{origin}?email_confirm_token={token}&request=pw_recovery"
+	
+	email_content =  f'''
+				<!DOCTYPE html>
+				<head>
+				<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+       			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>Восстановление пароля</title>
+				</head>
+				<body style="padding: 80px;
+					font-family: Montserrat, Arial !important;
+					word-wrap: break-word;
+					font-size: 20px;
+					font-weight: 500;">
+				<div style="font-family: Montserrat, Arial !important;">
+				<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {user_info['name']}! </div>
+				<div style="margin-top: 20px"> Недавно был получен запрос на изменение пароля вашей учетной записи. 
+				Если вы запрашивали это изменение пароля, нажмите на ссылку ниже для установки нового пароля: </div>
+				</div>
+				<div style="width: 640px;
+					margin: 80px auto; 
+					background: #1E8B93; 
+					box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+					border-radius: 6px;">
+				<a href="{link}" style="text-decoration: none">
+				<div style="text-align: center;
+					padding: 10px 0;
+					color: white; 
+					font-weight: 600;
+					box-sizing: border-box;
+					font-family: Montserrat, Arial !important;">
+				Нажмите здесь, чтобы изменить пароль
+				</div>
+				</a>
+				</div>
+				<div>
+				<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно менять пароль, просто проигнорируйте данное сообщение. </div>
+				<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+				</div>
+				</body>
+				</html>'''
+	
+	return send_mail(email_content=email_content, email=user_info['email'], subject="Восстановление пароля")
+	
 
 @route('/pw_recovery')
 def display_recovery_form(err=None):
