@@ -1,7 +1,7 @@
 <template>
     <div class="content_wrapper">
         <div class="advert_form">
-            <div class="header"> {{ title }} </div>
+            <p class="header"> {{ title }} </p>
             <p class="description" v-html="description" />
             <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" :error="error" @input="changeEmail" @clearError="clearError" />
             <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
@@ -62,9 +62,8 @@ export default {
             .then((resp) => {
                 console.log(resp)
                 if (!resp.status){
-                    console.log(resp.errors.email)
-                    if (resp.errors.email == "Превышен лимит писем за день!")
-                        status = "Превышен лимит писем за день!"
+                    if (resp.errors.email)
+                        status = resp.errors.email
                     else
                         status = "Проверка не пройдена"
                     }

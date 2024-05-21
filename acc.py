@@ -29,14 +29,14 @@ def get_tournament_results(db):
 			{
 				'title': f'{to_roman_number(tournament_amount - tournament)} Турнир',
 				'score': get_score_text(db, config["tournament"]["version"] - tournament),
-            }
-        )
+			}
+		)
 	return json.dumps(tournament_results)
 
 @route('/api/acc_fields')
 def get_acc_fields():
 	fields = [
-		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
+			{'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
 			{'type': "input", 'inputType': "text", 'name': "surname", 'placeholder': "Фамилия"},
 			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
 			{'type': "input", 'inputType': "text", 'name': "town", 'placeholder': "Город"},
@@ -61,7 +61,7 @@ def update_user_info(db, send_again=False):
 		'status': True,
 		'email_changed': False,
 		'errors': {},
-    }
+	}
 	data = json.loads(request.body.read())
 	update_info = data['user_info']
 		
@@ -86,7 +86,7 @@ def update_user_info(db, send_again=False):
 		'school': prev_school, 
 		'clas': prev_clas,
 		'town': prev_town,
-    }
+	}
 	
 	for field in update_info: # поля с ошибками остаются прежними
 		if field in resp['errors']:
@@ -95,7 +95,7 @@ def update_user_info(db, send_again=False):
 	try:
 		db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, clas=%s, town=%s where login=%s', 
 			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
-	            user))
+				user))
 	except:
 		resp['status'] = False
 		
@@ -127,47 +127,47 @@ def send_acc_confirm_message(name, login, email, origin):
 	link = f"{origin}?email_confirm_token={token}&request=update_acc"
 	
 	email_content =  f'''
-        <!DOCTYPE html>
-        <head>
-        <link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Подтверждение почты</title>
-        </head>
-        <body style="padding: 80px;
-            font-family: Montserrat, Arial !important;
-            word-wrap: break-word;
-            font-size: 20px;
-            font-weight: 500;">
-        <div style="font-family: Montserrat, Arial !important;">
-        <div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
-        <div style="margin-top: 20px"> 
-            Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
-            Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
-        </div>
-        <div style="width: 640px;
-            margin: 80px auto; 
-            background: #1E8B93; 
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
-            border-radius: 6px;">
-        <a href="{link}" style="text-decoration: none">
-        <div style="text-align: center;
-            padding: 10px 0;
-            color: white; 
-            font-weight: 600;
-            box-sizing: border-box;
-            font-family: Montserrat, Arial !important;">
-        Нажмите здесь для подтверждения
-        </div>
-        </a>
-        </div>
-        <div>
-        <div style="font-family: Montserrat, Arial !important;"> Если вам не нужно подтверждать адрес электронной почты, 
-        просто проигнорируйте данное сообщение.</div>
-        <div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
-        </div>
-        </body>
-        </html>'''
+		<!DOCTYPE html>
+		<head>
+		<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Подтверждение почты</title>
+		</head>
+		<body style="padding: 80px;
+			font-family: Montserrat, Arial !important;
+			word-wrap: break-word;
+			font-size: 20px;
+			font-weight: 500;">
+		<div style="font-family: Montserrat, Arial !important;">
+		<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+		<div style="margin-top: 20px"> 
+			Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
+			Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
+		</div>
+		<div style="width: 640px;
+			margin: 80px auto; 
+			background: #1E8B93; 
+			box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+			border-radius: 6px;">
+		<a href="{link}" style="text-decoration: none">
+		<div style="text-align: center;
+			padding: 10px 0;
+			color: white; 
+			font-weight: 600;
+			box-sizing: border-box;
+			font-family: Montserrat, Arial !important;">
+		Нажмите здесь для подтверждения
+		</div>
+		</a>
+		</div>
+		<div>
+		<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно подтверждать адрес электронной почты, 
+		просто проигнорируйте данное сообщение.</div>
+		<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+		</div>
+		</body>
+		</html>'''
 	
 	return send_mail(email_content=email_content, email=email, subject="Подтверждение почты")
 
@@ -553,10 +553,13 @@ def check_format(user_info):
 			if str(user_info[field]) == 'False':
 				err_dict[field] = "Поставьте галочку"
 			continue
-
-		if field in option_info.keys():
-			if not(user_info[field] in option_info[field]):
-				err_dict[field] = "Значение не из списка"
+		
+		try:
+			if field in option_info.keys():
+				if not(user_info[field] in option_info[field]):
+					err_dict[field] = "Значение не из списка"
+		except:
+			pass
 
 		if len(user_info[field]) < min_size:
 			if len(user_info[field]) == 0:
@@ -718,7 +721,7 @@ def send_reg_confirm_message(db, info, only_send = False):
 			<head>
 			<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
    			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>Подтверждение почты</title>
 			</head>
 			<body style="padding: 80px;

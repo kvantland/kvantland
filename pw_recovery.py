@@ -17,6 +17,7 @@ import time
 import jwt
 
 from login import do_login, current_user
+from acc import check_format
 from config import config
 import user
 
@@ -86,7 +87,7 @@ def user_exists(db, email):
 def send_pw_recovery_message(user_info, origin):
 	user_info['time'] = time.time()
 	token = jwt.encode(payload=user_info,  key=config['keys']['email_confirm'], algorithm='HS256')
-	link = f"{origin}?email_confirm_token={token}&request=pw_recovery"
+	link = f"{origin}/login/pwRecovery?email_confirm_token={token}&request=pw_recovery"
 	
 	email_content =  f'''
 				<!DOCTYPE html>
@@ -130,6 +131,88 @@ def send_pw_recovery_message(user_info, origin):
 				</html>'''
 	
 	return send_mail(email_content=email_content, email=user_info['email'], subject="Восстановление пароля")
+
+@route('/api/pw_update', method="POST")
+def pw_update(db):
+	resp = {
+		'status': False,
+		'errors': {},
+		'user_info': {},
+	}
+
+	data = json.loads(request.body.read())
+	if not('token' in data.keys()):
+		return json.dumps(resp)
+	if not('fields' in data.keys()):
+		resp['errors']['password_repeat'] = 'Поле обязательно для заполнения'
+		resp['errors']['password'] = 'Поле обязательно для заполнения'
+		return json.dumps(resp)
+	
+	token = data['token']
+	fields = data['fields']
+	if not('password' in fields.keys()):
+		fields['password'] = ''
+	if not('password_repeat' in fields.keys()):
+		fields['password_repeat'] = ''
+
+	try:
+		decoded_token = jwt.decode(jwt=token, key=config['keys']['email_confirm'], algorithms=['HS256'])
+		login = decoded_token['login']
+		email = decoded_token['email']
+	except:
+		return json.dumps(resp)
+	
+	resp['errors'] = check_format(fields)
+	if fields['password'] != fields['password_repeat']:
+		resp['errors']['password_again'] = 'Пароли не совпадают'
+
+	print(resp, file=sys.stderr)
+	
+	if not(resp['errors']):
+		update_user(db, email, fields['password'])
+		resp['status'] = True
+		resp['user_info'] = {'login': login, 'password': fields['password']}
+	return json.dumps(resp)
+	
+
+def check_format(user_info):
+	err_dict = {}
+
+	for field in user_info:
+		try:
+			min_size = config['reg']['min_' + field + '_size']
+		except:
+			min_size = 1
+		try:
+			max_size = config['reg']['max_' + field + '_size']
+		except:
+			max_size = 500
+
+		tmp_upper, tmp_lower, tmp_number = (0, 0, 0)
+		for s in user_info[field]	:
+			if s in alph_upper:
+				tmp_upper = 1
+			if s in alph_lower:
+				tmp_lower = 1
+			if s in num:
+				tmp_number = 1
+		if not(tmp_lower and tmp_upper and tmp_number):
+			err_dict[field] = "Пароль должен содержать заглавные и </br> строчные буквы, а также цифры"
+		
+		if len(user_info[field]) < min_size:
+			if len(user_info[field]) == 0:
+				err_dict[field] = "Поле обязательно для заполнения"
+			else:
+				err_dict[field] = "Минимум " + str(min_size) + ' ' + lang_form(min_size)
+		if len(user_info[field]) > max_size:
+			err_dict[field] = "Слишком много символов"
+
+	return err_dict
+
+	
+
+
+
 	
 
 @route('/pw_recovery')
