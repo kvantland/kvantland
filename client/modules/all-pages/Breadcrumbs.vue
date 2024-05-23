@@ -1,7 +1,7 @@
 <template>
 <nav class="breadcrumbs">
     <template v-for="item in crumbs">
-        <NuxtLink :to="item.link" target="_blank"> {{ item.name }} </NuxtLink>
+        <NuxtLink :to="item.link"> {{ item.name }} </NuxtLink>
         <div class="between">
             <img src="/icons/breadcrumbs.svg" />
             <img src="/icons/breadcrumbs.svg" />
@@ -15,7 +15,7 @@ export default {
     props: ["crumbs"]
 }
 </script>
-<style>
+<style scoped>
 nav.breadcrumbs {
     white-space: nowrap;
     justify-content: flex-start; 
