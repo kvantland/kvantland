@@ -46,7 +46,6 @@ def get_rules_breadcrumbs():
             'link':  "/rules"},]
 	return json.dumps(rules_crumbs)
 
-
 @route('/api/rules_info')
 def get_rules_info():
 	rules_info = [
@@ -67,6 +66,13 @@ def get_rules_info():
 
 	]
 	return json.dumps(rules_info)
+
+@route('/api/land_crumbs')
+def get_rules_breadcrumbs():
+	rules_crumbs = [
+		{   'name': "Квантландия",
+            'link':  "/"},]
+	return json.dumps(rules_crumbs)
 
 @route('/land')
 def show_land(db):
