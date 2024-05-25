@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import AuthForm from "../modules/login-page/AuthForm.vue"
-import RegForm from "../modules/login-page/RegForm.vue"
+import AuthForm from "../../modules/login-page/AuthForm.vue"
+import RegForm from "../../modules/login-page/RegForm.vue"
 
 export default {
     layout: 'forms',

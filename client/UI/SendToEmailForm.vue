@@ -1,34 +1,42 @@
 <template>
     <div class="content_wrapper">
         <div class="advert_form">
-            <div class="header"> {{ title }} </div>
-            <template v-if="canSend">
-                <p class="description" v-html="description" />
-                <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" :errorProp="error" />
-                <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
-                <button v-else-if="remainedTimeToSend == 0" class="send_again" @click="sendAgain"> Отправить еще раз </button>
-            </template>
+            <p class="header"> {{ title }} </p>
+            <p class="description" v-html="description" />
+            <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" :error="error" @input="changeEmail" @clearError="clearError" />
+            <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
+            <button v-else-if="remainedTimeToSend == 0" class="send_again" @click="sendAgain($event.target.value)"> Отправить еще раз </button>
+            <slot />
         </div>
     </div>
 </template>
 
 <script>
+import { readonly } from 'vue';
+
 export default {
-    props: ['title', 'email', 'description', 'formData', 'apiRequestUrl'],
+    props: {
+        title:{}, 
+        email:{default:""},
+        description:{},
+        formData:{}, 
+        apiRequestUrl:{},
+        readonly:{default:true},
+        remainedTimeToSendProp:{default: 60},
+    },
 
     data() {
         return {
-            canSend: true,
             formFieldInfo: {
                 'type': "input",
                 'inputType': "email",
                 'name': "email",
                 'placeholder': "Почта",
             },
-            readonly: true,
             timeToSendAgain: 60,
-            remainedTimeToSend: 60,
             error: "",
+            remainedTimeToSend: this.remainedTimeToSendProp,
+
         }
     },
 
@@ -36,12 +44,15 @@ export default {
         async remainedTimeToSend(newValue) {
             if (newValue > 0)
                 setTimeout(function(){this.remainedTimeToSend -= 1}.bind(this), 1000)
+            else
+                this.error = ""
         }
     },
 
     async mounted() {
         console.log(this.remainedTimeToSend)
-        setTimeout(function(){this.remainedTimeToSend -= 1}.bind(this), 1000)
+        if (this.remainedTimeToSend > 0)
+            setTimeout(function(){this.remainedTimeToSend -= 1}.bind(this), 1000)
     },
 
     methods: {
@@ -49,16 +60,24 @@ export default {
             let status = ""
             await this.$axios.$post(this.apiRequestUrl, this.formData)
             .then((resp) => {
+                console.log(resp)
                 if (!resp.status){
-                    if (resp.errors.email == "Превышен лимит писем за день!")
-                        status = "Превышен лимит писем за день!"
+                    if (resp.errors.email)
+                        status = resp.errors.email
                     else
                         status = "Проверка не пройдена"
                     }
                 })
             this.error = status
+            console.log(this.error)
             this.remainedTimeToSend = this.timeToSendAgain
         },
+        changeEmail(newValue) {
+            this.$emit('changeEmail', newValue)
+        },
+        clearError() {
+            this.error=""
+        }
     },
 }
 </script>

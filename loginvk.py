@@ -8,6 +8,8 @@ import jwt
 import urllib.request as urllib2
 from login import do_login, current_user
 from passlib.hash import pbkdf2_sha256 as pwhash
+import certifi
+from urllib.error import HTTPError, URLError
 
 import urllib.parse
 
@@ -26,7 +28,7 @@ def resp():
 		('Allow', 'POST'),
 		('Access-Control-Allow-Origin', 'http://localhost:3000'),
 		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
-    )
+	)
 	response.status = 200
 
 @route('/api/vk_auth', method=["POST"])
@@ -40,7 +42,7 @@ def vk_auth(db):
 		'tokens': {
 			'access_token': '',
 			'refresh_token': '',
-        }
+		}
 	}
 
 	login = 'vk#' + str(user['id'])
@@ -75,7 +77,12 @@ def get_user_vk_info(access_token, user_id):
 		'v': '5.131',
 	}
 	info_path = info_url + '?' + urllib.parse.urlencode(params)
-	cont = urllib2.urlopen(info_path)
+	try:
+		cont = urllib2.urlopen(info_path, cafile=certifi.where())
+	except HTTPError as e:
+		print(f"HTTP Error: {e.code}")
+	except URLError as e:
+		print(f"URL Error: {e.reason}")
 	user_info = json.loads(cont.read())
 
 	return user_info['response'][0]
