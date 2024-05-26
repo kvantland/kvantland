@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from config import config
-from bottle import route, redirect
+from bottle import route, redirect, request, response
 import json
 import nav
 import user
@@ -75,6 +75,7 @@ def get_rules_breadcrumbs():
 	return json.dumps(rules_crumbs)
 
 def check_token(request):
+	print("test_token", file=sys.stderr) 
 	auth_header = request.get_header('Authorization')
 	if auth_header is None:
 		return {'error': "Incorrect request format", 'login': ""}
@@ -88,15 +89,33 @@ def check_token(request):
 	user_login = payload['login']
 	return {'error': None, 'login': user_login}
 
-@route('/api/userID')
-def get_user_id(db):  
+def get_user_id(db): 
+	print("test_user", file=sys.stderr) 
 	token_check_status = check_token(request)
 	if token_check_status['error']:
 		response.status = 400
 		return json.dumps({'error': token_check_status['error']})
 	else:
-		user = token_check_status['login']
+		user_login = token_check_status['login']
+	db.execute('select student from Kvantland.Student where login=%s', (user_login, ))
+	(user, ) = db.fetchall()[0]
+	return user
 
+@route('/api/towns_info')
+def get_towns_info(db):
+	print("test", file=sys.stderr)
+	user_id = get_user_id(db)
+	print("user: " + user_id, file=sys.stderr)
+	if user_id is not None:
+		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false and tournament = %s) from Kvantland.Town', (user_id, config["tournament"]["version"]))
+	else:
+		db.execute('select town, name, position, true from Kvantland.Town')
+	resp = []
+	cnt = 0
+	for town, name, (x, y), opened in db.fetchall():
+		resp.append({"town": town, "name": name, "x": x, "y": y, "opened": opened, "cnt": cnt})
+		cnt += 1
+	return json.dumps(resp)
 
 @route('/land')
 def show_land(db):

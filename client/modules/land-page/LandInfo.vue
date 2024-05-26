@@ -9,8 +9,10 @@
 import LandDefs from "./components/LandDefs.vue"
 import Towns from "./components/Towns.vue"
 export default {
+	middleware: 'auth',
    components: {
         LandDefs,
+        Towns,
     },
 }
 </script>
