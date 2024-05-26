@@ -70,10 +70,12 @@ export default {
   },
 
   auth: {
+    watchLoggedIn: true,
     redirect: {
         login: '/login',
         logout: '/',
         home: '/',
+        callback: '/'
     },
     strategies: {
       local: {
@@ -84,16 +86,43 @@ export default {
         },
         user: {
           property: 'user',
-          autoFetch: true,
         },
         endpoints: {
           login: { url: '/api/check_login', method: 'post' },
           logout: false,
           user: { url: '/api/user', method: 'get'},
         },
-        autoFetchUser: true,
+      },
+      vk: {
+        scheme: '~auth-schemes/localAuthO',
+        endpoints: {
+            authorization: 'http://oauth.vk.com/authorize',
+            apiLogin: `${process.env.API}/api/vk_auth`,
+            userInfo: `${process.env.API}/api/user`,
+        },
+        userId: {
+            property: 'user_id',
+        },
+        token: {
+            property: 'access_token',
+        },
+        accessToken: {
+            property: 'access_token',
+        },
+        refreshToken: {
+            property: 'refresh_token',
+        },
+        user: {
+            property: 'user',
+        },
+        responseType: 'token',
+        scope: [],
+        clientId: process.env.VK_CLIENT,
+        codeChallengeMethod: '',
+        redirectUri: `${process.env.BASE_URL}/`,
+        state: 'VK',
       }
-    }
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

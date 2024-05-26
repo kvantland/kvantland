@@ -50,4 +50,13 @@ hr {
     width: 100%;
     border-top: 1px solid black;
 }
+
+.header {
+    display: inline-flex;
+    justify-content: center;
+    gap: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+}
 </style>
