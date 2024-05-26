@@ -1,5 +1,5 @@
 <template v-for="twn in townsInfo">
-	<a :class="twn.clazz" transform="translate({{twn.x}} {{twn.y}})" xlink:href="/town/{{twn.town}}/">
+	<a :class="twn.clazz" transform="translate(`${twn.x}` `${twn.y}`)" xlink:href="/town/ `${twn.town}`/">
 		<image href="/static/town-icon/icon-{{twn.town}}.png" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
 		<circle class="town-icon" r="33px" />
 		<g class="town-name">

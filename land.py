@@ -74,6 +74,30 @@ def get_rules_breadcrumbs():
             'link':  "/"},]
 	return json.dumps(rules_crumbs)
 
+def check_token(request):
+	auth_header = request.get_header('Authorization')
+	if auth_header is None:
+		return {'error': "Incorrect request format", 'login': ""}
+	if 'Bearer' not in auth_header:
+		return {'error': "No Bearer in header", 'login': ""}
+	token = auth_header.replace('Bearer ', '')
+	try:
+		payload = jwt.decode(jwt=token, key=config['keys']['access_key'], algorithms=['HS256'])
+	except:
+		return {'error': "Not correct token", 'login': ""}
+	user_login = payload['login']
+	return {'error': None, 'login': user_login}
+
+@route('/api/userID')
+def get_user_id(db):  
+	token_check_status = check_token(request)
+	if token_check_status['error']:
+		response.status = 400
+		return json.dumps({'error': token_check_status['error']})
+	else:
+		user = token_check_status['login']
+
+
 @route('/land')
 def show_land(db):
 	if MODE == 'private':
