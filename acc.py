@@ -268,6 +268,27 @@ def email_update(db):
 	db.execute('update Kvantland.Student set email=%s where login=%s', (decoded_data['email'], decoded_data['login']))
 	return json.dumps({'status': True})
 
+
+@route('/api/is_user_info_full', method="POST")
+def is_user_info_full(db):
+	resp = {
+		'status': False
+	}
+
+	token_status = check_token(request)
+	print(token_status, file=sys.stderr)
+	if token_status['error']:
+		return json.dumps(resp)
+	login = token_status['login']
+	print(login, file=sys.stderr)
+
+	db.execute('select name, surname, town, clas, email from Kvantland.Student where login=%s', (login,))
+	(name, surname, town, clas, email, ), = db.fetchall()
+	if name and surname and town and clas and email:
+		resp['status'] = True
+
+	return json.dumps(resp)
+
 		
 _key = config['keys']['mail_confirm']
 
