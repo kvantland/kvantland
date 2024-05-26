@@ -2,11 +2,9 @@
     <HeaderContainer>
         <Logo />
         <ScoreBar v-if="$auth.loggedIn" />
-        <ButtonArea>
-            <template v-if="$auth.loggedIn">
-                <AccButton />
-                <LogoutButton />
-            </template>
+        <ButtonArea v-show="$auth.loggedIn" style="display: none;">
+            <AccButton />
+            <LogoutButton />
         </ButtonArea>
     </HeaderContainer>
 </template>

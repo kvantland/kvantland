@@ -55,7 +55,6 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
     }
 
     async _handleCallback() {
-        console.log('handle!')
         if (this.check().valid)
             return
         console.log('first!')
