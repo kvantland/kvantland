@@ -88,6 +88,6 @@ import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
     };
 </script>
 
-<style>
+<style scoped>
 @import "../assets/css/start_page.css";
 </style>
