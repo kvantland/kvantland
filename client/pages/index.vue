@@ -24,6 +24,7 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
 
     export default {
+        layout: 'start-page',
         head() {
             return {
                 title: 'Квантландия'

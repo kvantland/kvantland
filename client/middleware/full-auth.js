@@ -1,4 +1,4 @@
-export default async function({$axios, redirect, store, $auth}) {
+export default async function({$axios, redirect, $auth}) {
     if (!$auth.loggedIn)
         return redirect('/login')
     else{
