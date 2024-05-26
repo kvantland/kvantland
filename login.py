@@ -10,6 +10,7 @@ import jwt
 import sys
 
 from config import config
+from check_fields_format import *
 import user
 
 _key = config['keys']['cookie']
@@ -25,22 +26,9 @@ def get_login_fields():
 	fields = [
 		{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
 		{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"}
-    ]
+	]
 	return json.dumps(fields)
 
-@route('/api/registration_fields')
-def get_registration_fields():
-	fields = [
-		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
-			{'type': "input", 'inputType': "text", 'name': "surname", 'placeholder': "Фамилия"},
-			{'type': "input", 'inputType': "email", 'name': "email", 'placeholder': "E-mail"},
-			{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
-			{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"},
-			{'type': "input", 'inputType': "text", 'name': "town", 'placeholder': "Город"},
-			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
-			{'type': "select", 'options': [str(i) for i in range(1, 12)] + ['Другое'], 'name': "clas", 'placeholder': "Класс"},
-		]
-	return json.dumps(fields)
 
 @route('/api/check_login', method="POST")
 def check_login_request(db):
@@ -49,21 +37,44 @@ def check_login_request(db):
 		'tokens': {
 			'access_token': '',
 			'refresh_token': '',
-        }
-    }
+		},
+		'status': False,
+		'errors': dict(),
+	}
 	try:
 		login = user_data['login']
+	except:
+		login = ''
+	
+	try:
 		password = user_data['password']
+	except:
+		password = ''
+	print(login, password, file=sys.stderr)
+	expected_fields = ['login', 'password']
+	pw_check = ['password']
+	
+	try:
 		db.execute('select password from Kvantland.Student where login = %s', (login, ))
 		(password_hash, ), = db.fetchall()
-		if pwhash.verify(password, password_hash):
-			access_key = config['keys']['access_key']
-			refresh_key = config['keys']['refresh_key']
-			resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
-			resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
-		return json.dumps(resp) 
 	except:
-		return json.dumps(resp) # Неполная информация или отсутствует пользователь
+		resp['errors']['login'] = 'Пользователь не существует'
+		password_hash = pwhash.hash('-')
+
+	if pwhash.verify(password, password_hash) and login:
+		access_key = config['keys']['access_key']
+		refresh_key = config['keys']['refresh_key']
+		resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
+		resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
+	else:
+		resp['errors']['password'] = 'Неверный пароль'
+
+	resp['errors'].update(check_fields_format(data=user_data, expected_fields=expected_fields, pw_check=pw_check))
+	print(resp['errors'], file=sys.stderr)
+	
+	if not(resp['errors']):
+		resp['status'] = True
+	return json.dumps(resp)
 	
 def check_token(request):
 	auth_header = request.get_header('Authorization')
@@ -79,51 +90,6 @@ def check_token(request):
 	user_login = payload['login']
 	return {'error': None, 'login': user_login}
 
-@route('/api/user', method="OPTIONS")
-def resp():
-	response.iter_headers(
-		('Allow', 'POST'),
-		('Access-Control-Allow-Origin', 'http://localhost:3000'),
-		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
-    )
-	response.status = 200
-	
-@route('/api/user')
-def get_user_info(db):	
-	token_check_status = check_token(request)
-	if token_check_status['error']:
-		response.status = 400
-		return json.dumps({'error': token_check_status['error']})
-	else:
-		user = token_check_status['login']
-		
-	resp = {
-		'user': {
-			'login': '',
-			'name': '',
-			'email': '',
-			'surname': '',
-			'school': '',
-			'clas': '',
-			'town': '',
-        }
-    }
-	if user:
-		try:
-			db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where login = %s', (user, ))
-		except:
-			response.status = 400
-			return json.dumps({'error': "No such user!"})
-		(name, email, surname, school, clas, town, score), = db.fetchall()
-		resp['user']['name'] = name
-		resp['user']['email'] = email
-		resp['user']['surname'] = surname
-		resp['user']['school'] = school
-		resp['user']['clas'] = clas
-		resp['user']['town'] = town
-		resp['user']['score'] = score
-		resp['user']['login'] = user
-	return json.dumps(resp) 
 
 @route('/login')
 def login_form(db):

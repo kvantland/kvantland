@@ -6,6 +6,7 @@ import nav
 import user
 import sys
 from login import current_user, do_login, check_token
+from check_fields_format import *
 from send_mail import send_mail
 import approv
 import hmac
@@ -19,6 +20,53 @@ import jwt
 
 import urllib.parse
 import json
+
+@route('/api/user', method="OPTIONS")
+def resp():
+	response.iter_headers(
+		('Allow', 'POST'),
+		('Access-Control-Allow-Origin', 'http://localhost:3000'),
+		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
+	)
+	response.status = 200
+	
+@route('/api/user')
+def get_user_info(db):	
+	token_check_status = check_token(request)
+	if token_check_status['error']:
+		response.status = 400
+		return json.dumps({'error': token_check_status['error']})
+	else:
+		user = token_check_status['login']
+		
+	resp = {
+		'user': {
+			'login': '',
+			'name': '',
+			'email': '',
+			'surname': '',
+			'school': '',
+			'clas': '',
+			'town': '',
+		}
+	}
+	if user:
+		try:
+			db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where login = %s', (user, ))
+		except:
+			response.status = 400
+			return json.dumps({'error': "No such user!"})
+		(name, email, surname, school, clas, town, score), = db.fetchall()
+		resp['user']['name'] = name
+		resp['user']['email'] = email
+		resp['user']['surname'] = surname
+		resp['user']['school'] = school
+		resp['user']['clas'] = clas
+		resp['user']['town'] = town
+		resp['user']['score'] = score
+		resp['user']['login'] = user
+	return json.dumps(resp) 
+
 
 @route('/api/tournament_results')
 def get_tournament_results(db):
@@ -45,41 +93,47 @@ def get_acc_fields():
 		]
 	return json.dumps(fields)
 
-def is_new_email(db, new_email, login):
-	try:
-		db.execute("select email from Kvantland.Student where login = %s", (login, ))
-		(prev_email, ), = db.fetchall()
-		if prev_email != new_email:
-			return True
-	except:
-		return False
-	return False
 
 @route('/api/update_user_info', method="POST")
 def update_user_info(db, send_again=False):
 	resp = {
-		'status': True,
+		'status': False,
 		'email_changed': False,
-		'errors': {},
+		'errors': dict(),
 	}
-	data = json.loads(request.body.read())
-	update_info = data['user_info']
-		
-	for key in update_info.keys():
-		update_info[key] = str(update_info[key]).strip()
+	try:
+		data = json.loads(request.body.read())
+		update_info = data['user_info']
+	except:
+		return json.dumps(resp)
 
 	check_token_status = check_token(request)
 	if check_token_status['error']:
-		resp['status'] = False
 		resp['errors']['token'] = check_token_status['error']
 		return json.dumps(resp)
 	else:
 		user = check_token_status['login']
-	check_user_info_status = check_format(update_info)
-	resp['errors'].update(check_user_info_status) # неверный формат полей за исключением почты
 	
-	db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие значения
-	(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
+	email_check = ['email']
+	expected_fields = []
+	select_check = dict()
+	
+	for field in json.loads(get_acc_fields()):
+		expected_fields.append(field['name'])
+		if field['type'] == 'select':
+			select_check[field['name']] = field['options']
+
+	resp['errors'].update(check_fields_format(update_info, 
+										   email_check=email_check,
+										   expected_fields=expected_fields,
+										   select_check=select_check))
+	
+	try:
+		db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие значения
+		(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
+	except:
+		return json.dumps(resp)
+	
 	prev_info = {
 		'name': prev_name,
 		'surname': prev_surname,
@@ -101,7 +155,7 @@ def update_user_info(db, send_again=False):
 		
 	if 'email' in update_info.keys():
 		if is_new_email(db, update_info['email'], user) or send_again:
-			if not check_email(db, update_info['email']):
+			if not email_already_exists(db, update_info['email']):
 				origin = request.get_header('Origin')
 				send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'], origin=origin)
 				if send_status['status']:
@@ -111,8 +165,9 @@ def update_user_info(db, send_again=False):
 			else:
 				resp['errors']['email'] = "Почта уже используется"
 			
-	if resp['errors']:
-		resp['status'] = False
+	if not(resp['errors']):
+		resp['status'] = True
+	print('errors: ', resp['errors'], file=sys.stderr)
 		
 	return json.dumps(resp)
 

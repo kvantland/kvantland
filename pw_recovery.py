@@ -3,6 +3,7 @@
 
 from bottle import route, redirect, request, response
 from passlib.hash import pbkdf2_sha256 as pwhash
+from check_fields_format import *
 import json
 import hmac
 import urllib.parse
@@ -17,7 +18,6 @@ import time
 import jwt
 
 from login import do_login, current_user
-from acc import check_format
 from config import config
 import user
 
@@ -32,18 +32,22 @@ def pw_recovery(db):
 	resp = {
 		'status': False,
 		'errors': {},
-    }
-	user_info = json.loads(request.body.read())
-	print(user_info, file=sys.stderr)
+	}
+	try:
+		user_info = json.loads(request.body.read())
+		print('user info: ', user_info, file=sys.stderr)
+	except:
+		return json.dumps(resp)
+	
 	if not('email' in user_info.keys()):
 		resp['errors']['email'] = 'Не указана почта'
 		return json.dumps(resp)
-	if not user_info['email']:
-		resp['errors']['email'] = 'Не указана почта'
-		return json.dumps(resp)
 	
+	email_check = ['email']
+	resp.update(check_fields_format(user_info, email_check=email_check))
+
 	user_add_info = user_exists(db, user_info['email'])
-	print(user_add_info, file=sys.stderr)
+	print('user add info: ', user_add_info, file=sys.stderr)
 	if not(user_add_info['status']):
 		resp['errors']['email'] = 'Неверный адрес почты'
 	else:
@@ -51,13 +55,18 @@ def pw_recovery(db):
 		user_info['login'] = user_add_info['login']
 		
 	if not(resp['errors']):
-		print('here!')
 		if check_email_amount(db, user_info['email']):
-			resp['status'] = True
-			update_email_amount(db, user_info['email'])
-			send_pw_recovery_message(user_info, request.get_header('Origin'))
+			send_status = send_pw_recovery_message(user_info, request.get_header('Origin'))
+			if send_status['status']:
+				update_email_amount(db, user_info['email'])
+			else:
+				resp['errors']['email'] = send_status['error']	
 		else:
 			resp['errors']['email'] = "Превышен лимит писем за день!"
+	
+	if not(resp['errors']):
+		resp['status'] = True
+	print('errors: ', resp['errors'], file=sys.stderr)
 
 	return json.dumps(resp)
 
@@ -93,8 +102,8 @@ def send_pw_recovery_message(user_info, origin):
 				<!DOCTYPE html>
 				<head>
 				<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
-       			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	   			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>Восстановление пароля</title>
 				</head>
 				<body style="padding: 80px;
@@ -136,24 +145,19 @@ def send_pw_recovery_message(user_info, origin):
 def pw_update(db):
 	resp = {
 		'status': False,
-		'errors': {},
-		'user_info': {},
+		'errors': dict(),
+		'user_info': dict(),
 	}
 
-	data = json.loads(request.body.read())
+	try:
+		data = json.loads(request.body.read())
+		token = data['token']
+		fields = data['fields']
+	except:
+		return json.dumps(resp)
+
 	if not('token' in data.keys()):
 		return json.dumps(resp)
-	if not('fields' in data.keys()):
-		resp['errors']['password_repeat'] = 'Поле обязательно для заполнения'
-		resp['errors']['password'] = 'Поле обязательно для заполнения'
-		return json.dumps(resp)
-	
-	token = data['token']
-	fields = data['fields']
-	if not('password' in fields.keys()):
-		fields['password'] = ''
-	if not('password_repeat' in fields.keys()):
-		fields['password_repeat'] = ''
 
 	try:
 		decoded_token = jwt.decode(jwt=token, key=config['keys']['email_confirm'], algorithms=['HS256'])
@@ -162,10 +166,21 @@ def pw_update(db):
 	except:
 		return json.dumps(resp)
 	
-	resp['errors'] = check_format(fields)
+	if not('password' in fields.keys()):
+		fields['password'] = ''
+	if not('password_repeat' in fields.keys()):
+		fields['password_repeat'] = ''
+	
+	print(fields, file=sys.stderr)
 	if fields['password'] != fields['password_repeat']:
-		resp['errors']['password_again'] = 'Пароли не совпадают'
-
+		resp['errors']['password_repeat'] = 'Пароли не совпадают'
+	
+	expected_fields = ['password', 'password_repeat']
+	pw_check = ['password', 'password_repeat']
+	resp['errors'].update(check_fields_format(fields, 
+										   expected_fields=expected_fields, 
+										   pw_check=pw_check))
+	
 	print(resp, file=sys.stderr)
 	
 	if not(resp['errors']):
@@ -173,43 +188,6 @@ def pw_update(db):
 		resp['status'] = True
 		resp['user_info'] = {'login': login, 'password': fields['password']}
 	return json.dumps(resp)
-	
-
-def check_format(user_info):
-	err_dict = {}
-
-	for field in user_info:
-		try:
-			min_size = config['reg']['min_' + field + '_size']
-		except:
-			min_size = 1
-		try:
-			max_size = config['reg']['max_' + field + '_size']
-		except:
-			max_size = 500
-
-		tmp_upper, tmp_lower, tmp_number = (0, 0, 0)
-		for s in user_info[field]	:
-			if s in alph_upper:
-				tmp_upper = 1
-			if s in alph_lower:
-				tmp_lower = 1
-			if s in num:
-				tmp_number = 1
-		if not(tmp_lower and tmp_upper and tmp_number):
-			err_dict[field] = "Пароль должен содержать заглавные и </br> строчные буквы, а также цифры"
-		
-		if len(user_info[field]) < min_size:
-			if len(user_info[field]) == 0:
-				err_dict[field] = "Поле обязательно для заполнения"
-			else:
-				err_dict[field] = "Минимум " + str(min_size) + ' ' + lang_form(min_size)
-		if len(user_info[field]) > max_size:
-			err_dict[field] = "Слишком много символов"
-
-	return err_dict
-
-	
 
 
 
@@ -353,8 +331,8 @@ def recovery_attempt(db, only_send=False, email=''):
 				<!DOCTYPE html>
 				<head>
 				<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
-       			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	   			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>Восстановление пароля</title>
 				</head>
 				<body style="padding: 80px;

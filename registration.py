@@ -16,38 +16,25 @@ import urllib.request as urllib2
 import urllib.parse
 import time
 import jwt
+from check_fields_format import *
 
 import sys
 
-def check_login(db, login):
-	db.execute("select student from Kvantland.Student where login = %s", (login,))
-	try:
-		(user,) = db.fetchall()
-	except ValueError:
-		return None
-	return user
 
-def check_email(db, email):
-	db.execute("select student from Kvantland.Student where email = %s", (email,))
-	try:
-		(user,) = db.fetchall()
-	except ValueError:
-		return None
-	return user
+@route('/api/registration_fields')
+def get_registration_fields():
+	fields = [
+		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
+			{'type': "input", 'inputType': "text", 'name': "surname", 'placeholder': "Фамилия"},
+			{'type': "input", 'inputType': "text", 'name': "email", 'placeholder': "E-mail"},
+			{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
+			{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"},
+			{'type': "input", 'inputType': "text", 'name': "town", 'placeholder': "Город"},
+			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
+			{'type': "select", 'options': [str(i) for i in range(1, 12)] + ['Другое'], 'name': "clas", 'placeholder': "Класс"},
+		]
+	return json.dumps(fields)
 
-def check_captcha(token):
-	not_robot = False
-	params = {
-        "secret": config['reg']['secret'],
-        "response": token,
-    }
-	out = config['reg']['reg_url'] + '?' + urllib.parse.urlencode(params)
-	cont = urllib2.urlopen(out)
-	not_robot = json.loads(cont.read())['success']
-	if not_robot:
-		return ""
-	else:
-		return "Капча не пройдена"
 
 @route('/api/checkout_reg', method="POST")
 def checkout_reg(db, required_captcha=True):
@@ -55,15 +42,30 @@ def checkout_reg(db, required_captcha=True):
 		'status': False,
 		'errors': {},
     }
-	data = json.loads(request.body.read())
-	user_info = data['user']
 	
-	for key in user_info.keys():
-		user_info[key] = str(user_info[key]).strip()
+	email_check = ['email']
+	pw_check = []
+	select_check = dict()
+	expected_fields = []
+	
+	for field in json.loads(get_registration_fields()):
+		expected_fields.append(field['name'])
+		if field['type'] == 'select':
+			select_check[field['name']] = field['options']
+		if field['type'] == 'input':
+			if field['inputType'] == 'password':
+				pw_check.append(field['name'])
+
+	try:
+		data = json.loads(request.body.read())
+		user_info = data['user']
+	except:
+		return json.dumps(resp)
 		
 	print(user_info, file=sys.stderr)
-	resp['errors'] = check_format(user_info)
-	
+	resp['errors'] = check_fields_format(user_info, expected_fields, pw_check, 
+									email_check, select_check)
+	print(resp['errors'], file=sys.stderr)
 	if required_captcha:
 		try:
 			captcha_token = data['captcha']
@@ -73,22 +75,26 @@ def checkout_reg(db, required_captcha=True):
 			resp['errors']['captcha'] = "Заполните капчу!"
 		
 	if 'login' in user_info.keys():
-		if check_login(db, user_info['login']):
+		if login_already_exists(db, user_info['login']):
 			resp['errors']['login'] = "Логин уже используется"
 			
 	if 'email' in user_info.keys():
-		if check_email(db, user_info['email']):
+		if email_already_exists(db, user_info['email']):
 			resp['errors']['email'] = "Почта уже используется"
 			
 	if not resp['errors']:
 		if check_email_amount(db, user_info):
 			resp['status'] = True
-			update_email_amount(db, user_info)
-			send_registration_confirm_message(user_info, request.get_header('Origin'))
+			send_status = send_registration_confirm_message(user_info, request.get_header('Origin'))
+			if send_status['status']:
+				update_email_amount(db, user_info)
+			else:
+				resp['errors']['email'] = send_status['error']	
 		else:
 			resp['errors']['email'] = "Превышен лимит писем за день!"
 	print(resp, file=sys.stderr)
 	return json.dumps(resp)
+
 
 @route('/api/send_reg_message_again', method="POST")
 def send_again(db):
@@ -187,7 +193,6 @@ all_info = [['name', 'text', 'Имя'],
 			['login', 'text', 'Логин'],
 			['password', 'password', 'Пароль'],
 			['city', 'text', 'Город'],
-			['town', 'text', 'Город'],
 			['school', 'text', 'Школа'],
 			['clas', 'select', 'Класс', [str(i) for i in range(1, 12)] + ['Другое']]]
 
