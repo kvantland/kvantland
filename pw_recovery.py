@@ -171,22 +171,22 @@ def pw_update(db):
 	if not('password_repeat' in fields.keys()):
 		fields['password_repeat'] = ''
 	
-	print(fields, file=sys.stderr)
-	if fields['password'] != fields['password_repeat']:
-		resp['errors']['password_repeat'] = 'Пароли не совпадают'
-	
 	expected_fields = ['password', 'password_repeat']
 	pw_check = ['password', 'password_repeat']
 	resp['errors'].update(check_fields_format(fields, 
 										   expected_fields=expected_fields, 
 										   pw_check=pw_check))
 	
-	print(resp, file=sys.stderr)
+	print('fields: ', fields, file=sys.stderr)
+	if fields['password'] != fields['password_repeat'] and not(resp['errors']):
+		resp['errors']['password_repeat'] = 'Пароли не совпадают'
 	
 	if not(resp['errors']):
 		update_user(db, email, fields['password'])
 		resp['status'] = True
 		resp['user_info'] = {'login': login, 'password': fields['password']}
+	
+	print('resp: ',  resp, file=sys.stderr)
 	return json.dumps(resp)
 
 

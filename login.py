@@ -58,7 +58,7 @@ def check_login_request(db):
 		db.execute('select password from Kvantland.Student where login = %s', (login, ))
 		(password_hash, ), = db.fetchall()
 	except:
-		resp['errors']['login'] = 'Пользователь не существует'
+		resp['errors']['password'] = 'Неверный логин или пароль'
 		password_hash = pwhash.hash('-')
 
 	if pwhash.verify(password, password_hash) and login:
@@ -67,7 +67,7 @@ def check_login_request(db):
 		resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
 		resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
 	else:
-		resp['errors']['password'] = 'Неверный пароль'
+		resp['errors']['password'] = 'Неверный логин или пароль'
 
 	resp['errors'].update(check_fields_format(data=user_data, expected_fields=expected_fields, pw_check=pw_check))
 	print(resp['errors'], file=sys.stderr)
