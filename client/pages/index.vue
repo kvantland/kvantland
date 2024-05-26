@@ -7,7 +7,7 @@
             <ProblemExamples @showDialog="displayDialog" />
             <TeamInfo />
             <ContactsArea />
-            <Dialog v-if="activeDialog" :dialogType="dialogType" 
+            <ProblemExampleDialog v-if="activeDialog" :dialogType="dialogType" 
                 :dialogData="dialogData" @closeDialog="hideDialog" 
                 @changeDialog="displayDialog" />
         </div>
@@ -21,10 +21,10 @@ import CommonInfo from '../modules/index-page/CommonInfo/CommonInfo.vue';
 import ContactsArea from '../modules/index-page/ContactsArea/ContactsArea.vue';
 import ProblemExamples from '../modules/index-page/ProblemExamples/ProblemExamples.vue';
 import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
-import Dialog from '../UI/Dialog.vue'
 import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
 
     export default {
+        layout: 'start-page',
         head() {
             return {
                 title: 'Квантландия'
@@ -37,7 +37,6 @@ import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
             ProblemExamples,
             TeamInfo,
             TournamentInfo,
-            Dialog,
             StartHeader,
         },
 
@@ -47,6 +46,31 @@ import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
                 dialogType: null,
                 dialogData: null,
             };
+        },
+
+        async mounted() {
+            switch(this.$route.query.request) {
+                case 'registration':
+                    let userInfo
+                    try {
+                        await this.$axios.$post('/api/registration', {email_confirm_token: this.$route.query.email_confirm_token})
+                        .then((resp) => { userInfo = resp })
+                    }
+                    catch(e) {console.log('Registration error:', e)}
+                    try {
+                        await this.$auth.loginWith('local', {data: userInfo})
+                            .then((resp) => {
+                                this.$auth.setUserToken(resp.data.tokens.access_token, resp.data.tokens.refresh_token)
+                                this.$auth.setUser(resp.data.user)
+                            })
+                    }
+                    catch(e) {console.log('Login error:', e)}
+                case 'update_acc':
+                    try {
+                        await this.$axios.$post('/api/email_update', {email_confirm_token: this.$route.query.email_confirm_token})
+                    }
+                    catch(e) {console.log('Acc update error:', e)}
+            }
         },
 
         methods: {

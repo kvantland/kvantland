@@ -6,9 +6,11 @@ from passlib.hash import pbkdf2_sha256 as pwhash
 import urllib.parse
 import json
 import hmac
+import jwt
 import sys
 
 from config import config
+from check_fields_format import *
 import user
 
 _key = config['keys']['cookie']
@@ -24,55 +26,70 @@ def get_login_fields():
 	fields = [
 		{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
 		{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"}
-    ]
+	]
 	return json.dumps(fields)
 
-@route('/api/registration_fields')
-def get_registration_fields():
-	fields = [
-		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
-			{'type': "input", 'inputType': "text", 'name': "surname", 'placeholder': "Фамилия"},
-			{'type': "input", 'inputType': "email", 'name': "email", 'placeholder': "E-mail"},
-			{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
-			{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"},
-			{'type': "input", 'inputType': "text", 'name': "city", 'placeholder': "Город"},
-			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
-			{'type': "select", 'options': [str(i) for i in range(1, 12)] + ['Другое'], 'name': "clas", 'placeholder': "Класс"},
-		]
-	return json.dumps(fields)
 
 @route('/api/check_login', method="POST")
 def check_login_request(db):
-	print('check login:', file=sys.stderr)
 	user_data = json.loads(request.body.read())
-	print(user_data, file=sys.stderr)
 	resp = {
-		'user': {
-			'name': '',
-			'email': '',
-        },
 		'tokens': {
 			'access_token': '',
 			'refresh_token': '',
-        }
-    }
+		},
+		'status': False,
+		'errors': dict(),
+	}
 	try:
 		login = user_data['login']
-		password = user_data['password']
-		db.execute('select student, password, name, email from Kvantland.Student where login = %s', (login, ))
-		(user, password_hash, name, email), = db.fetchall()
-		if pwhash.verify(password, password_hash):
-			access_key = config['keys']['access_key']
-			refresh_key = config['keys']['refresh_key']
-			resp['user']['name'] = name
-			resp['user']['email'] = email
-			resp['tokens']['access_token'] = hmac.new(access_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest()
-			resp['tokens']['refresh_token'] = hmac.new(refresh_key.encode('utf-8'), email.encode('utf-8'), 'sha256').hexdigest()
-		print(resp, file=sys.stderr)
-		return json.dumps(resp) 
 	except:
-		print(resp, file=sys.stderr)
-		return json.dumps(resp) # Неполная информация или отсутствует пользователь
+		login = ''
+	
+	try:
+		password = user_data['password']
+	except:
+		password = ''
+	print(login, password, file=sys.stderr)
+	expected_fields = ['login', 'password']
+	pw_check = ['password']
+	
+	try:
+		db.execute('select password from Kvantland.Student where login = %s', (login, ))
+		(password_hash, ), = db.fetchall()
+	except:
+		resp['errors']['password'] = 'Неверный логин или пароль'
+		password_hash = pwhash.hash('-')
+
+	if pwhash.verify(password, password_hash) and login:
+		access_key = config['keys']['access_key']
+		refresh_key = config['keys']['refresh_key']
+		resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
+		resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
+	else:
+		resp['errors']['password'] = 'Неверный логин или пароль'
+
+	resp['errors'].update(check_fields_format(data=user_data, expected_fields=expected_fields, pw_check=pw_check))
+	print(resp['errors'], file=sys.stderr)
+	
+	if not(resp['errors']):
+		resp['status'] = True
+	return json.dumps(resp)
+	
+def check_token(request):
+	auth_header = request.get_header('Authorization')
+	if auth_header is None:
+		return {'error': "Incorrect request format", 'login': ""}
+	if 'Bearer' not in auth_header:
+		return {'error': "No Bearer in header", 'login': ""}
+	token = auth_header.replace('Bearer ', '')
+	try:
+		payload = jwt.decode(jwt=token, key=config['keys']['access_key'], algorithms=['HS256'])
+	except:
+		return {'error': "Not correct token", 'login': ""}
+	user_login = payload['login']
+	return {'error': None, 'login': user_login}
+
 
 @route('/login')
 def login_form(db):

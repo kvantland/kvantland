@@ -5,7 +5,7 @@ from bottle import route, run, static_file, install, response, request
 
 import db
 import nav
-import land, town, problem, login, loginvk, registration, acc, start_page, pw_recovery, policy, icon
+import land, town, problem, login, loginvk, registration, acc, start_page, pw_recovery, policy, icon, approv
 from config import config, ROOT
 
 class EnableCors(object):
@@ -17,7 +17,7 @@ class EnableCors(object):
             # set CORS headers
             response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
             response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS'
-            response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+            response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token, Authorization'
 
             if request.method != 'OPTIONS':
                 # actual request; reply with the actual response
