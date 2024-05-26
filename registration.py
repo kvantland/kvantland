@@ -65,7 +65,7 @@ def checkout_reg(db, required_captcha=True):
 	print(user_info, file=sys.stderr)
 	resp['errors'] = check_fields_format(user_info, expected_fields, pw_check, 
 									email_check, select_check)
-	print(resp['errors'], file=sys.stderr)
+	
 	if required_captcha:
 		try:
 			captcha_token = data['captcha']
@@ -92,7 +92,7 @@ def checkout_reg(db, required_captcha=True):
 				resp['errors']['email'] = send_status['error']	
 		else:
 			resp['errors']['email'] = "Превышен лимит писем за день!"
-	print(resp, file=sys.stderr)
+	print('resp: ', resp, file=sys.stderr)
 	return json.dumps(resp)
 
 
@@ -160,7 +160,7 @@ def registration(db):
 	add_new_user(db, user_info)
 	resp['login'] = user_info['login']
 	resp['password'] = user_info['password']
-	print(resp, file=sys.stderr)
+	print('resp: ', resp, file=sys.stderr)
 	return json.dumps(resp)
 		
 def add_new_user(db, info):

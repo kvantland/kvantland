@@ -10,7 +10,7 @@
                         :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :error="fieldsErrors[fieldInfo.name]" />
                 </FieldsArea>
                 <UserAgreement :error="fieldsErrors.approval" v-model="fieldsValueInfo['approval']" @clearError="clearError" />
-                <SubmitButton> Сохранить </SubmitButton>
+                <SubmitButton :id="'acc'"> Сохранить </SubmitButton>
                 <hr size="1">
                 <BackButton />
             </form>
