@@ -45,6 +45,11 @@ def check_fields_format(data, expected_fields=[], pw_check=[], email_check=[], s
 			max_size = config['reg'][f'max_{field_name}_size']
 		except:
 			max_size = 500
+
+		if len(field_data) < min_size:
+			err_dict[field_name] = f"Минимум {str(min_size)} {lang_form(min_size)}"
+		if len(field_data) > max_size:
+			err_dict[field_name] = "Слишком много символов"
 		
 		if field_name in pw_check:
 			tmp_upper, tmp_lower, tmp_number = (0, 0, 0)
@@ -81,13 +86,9 @@ def check_fields_format(data, expected_fields=[], pw_check=[], email_check=[], s
 			if not(re.match(r'.+@.+', field_data)):
 				err_dict[field_name] = "Неверный формат данных"
 
-		if len(field_data) < min_size:
-			if len(field_data) == 0:
-				err_dict[field_name] = "Поле обязательно для заполнения"
-			else:
-				err_dict[field_name] = f"Минимум {str(min_size)} {lang_form(min_size)}"
-		if len(field_data) > max_size:
-			err_dict[field_name] = "Слишком много символов"
+		if len(field_data) == 0:
+			err_dict[field_name] = "Поле обязательно для заполнения"
+
 	print(err_dict)
 	return err_dict
 
