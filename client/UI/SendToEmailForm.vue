@@ -5,7 +5,7 @@
             <p class="description" v-html="description" />
             <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" :error="error" @input="changeEmail" @clearError="clearError" />
             <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
-            <button v-else-if="remainedTimeToSend == 0" class="send_again" @click="sendAgain($event.target.value)"> Отправить еще раз </button>
+            <button v-else-if="remainedTimeToSend == 0" class="send_again" @click="sendAgain($event.target.value)"> Отправить </button>
             <slot />
         </div>
     </div>

@@ -10,8 +10,8 @@
             <FormHeader mode="auth" @changeHeaderMode="changeHeaderMode" />
             <form method="post" :id="id" @submit.prevent="onSubmitAuthForm">
                 <FieldsArea>
-                    <FormField v-for="field in loginFields" :fieldInfo="field" 
-                    :key="field.name" v-model="fields[field.name]" />
+                    <FormField v-for="field in loginFields" :fieldInfo="field" @clearError="clearError"
+                    :key="field.name" v-model="fields[field.name]" :error="errors[field.name]"/>
                 </FieldsArea>
                 <SubmitButton :form="id"> Войти </SubmitButton>
             </form>
@@ -34,6 +34,7 @@ export default {
         return {
             id: 'login',
             fields: {},
+            errors: {},
             pwRecoveryMode: false,
             pwRecovery: {
                 email: "",
@@ -42,7 +43,7 @@ export default {
                 description:  `Введите адрес электронной почты,
                             <br/> привязанной к Вашему аккаунту `,
                 timeToSendAgain: 0,
-            }
+            },
         }
     },
 
@@ -58,8 +59,13 @@ export default {
             console.log('auth!')
             await this.$auth.loginWith('local', {data:this.fields})
             .then((res) => {
-                this.$auth.setUserToken(res.data.tokens.access_token, res.data.tokens.refresh_token)
-                this.$auth.setUser(res.data.user)
+                if (res.data.status) {
+                    this.$auth.setUserToken(res.data.tokens.access_token, res.data.tokens.refresh_token)
+                    this.$auth.setUser(res.data.user)
+                }
+                else {
+                    this.errors = res.data.errors
+                }
             })
         },
         changeEmail(newValue) {
@@ -70,6 +76,9 @@ export default {
         },
         startPwRecovery() {
             this.pwRecoveryMode = true
+        },
+        clearError(name) {
+            this.errors[name] = ''
         }
     }
 }

@@ -3,11 +3,9 @@
         <Logo />
         <StartPageNav @scrollToSection="blockHeader" />
         <ButtonArea>
-            <template v-if="$auth.loggedIn">
-                <AccButton />
-                <LogoutButton />
-            </template>
-            <LogButton v-else />
+            <AccButton v-show="$auth.loggedIn" />
+            <LogoutButton v-show="$auth.loggedIn" />
+            <LogButton v-show="!$auth.loggedIn"/>
         </ButtonArea>
     </HeaderContainer>
 </template>

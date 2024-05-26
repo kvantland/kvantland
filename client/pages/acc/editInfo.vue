@@ -3,14 +3,18 @@
         <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fieldsValueInfo.email" 
             :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
         <Form v-else>
-            <p class="header"> Личный кабинет </p>
+            <p class="header"> Редактирование данных </p>
             <form method="post" id="acc" @submit.prevent="submitAccForm">
                 <FieldsArea>
+                    <div class="global_error" v-if="globalError">
+                        <img class="error_img" src="/icons/info.svg" />
+                        <p class="error" v-html="globalError"> </p>
+                    </div>
                     <FormField v-for="fieldInfo in fieldsTypeInfo" :fieldInfo="fieldInfo" @clearError="clearError"
                         :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :error="fieldsErrors[fieldInfo.name]" />
                 </FieldsArea>
                 <UserAgreement :error="fieldsErrors.approval" v-model="fieldsValueInfo['approval']" @clearError="clearError" />
-                <SubmitButton> Сохранить </SubmitButton>
+                <SubmitButton :id="'acc'"> Сохранить </SubmitButton>
                 <hr size="1">
                 <BackButton />
             </form>
@@ -34,6 +38,7 @@ export default {
             fieldsTypeInfo: [],
             fieldsValueInfo: [],
             fieldsErrors: {},
+            globalError: "",
             checkEmailMode: false,
             sendEmailDescription: `Письмо для подтверждения адреса
                                     электронной почты,</br> 
@@ -56,6 +61,10 @@ export default {
             fieldsValueInfo[key] = this.$auth.user[key]
         }
         this.fieldsValueInfo = fieldsValueInfo
+        switch(this.$route.query.globalError) {
+            case 'fillFields':
+                this.globalError = "Все поля в личном кабинете обязательны </br> для заполнения"
+        }
     },
 
     methods: {
@@ -89,7 +98,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .header {
     display: inline-flex;
     justify-content: center;
@@ -98,5 +107,23 @@ export default {
     font-size: 16px;
     text-transform: uppercase;
 }
+
+.error{
+	align-self: flex-start;
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.error_img {
+    align-self: center !important;
+	width: 16px;
+	height: 16px;
+}
+
+.global_error {
+    gap: 16px;
+    display: inline-flex;
+    align-self: stretch;
+}
 </style>
-</template>

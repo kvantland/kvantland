@@ -35,7 +35,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .dialog_header {
     display: inline-flex;
     justify-content: space-between;
