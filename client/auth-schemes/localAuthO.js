@@ -33,7 +33,7 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
         }
         this.$auth.$storage.setUniversal(this.name + '.state', opts.state)
         const url = this.options.endpoints.authorization + '?' + encodeQuery(opts)
-        window.location.replace(url)
+        await window.location.replace(url)
     }
 
     async fetchUser() {

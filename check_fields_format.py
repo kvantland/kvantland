@@ -34,7 +34,9 @@ def check_fields_format(data, expected_fields=[], pw_check=[], email_check=[], s
 		except:
 			field_data = field_data_
 		print(field_name, field_data)
-
+		
+		if not(field_name in expected_fields):
+			continue
 		try:
 			min_size = config['reg'][f'min_{field_name}_size']
 		except:
@@ -122,9 +124,9 @@ def login_already_exists(db, login):
 def check_captcha(token):
 	not_robot = False
 	params = {
-        "secret": config['reg']['secret'],
-        "response": token,
-    }
+		"secret": config['reg']['secret'],
+		"response": token,
+	}
 	out = config['reg']['reg_url'] + '?' + urllib.parse.urlencode(params)
 	cont = urllib.request.urlopen(out)
 	not_robot = json.loads(cont.read())['success']

@@ -112,10 +112,10 @@ def update_user_info(db, send_again=False):
 		resp['errors']['token'] = check_token_status['error']
 		return json.dumps(resp)
 	else:
-		user = check_token_status['login']
+		login = check_token_status['login']
 	
 	email_check = ['email']
-	expected_fields = []
+	expected_fields = ['approval']
 	select_check = dict()
 	
 	for field in json.loads(get_acc_fields()):
@@ -129,7 +129,7 @@ def update_user_info(db, send_again=False):
 										   select_check=select_check))
 	
 	try:
-		db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие значения
+		db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (login, )) # предыдущие значения
 		(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
 	except:
 		return json.dumps(resp)
@@ -142,6 +142,7 @@ def update_user_info(db, send_again=False):
 		'town': prev_town,
 	}
 	
+	print('prev info: ', prev_info, file=sys.stderr)
 	for field in update_info: # поля с ошибками остаются прежними
 		if field in resp['errors']:
 			if resp['errors'][field]:
@@ -149,15 +150,15 @@ def update_user_info(db, send_again=False):
 	try:
 		db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, clas=%s, town=%s where login=%s', 
 			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
-				user))
+				login))
 	except:
 		resp['status'] = False
 		
 	if 'email' in update_info.keys():
-		if is_new_email(db, update_info['email'], user) or send_again:
+		if is_new_email(db, update_info['email'], login) or send_again:
 			if not email_already_exists(db, update_info['email']):
 				origin = request.get_header('Origin')
-				send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'], origin=origin)
+				send_status = send_acc_confirm_message(name=update_info['name'], login=login, email=update_info['email'], origin=origin)
 				if send_status['status']:
 					resp['email_changed'] = True
 				else:
@@ -167,7 +168,7 @@ def update_user_info(db, send_again=False):
 			
 	if not(resp['errors']):
 		resp['status'] = True
-	print('errors: ', resp['errors'], file=sys.stderr)
+	print('resp: ', resp, file=sys.stderr)
 		
 	return json.dumps(resp)
 

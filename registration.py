@@ -46,7 +46,7 @@ def checkout_reg(db, required_captcha=True):
 	email_check = ['email']
 	pw_check = []
 	select_check = dict()
-	expected_fields = []
+	expected_fields = ['approval']
 	
 	for field in json.loads(get_registration_fields()):
 		expected_fields.append(field['name'])

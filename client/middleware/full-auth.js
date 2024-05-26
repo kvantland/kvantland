@@ -1,10 +1,13 @@
-export default function({$axios, redirect, store}) {
-    if (!store.state.authenticated)
+export default async function({$axios, redirect, store, $auth}) {
+    if (!$auth.loggedIn)
         return redirect('/login')
     else{
-        const resp = $axios.$post('/api/is_user_info_full')
-        if (!resp['status'])
-            return redirect('/acc/editInfo')
+        let resp = {
+            status: false,
+        }
+        await $axios.$post('/api/is_user_info_full')
+        .then((res) => {resp = res})
+        if (!resp.status)
+            return redirect('/acc/editInfo?globalError=fillFields')
     }
-    console.log(resp)
 }
