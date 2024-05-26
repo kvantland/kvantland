@@ -3,6 +3,9 @@
 from config import config
 from bottle import route, redirect, request, response
 import json
+import jwt
+import sys
+import hmac
 import nav
 import user
 import footer
@@ -81,10 +84,13 @@ def check_token(request):
 		return {'error': "Incorrect request format", 'login': ""}
 	if 'Bearer' not in auth_header:
 		return {'error': "No Bearer in header", 'login': ""}
+	print("auth_head" + auth_header, file=sys.stderr)
 	token = auth_header.replace('Bearer ', '')
+	print("token" + token, file=sys.stderr)
 	try:
 		payload = jwt.decode(jwt=token, key=config['keys']['access_key'], algorithms=['HS256'])
 	except:
+		print("token incorrect", file=sys.stderr)
 		return {'error': "Not correct token", 'login': ""}
 	user_login = payload['login']
 	return {'error': None, 'login': user_login}
@@ -92,6 +98,7 @@ def check_token(request):
 def get_user_id(db): 
 	print("test_user", file=sys.stderr) 
 	token_check_status = check_token(request)
+	print("req" + token_check_status, file=sys.stderr)
 	if token_check_status['error']:
 		response.status = 400
 		return json.dumps({'error': token_check_status['error']})
