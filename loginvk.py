@@ -4,9 +4,12 @@ from bottle import route, request, response, redirect
 
 from config import config
 import json
+import jwt
 import urllib.request as urllib2
 from login import do_login, current_user
 from passlib.hash import pbkdf2_sha256 as pwhash
+import certifi
+from urllib.error import HTTPError, URLError
 
 import urllib.parse
 
@@ -17,6 +20,73 @@ redirect_uri = config['vk']['redirect_uri']
 client_id = config['vk']['client_id']
 token_url = config['vk']['token_url']
 info_url = config['vk']['info_url']
+
+@route('/api/vk_auth', method=["OPTIONS"])
+def resp():
+	print(dict(request.headers), file=sys.stderr)
+	response.iter_headers(
+		('Allow', 'POST'),
+		('Access-Control-Allow-Origin', 'http://localhost:3000'),
+		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
+	)
+	response.status = 200
+
+@route('/api/vk_auth', method=["POST"])
+def vk_auth(db):
+	data =  json.loads(request.body.read().decode('utf-8'))
+	access_token = data['token']
+	user_id = data['user_id']
+
+	user = get_user_vk_info(access_token, user_id)
+	resp = {
+		'tokens': {
+			'access_token': '',
+			'refresh_token': '',
+		}
+	}
+
+	login = 'vk#' + str(user['id'])
+	password, name, surname, city, school = ('some', None, None, None, None)
+	if 'first_name' in user.keys():
+		name = user['first_name']
+	if 'last_name' in user.keys():
+		surname = user['last_name']
+	if 'city' in user.keys():
+		if 'title' in user['city'].keys():
+			city = user['city']['title']
+	if 'schools' in user.keys():
+		if len(user['schools']) > 0:
+			school = user['schools'][0]['name']
+			
+	if (user := vk_check_login(db, login)) == None:	
+		user = add_user(login, name, surname, city, school, password, db)
+
+	access_key = config['keys']['access_key']
+	refresh_key = config['keys']['refresh_key']
+	resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
+	resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
+
+	return json.dumps(resp)
+
+
+def get_user_vk_info(access_token, user_id):
+	params = {
+		'user_ids': user_id,
+		'fields': 'uid, first_name, last_name, city, schools',
+		'access_token': access_token,
+		'v': '5.131',
+	}
+	info_path = info_url + '?' + urllib.parse.urlencode(params)
+	try:
+		cont = urllib2.urlopen(info_path, cafile=certifi.where())
+	except HTTPError as e:
+		print(f"HTTP Error: {e.code}")
+	except URLError as e:
+		print(f"URL Error: {e.reason}")
+	user_info = json.loads(cont.read())
+
+	return user_info['response'][0]
+
 
 @route('/login/vk')	
 def login_attempt(db):
@@ -60,14 +130,14 @@ def get_token():
 		params = {'client_id': client_id,
 		'client_secret': client_secret,
 		'code': request.query['code'],
-		'redirect_uri': redirect_uri}
+		'redirect_uri': 'http://localhost:8080/api/vk_auth'}
 		token_path = token_url + '?' + urllib.parse.urlencode(params)
 		try:
 			cont = urllib2.urlopen(token_path)
 			token = json.loads(cont.read())
 			return token
-		except HTTPError:
-			pass
+		except:
+			print('Something went wrong', file=sys.stderr)
 		return ''
 
 def get_info(token):

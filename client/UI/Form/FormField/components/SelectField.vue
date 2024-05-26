@@ -2,7 +2,7 @@
     <div>
         <div class="select_line" @click="showSelect">
             <input name="fieldInfo.name" :value="selectedOption"
-            readonly required/> 
+            readonly /> 
             <img class="arrow" src="/icons/down_arrow.svg" />
         </div>
         <SelectList ref="SelectList" v-if="showSelectList" :options="fieldInfo.options" 
@@ -74,5 +74,18 @@ export default {
 .arrow {
     width: 10px;
     height: 5.84px;
+}
+input {
+    font-size: 12px;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    font-family: Montserrat;
+}
+input:-webkit-autofill {
+    background: none;
+}
+.field input:focus {
+	outline: none;
 }
 </style>

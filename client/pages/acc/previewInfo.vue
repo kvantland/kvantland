@@ -17,6 +17,7 @@ import AccTournamentResults from '../../modules/acc-previewInfo-page/AccTourname
 
 export default {
     layout: "forms",
+    middleware: "auth",
 
     head() {
         return {
@@ -38,7 +39,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .acc_form{
     display: inline-flex;
     flex-direction: column;
@@ -48,5 +49,14 @@ export default {
 hr {
     width: 100%;
     border-top: 1px solid black;
+}
+
+.header {
+    display: inline-flex;
+    justify-content: center;
+    gap: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <button class="back_button" @click="back"> Назад </button>
+    <button class="back_button" type="button" @click="back"> Назад </button>
 </template>
 
 <script>

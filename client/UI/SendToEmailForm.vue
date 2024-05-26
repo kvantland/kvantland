@@ -1,76 +1,88 @@
 <template>
     <div class="content_wrapper">
         <div class="advert_form">
-            <div class="header"> {{ title }} </div>
-            <template v-if="canSend">
-                <p class="description">
-                    Письмо для подтверждения адреса
-                    электронной почты,</br> 
-                    привязанной	к Вашему аккаунту, успешно отправлено!</br>
-                    Для подтверждения адреса, перейдите по ссылке в</br>
-                    письме, которое придёт Вам на почту
-                </p>
-                <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" />
-                <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
-                <SubmitButton v-else-if="remainedTimeToSend == 0" @click="sendAgain"> Отправить еще раз </SubmitButton>
-            </template>
-            <div v-else class="limit_info">
-                <img src="/icons/info.svg" />
-                <p class="err"> Превышен лимит писем за день! </p>
-            </div>
+            <p class="header"> {{ title }} </p>
+            <p class="description" v-html="description" />
+            <FormField :fieldInfo="formFieldInfo" :value="email" :readonly="readonly" :error="error" @input="changeEmail" @clearError="clearError" />
+            <p v-if="remainedTimeToSend > 0" class="timer"> Отправить еще раз через: {{ remainedTimeToSend }}</p>
+            <button v-else-if="remainedTimeToSend == 0" class="send_again" @click="sendAgain($event.target.value)"> Отправить </button>
+            <slot />
         </div>
     </div>
 </template>
 
 <script>
-import SubmitButton from './Form/SubmitButton.vue';
+import { readonly } from 'vue';
 
 export default {
-    props: ['title', 'email'],
+    props: {
+        title:{}, 
+        email:{default:""},
+        description:{},
+        formData:{}, 
+        apiRequestUrl:{},
+        readonly:{default:true},
+        remainedTimeToSendProp:{default: 60},
+    },
 
     data() {
         return {
-            canSend: true,
             formFieldInfo: {
                 'type': "input",
                 'inputType': "email",
                 'name': "email",
                 'placeholder': "Почта",
             },
-            readonly: true,
-            remainedTimeToSend: 60,
-        }
-    },
+            timeToSendAgain: 60,
+            error: "",
+            remainedTimeToSend: this.remainedTimeToSendProp,
 
-    async fetch() {
-        const newEmail = this.email
-        let status = true
-        this.$axios.$post('/api/check_email_amount', {'email': newEmail})
-            .then((res) => {status = res.status})
-        this.canSend = status
+        }
     },
 
     watch: {
         async remainedTimeToSend(newValue) {
             if (newValue > 0)
                 setTimeout(function(){this.remainedTimeToSend -= 1}.bind(this), 1000)
+            else
+                this.error = ""
         }
     },
 
     async mounted() {
         console.log(this.remainedTimeToSend)
-        setTimeout(function(){this.remainedTimeToSend -= 1}.bind(this), 1000)
+        if (this.remainedTimeToSend > 0)
+            setTimeout(function(){this.remainedTimeToSend -= 1}.bind(this), 1000)
     },
 
     methods: {
-        sendAgain() {
-
+        async sendAgain() { 
+            let status = ""
+            await this.$axios.$post(this.apiRequestUrl, this.formData)
+            .then((resp) => {
+                console.log(resp)
+                if (!resp.status){
+                    if (resp.errors.email)
+                        status = resp.errors.email
+                    else
+                        status = "Проверка не пройдена"
+                    }
+                })
+            this.error = status
+            console.log(this.error)
+            this.remainedTimeToSend = this.timeToSendAgain
         },
-    }
+        changeEmail(newValue) {
+            this.$emit('changeEmail', newValue)
+        },
+        clearError() {
+            this.error=""
+        }
+    },
 }
 </script>
 
-<style>
+<style scoped>
 .content_wrapper {
 	width: 100%;
 	margin-top: 152px;
@@ -131,5 +143,20 @@ export default {
 	font-size: 14px;
 	text-align: center;
 	align-self: stretch;
+}
+
+.send_again {
+    cursor: pointer;
+    align-self: stretch;
+    padding: 0 20px;
+    height: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #1E8B93;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    color: white;
+    border: none;
+    font-family: Montserrat;
 }
 </style>

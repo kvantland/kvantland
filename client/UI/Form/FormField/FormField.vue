@@ -4,18 +4,17 @@
             <div class="content">
                 <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
                 <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
-                @input="changeValue($event.target.value)" :value="value" required :readonly="readonly" />
+                @input="changeValue($event.target.value)" :value="value" :readonly="readonly" />
                 <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
                     :fieldInfo="fieldInfo" :selectedOption="currentValue" />
             </div>
-            <img v-if="fieldInfo.error" class="error_img" src="/icons/info.svg" />
+            <img v-if="error" class="error_img" src="/icons/info.svg" />
         </div>
-        <p class="error" v-if="fieldInfo.error"> {{ fieldInfo.error }} </p>
+        <p class="error" v-if="error" v-html="error"> </p>
     </div>
 </template>
 
 <script>
-import { readonly } from 'vue';
 import SelectField from './components/SelectField.vue'
 
 export default {
@@ -27,32 +26,36 @@ export default {
         fieldInfo:{},
         value:{default: ""},
         readonly:{default: false},
+        error:{default: ""},
     },
 
-    computed: {
-        currentValue: {
-            get() {
-                return this.value
-            },
-            set(newValue) {}
+    data() {
+        return {
+            currentValue: this.value,
+        }
+    },
+
+    watch: {
+        value(newValue) {
+            this.currentValue = newValue
         }
     },
 
     methods: {
         selectOption(option){
-            this.fieldInfo.error=""
+            this.error=""
             this.currentValue = option
             this.$emit('input', option)
         },
         changeValue(newValue){
-            this.fieldInfo.error = ""
+            this.$emit('clearError', this.fieldInfo.name)
             this.$emit('input', newValue)
         }
     },
 }
 </script>
 
-<style>
+<style scoped>
 .fieldWithError {
     display: inline-flex;
     flex-direction: column;
@@ -103,7 +106,7 @@ input:-webkit-autofill {
 }
 
 .error_img {
-    align-self: center;
+    align-self: center !important;
 	width: 16px;
 	height: 16px;
 }

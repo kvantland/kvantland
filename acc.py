@@ -6,6 +6,8 @@ import nav
 import user
 import sys
 from login import current_user, do_login, check_token
+from check_fields_format import *
+from send_mail import send_mail
 import approv
 import hmac
 import email.message
@@ -19,6 +21,53 @@ import jwt
 import urllib.parse
 import json
 
+@route('/api/user', method="OPTIONS")
+def resp():
+	response.iter_headers(
+		('Allow', 'POST'),
+		('Access-Control-Allow-Origin', 'http://localhost:3000'),
+		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
+	)
+	response.status = 200
+	
+@route('/api/user')
+def get_user_info(db):	
+	token_check_status = check_token(request)
+	if token_check_status['error']:
+		response.status = 400
+		return json.dumps({'error': token_check_status['error']})
+	else:
+		user = token_check_status['login']
+		
+	resp = {
+		'user': {
+			'login': '',
+			'name': '',
+			'email': '',
+			'surname': '',
+			'school': '',
+			'clas': '',
+			'town': '',
+		}
+	}
+	if user:
+		try:
+			db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where login = %s', (user, ))
+		except:
+			response.status = 400
+			return json.dumps({'error': "No such user!"})
+		(name, email, surname, school, clas, town, score), = db.fetchall()
+		resp['user']['name'] = name
+		resp['user']['email'] = email
+		resp['user']['surname'] = surname
+		resp['user']['school'] = school
+		resp['user']['clas'] = clas
+		resp['user']['town'] = town
+		resp['user']['score'] = score
+		resp['user']['login'] = user
+	return json.dumps(resp) 
+
+
 @route('/api/tournament_results')
 def get_tournament_results(db):
 	tournament_results = []
@@ -28,14 +77,14 @@ def get_tournament_results(db):
 			{
 				'title': f'{to_roman_number(tournament_amount - tournament)} Турнир',
 				'score': get_score_text(db, config["tournament"]["version"] - tournament),
-            }
-        )
+			}
+		)
 	return json.dumps(tournament_results)
 
 @route('/api/acc_fields')
 def get_acc_fields():
 	fields = [
-		    {'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
+			{'type': "input", 'inputType': "text", 'name':"name", 'placeholder':"Имя"},
 			{'type': "input", 'inputType': "text", 'name': "surname", 'placeholder': "Фамилия"},
 			{'type': "input", 'inputType': "text", 'name': "school", 'placeholder': "Школа"},
 			{'type': "input", 'inputType': "text", 'name': "town", 'placeholder': "Город"},
@@ -44,43 +93,56 @@ def get_acc_fields():
 		]
 	return json.dumps(fields)
 
-def is_new_email(db, new_email, login):
-	try:
-		db.execute("select email from Kvantland.Student where login = %s", (login, ))
-		(prev_email, ), = db.fetchall()
-		if prev_email != new_email:
-			return True
-	except:
-		return False
-	return False
 
 @route('/api/update_user_info', method="POST")
-def update_user_info(db):
+def update_user_info(db, send_again=False):
 	resp = {
-		'status': "updated",
+		'status': False,
 		'email_changed': False,
-		'errors': {},
-    }
-	update_info = json.loads(request.body.read())
+		'errors': dict(),
+	}
+	try:
+		data = json.loads(request.body.read())
+		update_info = data['user_info']
+	except:
+		return json.dumps(resp)
+
 	check_token_status = check_token(request)
 	if check_token_status['error']:
-		response.status = 400
-		return json.dumps({'error': check_token_status['error']})
+		resp['errors']['token'] = check_token_status['error']
+		return json.dumps(resp)
 	else:
-		user = check_token_status['login']
-	check_user_info_status = check_format(update_info)
-	resp['errors'].update(check_user_info_status) # неверный формат полей за исключением почты
+		login = check_token_status['login']
 	
-	db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (user, )) # предыдущие значения
-	(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
+	email_check = ['email']
+	expected_fields = ['approval']
+	select_check = dict()
+	
+	for field in json.loads(get_acc_fields()):
+		expected_fields.append(field['name'])
+		if field['type'] == 'select':
+			select_check[field['name']] = field['options']
+
+	resp['errors'].update(check_fields_format(update_info, 
+										   email_check=email_check,
+										   expected_fields=expected_fields,
+										   select_check=select_check))
+	
+	try:
+		db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (login, )) # предыдущие значения
+		(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
+	except:
+		return json.dumps(resp)
+	
 	prev_info = {
 		'name': prev_name,
 		'surname': prev_surname,
 		'school': prev_school, 
 		'clas': prev_clas,
 		'town': prev_town,
-    }
+	}
 	
+	print('prev info: ', prev_info, file=sys.stderr)
 	for field in update_info: # поля с ошибками остаются прежними
 		if field in resp['errors']:
 			if resp['errors'][field]:
@@ -88,100 +150,88 @@ def update_user_info(db):
 	try:
 		db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, clas=%s, town=%s where login=%s', 
 			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
-	            user))
-	except:
-		resp['status'] = "rejected"
-		
-	if 'email' in update_info.keys():
-		if is_new_email(db, update_info['email'], user):
-			origin = request.get_header('Origin')
-			send_status = send_acc_confirm_message(name=update_info['name'], login=user, email=update_info['email'], origin=origin)
-			if send_status['status']:
-				resp['email_changed'] = True
-			resp['errors']['email'] = send_status['error']
-	return json.dumps(resp)
-
-def send_acc_confirm_message(name, login, email, origin):
-	token = jwt.encode(payload={'login': login, 'email': email, 'time': time.time()}, key=config['keys']['email_confirm'], algorithm='HS256')
-	link = f"{origin}?email_confirm_token={token}"
-	localhost = config['recovery']['localhost']
-	host = config['recovery']['host']
-	port = config['recovery']['port']
-	sender_login = config['recovery']['login']
-	sender_password = config['recovery']['password']
-	sender = config['recovery']['sender']
-	
-	server = smtplib.SMTP_SSL(host, port,  local_hostname=localhost, timeout=120)
-	email_content =  f'''
-        <!DOCTYPE html>
-        <head>
-        <link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Подтверждение почты</title>
-        </head>
-        <body style="padding: 80px;
-            font-family: Montserrat, Arial !important;
-            word-wrap: break-word;
-            font-size: 20px;
-            font-weight: 500;">
-        <div style="font-family: Montserrat, Arial !important;">
-        <div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
-        <div style="margin-top: 20px"> 
-            Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
-            Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
-        </div>
-        <div style="width: 640px;
-            margin: 80px auto; 
-            background: #1E8B93; 
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
-            border-radius: 6px;">
-        <a href="{link}" style="text-decoration: none">
-        <div style="text-align: center;
-            padding: 10px 0;
-            color: white; 
-            font-weight: 600;
-            box-sizing: border-box;
-            font-family: Montserrat, Arial !important;">
-        Нажмите здесь для подтверждения
-        </div>
-        </a>
-        </div>
-        <div>
-        <div style="font-family: Montserrat, Arial !important;"> Если вам не нужно подтверждать адрес электронной почты, 
-        просто проигнорируйте данное сообщение.</div>
-        <div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
-        </div>
-        </body>
-        </html>'''
-	
-	msg = EmailMessage()
-	msg['Subject'] = 'Подтверждение почты'
-	msg['From'] = sender
-	msg['To'] = email
-	msg.set_content(email_content, subtype='html')
-	
-	server.login(str(sender_login), str(sender_password))
-	
-	resp = {'status': False, 'error': ''}
-	try:
-		resp['status'] = True
-		server.sendmail(sender, [email], msg.as_string())
+				login))
 	except:
 		resp['status'] = False
-		resp['error'] = 'Неверный адрес почты'
-	finally:
-		server.quit()
-		return resp
+		
+	if 'email' in update_info.keys():
+		if is_new_email(db, update_info['email'], login) or send_again:
+			if not email_already_exists(db, update_info['email']):
+				origin = request.get_header('Origin')
+				send_status = send_acc_confirm_message(name=update_info['name'], login=login, email=update_info['email'], origin=origin)
+				if send_status['status']:
+					resp['email_changed'] = True
+				else:
+					resp['errors']['email'] = send_status['error']
+			else:
+				resp['errors']['email'] = "Почта уже используется"
+			
+	if not(resp['errors']):
+		resp['status'] = True
+	print('resp: ', resp, file=sys.stderr)
+		
+	return json.dumps(resp)
+
+@route('/api/send_acc_message_again', method="POST")
+def send_acc_message_again(db):
+	return update_user_info(db, send_again=True)
+
+
+def send_acc_confirm_message(name, login, email, origin):
+	user_info = {'login': login, 'email': email, 'send_time': time.time()}
+	token = jwt.encode(payload=user_info, key=config['keys']['email_confirm'], algorithm='HS256')
+	link = f"{origin}?email_confirm_token={token}&request=update_acc"
+	
+	email_content =  f'''
+		<!DOCTYPE html>
+		<head>
+		<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Подтверждение почты</title>
+		</head>
+		<body style="padding: 80px;
+			font-family: Montserrat, Arial !important;
+			word-wrap: break-word;
+			font-size: 20px;
+			font-weight: 500;">
+		<div style="font-family: Montserrat, Arial !important;">
+		<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+		<div style="margin-top: 20px"> 
+			Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
+			Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
+		</div>
+		<div style="width: 640px;
+			margin: 80px auto; 
+			background: #1E8B93; 
+			box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25); 
+			border-radius: 6px;">
+		<a href="{link}" style="text-decoration: none">
+		<div style="text-align: center;
+			padding: 10px 0;
+			color: white; 
+			font-weight: 600;
+			box-sizing: border-box;
+			font-family: Montserrat, Arial !important;">
+		Нажмите здесь для подтверждения
+		</div>
+		</a>
+		</div>
+		<div>
+		<div style="font-family: Montserrat, Arial !important;"> Если вам не нужно подтверждать адрес электронной почты, 
+		просто проигнорируйте данное сообщение.</div>
+		<div style="margin-top: 20px; font-family: Montserrat, Arial !important;"> С уважением, команда Kvantland </div>
+		</div>
+		</body>
+		</html>'''
+	
+	return send_mail(email_content=email_content, email=email, subject="Подтверждение почты")
 
 @route('/api/check_email_amount', method="POST")
 def check_user_email_amount(db):
 	check_token_status = check_token(request)
 	if check_token_status['error']:
-		response.status = 400
 		return json.dumps({'error': check_token_status['error']})
-	else:
-		user = check_token_status['login']
 		
 	email = json.loads(request.body.read())['email']
 	
@@ -218,6 +268,27 @@ def email_update(db):
 	decoded_data = jwt.decode(jwt=request_data['email_confirm_token'], key=config['keys']['email_confirm'], algorithms=['HS256'])
 	db.execute('update Kvantland.Student set email=%s where login=%s', (decoded_data['email'], decoded_data['login']))
 	return json.dumps({'status': True})
+
+
+@route('/api/is_user_info_full', method="POST")
+def is_user_info_full(db):
+	resp = {
+		'status': False
+	}
+
+	token_status = check_token(request)
+	print(token_status, file=sys.stderr)
+	if token_status['error']:
+		return json.dumps(resp)
+	login = token_status['login']
+	print(login, file=sys.stderr)
+
+	db.execute('select name, surname, town, clas, email from Kvantland.Student where login=%s', (login,))
+	(name, surname, town, clas, email, ), = db.fetchall()
+	if name and surname and town and clas and email:
+		resp['status'] = True
+
+	return json.dumps(resp)
 
 		
 _key = config['keys']['mail_confirm']
@@ -554,13 +625,24 @@ def check_format(user_info):
 			max_size = config['acc']['max_' + field + '_size']
 		except:
 			max_size = 500
-
-		if field in option_info.keys():
-			if not(user_info[field] in option_info[field]):
-				err_dict[field] = "Значение не из списка"
+			
+		if field == 'approval':
+			if str(user_info[field]) == 'False':
+				err_dict[field] = "Поставьте галочку"
+			continue
+		
+		try:
+			if field in option_info.keys():
+				if not(user_info[field] in option_info[field]):
+					err_dict[field] = "Значение не из списка"
+		except:
+			pass
 
 		if len(user_info[field]) < min_size:
-			err_dict[field] = "Слишком мало символов в поле, <br /> должно быть минимум " + str(min_size)
+			if len(user_info[field]) == 0:
+				err_dict[field] = "Поле обязательно для заполнения"
+			else:
+				err_dict[field] = "Слишком мало символов в поле, <br /> должно быть минимум " + str(min_size)
 		if len(user_info[field]) > max_size:
 			err_dict[field] = "Слишком много символов"
 	return err_dict
@@ -716,7 +798,7 @@ def send_reg_confirm_message(db, info, only_send = False):
 			<head>
 			<link rel="stylesheet" type="text/css" hs-webfonts="true" href="https://fonts.googleapis.com/css?family=Montserrat">
    			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<title>Подтверждение почты</title>
 			</head>
 			<body style="padding: 80px;

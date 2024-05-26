@@ -1,9 +1,19 @@
 <template>
-    <div class="vk_button">
+    <div class="vk_button" @click="vkAuth">
         <span> Войти через </span>
         <img src="/icons/vk_button.svg" />
     </div>
 </template>
+
+<script>
+export default {
+    methods: {
+        vkAuth() {
+            this.$auth.loginWith('vk')
+        }
+    }
+}
+</script>
 
 <style>
 .vk_button {
@@ -20,5 +30,6 @@
     border-radius: 6px;
     color: #1E8B93;
     border: 2px #1E8B93 solid;
+    cursor: pointer;
 }
 </style>

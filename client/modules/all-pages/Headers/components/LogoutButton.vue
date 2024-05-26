@@ -1,14 +1,31 @@
 <template>
-    <div class="logout_button" @click="logout"> Выйти </div>
+    <div>
+        <LogoutDialog v-if="logoutDialogMode" @hideDialog="hideLogoutDialog"/>
+        <div class="logout_button" @click="showLogoutDialog"> Выйти </div>
+    </div>
 </template>
 
 <script>
+import LogoutDialog from './LogoutDialog.vue'
+
 export default {
-    methods: {
-        async logout() {
-            console.log('logout!')
-            await this.$auth.logout()
+    components: {
+        LogoutDialog
+    },
+
+    data() {
+        return {
+            logoutDialogMode: false
         }
+    },
+
+    methods: {
+        showLogoutDialog() {
+            this.logoutDialogMode = true
+        },
+        hideLogoutDialog(){
+            this.logoutDialogMode = false
+        },
     }
 }
 </script>
