@@ -28,11 +28,7 @@ function send_xhr(params) {
 }
 
 var movement = ''
-console.log('HEEEEELP')
-console.log($('.casket'))
-$('.casket').on('click', function(){console.log('some!')})
-
-/*$(".casket").on("click", function(){confirm_action('Вы уверены, что хотите выбрать эту шкатулку? Больше попыток не будет.', 
+$(".casket").on("click", function(){confirm_action('Вы уверены, что хотите выбрать эту шкатулку? Больше попыток не будет.', 
 	['Подтердить', 'Отмена'], 
 	[send_xhr, function(){}],
-	[{'casket': this}, {}])})*/
+	[{'casket': this}, {}])})

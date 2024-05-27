@@ -83,7 +83,7 @@ def get_problem_data(db):
 	
 	print('here', file=sys.stderr)
 	
-	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs))
+	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs)).replace('/static', '')
 	if style:
 		resp['problem']['problemCSS'] = f'/problem-types/{type_}.css'
 	if script:
