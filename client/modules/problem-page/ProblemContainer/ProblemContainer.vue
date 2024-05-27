@@ -9,7 +9,7 @@
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
             <div class="newTypeProblem" v-if="problemComponent">
-                <component :is="problemComponent" />
+                <component :is="dynamicProblemComponent" />
             </div>
             <div v-if="problemContent" class="oldTypeProblem" v-html="problemContent.problemHTML" />
         </div>
@@ -23,7 +23,8 @@
 export default {
     data() {
         return {
-            dynamicInput: () => import(`./components/${this.problemInputType}.vue`)
+            dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
+            dynamicProblemComponent: () => import(`../../../problemModules/${this.problemComponent}.vue`)
         }
     },
 

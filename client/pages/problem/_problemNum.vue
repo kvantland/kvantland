@@ -8,6 +8,7 @@
                             :variantParams="variantParams"
                             :hint="hint"
                             :problemInputType="inputType"
+                            :problemComponent="problemComponent"
                             :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" />
         <SupportInfoContainer />
     </div>

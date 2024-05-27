@@ -59,6 +59,7 @@ def get_problem_data(db):
 			'variantParams': "",
 			'hint': {'status':"", 'cost':1},
 			'inputType': "",
+			'problemComponent': "",
 			'problemHTML': "",
 			'problemCSS': "",
 			'problemJS': "",
@@ -107,17 +108,21 @@ def get_problem_data(db):
 	resp['problem']['variantParams'] = content
 	resp['problem']['hint']['status'] = bool(hint)
 	resp['problem']['hint']['cost'] = hint_cost
-
+	
 	if not(typedesc):   # Задача нового типа
+		if type_ == 'integer':
+			resp['problem']['inputType'] = 'integerTypeInput'
+		if content['inputType']:
+			resp['problem']['inputType'] = content['inputType']
+		if content['componentType']:
+			resp['problem']['componentType'] = content['componentType']
 		return json.dumps(resp)
 	
-	print('here', file=sys.stderr)
-	
-	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs)).replace('/static', '')
+	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs)).replace('/static', '').replace('problem_assets', 'old-problem_assets')
 	if style:
-		resp['problem']['problemCSS'] = f'/problem-types/{type_}.css'
+		resp['problem']['problemCSS'] = f'/old-problem-types/{type_}.css'
 	if script:
-		resp['problem']['problemJS'] = f'/problem-types/{type_}.js'
+		resp['problem']['problemJS'] = f'/old-problem-types/{type_}.js'
 
 	try:
 		show_default_buttons = not typedesc.CUSTOM_BUTTONS
