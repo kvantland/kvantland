@@ -1,7 +1,7 @@
 <template>
 <g class="towns">
 <a v-for="twn in townsInfo" class="town" :transform="`translate(${twn.x} ${twn.y})`" :xlink:href="`/town/${twn.town}/`">
-    <img :href="`town-icon/icon-${twn.town}.png`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
+    <image :href="`town-icon/icon-${twn.town}.png`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
     <circle class="town-icon" r="33px" />
     <g class="town-name">
         <path class="town-name" :num="twn.cnt" :d="paths[twn.cnt]" :transform="`translate(${trans[twn.cnt]})`" style="filter:url(#dropshadow)"/>
