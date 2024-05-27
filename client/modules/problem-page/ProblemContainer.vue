@@ -9,28 +9,33 @@
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
             <component v-if="problemComponent" :is="problemComponent" />
-            <div v-if="problemContent" class="oldTypeProblem" v-html="problemContent" />
+            <div v-if="problemContent" class="oldTypeProblem" v-html="problemContent.problemHTML" />
         </div>
 
-        <IntegerProblemInput />
+        <component :is="dynamicInput" :hasHint="hint.status" />
     </div>
 </template>
 
 <script>
-import IntegerProblemInput from './components/IntegerProblemInput.vue';
 
 export default {
-    components: {
-        IntegerProblemInput,
+    data() {
+        return {
+            dynamicInput: () => import(`./components/${this.problemInputType}.vue`)
+        }
     },
 
     props: {
         title: {default: ''},
         cost: {default: 0},
+        hint: {default: null},
         description: {default: ''},
         image: {default: null},
         problemComponent: {default: null},
-    }
+        problemContent: {default: null},
+        variantParams: {default: null},
+        problemInputType: {default: 'InteractiveTypeInput'}
+    },
 }
 </script>
 
@@ -92,4 +97,12 @@ export default {
     display: flex;
 }
 
+.problem_img{
+    max-height: 512px;
+    width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: contain;
+}
 </style>

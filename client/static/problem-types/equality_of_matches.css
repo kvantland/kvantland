@@ -1,0 +1,45 @@
+rect {
+	stroke: none;
+	fill: grey;
+	stroke-linecap: round;
+	opacity: 0.1;
+}
+
+svg {
+	background: white;
+	position: relative;
+}
+
+.targeted {
+	box-shadow:0 0 20px lightyellow;
+	z-index: 10;
+	-webkit-filter: drop-shadow(0 0 0.3rem grey);
+  	filter: drop-shadow(0 0 0.3rem grey);
+}
+
+.best {
+	opacity: 1;
+	stroke-width: 3;
+	fill: white;
+	stroke-linecap: round;
+	stroke: lightgreen;
+}
+
+image.match.active {
+	cursor: pointer;
+}
+
+@media(hover:hover) {
+	image.match.active:hover {
+		-webkit-filter: drop-shadow(0 0 0.3rem grey);
+  		filter: drop-shadow(0 0 0.3rem grey);
+	}
+}
+
+.reload {
+	cursor: pointer;
+}
+
+.passive {
+	filter: hue-rotate(-44.14deg) saturate(106.54%) brightness(94.9%);
+}

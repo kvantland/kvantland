@@ -12,7 +12,115 @@ import nav
 import user
 import footer
 from config import config
-from login import do_logout
+from login import do_logout, check_token
+
+
+@route('/api/problem_data', method="POST")
+def get_problem_data(db):
+	resp = {
+		'status': False,
+		'problem':
+		{
+			'description': "",
+			'title': "",
+			'cost': "",
+			'image': "",
+			'type': "",
+			'variantParams': "",
+			'hint': {'status':"", 'cost':1},
+			'inputType': "",
+			'problemHTML': "",
+			'problemCSS': "",
+			'problemJS': "",
+		}
+	}
+	try:
+		variant = json.loads(request.body.read())['variant']
+	except:
+		return json.dumps(resp)
+
+	token_status = check_token(request)
+	if token_status['error']:
+		return json.dumps(resp)
+	login = token_status['login']
+	
+	try:
+		db.execute('''select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, 
+				description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost 
+				from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join 
+				Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s''', (variant,))
+		(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
+		default = content
+		db.execute('select student from Kvantland.Student where login=%s', (login, ))
+		(user_id, ), = db.fetchall()
+		print(user_id, variant, file=sys.stderr)
+		db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+		(step, curr, ), = db.fetchall()
+		if curr:
+			content = curr
+	except:
+		return json.dumps(resp)
+	try:
+		typedesc = import_module(f'problem-types.{type_}')
+	except:
+		typedesc = ''
+	kwargs = {'step': step, 'default': default}
+	script = try_read_file(f'problem-types/{type_}.js')
+	style = try_read_file(f'problem-types/{type_}.css')
+	print('here!', file=sys.stderr)
+	
+	resp['problem']['description'] = description
+	resp['problem']['title'] = name
+	resp['problem']['image'] = image
+	resp['problem']['cost'] = points
+	resp['problem']['type'] = type_
+	resp['problem']['variantParams'] = content
+	resp['problem']['hint']['status'] = bool(hint)
+	resp['problem']['hint']['cost'] = hint_cost
+
+	if not(typedesc):   # Задача нового типа
+		return json.dumps(resp)
+	
+	print('here', file=sys.stderr)
+	
+	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs))
+	if style:
+		resp['problem']['problemCSS'] = f'/problem-types/{type_}.css'
+	if script:
+		resp['problem']['problemJS'] = f'/problem-types/{type_}.js'
+
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
+
+	try:
+		hybrid = typedesc.HYBRID
+	except AttributeError:
+		hybrid = False
+
+	try:
+		without_buttons = typedesc.WITHOUT_BUTTONS
+	except AttributeError:
+		without_buttons = False
+
+	try:
+		hint_only = typedesc.HINT_ONLY
+	except AttributeError:
+		hint_only = False
+
+	if not(without_buttons):
+		if hint_only and not(hybrid):
+			resp['problem']['inputType'] = 'HintOnlyInput'
+		elif show_default_buttons and not(hybrid):
+			resp['problem']['inputType'] = 'InteractiveTypeInput'
+		else:
+			resp['problem']['inputType'] = 'IntegerTypeInput'
+
+	print('resp: ', resp, file=sys.stderr)
+	resp['status'] = True
+	return json.dumps(resp)
+	
 
 MODE = config['tournament']['mode']
 _key = config['keys']['cookie']

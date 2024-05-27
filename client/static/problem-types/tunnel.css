@@ -1,0 +1,49 @@
+.plot_area{
+	margin: 0 auto 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;	
+	z-index: 1;
+	position: relative;
+	-webkit-user-select:none;
+	user-select: none;
+}
+
+.gate{
+	font-size: 40px;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+}
+
+.grass {
+	fill: url(#grassGradient);
+}
+.grid_line{
+	stroke: #91a359;
+	stroke-linecap: square;
+	stroke-width: 1;
+}
+
+.border_line{
+	stroke:black;
+	stroke-linecap: square;
+	stroke-width: 2;
+}
+.cross {
+	pointer-events: none;
+	dominant-baseline: central;
+	text-anchor: middle;
+}
+.inside_line{
+	stroke-linecap: square;
+	stroke-width: 2;
+}
+
+.not_choiced {
+	stroke:black;
+}
+
+.choiced {
+	stroke: grey;
+}

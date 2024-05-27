@@ -1,7 +1,7 @@
 <template>
     <div class="problem_input">
         <InputArea />
-        <HintButton />
+        <HintButton v-if="hasHint" />
     </div>
 </template>
 
