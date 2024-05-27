@@ -107,62 +107,42 @@ def get_rules_breadcrumbs():
 	return json.dumps(rules_crumbs)
 
 def check_token(request):
-	print("test_token", file=sys.stderr) 
 	auth_header = request.get_header('Authorization')
 	if auth_header is None:
 		return {'error': "Incorrect request format", 'login': ""}
 	if 'Bearer' not in auth_header:
 		return {'error': "No Bearer in header", 'login': ""}
-	print("auth_head " + auth_header, file=sys.stderr)
 	token = auth_header.replace('Bearer ', '')
-	print("token " + token, file=sys.stderr)
 	try:
 		payload = jwt.decode(jwt=token, key=config['keys']['access_key'], algorithms=['HS256'])
 	except:
-		print("token incorrect", file=sys.stderr)
 		return {'error': "Not correct token", 'login': ""}
 	user_login = payload['login']
-	print("user_login " + user_login, file=sys.stderr)
 	return {'error': None, 'login': user_login}
 
 def get_user_id(db): 
-	print("test_user", file=sys.stderr) 
 	token_check_status = check_token(request)
-	print("req ", file=sys.stderr)
 	if token_check_status['error']:
 		response.status = 400
-		print("token error", file=sys.stderr)
 		return json.dumps({'error': token_check_status['error']})
 	else:
-		print("get user", file=sys.stderr)
 		user_login = token_check_status['login']
-		print("user_log " + user_login, file=sys.stderr)
-	print("prep db", file=sys.stderr)
 	db.execute('select student from Kvantland.Student where login=%s', (user_login, ))
-	print("got db", file=sys.stderr)
 	(user_id, ) = db.fetchall()[0]
-	print(user_id, file=sys.stderr)
 	return user_id
 
 @route('/api/towns_info')
 def get_towns_info(db):
-	print("test", file=sys.stderr)
 	user_id = get_user_id(db)
-	print(user_id, file=sys.stderr)
 	if user_id is not None:
-		print("not none db prep", file=sys.stderr)
 		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false and tournament = %s) from Kvantland.Town', (user_id, config["tournament"]["version"]))
-		print("not none db prep succ", file=sys.stderr)
 	else:
-		print("none db prep", file=sys.stderr)
 		db.execute('select town, name, position, true from Kvantland.Town')
-		print("none db prep succ", file=sys.stderr)
 	resp = []
 	cnt = 0
 	for town, name, (x, y), opened in db.fetchall():
 		resp.append({"town": town, "name": name, "x": x, "y": y, "opened": opened, "cnt": cnt})
 		cnt += 1
-	print(resp, file=sys.stderr)
 	return json.dumps(resp)
 
 @route('/land')
