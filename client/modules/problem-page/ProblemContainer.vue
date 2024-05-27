@@ -8,7 +8,9 @@
         <div class="problem_body">
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
-            <component v-if="problemComponent" :is="problemComponent" />
+            <div class="newTypeProblem" v-if="problemComponent">
+                <component :is="problemComponent" />
+            </div>
             <div v-if="problemContent" class="oldTypeProblem" v-html="problemContent.problemHTML" />
         </div>
 
