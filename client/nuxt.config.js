@@ -17,6 +17,11 @@ export default {
             src: '/jsLibraries/jQuery/jquery-3.7.1.js'
         }
     ]
+    script: [
+        {
+            src: '/jsLibraries/jQuery/jquery-3.7.1.js'
+        }
+    ]
   },
 
   publicRuntimeConfig: {
