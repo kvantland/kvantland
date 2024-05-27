@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .button_area {
 	justify-content: flex-start; 
 	align-items: center; 

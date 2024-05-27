@@ -20,7 +20,7 @@ import ConfidentialityInfo from '../../modules/policy-page/ConfidentialityInfo/C
     };
 </script>
 
-<style>
+<style scoped>
 .content_wrapper {
     width: 100%;
     padding: 0 80px 80px 80px;

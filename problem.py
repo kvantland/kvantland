@@ -53,6 +53,10 @@ def get_problem_data(db):
 		{
 			'description': "",
 			'title': "",
+			'answer': "",
+			'solution': "",
+			'answerGiven': False,
+			'answerStatus': None,
 			'cost': "",
 			'image': "",
 			'type': "",
@@ -73,7 +77,16 @@ def get_problem_data(db):
 	token_status = check_token(request)
 	if token_status['error']:
 		return json.dumps(resp)
-	login = token_status['login']
+	user_id = token_status['user_id']
+
+	is_answer_correct = get_past_answer_correctness(db, user_id, variant)
+	if is_answer_correct is not None:
+		resp['problem']['answerGiven'] = True
+		resp['problem']['answerStatus'] = is_answer_correct
+		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+		(answer, solution, ), = db.fetchall()
+		resp['problem']['answer'] = answer
+		resp['problem']['solution'] = solution
 	
 	try:
 		db.execute('''select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, 
@@ -82,9 +95,6 @@ def get_problem_data(db):
 				Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s''', (variant,))
 		(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
 		default = content
-		db.execute('select student from Kvantland.Student where login=%s', (login, ))
-		(user_id, ), = db.fetchall()
-		print(user_id, variant, file=sys.stderr)
 		db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 		(step, curr, ), = db.fetchall()
 		if curr:
@@ -98,7 +108,6 @@ def get_problem_data(db):
 	kwargs = {'step': step, 'default': default}
 	script = try_read_file(f'problem-types/{type_}.js')
 	style = try_read_file(f'problem-types/{type_}.css')
-	print('here!', file=sys.stderr)
 	
 	resp['problem']['description'] = description
 	resp['problem']['title'] = name
@@ -155,6 +164,43 @@ def get_problem_data(db):
 	print('resp: ', resp, file=sys.stderr)
 	resp['status'] = True
 	return json.dumps(resp)
+
+
+@route('/api/check_answer', method="POST")
+def check_user_answer(db):
+	resp = {
+		'status': False,
+	}
+	
+	access_token_status = check_token(request)
+	if access_token_status['error']:
+		return json.dumps(resp)
+	user_id = access_token_status['user_id']
+	
+	try:
+		data = json.loads(request.body.read())
+		variant = data['variant']
+		answer = data['answer']
+	except:
+		return json.dumps(resp)
+	
+	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (variant,))
+	(type_, content), = db.fetchall()
+	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+	(curr, ), = db.fetchall()
+	if curr:
+		content = curr
+	typedesc = import_module(f'problem-types.{type_}')
+	is_answer_correct = typedesc.validate(content, answer)
+	
+	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, answer, variant, user_id))
+	if is_answer_correct:
+		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))
+		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (variant, user_id, config["tournament"]["version"]))
+
+	resp['status'] = True
+	return json.dumps(resp)
+
 	
 
 MODE = config['tournament']['mode']

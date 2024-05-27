@@ -2,6 +2,11 @@
     <div class="content_wrapper">
         <Breadcrumbs :crumbs="crumbs"/>
         <ProblemContainer :title="title" 
+                            :answerStatus="answerStatus"
+                            :answerGiven="answerGiven"
+                            :answer="answer"
+                            :solution="solution"
+                            :variant="problemNum"
                             :description="description" 
                             :cost="cost"
                             :image="image"
@@ -40,7 +45,7 @@ export default {
                 },
                 {
                     body: true,
-                    src: '/problem-types/confirm_action.js'
+                    src: '/old-problem-types/confirm_action.js'
                 }
             ]
         }
@@ -67,6 +72,7 @@ export default {
             else
                 resp.crumbs = []
         })
+        resp.problemNum = params.problemNum
         console.log(resp)
         return resp
     },

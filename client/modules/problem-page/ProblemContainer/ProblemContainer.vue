@@ -14,11 +14,13 @@
             <div v-if="problemContent" class="oldTypeProblem" v-html="problemContent.problemHTML" />
         </div>
 
-        <component :is="dynamicInput" :hasHint="hint.status" />
+        <component v-if="!answerGiven" :is="dynamicInput" :hasHint="hint.status" @sendAnswer="sendAnswer" />
+        <ProblemResult v-if="answerGiven && problemInputType=='IntegerTypeInput'" :answer="answer" :answerStatus="answerStatus" />
     </div>
 </template>
 
 <script>
+import ProblemResult from './components/ProblemResult.vue'
 
 export default {
     data() {
@@ -28,7 +30,16 @@ export default {
         }
     },
 
+    components: {
+        ProblemResult,
+    },
+
     props: {
+        answerStatus: {default: false},
+        answerGiven: {default: false},
+        answer: {default: ''},
+        solution: {default: ''},
+        variant: {default: null},
         title: {default: ''},
         cost: {default: 0},
         hint: {default: null},
@@ -38,6 +49,13 @@ export default {
         problemContent: {default: null},
         variantParams: {default: null},
         problemInputType: {default: 'InteractiveTypeInput'}
+    },
+
+    methods: {
+        async sendAnswer(answer) {
+            await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer})
+            window.location.reload('true')
+        }
     },
 }
 </script>
