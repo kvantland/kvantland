@@ -31,10 +31,10 @@ def get_problem_breadcrumbs(db):
 	login = token_status['login']
 	
 	try:
-		db.execute('''select town,  Kvantland.Town.name, Kvantland.Problem.name
+		db.execute('''select town,  Kvantland.Town.name
 				from Kvantland.Problem join Kvantland.Variant using (problem) join 
 				Kvantland.Town using (town) where variant = %s''', (variant,))
-		(town, town_name, problem_name), = db.fetchall()
+		(town, town_name, ), = db.fetchall()
 		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
 		resp['breadcrumbs'].append({'name': town_name, 'link': f'/land/town/{town}'})
 	except:

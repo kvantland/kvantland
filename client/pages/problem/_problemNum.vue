@@ -9,15 +9,18 @@
                             :hint="hint"
                             :problemInputType="inputType"
                             :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" />
+        <SupportInfoContainer />
     </div>
 </template>
 
 <script>
-import ProblemContainer from "../../modules/problem-page/ProblemContainer.vue"
+import ProblemContainer from "../../modules/problem-page/ProblemContainer/ProblemContainer.vue"
+import SupportInfoContainer from "../../modules/problem-page/SupportInfoContaner/SupportInfoContainer.vue"
 
 export default {
     components: {
         ProblemContainer,
+        SupportInfoContainer,
     },
 
     head() {
