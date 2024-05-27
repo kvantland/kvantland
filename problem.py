@@ -103,7 +103,7 @@ def get_problem_data(db):
 	resp['problem']['description'] = description
 	resp['problem']['title'] = name
 	resp['problem']['image'] = image
-	resp['problem']['cost'] = points
+	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 	resp['problem']['type'] = type_
 	resp['problem']['variantParams'] = content
 	resp['problem']['hint']['status'] = bool(hint)
