@@ -30,7 +30,8 @@ export default {
             script: [
                 {
                     body: true,
-                    src: `${this.problemJS}`
+                    src: `${this.problemJS}`,
+                    type: 'text/ecmascript',
                 },
                 {
                     body: true,
