@@ -1,6 +1,6 @@
 <template>
-    <div style="background-color: #D2E8E9;">
-        <EmptyHeader />
+    <div class="background" style="background-color: #D2E8E9;">
+        <DefaultHeader />
         <Nuxt />
         <InfoFooter/>
     </div>
@@ -8,12 +8,12 @@
 
 <script>
 import InfoFooter from "../modules/all-pages/InfoFooter.vue"
-import EmptyHeader from "../modules/all-pages/Headers/EmptyHeader.vue"
+import DefaultHeader from "../modules/all-pages/Headers/DefaultHeader.vue"
 
 export default {
     components: {
         InfoFooter,
-        EmptyHeader,
+        DefaultHeader,
     }
 }
 </script>

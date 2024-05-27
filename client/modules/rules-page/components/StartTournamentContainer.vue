@@ -26,6 +26,10 @@
     display: flex;
 }
 
+.conformation_text {
+    font-weight: 600;
+}
+
 .conformation_wrapper {
     align-self: stretch;
     justify-content: space-between;

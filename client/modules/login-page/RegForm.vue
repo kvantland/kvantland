@@ -1,54 +1,87 @@
 <template>
-    <Form>
-        <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
-        <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
-            <FieldsArea>
-                <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" v-model="fields[field.name]" />
-            </FieldsArea>
-            <UserAgreement v-model="fields['approval']" />
-            <Captcha />
-            <hr size="1" style="border-width: 1px"/>
-            <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
-        </form>
-    </Form>
+    <div>
+        <SendToEmailForm v-if="checkEmailMode" :title="'Регистрация'" :email="fields.email"
+            :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
+        <Form v-else>
+            <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
+            <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
+                <FieldsArea>
+                    <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" 
+                        @clearError="clearRegError" v-model="fields[field.name]" :error="errors[field.name]"/>
+                </FieldsArea>
+                <UserAgreement :error="errors.approval" v-model="fields.approval" @clearError="clearRegError"/>
+                <Captcha :error="errors['captcha']"/>
+                <hr size="1" style="border-width: 1px"/>
+                <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
+            </form>
+        </Form>
+    </div>
 </template>
 
 
 <script>
 import FormHeader from './components/FormHeader'
-import UserAgreement from './components/UserAgreement'
 
 export default {
     data() {
         return {
             id: 'reg',
             fields: {},
+            checkEmailMode: false,
+            sendEmailDescription: `Письмо для подтверждения регистрации</br> успешно 
+                                    отправлено на Ваш адрес!</br> Для подтверджения адреса 
+                                    перейдите</br> по ссылке в письме, которое придёт 
+                                    Вам<br/> на почту`,
+            sendEmailData: {},
+            sendEMailRequestUrl: "/api/send_reg_message_again",
         }
     },
 
-    props: ['regFields'],
+    props: {
+        regFields: {},
+        errors: {default: {}},
+    },
 
     components: {
         FormHeader,
-        UserAgreement,
     },
 
     methods: {
         changeHeaderMode(modeToChange) {
             this.$emit('changeHeaderMode', modeToChange)
         },
+        clearRegError(name) {
+            let errors = this.errors ? this.errors : {}
+            errors[name] = ""
+            this.$emit('updateErrors', errors)
+        },
         async onSubmitRegForm() {
             let token
             try {
                 token = await this.$recaptcha.getResponse()
-                console.log('ReCaptcha token:', token)
                 await this.$recaptcha.reset()
             }
             catch (error) {
-                console.log('Login error', error)
+                console.log('Login error:', error)
             }
-            this.field.recaptcha_token = token
-            this.$axios.post('/api/checkout_reg', this.fields)
+            let errors, status, infoFields, sendEmailData
+
+            infoFields = this.fields
+            this.regFields.forEach((field) => {if (!infoFields[field.name]) infoFields[field.name] = ""})
+            if (!infoFields['approval']) infoFields['approval'] = false
+
+            sendEmailData = {'user': infoFields, 'captcha': token}
+            await this.$axios.$post('/api/checkout_reg', sendEmailData)
+                .then((res) => {
+                        errors = res.errors
+                        status = res.status
+                    })
+            console.log(errors)
+            this.$emit('updateErrors', errors)
+            if (status) {
+                this.checkEmailMode = true
+                this.sendEmailData = sendEmailData
+            }
         },
     },
 
@@ -62,3 +95,6 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+</style>

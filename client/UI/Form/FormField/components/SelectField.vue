@@ -2,7 +2,7 @@
     <div>
         <div class="select_line" @click="showSelect">
             <input name="fieldInfo.name" :value="selectedOption"
-            readonly required/> 
+            readonly /> 
             <img class="arrow" src="/icons/down_arrow.svg" />
         </div>
         <SelectList ref="SelectList" v-if="showSelectList" :options="fieldInfo.options" 
@@ -18,12 +18,16 @@ export default {
     data() {
         return {
             showSelectList: false,
-            selectedOption: '',
             canHideSelectList: 0, //на 2-й клик можно скрывать!
         }
     },
 
-    props: ['fieldInfo'],
+    props: {
+        fieldInfo:{},
+        selectedOption: {
+            default: '',
+        }
+    },
 
     methods: {
         showSelect() {
@@ -31,7 +35,7 @@ export default {
         },
         hideSelect(selectedOption) {
             this.showSelectList = false
-            this.selectedOption = selectedOption
+            this.$emit('selectOption', selectedOption)
             this.canHideSelectList = 0
         },
         changeHideAbility() {
@@ -50,9 +54,6 @@ export default {
         canHideSelectList(newValue) {
             if (newValue == 2) 
                 window.addEventListener('click', this.hideSelect(this.selectedOption))
-        },
-        selectedOption(newValue) {
-            this.$emit('selectOption', newValue)
         },
     }
 }
@@ -73,5 +74,18 @@ export default {
 .arrow {
     width: 10px;
     height: 5.84px;
+}
+input {
+    font-size: 12px;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    font-family: Montserrat;
+}
+input:-webkit-autofill {
+    background: none;
+}
+.field input:focus {
+	outline: none;
 }
 </style>

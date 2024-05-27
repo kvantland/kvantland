@@ -1,18 +1,22 @@
-<template>
-     <div class="g-recaptcha-outer">
-        <div class="g-recaptcha-inner">
-            <recaptcha />
+<template>    
+    <div class="captcha_with_error">
+        <div class="g-recaptcha-outer">
+            <div class="g-recaptcha-inner">
+                <recaptcha />
+            </div>
         </div>
-	 </div>
+        <div class="error_container" v-if="error">
+            <img class="captcha_error" src="/icons/info.svg" />
+            <p class="captcha_error"> {{ error }} </p>
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            sitekey: '6LcWR2MoAAAAABz4UpMRZlmwmWZlvne32dKbc1Kx'
-        }
-    },
+    props: {
+        error: {default:""},
+    }
 }
 </script>
 
@@ -43,5 +47,30 @@ export default {
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
+}
+
+.captcha_with_error {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.error_container {
+    display: inline-flex;
+    gap: 6px;
+    align-self: flex-start;
+    padding-left: 20px;
+}
+
+img.captcha_error {
+    align-self: center;
+	width: 16px;
+	height: 16px;
+}
+
+p.captcha_error{
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
 }
 </style>

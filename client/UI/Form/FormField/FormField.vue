@@ -1,11 +1,16 @@
 <template>
-    <div class="field">
-        <div class="content">
-            <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
-            <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
-            @input="$emit('input', $event.target.value)" required />
-            <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" :fieldInfo="fieldInfo" />
+    <div class="fieldWithError">
+        <div class="field">
+            <div class="content">
+                <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
+                <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
+                @input="changeValue($event.target.value)" :value="value" :readonly="readonly" />
+                <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
+                    :fieldInfo="fieldInfo" :selectedOption="currentValue" />
+            </div>
+            <img v-if="error" class="error_img" src="/icons/info.svg" />
         </div>
+        <p class="error" v-if="error" v-html="error"> </p>
     </div>
 </template>
 
@@ -16,23 +21,53 @@ export default {
     components: {
         SelectField,
     },
-    props: ['fieldInfo'],
+
+    props: {
+        fieldInfo:{},
+        value:{default: ""},
+        readonly:{default: false},
+        error:{default: ""},
+    },
+
+    data() {
+        return {
+            currentValue: this.value,
+        }
+    },
+
+    watch: {
+        value(newValue) {
+            this.currentValue = newValue
+        }
+    },
+
     methods: {
         selectOption(option){
+            this.error=""
+            this.currentValue = option
             this.$emit('input', option)
+        },
+        changeValue(newValue){
+            this.$emit('clearError', this.fieldInfo.name)
+            this.$emit('input', newValue)
         }
-    }
+    },
 }
 </script>
 
-<style>
+<style scoped>
+.fieldWithError {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+}
 .field {
     display: inline-flex;
     justify-content: space-between;
     padding: 10px 20px;
     background: rgba(26.35, 88.38, 102, 0.10);
     border-radius: 6px;
-    width: 280px;
+    min-width: 280px;
     gap: 2px;
 }
 .field .placeholder {
@@ -61,5 +96,18 @@ input:-webkit-autofill {
 }
 .field input:focus {
 	outline: none;
+}
+.error{
+    padding: 0 20px;
+	align-self: flex-start;
+	color: #B62C5A;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.error_img {
+    align-self: center !important;
+	width: 16px;
+	height: 16px;
 }
 </style>
