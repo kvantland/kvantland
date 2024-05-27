@@ -44,6 +44,10 @@ export default {
             path: '~UI/Form',
             prefix: false,
         },
+        {
+            path: '~UI/Headers',
+            prefix: false,
+        }
     ] 
   },
 

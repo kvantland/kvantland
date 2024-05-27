@@ -43,5 +43,5 @@ export default {
 </script>
 
 <style>
-@import "../../../assets/css/header.css"
+@import "../../assets/css/header.css"
 </style>

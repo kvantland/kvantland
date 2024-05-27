@@ -14,6 +14,36 @@ import footer
 from config import config
 from login import do_logout, check_token
 
+@route('/api/problem_breadcrumbs', method="POST")
+def get_problem_breadcrumbs(db):
+	resp = {
+		'status': False,
+		'breadcrumbs': [],
+	}
+	try:
+		variant = json.loads(request.body.read())['variant']
+	except:
+		return json.dumps(resp)
+
+	token_status = check_token(request)
+	if token_status['error']:
+		return json.dumps(resp)
+	login = token_status['login']
+	
+	try:
+		db.execute('''select town,  Kvantland.Town.name, Kvantland.Problem.name
+				from Kvantland.Problem join Kvantland.Variant using (problem) join 
+				Kvantland.Town using (town) where variant = %s''', (variant,))
+		(town, town_name, problem_name), = db.fetchall()
+		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
+		resp['breadcrumbs'].append({'name': town_name, 'link': f'/land/town/{town}'})
+	except:
+		return json.dumps(resp)
+	
+	print('resp: ', resp, file=sys.stderr)
+	resp['status'] = True
+	return json.dumps(resp)
+
 
 @route('/api/problem_data', method="POST")
 def get_problem_data(db):

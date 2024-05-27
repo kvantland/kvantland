@@ -1,5 +1,6 @@
 <template>
     <div class="content_wrapper">
+        <Breadcrumbs :crumbs="crumbs"/>
         <ProblemContainer :title="title" 
                             :description="description" 
                             :cost="cost"
@@ -55,6 +56,13 @@ export default {
                 resp[prop] = problem_data[prop]
             }
         }
+        await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
+        .then((res) => {
+            if (res.status)
+                resp.crumbs = res.breadcrumbs
+            else
+                resp.crumbs = []
+        })
         console.log(resp)
         return resp
     },
