@@ -1,28 +1,67 @@
 <template>
     <div class="content_wrapper">
-        <ProblemContainer :title="title" :description="description" :cost="cost" />
+        <ProblemContainer :title="title" 
+                            :description="description" 
+                            :cost="cost"
+                            :image="image"
+                            :variantParams="variantParams"
+                            :hint="hint"
+                            :problemInputType="inputType"
+                            :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" />
     </div>
 </template>
 
 <script>
-import ProblemContainer from '../../modules/problem-page/ProblemContainer.vue'
+import ProblemContainer from "../../modules/problem-page/ProblemContainer.vue"
 
 export default {
     components: {
         ProblemContainer,
     },
 
-    data() {
+    head() {
         return {
-            title: 'TEst',
-            description: 'TESt',
-            cost: 34,
+            link: [
+                { 
+                    rel: 'stylesheet', 
+                    href: `${this.problemCSS}`
+                }
+            ],
+            script: [
+                {
+                    body: true,
+                    src: `${this.problemJS}`
+                },
+                {
+                    body: true,
+                    src: '/problem-types/confirm_action.js'
+                }
+            ]
         }
-    }
+    },
+
+    async asyncData({ params, $axios }){
+        let problemNum = params.problemNum
+        let status, problem_data
+        let resp = {}
+        await $axios.$post("/api/problem_data", {variant: problemNum})
+        .then((resp) => {
+            status = resp.status
+            problem_data = resp.problem
+        })
+        if (status) {
+            for (const prop in problem_data) {
+                resp[prop] = problem_data[prop]
+            }
+        }
+        console.log(resp)
+        return resp
+    },
 }
 </script>
 
 <style scoped>
+
 .content_wrapper{
 	margin-top: 130px;
 	box-sizing: border-box;
