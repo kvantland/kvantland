@@ -3,7 +3,7 @@
         <StartHeader />
         <div class="content_wrapper_land">
             <Breadcrumbs :crumbs="landCrumbs" />
-            <LandInfo />
+            <LandMap />
         </div>
     </div>
 </template>
@@ -12,18 +12,18 @@
 <script>
 import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
 import Breadcrumbs from '../modules/all-pages/Breadcrumbs.vue'
-import LandInfo from '../modules/land-page/LandInfo.vue'
+import LandMap from '../modules/land-page/LandMap.vue'
     export default {
         head() {
             return {
                 title: 'Квантландия'
             };
         },
-        middleware: 'auth',
+        middleware: 'full-auth',
         components: {
             StartHeader,
             Breadcrumbs,
-            LandInfo,
+            LandMap,
         },
 
         data() {

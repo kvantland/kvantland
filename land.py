@@ -9,7 +9,7 @@ import hmac
 import nav
 import user
 import footer
-from login import do_logout
+from login import do_logout, check_token
 
 MODE = config['tournament']['mode']
 
@@ -100,25 +100,11 @@ def get_rules_info():
 	return json.dumps(rules_info)
 
 @route('/api/land_crumbs')
-def get_rules_breadcrumbs():
-	rules_crumbs = [
+def get_land_breadcrumbs():
+	land_crumbs = [
 		{   'name': "Квантландия",
             'link':  "/"},]
-	return json.dumps(rules_crumbs)
-
-def check_token(request):
-	auth_header = request.get_header('Authorization')
-	if auth_header is None:
-		return {'error': "Incorrect request format", 'login': ""}
-	if 'Bearer' not in auth_header:
-		return {'error': "No Bearer in header", 'login': ""}
-	token = auth_header.replace('Bearer ', '')
-	try:
-		payload = jwt.decode(jwt=token, key=config['keys']['access_key'], algorithms=['HS256'])
-	except:
-		return {'error': "Not correct token", 'login': ""}
-	user_login = payload['login']
-	return {'error': None, 'login': user_login}
+	return json.dumps(land_crumbs)
 
 def get_user_id(db): 
 	token_check_status = check_token(request)
@@ -127,8 +113,11 @@ def get_user_id(db):
 		return json.dumps({'error': token_check_status['error']})
 	else:
 		user_login = token_check_status['login']
-	db.execute('select student from Kvantland.Student where login=%s', (user_login, ))
-	(user_id, ) = db.fetchall()[0]
+	try:
+		db.execute('select student from Kvantland.Student where login=%s', (user_login, ))
+	except:
+		print("Login does not exist", file=sys.stderr)
+	(user_id, ), = db.fetchall()
 	return user_id
 
 @route('/api/towns_info')
@@ -139,10 +128,8 @@ def get_towns_info(db):
 	else:
 		db.execute('select town, name, position, true from Kvantland.Town')
 	resp = []
-	cnt = 0
 	for town, name, (x, y), opened in db.fetchall():
-		resp.append({"town": town, "name": name, "x": x, "y": y, "opened": opened, "cnt": cnt})
-		cnt += 1
+		resp.append({"townID": town, "name": name, "x": x, "y": y, "opened": opened})
 	return json.dumps(resp)
 
 @route('/land')
