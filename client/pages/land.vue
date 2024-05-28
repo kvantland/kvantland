@@ -39,7 +39,7 @@ import LandInfo from '../modules/land-page/LandInfo.vue'
 };
 </script>
 
-<style>
+<style scoped>
 .content_wrapper_land {
     width: 100%;
     padding: 0 min(5vw, 80px) 80px min(5vw, 80px);
@@ -52,50 +52,4 @@ import LandInfo from '../modules/land-page/LandInfo.vue'
     display: inline-flex;
 }
 
-.town-icon {
-    stroke: currentColor;
-    stroke-width: 6px;
-    fill: transparent;
-}
-
-.town-name {
-    fill: #B62C5A;
-}
-
-text.town-name {
-    dominant-baseline: central;
-    text-anchor: middle;
-    fill: currentColor; 
-    font-size: 24px; 
-    font-family: Montserrat Alternates; 
-    font-weight: 700;
-}
-
-a.town {
-    color: white;
-}
-
-a.town * {
-    transition: 0.5s all;
-}
-
-a.town.town_completed {
-    color: #bdbdbd !important;
-}
-
-@media(min-width: 961px) {
-    a.town:hover {
-        color: #ffc400;
-    }
-}
-
-
-a.town:hover g.town-name {
-    transform: translateY(1%) scale(1.2);
-}
-
-g.town-name {
-    position: absolute;
-    z-index: 10;
-}
 </style>

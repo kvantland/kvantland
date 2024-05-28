@@ -1,6 +1,6 @@
 <template>
 <g class="towns">
-<a v-for="twn in townsInfo" :class="[twn.opened ? 'town' : 'town_completed']" :transform="`translate(${twn.x} ${twn.y})`" :xlink:href="`/town/${twn.town}/`">
+<a v-for="twn in townsInfo" :class="[twn.opened ? 'town' : 'town town_completed']" :transform="`translate(${twn.x} ${twn.y})`" :xlink:href="`/town/${twn.town}/`">
     <image :href="`town-icon/icon-${twn.town}.png`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
     <circle class="town-icon" r="33px" />
     <g class="town-name">
@@ -42,3 +42,51 @@ export default {
     }
 }
 </script>
+<style>
+.town-icon {
+    stroke: currentColor;
+    stroke-width: 6px;
+    fill: transparent;
+}
+
+.town-name {
+    fill: #B62C5A;
+}
+
+text.town-name {
+    dominant-baseline: central;
+    text-anchor: middle;
+    fill: currentColor; 
+    font-size: 24px; 
+    font-family: Montserrat Alternates; 
+    font-weight: 700;
+}
+
+a.town {
+    color: white;
+}
+
+a.town * {
+    transition: 0.5s all;
+}
+
+a.town.town_completed {
+    color: #bdbdbd !important;
+}
+
+@media(min-width: 961px) {
+    a.town:hover {
+        color: #ffc400;
+    }
+}
+
+
+a.town:hover g.town-name {
+    transform: translateY(1%) scale(1.2);
+}
+
+g.town-name {
+    position: absolute;
+    z-index: 10;
+}
+</style>
