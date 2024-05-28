@@ -1,6 +1,6 @@
 <template>
 <g class="towns">
-<a v-for="twn in townsInfo" class="town" :transform="`translate(${twn.x} ${twn.y})`" :xlink:href="`/town/${twn.town}/`">
+<a v-for="twn in townsInfo" :class="[twn.opened ? 'town' : 'town_completed']" :transform="`translate(${twn.x} ${twn.y})`" :xlink:href="`/town/${twn.town}/`">
     <image :href="`town-icon/icon-${twn.town}.png`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
     <circle class="town-icon" r="33px" />
     <g class="town-name">
