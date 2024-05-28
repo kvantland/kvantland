@@ -1,5 +1,5 @@
 <template>
-    <button class="hint_button" :title="hintTitle"> 
+    <button class="hint_button" :title="hintTitle" @click="getHint"> 
         <img class="hint_icon" src="/icons/hint_icon.svg" />
         <p> Подсказка </p>
     </button>
@@ -12,6 +12,12 @@ export default {
             hintTitle: 'Получить подсказку (стоимость: 1)',
         }
     },
+    
+    methods: {
+        getHint() {
+            this.$emit('getHint')
+        }
+    }
 }
 </script>
 

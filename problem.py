@@ -14,6 +14,42 @@ import footer
 from config import config
 from login import do_logout, check_token
 
+
+@route('/api/get_hint', method="POST")
+def get_hint(db):
+	resp = {
+		'status': False,
+		'hint': '',
+	}
+	try:
+		variant = json.loads(request.body.read())['variant']
+	except:
+		return json.dumps(resp)
+
+	token_status = check_token(request)
+	if token_status['error']:
+		return json.dumps(resp)
+	user_id = token_status['user_id']
+	
+	try:
+		db.execute('''select Kvantland.Hint.content, Kvantland.Hint.cost 
+				from Kvantland.Problem join Kvantland.Variant using (problem)
+			 	join Kvantland.Hint using (problem) where variant = %s''', (variant,))
+		(hint, hint_cost, ), = db.fetchall()
+		db.execute('select score from Kvantland.Student where student=%s', (user_id, ))
+		(score, ), = db.fetchall()
+		if score >= hint_cost:
+			db.execute('update Kvantland.Student set score=%s where student=%s', (score - hint_cost, user_id, ))
+			resp['hint'] = hint
+	except:
+		return json.dumps(resp)
+	
+	resp['status'] = True
+	print('hint: ', resp, file=sys.stderr)
+	return json.dumps(resp)
+
+
+
 @route('/api/problem_breadcrumbs', method="POST")
 def get_problem_breadcrumbs(db):
 	resp = {
@@ -61,7 +97,7 @@ def get_problem_data(db):
 			'image': "",
 			'type': "",
 			'variantParams': "",
-			'hint': {'status':"", 'cost':1},
+			'hint': {'status':"", 'cost':1, 'description': ''},
 			'inputType': "",
 			'problemComponent': "",
 			'problemHTML': "",

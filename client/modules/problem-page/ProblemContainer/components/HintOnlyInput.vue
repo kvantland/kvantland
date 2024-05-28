@@ -1,6 +1,6 @@
 <template>
     <div class="problem_input">
-        <HintButton />
+        <HintButton @getHint="getHint" />
     </div>
 </template>
 
@@ -11,6 +11,12 @@ export default {
     components: {
         HintButton,
     },
+
+    methods: {
+        getHint() {
+            this.$emit('getHint')
+        }
+    }
 }
 </script>
 

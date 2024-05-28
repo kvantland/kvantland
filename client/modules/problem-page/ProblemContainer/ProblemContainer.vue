@@ -12,15 +12,17 @@
                 <component :is="dynamicProblemComponent" />
             </div>
             <div v-if="problemContent" class="oldTypeProblem" v-html="problemContent.problemHTML" />
+            <HintContainer v-if="hint.description" :description="hint.description" />
         </div>
 
-        <component v-if="!answerGiven" :is="dynamicInput" :hasHint="hint.status" @sendAnswer="sendAnswer" />
+        <component v-if="!answerGiven" :is="dynamicInput" :hasHint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
         <ProblemResult v-if="answerGiven && problemInputType=='IntegerTypeInput'" :answer="answer" :answerStatus="answerStatus" />
     </div>
 </template>
 
 <script>
 import ProblemResult from './components/ProblemResult.vue'
+import HintContainer from './components/HintContainer.vue'
 
 export default {
     data() {
@@ -32,6 +34,7 @@ export default {
 
     components: {
         ProblemResult,
+        HintContainer,
     },
 
     props: {
@@ -42,7 +45,7 @@ export default {
         variant: {default: null},
         title: {default: ''},
         cost: {default: 0},
-        hint: {default: null},
+        hint: {default: null },
         description: {default: ''},
         image: {default: null},
         problemComponent: {default: null},
@@ -55,6 +58,12 @@ export default {
         async sendAnswer(answer) {
             await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer})
             window.location.reload('true')
+        },
+        async getHint(){
+            const response = await this.$axios.$post('/api/get_hint', {variant: this.variant})
+            console.log(response)
+            if (response.status)
+                this.$emit('updateHint', response.hint)
         }
     },
 }

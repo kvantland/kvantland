@@ -1,7 +1,7 @@
 <template>
     <div class="problem_input">
         <InputArea @sendAnswer="sendAnswer" />
-        <HintButton v-if="hasHint" />
+        <HintButton v-if="hasHint" @getHint="getHint" />
     </div>
 </template>
 
@@ -22,6 +22,9 @@ export default {
     methods: {
         sendAnswer(answer) {
             this.$emit('sendAnswer', answer)
+        },
+        getHint() {
+            this.$emit('getHint')
         }
     }
 }

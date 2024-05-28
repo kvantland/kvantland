@@ -5,7 +5,7 @@
             <input type="hidden" name="answer" />
             <AnswerButton />
         </form>
-        <HintButton v-if="hasHint" />
+        <HintButton v-if="hasHint" @getHint="getHint"/>
     </div>
 </template>
 
@@ -21,7 +21,13 @@ export default {
     
     props: {
         hasHint: {default: false},
-    }
+    },
+
+    methods: {
+        getHint() {
+            this.$emit('getHint')
+        }
+    },
 }
 </script>
 

@@ -14,7 +14,8 @@
                             :hint="hint"
                             :problemInputType="inputType"
                             :problemComponent="problemComponent"
-                            :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" />
+                            :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
+                            @updateHint="updateHint" />
         <SupportInfoContainer />
     </div>
 </template>
@@ -76,6 +77,12 @@ export default {
         console.log(resp)
         return resp
     },
+
+    methods: {
+        updateHint(hint) {
+            this.hint.description = hint
+        }
+    }
 }
 </script>
 
