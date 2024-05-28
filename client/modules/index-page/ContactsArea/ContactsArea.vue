@@ -46,3 +46,34 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.contacts_area {
+	flex-direction: column; 
+	justify-content: flex-start; 
+	align-items: flex-start; 
+	gap: 40px; 
+	display: flex;
+}
+
+.page_header {
+	color: #1E8B93;
+	font-size: 40px;
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+}
+
+.contacts_area .text {
+	color: black; 
+	font-size: 20px; 
+	font-weight: 400;
+}
+
+.contacts_area .button_area {
+	justify-content: flex-start; 
+	align-items: flex-start; 
+	gap: 40px; 
+	display: inline-flex;
+    width: 100%;
+} 
+</style>

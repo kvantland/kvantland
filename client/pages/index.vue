@@ -84,5 +84,15 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 </script>
 
 <style scoped>
-@import "../assets/css/start_page.css";
+.content_wrapper {
+	width: 100%;
+	padding: 0 max(40px, min(5vw, 80px)) 70px max(40px, min(5vw, 80px));
+	margin-top: 130px;
+	box-sizing: border-box;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 60px;
+	display: inline-flex;
+}
 </style>

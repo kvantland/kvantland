@@ -27,3 +27,56 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.history {
+    width: 100%;
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.history .content {
+	display: inline-flex;
+	justify-content: space-between;
+}
+
+.history hr {
+	position: relative;
+	top: -21px;
+	color: white;
+}
+
+.history .content .item {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.history .content .item .rect {
+	width: 40px;
+	height: 40px;
+	background-color: white;
+	border-radius: 10px;
+}
+
+.history .content .item .text_cont {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 20px;
+
+}
+
+.history .content .item .text_cont .header {
+	color: white;
+	font-size: max(20px, min(32px, 2.5vw));
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+}
+
+.history .content .item .text_cont .text {
+	color: white;
+	font-size: max(15px, min(24px, 1.8vw));
+	font-family: Montserrat;
+	font-weight: 400;
+}
+</style>
