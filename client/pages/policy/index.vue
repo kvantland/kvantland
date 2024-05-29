@@ -1,15 +1,11 @@
 <template>
-    <div>
-        <StartHeader />
-        <div class="content_wrapper">
-            <ConfidentialityInfo />
-        </div>
+    <div class="content_wrapper">
+        <ConfidentialityInfo />
     </div>
 </template>
 
 
 <script>
-import StartHeader from '../../modules/all-pages/Headers/StartHeader.vue'
 import ConfidentialityInfo from '../../modules/policy-page/ConfidentialityInfo/ConfidentialityInfo.vue'
     export default {
         head() {
@@ -19,13 +15,12 @@ import ConfidentialityInfo from '../../modules/policy-page/ConfidentialityInfo/C
         },
 
         components: {
-            StartHeader,
             ConfidentialityInfo,
         },
     };
 </script>
 
-<style>
+<style scoped>
 .content_wrapper {
     width: 100%;
     padding: 0 80px 80px 80px;

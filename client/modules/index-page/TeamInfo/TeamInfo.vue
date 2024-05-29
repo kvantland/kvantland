@@ -27,3 +27,27 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.team_container {
+	flex-direction: column;
+  	justify-content: flex-start;
+  	align-items: flex-start;
+  	gap: 40px;
+  	display: flex;
+}
+
+.team_container .page_header {
+	color: #1E8B93;
+	font-size: 40px;
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+}
+
+.team_container .content {
+	display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 25px;
+    grid-row-gap: 30px;
+}
+</style>

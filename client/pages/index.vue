@@ -1,16 +1,13 @@
 <template>
-    <div>
-        <StartHeader />
-        <div class="content_wrapper">
-            <TournamentInfo />
-            <CommonInfo />
-            <ProblemExamples @showDialog="displayDialog" />
-            <TeamInfo />
-            <ContactsArea />
-            <ProblemExampleDialog v-if="activeDialog" :dialogType="dialogType" 
-                :dialogData="dialogData" @closeDialog="hideDialog" 
-                @changeDialog="displayDialog" />
-        </div>
+    <div class="content_wrapper">
+        <TournamentInfo />
+        <CommonInfo />
+        <ProblemExamples @showDialog="displayDialog" />
+        <TeamInfo />
+        <ContactsArea />
+        <ProblemExampleDialog v-if="activeDialog" :dialogType="dialogType" 
+            :dialogData="dialogData" @closeDialog="hideDialog" 
+            @changeDialog="displayDialog" />
     </div>
 </template>
 
@@ -21,7 +18,6 @@ import CommonInfo from '../modules/index-page/CommonInfo/CommonInfo.vue';
 import ContactsArea from '../modules/index-page/ContactsArea/ContactsArea.vue';
 import ProblemExamples from '../modules/index-page/ProblemExamples/ProblemExamples.vue';
 import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
-import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
 
     export default {
         layout: 'start-page',
@@ -37,7 +33,6 @@ import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
             ProblemExamples,
             TeamInfo,
             TournamentInfo,
-            StartHeader,
         },
 
         data() {
@@ -88,6 +83,16 @@ import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
     };
 </script>
 
-<style>
-@import "../assets/css/start_page.css";
+<style scoped>
+.content_wrapper {
+	width: 100%;
+	padding: 0 max(40px, min(5vw, 80px)) 70px max(40px, min(5vw, 80px));
+	margin-top: 130px;
+	box-sizing: border-box;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 60px;
+	display: inline-flex;
+}
 </style>

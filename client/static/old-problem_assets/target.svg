@@ -1,0 +1,39 @@
+<svg class="picture target" viewBox="-600 -600 1200 1200" width="36em" height="36em">
+	<style type="text/css">
+		circle { stroke: black; stroke-width: 5px; }
+		text { fill: black; font-size: 50px; text-anchor: middle; dominant-baseline: central; }
+	</style>
+	<defs>
+		<g id="hit">
+			<image x="-30" y="-30" width="60" height="60" href="%(hit-img)s" />
+		</g>
+	</defs>
+	<circle fill="#0093dd" r="500" />
+	<circle fill="#da251c" r="400" />
+	<circle fill="none" r="300" />
+	<circle fill="#fff500" r="200" />
+	<circle fill="none" r="125" />
+	<circle fill="#1f1a17" r="50" />
+	<text x="0" y="0" style="fill: white">10</text>
+	<text x="-87.5" y="0">9</text>
+	<text x="87.5" y="0">9</text>
+	<text x="0" y="-87.5">9</text>
+	<text x="0" y="87.5">9</text>
+	<text x="162.5" y="0">8</text>
+	<text x="-162.5" y="0">8</text>
+	<text x="0" y="162.5">8</text>
+	<text x="0" y="-162.5">8</text>
+	<text x="-250" y="0">7</text>
+	<text x="250" y="0">7</text>
+	<text x="0" y="-250">7</text>
+	<text x="0" y="250">7</text>
+	<text x="-350" y="0">6</text>
+	<text x="350" y="0">6</text>
+	<text x="0" y="-350">6</text>
+	<text x="0" y="350">6</text>
+	<text x="-450" y="0">5</text>
+	<text x="450" y="0">5</text>
+	<text x="0" y="-450">5</text>
+	<text x="0" y="450">5</text>
+	%(hit-list)s
+</svg>

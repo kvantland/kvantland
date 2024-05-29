@@ -12,6 +12,11 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/svg', href: '/favicon.svg' }],
+    script: [
+        {
+            src: '/jsLibraries/jQuery/jquery-3.7.1.js'
+        }
+    ]
   },
 
   publicRuntimeConfig: {
@@ -37,6 +42,10 @@ export default {
         },
         {
             path: '~UI/Form',
+            prefix: false,
+        },
+        {
+            path: '~UI/Headers',
             prefix: false,
         }
     ] 

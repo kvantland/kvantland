@@ -55,17 +55,17 @@ def check_login_request(db):
 	pw_check = ['password']
 	
 	try:
-		db.execute('select password from Kvantland.Student where login = %s', (login, ))
-		(password_hash, ), = db.fetchall()
+		db.execute('select password, student from Kvantland.Student where login = %s', (login, ))
+		(password_hash, user_id, ), = db.fetchall()
 	except:
 		resp['errors']['password'] = 'Неверный логин или пароль'
 		password_hash = pwhash.hash('-')
 
-	if pwhash.verify(password, password_hash) and login:
+	if pwhash.verify(password, password_hash) and login and user_id:
 		access_key = config['keys']['access_key']
 		refresh_key = config['keys']['refresh_key']
-		resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
-		resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
+		resp['tokens']['access_token'] = jwt.encode(payload={'login': login, 'user_id': user_id}, key=access_key, algorithm='HS256')
+		resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login, 'user_id': user_id}, key=refresh_key, algorithm='HS256')
 	else:
 		resp['errors']['password'] = 'Неверный логин или пароль'
 
@@ -88,7 +88,8 @@ def check_token(request):
 	except:
 		return {'error': "Not correct token", 'login': ""}
 	user_login = payload['login']
-	return {'error': None, 'login': user_login}
+	user_id = payload['user_id']
+	return {'error': None, 'login': user_login, 'user_id': user_id}
 
 
 @route('/login')

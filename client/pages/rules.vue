@@ -1,17 +1,12 @@
 <template>
-    <div>
-        <StartHeader />
-        <div class="content_wrapper_rules">
-            <Breadcrumbs :crumbs="rulesCrumbs" />
-            <RulesInfo />
-        </div>
+    <div class="content_wrapper_rules">
+        <Breadcrumbs :crumbs="rulesCrumbs" />
+        <RulesInfo />
     </div>
 </template>
 
 
 <script>
-import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
-import Breadcrumbs from '../modules/all-pages/Breadcrumbs.vue'
 import RulesInfo from '../modules/rules-page/RulesInfo.vue'
     export default {
         head() {
@@ -21,8 +16,6 @@ import RulesInfo from '../modules/rules-page/RulesInfo.vue'
         },
         middleware: 'auth',
         components: {
-            StartHeader,
-            Breadcrumbs,
             RulesInfo,
         },
 

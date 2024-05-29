@@ -1,0 +1,76 @@
+.plot_area {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+
+
+.flex_box{
+	display: inline-flex;
+	flex-direction: column;
+	border: 1px solid;
+}
+
+.row{
+	display: flex;
+	flex-direction: row;
+	height: max(60px, min(8vw, 96px));;
+}
+
+.field {
+	display: flex;
+	font-family: Montserrat Alternates;
+	font-weight: 600; 
+	font-size:64px;
+	border:1px black solid;
+	justify-content: center;
+	text-align: center;
+	width: max(60px, min(8vw, 96px));
+	align-items: center;
+}
+
+.fieldinput {
+	font-family: Montserrat Alternates;
+	font-weight: 400;
+	font-size:64px;
+	stroke: black;
+	display: block;
+    margin:auto;
+    width: 80%;
+    height: 80%;
+    text-align: center;
+    background: none;
+}
+
+.fieldinput:focus{
+	outline: none;
+}
+
+.color0{
+	color: #FF3D00;
+}
+
+.color1{
+	color: #0066FF;
+}
+
+.color2{
+	color: #703AC7;
+}
+
+.color3{
+	color: #C414F0;
+}
+
+.color4{
+	color: #67C91A;
+}
+
+.color5{
+	color: #FF9900;
+}
+
+.color6{
+	color: #FF3D00;
+}

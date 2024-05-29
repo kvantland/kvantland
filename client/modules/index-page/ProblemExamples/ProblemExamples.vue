@@ -53,3 +53,28 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.examples_container {
+	flex-direction: column; 
+	justify-content: flex-start; 
+	align-items: flex-start; 
+	gap: 40px; 
+	display: flex;
+}
+
+.examples_container .content {
+	flex-direction: column; 
+	justify-content: flex-start; 
+	align-items: flex-start; 
+	gap: 20px; 
+	display: flex;
+}
+
+.page_header {
+	color: #1E8B93;
+	font-size: 40px;
+	font-family: Montserrat Alternates;
+	font-weight: 600;
+}
+</style>

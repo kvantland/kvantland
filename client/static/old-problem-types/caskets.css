@@ -1,0 +1,27 @@
+.row {
+	margin-top: 40px;
+	width: 100%;
+	display: inline-flex;
+	gap: 5%;
+	justify-content: center;
+}
+
+.row .column {
+	width: 13%;
+	display: inline-flex;
+	flex-direction: column;
+	gap: 20px;
+	align-self: stretch;
+}
+
+.row .column .name {
+	font-family: Montserrat;
+	font-weight: 700;
+	text-align: center;
+	align-self: stretch;
+	font-size: 14px;
+}
+
+.casket {
+	cursor: pointer;
+}

@@ -154,10 +154,11 @@ def registration(db):
 	resp = {
         'login': "",
         'password': "",
+		'user_id': "",
     }
 	token = json.loads(request.body.read())['email_confirm_token']
 	user_info = jwt.decode(jwt=token, key=config['keys']['email_confirm'], algorithms=['HS256'])
-	add_new_user(db, user_info)
+	user_id = add_new_user(db, user_info)
 	resp['login'] = user_info['login']
 	resp['password'] = user_info['password']
 	print('resp: ', resp, file=sys.stderr)

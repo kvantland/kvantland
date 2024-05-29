@@ -10,5 +10,22 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.contact_button {
+	flex: 1 1 0; 
+	align-self: stretch; 
+	padding: 10px; 
+	background: #1E8B93; 
+	box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); 
+	border-radius: 10px; 
+	justify-content: center; 
+	align-items: center; 
+	gap: 10px; 
+	display: flex;
+}
+
+.contact_icon {
+	width: 31.25px; 
+	height: 25px; 
+}
 </style>

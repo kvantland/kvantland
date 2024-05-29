@@ -12,7 +12,233 @@ import nav
 import user
 import footer
 from config import config
-from login import do_logout
+from login import do_logout, check_token
+
+
+@route('/api/get_hint', method="POST")
+def get_hint(db):
+	resp = {
+		'status': False,
+		'hint': '',
+	}
+	try:
+		variant = json.loads(request.body.read())['variant']
+	except:
+		return json.dumps(resp)
+
+	token_status = check_token(request)
+	if token_status['error']:
+		return json.dumps(resp)
+	user_id = token_status['user_id']
+	
+	try:
+		db.execute('''select Kvantland.Hint.content, Kvantland.Hint.cost 
+				from Kvantland.Problem join Kvantland.Variant using (problem)
+			 	join Kvantland.Hint using (problem) where variant = %s''', (variant,))
+		(hint, hint_cost, ), = db.fetchall()
+		db.execute('select score from Kvantland.Student where student=%s', (user_id, ))
+		(score, ), = db.fetchall()
+		if score >= hint_cost:
+			db.execute('update Kvantland.Student set score=%s where student=%s', (score - hint_cost, user_id, ))
+			resp['hint'] = hint
+	except:
+		return json.dumps(resp)
+	
+	resp['status'] = True
+	print('hint: ', resp, file=sys.stderr)
+	return json.dumps(resp)
+
+
+
+@route('/api/problem_breadcrumbs', method="POST")
+def get_problem_breadcrumbs(db):
+	resp = {
+		'status': False,
+		'breadcrumbs': [],
+	}
+	try:
+		variant = json.loads(request.body.read())['variant']
+	except:
+		return json.dumps(resp)
+
+	token_status = check_token(request)
+	if token_status['error']:
+		return json.dumps(resp)
+	login = token_status['login']
+	
+	try:
+		db.execute('''select town,  Kvantland.Town.name
+				from Kvantland.Problem join Kvantland.Variant using (problem) join 
+				Kvantland.Town using (town) where variant = %s''', (variant,))
+		(town, town_name, ), = db.fetchall()
+		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
+		resp['breadcrumbs'].append({'name': town_name, 'link': f'/land/town/{town}'})
+	except:
+		return json.dumps(resp)
+	
+	print('resp: ', resp, file=sys.stderr)
+	resp['status'] = True
+	return json.dumps(resp)
+
+
+@route('/api/problem_data', method="POST")
+def get_problem_data(db):
+	resp = {
+		'status': False,
+		'problem':
+		{
+			'description': "",
+			'title': "",
+			'answer': "",
+			'solution': "",
+			'answerGiven': False,
+			'answerStatus': None,
+			'cost': "",
+			'image': "",
+			'type': "",
+			'variantParams': "",
+			'hint': {'status':"", 'cost':1, 'description': ''},
+			'inputType': "",
+			'problemComponent': "",
+			'problemHTML': "",
+			'problemCSS': "",
+			'problemJS': "",
+		}
+	}
+	try:
+		variant = json.loads(request.body.read())['variant']
+	except:
+		return json.dumps(resp)
+
+	token_status = check_token(request)
+	if token_status['error']:
+		return json.dumps(resp)
+	user_id = token_status['user_id']
+
+	is_answer_correct = get_past_answer_correctness(db, user_id, variant)
+	if is_answer_correct is not None:
+		resp['problem']['answerGiven'] = True
+		resp['problem']['answerStatus'] = is_answer_correct
+		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+		(answer, solution, ), = db.fetchall()
+		resp['problem']['answer'] = answer
+		resp['problem']['solution'] = solution
+	
+	try:
+		db.execute('''select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, 
+				description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost 
+				from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join 
+				Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s''', (variant,))
+		(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
+		default = content
+		db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+		(step, curr, ), = db.fetchall()
+		if curr:
+			content = curr
+	except:
+		return json.dumps(resp)
+	try:
+		typedesc = import_module(f'problem-types.{type_}')
+	except:
+		typedesc = ''
+	kwargs = {'step': step, 'default': default}
+	script = try_read_file(f'problem-types/{type_}.js')
+	style = try_read_file(f'problem-types/{type_}.css')
+	
+	resp['problem']['description'] = description
+	resp['problem']['title'] = name
+	if image:
+		resp['problem']['image'] = f'/old_problem-assests/integer_img/{image}'
+	resp['problem']['cost'] = f'{points} {lang_form(points)}'
+	resp['problem']['type'] = type_
+	resp['problem']['variantParams'] = content
+	resp['problem']['hint']['status'] = bool(hint)
+	resp['problem']['hint']['cost'] = hint_cost
+	
+	if not(typedesc):   # Задача нового типа
+		if type_ == 'integer':
+			resp['problem']['inputType'] = 'integerTypeInput'
+		if content['inputType']:
+			resp['problem']['inputType'] = content['inputType']
+		if content['componentType']:
+			resp['problem']['componentType'] = content['componentType']
+		return json.dumps(resp)
+	
+	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs)).replace('/static', '').replace('problem_assets', 'old-problem_assets')
+	if style:
+		resp['problem']['problemCSS'] = f'/old-problem-types/{type_}.css'
+	if script:
+		resp['problem']['problemJS'] = f'/old-problem-types/{type_}.js'
+
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
+
+	try:
+		hybrid = typedesc.HYBRID
+	except AttributeError:
+		hybrid = False
+
+	try:
+		without_buttons = typedesc.WITHOUT_BUTTONS
+	except AttributeError:
+		without_buttons = False
+
+	try:
+		hint_only = typedesc.HINT_ONLY
+	except AttributeError:
+		hint_only = False
+
+	if not(without_buttons):
+		if hint_only and not(hybrid):
+			resp['problem']['inputType'] = 'HintOnlyInput'
+		elif show_default_buttons and not(hybrid):
+			resp['problem']['inputType'] = 'InteractiveTypeInput'
+		else:
+			resp['problem']['inputType'] = 'IntegerTypeInput'
+
+	print('resp: ', resp, file=sys.stderr)
+	resp['status'] = True
+	return json.dumps(resp)
+
+
+@route('/api/check_answer', method="POST")
+def check_user_answer(db):
+	resp = {
+		'status': False,
+	}
+	
+	access_token_status = check_token(request)
+	if access_token_status['error']:
+		return json.dumps(resp)
+	user_id = access_token_status['user_id']
+	
+	try:
+		data = json.loads(request.body.read())
+		variant = data['variant']
+		answer = data['answer']
+	except:
+		return json.dumps(resp)
+	
+	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (variant,))
+	(type_, content), = db.fetchall()
+	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+	(curr, ), = db.fetchall()
+	if curr:
+		content = curr
+	typedesc = import_module(f'problem-types.{type_}')
+	is_answer_correct = typedesc.validate(content, answer)
+	
+	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, answer, variant, user_id))
+	if is_answer_correct:
+		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))
+		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (variant, user_id, config["tournament"]["version"]))
+
+	resp['status'] = True
+	return json.dumps(resp)
+
+	
 
 MODE = config['tournament']['mode']
 _key = config['keys']['cookie']
