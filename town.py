@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
 import random
-from bottle import route, HTTPError, redirect
+from bottle import route, HTTPError, redirect, request, response
 import json
 from config import config
 from login import do_logout, check_token
 import nav
+import sys
 import user
 import footer
 
@@ -30,11 +31,6 @@ def get_town_breadcrumbs(db):
 		town = json.loads(request.body.read())['town']
 	except:
 		return json.dumps(resp)
-
-	token_status = check_token(request)
-	if token_status['error']:
-		return json.dumps(resp)
-	login = token_status['login']
 	
 	try:
 		db.execute('''Kvantland.Town.name
@@ -57,6 +53,7 @@ def get_town_data(db):
 	}
 	try:
 		town = json.loads(request.body.read())['town']
+		print('town: ', town, file=sys.stderr)
 	except:
 		return json.dumps(resp)
 
@@ -84,8 +81,8 @@ def get_town_data(db):
 	except:
 		return json.dumps(resp)
 
-	print('resp: ', resp, file=sys.stderr)
 	resp['status'] = True
+	print('resp: ', resp, file=sys.stderr)
 	return json.dumps(resp)
 
 
