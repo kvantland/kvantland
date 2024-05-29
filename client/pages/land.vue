@@ -1,6 +1,5 @@
 <template>
     <div>
-        <StartHeader />
         <div class="content_wrapper_land">
             <Breadcrumbs :crumbs="landCrumbs" />
             <LandMap />
@@ -10,8 +9,6 @@
 
 
 <script>
-import StartHeader from '../modules/all-pages/Headers/StartHeader.vue'
-import Breadcrumbs from '../modules/all-pages/Breadcrumbs.vue'
 import LandMap from '../modules/land-page/LandMap.vue'
     export default {
         head() {
@@ -21,8 +18,6 @@ import LandMap from '../modules/land-page/LandMap.vue'
         },
         middleware: 'full-auth',
         components: {
-            StartHeader,
-            Breadcrumbs,
             LandMap,
         },
 
