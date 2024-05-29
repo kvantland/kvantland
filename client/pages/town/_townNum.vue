@@ -15,7 +15,7 @@
                     h -1237
                     a 20 20 0 0 0 -20 20
                     z" />
-            <Problems :data="town_data"/>
+            <Problems :problems_data="town_data"/>
         </svg>
     </div>
 </template>
