@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 
 from config import config
-from bottle import route, redirect
+from bottle import route, redirect, request, response
 import json
+import jwt
+import sys
+import hmac
 import nav
 import user
 import footer
-from login import do_logout
+from login import do_logout, check_token
 
 MODE = config['tournament']['mode']
 
@@ -45,7 +48,6 @@ def get_rules_breadcrumbs():
         {   'name': "Правила",
             'link':  "/rules"},]
 	return json.dumps(rules_crumbs)
-
 
 @route('/api/rules_info')
 def get_rules_info():
@@ -96,6 +98,39 @@ def get_rules_info():
 
 	]
 	return json.dumps(rules_info)
+
+@route('/api/land_crumbs')
+def get_land_breadcrumbs():
+	land_crumbs = [
+		{   'name': "Квантландия",
+            'link':  "/"},]
+	return json.dumps(land_crumbs)
+
+def get_user_id(db): 
+	token_check_status = check_token(request)
+	if token_check_status['error']:
+		response.status = 400
+		return json.dumps({'error': token_check_status['error']})
+	else:
+		user_login = token_check_status['login']
+	try:
+		db.execute('select student from Kvantland.Student where login=%s', (user_login, ))
+	except:
+		print("Login does not exist", file=sys.stderr)
+	(user_id, ), = db.fetchall()
+	return user_id
+
+@route('/api/towns_info')
+def get_towns_info(db):
+	user_id = get_user_id(db)
+	if user_id is not None:
+		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false and tournament = %s) from Kvantland.Town', (user_id, config["tournament"]["version"]))
+	else:
+		db.execute('select town, name, position, true from Kvantland.Town')
+	resp = []
+	for town, name, (x, y), opened in db.fetchall():
+		resp.append({"townID": town, "name": name, "x": x, "y": y, "opened": opened})
+	return json.dumps(resp)
 
 @route('/land')
 def show_land(db):
