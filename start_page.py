@@ -16,7 +16,7 @@ def get_tournament_history():
 		{'event_name': 'Старт Турнира 2', 'event_date': '24.02.2024'},
 		{'event_name': 'Финиш Турнира 2', 'event_date': '31.03.2024'},
 		{'event_name': 'Старт Турнира 3', 'event_date': '22.04.2024'},
-		{'event_name': 'Финиш Турнира 3', 'event_date': '31.05.2024'}
+		{'event_name': 'Финиш Турнира 3', 'event_date': '15.06.2024'}
 		]
 	events_amount = 4
 	first_event = max(0, len(tournament_history) - events_amount)
