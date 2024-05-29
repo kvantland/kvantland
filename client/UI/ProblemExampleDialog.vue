@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <div class="shadow"></div>
+    <DialogShadowScreen>
         <div v-if="['answer', 'solution'].includes(dialogType)" class="dialog dialogType" :num="dialogData.num">
             <div class="head">
                 <p>{{ problemInfo.title }}</p>
@@ -16,8 +15,8 @@
             </div>
             <div class="body" v-else-if="dialogType == 'solution'">
                 <iframe loading="lazy" width="560" height="315"
-			        :src="problemInfo.solution_video_link"
-		        	frameborder="0"  allowfullscreen></iframe>
+                    :src="problemInfo.solution_video_link"
+                    frameborder="0"  allowfullscreen></iframe>
             </div>
             <div v-if="dialogType == 'answer'" class="button solution" @click="showSolution">
                 Посмотреть решение
@@ -26,7 +25,7 @@
                 Посмотреть ответ
             </div>
         </div>
-    </div>
+    </DialogShadowScreen>
 </template>
 
 <script>
@@ -128,15 +127,5 @@ export default {
 	text-align: center;
 	justify-content: center;
 	display: inline-flex;
-}
-
-.shadow {
-	position: fixed;
-	top: 0;
-	left: 0	;
-	width: 100%;
-	height: 100%;
-	z-index: 3;
-	background-color: rgba(0, 0, 0, 0.25)
 }
 </style>

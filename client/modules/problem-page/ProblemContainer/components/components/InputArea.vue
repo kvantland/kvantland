@@ -46,6 +46,7 @@ export default {
     align-items: center;
 }
 .answer_input {
+    -moz-appearance: textfield;
 	width: 160px;
 	height: 30px;
 	padding-left: 20px;
@@ -57,7 +58,7 @@ export default {
 	font-size: 24px;
 	font-family: Montserrat;
 	font-weight: 500;
-	word-wrap: break-word
+	word-wrap: break-word;
 }
 
 .input_label {

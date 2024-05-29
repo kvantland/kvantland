@@ -25,6 +25,8 @@ import ProblemContainer from "../../modules/problem-page/ProblemContainer/Proble
 import SupportInfoContainer from "../../modules/problem-page/SupportInfoContaner/SupportInfoContainer.vue"
 
 export default {
+    middleware: 'full-auth',
+    
     components: {
         ProblemContainer,
         SupportInfoContainer,
@@ -52,7 +54,7 @@ export default {
         }
     },
 
-    async asyncData({ params, $axios }){
+    async asyncData({ params, $axios, redirect }){
         let problemNum = params.problemNum
         let status, problem_data
         let resp = {}
@@ -65,6 +67,9 @@ export default {
             for (const prop in problem_data) {
                 resp[prop] = problem_data[prop]
             }
+        }
+        else {
+            return redirect('/')
         }
         await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
         .then((res) => {

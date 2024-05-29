@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <div class="shadow"></div>
+    <DialogShadowScreen>
         <div class="dialog out">
             <p class="content"> Вы уверены, что хотите выйти? <br/><br/> 
                 Все ваши ответы будут сохранены, вы<br/>сможете вернуться к решению задач<br/>позже 
@@ -10,10 +9,11 @@
                 <button type="button" @click="logout"> Выйти </button>
             </div>
         </div>
-    </div>
+    </DialogShadowScreen>
 </template>
 
 <script>
+
 export default {
     methods: {
         hideDialog() {
@@ -27,6 +27,23 @@ export default {
 </script>
 
 <style scoped>
+.dialog {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	padding: 40px 60px;
+	gap: 40px;
+	border-radius: 20px;
+	background: #1E8B93;
+	flex-direction: column;
+	justify-content: flex-start;
+	z-index: 4;
+    display: inline-flex;
+    animation: show 0.2s;
+}
+
 .content {
 	color: white;
 	font-size: 24px;

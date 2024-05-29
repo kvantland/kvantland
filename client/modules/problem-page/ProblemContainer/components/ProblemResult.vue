@@ -1,7 +1,7 @@
 <template>
     <div class="result_area">
-        <div :class="answerStatus ? 'correct' : 'incorrect'"> {{ answerStatus ? 'Верно': 'Heверно' }} </div>
-        <div class="answer"> Ваш ответ: {{ answer }} </div>
+        <p :class="answerStatus ? 'correct' : 'incorrect'"> {{ answerStatus ? 'Верно': 'Heверно' }} </p>
+        <p class="answer"> Ваш ответ: {{ answer }} </p>
     </div>
 </template>
 
@@ -20,13 +20,9 @@ export default {
     flex-direction: column;
     align-items: stretch;
     align-self: stretch;
-    gap: 10px;
     font-size: 21px;
 	font-family: Montserrat Alternates;
 	font-weight: 700;
-}
-
-.result_area div {
     padding-top: 23px;
 	padding-bottom: 23px;
 	background: white;
@@ -46,5 +42,12 @@ export default {
 
 .correct {
     color: #17A814;
+}
+
+.answer {
+    color: black;
+    font-size: 24px;
+    font-family: Montserrat;
+    font-weight: 500;
 }
 </style>
