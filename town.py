@@ -29,16 +29,17 @@ def get_town_breadcrumbs(db):
 	}
 	try:
 		town = json.loads(request.body.read())['town']
+		print('town: ', town, file=sys.stderr)
 	except:
 		return json.dumps(resp)
-	
 	try:
-		db.execute('''Kvantland.Town.name
+		db.execute('''select Kvantland.Town.name
 				from Kvantland.Town where town = %s''', (town,))
 		(town_name, ), = db.fetchall()
 		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
 		resp['breadcrumbs'].append({'name': town_name, 'link': f'/land/town/{town}'})
 	except:
+		print('bad db', resp, file=sys.stderr)
 		return json.dumps(resp)
 	
 	print('resp: ', resp, file=sys.stderr)
@@ -53,7 +54,6 @@ def get_town_data(db):
 	}
 	try:
 		town = json.loads(request.body.read())['town']
-		print('town: ', town, file=sys.stderr)
 	except:
 		return json.dumps(resp)
 
