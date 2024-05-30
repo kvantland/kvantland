@@ -72,7 +72,7 @@ def get_problem_breadcrumbs(db):
 				Kvantland.Town using (town) where variant = %s''', (variant,))
 		(town, town_name, ), = db.fetchall()
 		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
-		resp['breadcrumbs'].append({'name': town_name, 'link': f'/land/town/{town}'})
+		resp['breadcrumbs'].append({'name': town_name, 'link': f'/town/{town}'})
 	except:
 		return json.dumps(resp)
 	

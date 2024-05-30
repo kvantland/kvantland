@@ -1,13 +1,13 @@
 <template>
 <g class="towns">
-<a v-for="twn in townsInfo" :class="twn.opened ? 'town' : 'town town_completed'" :transform="`translate(${twn.x} ${twn.y})`" :xlink:href="`/town/${twn.townID}/`">
-    <image :href="`town-icon/icon-${twn.townID}.png`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
-    <circle class="town-icon" r="33px" />
-    <g class="town-name">
-        <path class="town-name" :num="twn.townID-1" :d="townNamesPaths[twn.townID-1]" :transform="`translate(${townNamesTransforms[twn.townID-1]})`" style="filter:url(#dropshadow)"/>
-        <text class="town-name" style="font-family:Montserrat Alternates" :num="twn.townID-1" y="-60">{{twn.name}}</text>
-    </g>
-</a>
+    <NuxtLink v-for="twn in townsInfo" :class="twn.opened ? 'town' : 'town town_completed'" :transform="`translate(${twn.x} ${twn.y})`" :to="`/town/${twn.townID}/`">
+        <image :href="`town-icon/icon-${twn.townID}.png`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
+        <circle class="town-icon" r="33px" />
+        <g class="town-name">
+            <path class="town-name" :num="twn.townID-1" :d="townNamesPaths[twn.townID-1]" :transform="`translate(${townNamesTransforms[twn.townID-1]})`" style="filter:url(#dropshadow)"/>
+            <text class="town-name" style="font-family:Montserrat Alternates" :num="twn.townID-1" y="-60">{{twn.name}}</text>
+        </g>
+    </NuxtLink>
 </g>
 </template>
 <script>

@@ -37,7 +37,7 @@ def get_town_breadcrumbs(db):
 				from Kvantland.Town where town = %s''', (town,))
 		(town_name, ), = db.fetchall()
 		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
-		resp['breadcrumbs'].append({'name': town_name, 'link': f'/land/town/{town}'})
+		resp['breadcrumbs'].append({'name': town_name, 'link': f'/town/{town}'})
 	except:
 		print('bad db', resp, file=sys.stderr)
 		return json.dumps(resp)
