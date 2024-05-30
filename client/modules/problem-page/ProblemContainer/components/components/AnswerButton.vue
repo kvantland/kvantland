@@ -1,7 +1,37 @@
 <template>
-    <button class="submit_button" type="submit" form="problem_form"> Отправить </button>
+    <div>
+        <ConfirmDialog v-if="confirmMode" @sendAnswer="sendAnswer" @hideConfirmDialog="hideConfirmDialog"> </ConfirmDialog>
+        <button class="submit_button" type="submit" form="problem_form" @click="showConfirmDialog"> Отправить </button>
+    </div>
 </template>
 
+<script scoped>
+import ConfirmDialog from  './ConfirmDialog.vue'
+
+export default {
+    data() {
+        return {
+            confirmMode: false
+        }
+    },
+
+    components: {
+        ConfirmDialog,
+    },
+
+    methods: {
+        showConfirmDialog() {
+            this.confirmMode = true
+        },
+        hideConfirmDialog() {
+            this.confirmMode = false
+        },
+        sendAnswer() {
+            this.$emit('sendAnswer')
+        }
+    }
+}
+</script>
 <style scoped>
 .submit_button {
     align-self: center;

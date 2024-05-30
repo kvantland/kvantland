@@ -1,7 +1,7 @@
 <template>
     <div class="result_area">
         <p :class="answerStatus ? 'correct' : 'incorrect'"> {{ answerStatus ? 'Верно': 'Heверно' }} </p>
-        <p class="answer"> Ваш ответ: {{ answer }} </p>
+        <p v-if="isInteger" class="answer"> Ваш ответ: {{ answer }} </p>
     </div>
 </template>
 
@@ -10,6 +10,7 @@ export default {
     props: {
         answer: {default: ''},
         answerStatus: {default: false},
+        isInteger: {default: false}
     }
 }
 </script>

@@ -1,10 +1,6 @@
 <template>
     <div class="problem_input">
-        <form id="problem_form" method="post">
-            <input type="hidden" name="progress" />
-            <input type="hidden" name="answer" />
-            <AnswerButton />
-        </form>
+        <AnswerButton @sendAnswer="sendAnswer"/>
         <HintButton v-if="hasHint" @getHint="getHint"/>
     </div>
 </template>
@@ -26,6 +22,9 @@ export default {
     methods: {
         getHint() {
             this.$emit('getHint')
+        },
+        sendAnswer() {
+            this.$emit('sendAnswer')
         }
     },
 }
