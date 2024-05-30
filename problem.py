@@ -151,17 +151,28 @@ def get_problem_data(db):
 		resp['problem']['image'] = f'/old_problem-assests/integer_img/{image}'
 	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 	resp['problem']['type'] = type_
+	if 'correct' in content.keys(): # пользователь не должен знать ответ)
+		del content['correct']
+	print(content, file=sys.stderr)
 	resp['problem']['variantParams'] = content
 	resp['problem']['hint']['status'] = bool(hint)
 	resp['problem']['hint']['cost'] = hint_cost
 	
-	if not(typedesc):   # Задача нового типа
+	try:
+		typedesc.entry_form()
+		isNewProblem = False
+	except:
+		isNewProblem = True
+		
+	if isNewProblem:
 		if type_ == 'integer':
 			resp['problem']['inputType'] = 'integerTypeInput'
-		if content['inputType']:
+		if 'inputType' in content.keys():
 			resp['problem']['inputType'] = content['inputType']
-		if content['componentType']:
+		if 'componentType' in content.keys():
 			resp['problem']['componentType'] = content['componentType']
+		print('newProblemData: ', resp, file=sys.stderr)
+		resp['status'] = True
 		return json.dumps(resp)
 	
 	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs)).replace('/static', '').replace('problem_assets', 'old-problem_assets')
@@ -218,6 +229,7 @@ def check_user_answer(db):
 		data = json.loads(request.body.read())
 		variant = data['variant']
 		answer = data['answer']
+		solution = data['solution']
 	except:
 		return json.dumps(resp)
 	
@@ -227,10 +239,12 @@ def check_user_answer(db):
 	(curr, ), = db.fetchall()
 	if curr:
 		content = curr
+	print(type_, file=sys.stderr)
+	print(content, file=sys.stderr)
 	typedesc = import_module(f'problem-types.{type_}')
 	is_answer_correct = typedesc.validate(content, answer)
 	
-	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (is_answer_correct, answer, variant, user_id))
+	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, answer, solution, variant, user_id))
 	if is_answer_correct:
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))
 		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (variant, user_id, config["tournament"]["version"]))

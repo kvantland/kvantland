@@ -8,15 +8,16 @@
         <div class="problem_body">
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
-            <div class="newTypeProblem" v-if="problemComponent">
-                <component :is="dynamicProblemComponent" />
+            <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
+                <component :is="dynamicProblemComponent" v-show="!answerGiven" :problemParams="variantParams" v-model="currentAnswer"/>
+                <div class="problem_solution" v-html="solution" v-show="answerGiven"></div>
             </div>
-            <div v-if="problemContent" class="oldTypeProblem" v-html="problemContent.problemHTML" />
+            <div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
             <HintContainer v-if="hint.description" :description="hint.description" />
         </div>
 
         <component v-if="!answerGiven" :is="dynamicInput" :hasHint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
-        <ProblemResult v-if="answerGiven && problemInputType=='IntegerTypeInput'" :answer="answer" :answerStatus="answerStatus" />
+        <ProblemResult v-if="answerGiven" :answer="answer" :answerStatus="answerStatus" :isInteger="problemInputType=='IntegerTypeInput'" />
     </div>
 </template>
 
@@ -28,7 +29,8 @@ export default {
     data() {
         return {
             dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
-            dynamicProblemComponent: () => import(`../../../problemModules/${this.problemComponent}.vue`)
+            dynamicProblemComponent: () => import(`../../../problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
+            currentAnswer: '',
         }
     },
 
@@ -55,17 +57,29 @@ export default {
     },
 
     methods: {
-        async sendAnswer(answer) {
-            await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer})
-            window.location.reload('true')
+        async sendAnswer(integerAnswer=false) {
+            console.log('send answer!')
+            let answer
+            if (integerAnswer)
+                answer = integerAnswer
+            else {
+                answer = this.currentAnswer
+            }
+            const solution = this.$refs['problem'].innerHTML
+            await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer, solution: solution})
+            window.location.reload()
         },
         async getHint(){
             const response = await this.$axios.$post('/api/get_hint', {variant: this.variant})
             console.log(response)
             if (response.status)
                 this.$emit('updateHint', response.hint)
-        }
+        },
     },
+
+    mounted() {
+        console.log(this.variantParams)
+    }
 }
 </script>
 

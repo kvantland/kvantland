@@ -1,10 +1,9 @@
 <template>
-    <form class="input_area" id="problem_form" method="post" @submit.prevent="showConfirmDialog">
+    <div class="input_area">
         <p class="input_label"> Введите ответ: </p>
         <input class="answer_input" name="answer" type="number" v-model="answer" required/>
-        <AnswerButton />
-        <ConfirmDialog v-if="showConfirmDialogMode" @hideConfirmDialog="hideConfirmDialog" @sendAnswer="sendAnswer" />
-    </form>
+        <AnswerButton @sendAnswer="sendAnswer"/>
+    </div>
 </template>
 
 <script>
@@ -25,12 +24,6 @@ export default {
     },
 
     methods: {
-        showConfirmDialog() {
-            this.showConfirmDialogMode = true
-        },
-        hideConfirmDialog() {
-            this.showConfirmDialogMode = false
-        },
         sendAnswer() {
             this.showConfirmDialogMode = false
             this.$emit('sendAnswer', this.answer)

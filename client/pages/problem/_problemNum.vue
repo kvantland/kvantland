@@ -13,7 +13,7 @@
                             :variantParams="variantParams"
                             :hint="hint"
                             :problemInputType="inputType"
-                            :problemComponent="problemComponent"
+                            :problemComponent="componentType"
                             :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
                             @updateHint="updateHint" />
         <SupportInfoContainer />
