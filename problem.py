@@ -235,10 +235,13 @@ def check_user_answer(db):
 	
 	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (variant,))
 	(type_, content), = db.fetchall()
-	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-	(curr, ), = db.fetchall()
+	db.execute('select currб answer_given from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+	(curr, answer_given, ), = db.fetchall()
 	if curr:
 		content = curr
+		
+	if answer_given:
+		return json.dumps(resp)
 	print(type_, file=sys.stderr)
 	print(content, file=sys.stderr)
 	typedesc = import_module(f'problem-types.{type_}')
