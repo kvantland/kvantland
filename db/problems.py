@@ -149,6 +149,12 @@ def IslandOfLiars4(cur):
 def Chiselburg4(cur):
 	problems_list = []
 	variants_list = dict()
+
+	add_list(problems_list, variants_list)
+
+def Geom4(cur):
+	problems_list = []
+	variants_list = dict()
 	
 	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'partition_restore', "Восстановите разбиение")
 	for start_board, correct in [
@@ -227,12 +233,6 @@ def Chiselburg4(cur):
 			'correct': correct,
 		}
 		variants_list = add_variant_to_list(variants_list, "Восстановите разбиение", desc, json.dumps(cont))
-
-	add_list(problems_list, variants_list)
-
-def Geom4(cur):
-	problems_list = []
-	variants_list = dict()
 	
 	add_list(problems_list, variants_list)
 
