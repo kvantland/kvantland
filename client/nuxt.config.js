@@ -88,10 +88,17 @@ export default {
     },
     strategies: {
       local: {
+        scheme: 'refresh',
         token: {
           property: 'token',
           global: true,
-          type: 'Bearer'
+          type: 'Bearer',
+          maxAge: 1800,
+        },
+        refreshToken: {
+            property: 'refresh_token',
+            data: 'refresh_token',
+            maxAge: 60 * 60 * 24 * 30,
         },
         user: {
           property: 'user',
@@ -100,6 +107,7 @@ export default {
           login: { url: '/api/check_login', method: 'post' },
           logout: false,
           user: { url: '/api/user', method: 'get'},
+          refresh: { url: '/api/refresh_tokens', method: 'post'}
         },
       },
       vk: {

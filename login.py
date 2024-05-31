@@ -8,6 +8,7 @@ import json
 import hmac
 import jwt
 import sys
+import time
 
 from config import config
 from check_fields_format import *
@@ -28,6 +29,33 @@ def get_login_fields():
 		{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"}
 	]
 	return json.dumps(fields)
+
+
+@route('/api/refresh_tokens', method="POST")
+def refresh_tokens():
+	print('refresh', file=sys.stderr)
+	resp = {
+		'access_token': "",
+		'refresh_token': "",
+	}
+	try:
+		data = json.loads(request.body.read())
+		old_refresh_token = data['refresh_token']
+	except:
+		return json.dumps(resp)
+	print(old_refresh_token, file=sys.stderr)
+	
+	try:
+		user_data = jwt.decode(jwt=old_refresh_token, key=config['keys']['refresh_key'], algorithms=['HS256'])
+		login = user_data['login']
+		user_id = user_data['user_id']
+	except:
+		return json.dumps(resp)
+	
+	resp['refresh_token'] = jwt.encode(payload={'login': login, 'user_id': user_id, 'time': time.time()}, key=config['keys']['refresh_key'], algorithm='HS256')
+	resp['access_token'] = jwt.encode(payload={'login': login, 'user_id': user_id, 'time': time.time()}, key=config['keys']['access_key'], algorithm='HS256')
+
+	return json.dumps(resp)
 
 
 @route('/api/check_login', method="POST")
