@@ -67,7 +67,7 @@ export default {
             }
             const solution = this.$refs['problem'].innerHTML
             await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer, solution: solution})
-            window.location.reload()
+            this.$emit('updateProblemStatus')
         },
         async getHint(){
             const response = await this.$axios.$post('/api/get_hint', {variant: this.variant})
@@ -84,6 +84,9 @@ export default {
 </script>
 
 <style scoped>
+.problem_solution {
+    pointer-events: none;
+}
 .problem_container{
 	align-self: stretch;
 	padding: 40px 60px;

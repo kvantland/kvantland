@@ -14,11 +14,11 @@
                     :y="`${yInd * side + rectInd + side / 2}`"> {{ perimeterValue }} </text>
             </g>
         </g>
-        <g class="palette" :transform="`translate(${boardWidth + paletteInd} ${colorCircleRadius})`">
+        <g class="palette" :transform="`translate(${boardWidth + paletteInd} ${side / 2})`">
             <g class="paletteColumns" v-for="(column, columnNum) in paletteColumns" 
                 :transform="`translate(${columnNum * (paletteColumnInd + 2 * colorCircleRadius) + colorCircleRadius} 0)`">
                 <circle v-for="(color, colorNum) in colorsInColumn" :class="`color color-${colorNum + columnNum * colorsInColumn}`" cx="0" 
-                    :cy="`${colorNum * (colorInd + 2*colorCircleRadius)}`" :r="colorCircleRadius" @click="chooseColor(colorNum + columnNum * colorsInColumn)" />
+                    :cy="`${colorNum * side}`" :r="colorCircleRadius" @click="chooseColor(colorNum + columnNum * colorsInColumn)" />
             </g>
         </g>
     </svg>
@@ -43,10 +43,9 @@ export default {
             lineWidth: 2,
             paletteInd: 40,
             paletteColumns: 2,
-            paletteColumnInd: 10,
+            paletteColumnInd: 40,
             colorsInColumn: 5,
-            colorInd: 10,
-            colorCircleRadius: 20,
+            colorCircleRadius: 30,
             currentColor: null,
             colors: colors,
         }
