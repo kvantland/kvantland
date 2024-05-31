@@ -41,7 +41,7 @@ export default {
             rectInRow: rectInRow,
             side: 80,
             lineWidth: 2,
-            paletteInd: 40,
+            paletteInd: 120,
             paletteColumns: 2,
             paletteColumnInd: 40,
             colorsInColumn: 5,
