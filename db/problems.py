@@ -150,6 +150,21 @@ def Chiselburg4(cur):
 	problems_list = []
 	variants_list = dict()
 
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'unusual_number', "Необычное число")
+	for X, Y, A in [
+			(6, 9, 53999),
+			(9, 3, 49999),
+			(15, 9, 23999),
+			(18, 3, 29999),
+			]:
+		desc = f"""Напишите пятизначное число, у которого первая цифра в {X} раз меньше суммы всех цифр справа от неё, а вторая цифра в {Y} раз меньше суммы всех цифр справа от неё."""
+		cont = {
+				'inputType': "InteractiveTypeInput",
+				'componentType': "unusualNumber",
+				'correct': A,
+		}
+		variants_list = add_variant_to_list(variants_list, "Необычное число", desc, json.dumps(cont))	
+
 	add_list(problems_list, variants_list)
 
 def Geom4(cur):
@@ -233,7 +248,7 @@ def Geom4(cur):
 			'correct': correct,
 		}
 		variants_list = add_variant_to_list(variants_list, "Восстановите разбиение", desc, json.dumps(cont))
-	
+
 	add_list(problems_list, variants_list)
 
 
