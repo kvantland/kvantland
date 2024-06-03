@@ -196,8 +196,8 @@ def Chiselburg4(cur):
 		но стоит не на своём месте. В каком порядке расположены цифры в верхней строке?'''
 		cont = {
 			'start_board': start_board,
-			#'inputType': "IntegerTypeInput",
-			#'componentType': "bullsAndCows",
+			'inputType': "IntegerTypeInput",
+			'componentType': "bullsAndCows",
 			'correct': correct,
 		}
 		variants_list = add_variant_to_list(variants_list, "Быки и коровы", desc, json.dumps(cont))
