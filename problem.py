@@ -171,7 +171,7 @@ def get_problem_data(db):
 			resp['problem']['inputType'] = content['inputType']
 		if 'componentType' in content.keys():
 			resp['problem']['componentType'] = content['componentType']
-		print('newProblemData: ', resp, file=sys.stderr)
+		# print('newProblemData: ', resp, file=sys.stderr)
 		resp['status'] = True
 		return json.dumps(resp)
 	
@@ -235,7 +235,7 @@ def check_user_answer(db):
 	
 	db.execute('select Kvantland.Type_.code, content from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (variant,))
 	(type_, content), = db.fetchall()
-	db.execute('select currб answer_given from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+	db.execute('select curr, answer_given from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 	(curr, answer_given, ), = db.fetchall()
 	if curr:
 		content = curr
@@ -245,9 +245,10 @@ def check_user_answer(db):
 	print(type_, file=sys.stderr)
 	print(content, file=sys.stderr)
 	typedesc = import_module(f'problem-types.{type_}')
+	print(answer, file=sys.stderr)
 	is_answer_correct = typedesc.validate(content, answer)
 	
-	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, answer, solution, variant, user_id))
+	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, json.dumps(answer), solution, variant, user_id))
 	if is_answer_correct:
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))
 		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (variant, user_id, config["tournament"]["version"]))

@@ -87,6 +87,15 @@ export default {
 .problem_solution {
     pointer-events: none;
 }
+
+.newTypeProblem {
+    margin-top: 50px;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .problem_container{
 	align-self: stretch;
 	padding: 40px 60px;
