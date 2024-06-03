@@ -21,10 +21,6 @@
 <script>
 export default {
     props: ["problemParams"],
-    model: {
-        prop: 'answer',
-        event: 'updateAnswer'
-    },
     data() {
         const rectInRow = this.problemParams['start_board'][0].length
         const rectInColumn = this.problemParams['start_board'].length

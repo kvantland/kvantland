@@ -150,7 +150,7 @@ def Chiselburg4(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'bulls_and_cows', "Быки и коровы")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Быки и коровы")
 	for start_board, correct in [
 		(
 			[
@@ -196,8 +196,8 @@ def Chiselburg4(cur):
 		но стоит не на своём месте. В каком порядке расположены цифры в верхней строке?'''
 		cont = {
 			'start_board': start_board,
-			'inputType': "IntegerTypeInput",
-			'componentType': "bullsAndCows",
+			#'inputType': "IntegerTypeInput",
+			#'componentType': "bullsAndCows",
 			'correct': correct,
 		}
 		variants_list = add_variant_to_list(variants_list, "Быки и коровы", desc, json.dumps(cont))
