@@ -99,7 +99,7 @@ def get_problem_data(db):
 			'variantParams': "",
 			'hint': {'status':"", 'cost':1, 'description': ''},
 			'inputType': "",
-			'problemComponent': "",
+			'componentType': "",
 			'problemHTML': "",
 			'problemCSS': "",
 			'problemJS': "",
@@ -166,7 +166,7 @@ def get_problem_data(db):
 		
 	if isNewProblem:
 		if type_ == 'integer':
-			resp['problem']['inputType'] = 'integerTypeInput'
+			resp['problem']['inputType'] = 'IntegerTypeInput'
 		if 'inputType' in content.keys():
 			resp['problem']['inputType'] = content['inputType']
 		if 'componentType' in content.keys():
