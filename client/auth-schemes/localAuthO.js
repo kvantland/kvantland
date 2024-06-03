@@ -59,12 +59,13 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
             return
         console.log('first!')
         // Handle callback only for specified route
-        if (
+       /*if (
             this.$auth.options.redirect &&
             this.$auth.ctx.route.path != this.$auth.options.redirect.callback
         ) {
             return
-        }
+        }*/
+
         // Callback flow is not supported in server side
         if (process.server) {
           return
@@ -73,6 +74,10 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
         const parsedQuery = parseQuery(this.$auth.ctx.route.hash.substr(1))
         const vk_token = parsedQuery[this.options.token.property]
         const user_id = parsedQuery[this.options.userId.property]
+        console.log(vk_token, user_id)
+
+        if (!(vk_token || user_id))
+            return
     
         // Validate state
         const state = this.$auth.$storage.getUniversal(this.name + '.state')
@@ -91,17 +96,21 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
             }
         })
 
-        if (!resp.data.tokens)
-            return
+        console.log(resp.data)
+        
+        const redirect_to_acc = `/acc/editInfo?${encodeQuery({'user_info': JSON.stringify(resp.data.user_info), 
+            'request': "oauthReg", 'globalError':"fillFields"})}`
+        console.log(redirect_to_acc)
+        window.location.replace(redirect_to_acc)
 
-        this.token.set(resp.data.tokens[this.options.accessToken.property])
+        /*this.token.set(resp.data.tokens[this.options.accessToken.property])
         this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])
 
         if (this.$auth.options.watchLoggedIn) {
             await this.fetchUser()
             this.$auth.redirect('home', true)
             return true // True means a redirect happened
-        }
+        }*/
     }
 
     updateTokens(response) {

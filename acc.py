@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 
 from html import escape
+from copy import deepcopy
 from bottle import route, request, response, redirect
 import nav
 import user
 import sys
 from login import current_user, do_login, check_token
+from registration import add_new_user
 from check_fields_format import *
 from send_mail import send_mail
 import approv
@@ -24,20 +26,23 @@ import json
 @route('/api/user', method="OPTIONS")
 def resp():
 	response.iter_headers(
-		('Allow', 'POST'),
+		('Allow', 'GET'),
 		('Access-Control-Allow-Origin', 'http://localhost:3000'),
-		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
+		('Access-Control-Allow-Methods', ['GET', 'OPTIONS']),
 	)
 	response.status = 200
 	
 @route('/api/user')
 def get_user_info(db):	
+	print('user info requested', file=sys.stderr)
 	token_check_status = check_token(request)
+	print(token_check_status, file=sys.stderr)
 	if token_check_status['error']:
 		response.status = 400
 		return json.dumps({'error': token_check_status['error']})
 	else:
 		user = token_check_status['login']
+	print(user, file=sys.stderr)
 		
 	resp = {
 		'user': {
@@ -93,26 +98,28 @@ def get_acc_fields():
 		]
 	return json.dumps(fields)
 
-
-@route('/api/update_user_info', method="POST")
-def update_user_info(db, send_again=False):
+@route('/api/acc_form_request', method="POST")
+def acc_form_request(db):
 	resp = {
 		'status': False,
 		'email_changed': False,
 		'errors': dict(),
 	}
 	try:
-		data = json.loads(request.body.read())
+		data = json.loads(request.body.read().decode('utf-8'))
 		update_info = data['user_info']
+		request_type = data['action_type']
 	except:
 		return json.dumps(resp)
-
-	check_token_status = check_token(request)
-	if check_token_status['error']:
-		resp['errors']['token'] = check_token_status['error']
-		return json.dumps(resp)
-	else:
-		login = check_token_status['login']
+	print(update_info, request_type, sep='\n')
+	
+	if request_type in ['updateInfo']:
+		check_token_status = check_token(request)
+		if check_token_status['error']:
+			resp['errors']['token'] = check_token_status['error']
+			return json.dumps(resp)
+		else:
+			login = check_token_status['login']
 	
 	email_check = ['email']
 	expected_fields = ['approval']
@@ -128,11 +135,46 @@ def update_user_info(db, send_again=False):
 										   expected_fields=expected_fields,
 										   select_check=select_check))
 	
+	if request_type in ['updateInfo']:
+		update_status = update_user_info(db, update_info=update_info,  field_errors=resp['errors'], login=login)
+		resp['errors'].update(update_status['errors']) # добавляем ошибки, возникшие при запросах к дб на обновление информации о пользователе
+
+	elif request_type in ['oauthReg']:
+		try:
+			login = update_info['login']
+		except:
+			return json.dumps(resp)
+	
+	if 'email' in update_info.keys() and not(resp['errors']):
+		if is_new_email(db, update_info['email'], login) or request_type in ['send_again']:
+			if not email_already_exists(db, update_info['email']):
+				origin = request.get_header('Origin')
+				send_status = send_acc_confirm_message(login=login, user_info=update_info, request_type=request_type, origin=origin)
+				if send_status['status']:
+					resp['email_changed'] = True
+				else:
+					resp['errors']['email'] = send_status['error']
+			else:
+				resp['errors']['email'] = "Почта уже используется"
+	
+	if not(resp['errors']):
+		resp['status'] = True
+	print('resp: ', resp, file=sys.stderr)
+		
+	return json.dumps(resp)
+
+
+def update_user_info(db, update_info={}, field_errors={}, login=''):
+	resp = {
+		'status': False,
+		'errors': {},
+	}
 	try:
 		db.execute('select name, surname, school, clas, town from Kvantland.Student where login=%s', (login, )) # предыдущие значения
 		(prev_name, prev_surname, prev_school, prev_clas, prev_town, ), = db.fetchall()
 	except:
-		return json.dumps(resp)
+		resp['errors']['db'] = 'User not exists'
+		return resp
 	
 	prev_info = {
 		'name': prev_name,
@@ -144,42 +186,24 @@ def update_user_info(db, send_again=False):
 	
 	print('prev info: ', prev_info, file=sys.stderr)
 	for field in update_info: # поля с ошибками остаются прежними
-		if field in resp['errors']:
-			if resp['errors'][field]:
+		if field in field_errors:
+			if field_errors[field]:
 				update_info[field] = prev_info[field]
 	try:
 		db.execute('update Kvantland.Student set name=%s, surname=%s, school=%s, clas=%s, town=%s where login=%s', 
 			(update_info['name'], update_info['surname'], update_info['school'], update_info['clas'], update_info['town'], 
 				login))
 	except:
-		resp['status'] = False
-		
-	if 'email' in update_info.keys():
-		if is_new_email(db, update_info['email'], login) or send_again:
-			if not email_already_exists(db, update_info['email']):
-				origin = request.get_header('Origin')
-				send_status = send_acc_confirm_message(name=update_info['name'], login=login, email=update_info['email'], origin=origin)
-				if send_status['status']:
-					resp['email_changed'] = True
-				else:
-					resp['errors']['email'] = send_status['error']
-			else:
-				resp['errors']['email'] = "Почта уже используется"
-			
-	if not(resp['errors']):
-		resp['status'] = True
-	print('resp: ', resp, file=sys.stderr)
-		
-	return json.dumps(resp)
-
-@route('/api/send_acc_message_again', method="POST")
-def send_acc_message_again(db):
-	return update_user_info(db, send_again=True)
+		resp['errors']['db'] = "Can't update user info"
+	return resp
 
 
-def send_acc_confirm_message(name, login, email, origin):
-	user_info = {'login': login, 'email': email, 'send_time': time.time()}
-	token = jwt.encode(payload=user_info, key=config['keys']['email_confirm'], algorithm='HS256')
+def send_acc_confirm_message(login="", user_info={}, request_type="", origin=""):
+	add_info = {'login': login, 'send_time': time.time(), 'request_type': request_type}
+	link_params = deepcopy(user_info)
+	link_params.update(add_info)
+	print(link_params)
+	token = jwt.encode(payload=link_params, key=config['keys']['email_confirm'], algorithm='HS256')
 	link = f"{origin}?email_confirm_token={token}&request=update_acc"
 	
 	email_content =  f'''
@@ -196,7 +220,7 @@ def send_acc_confirm_message(name, login, email, origin):
 			font-size: 20px;
 			font-weight: 500;">
 		<div style="font-family: Montserrat, Arial !important;">
-		<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {name}! </div>
+		<div style="font-family: Montserrat, Arial !important;"> Здравствуйте, {user_info['name']}! </div>
 		<div style="margin-top: 20px"> 
 			Недавно был получен запрос на подтверждение адреса электронной почты, связанной с вашей учетной записью. 
 			Если вы запрашивали это подтверждение, нажмите на ссылку ниже: </div>
@@ -225,7 +249,8 @@ def send_acc_confirm_message(name, login, email, origin):
 		</body>
 		</html>'''
 	
-	return send_mail(email_content=email_content, email=email, subject="Подтверждение почты")
+	return send_mail(email_content=email_content, email=user_info['email'], subject="Подтверждение почты")
+
 
 @route('/api/check_email_amount', method="POST")
 def check_user_email_amount(db):
@@ -264,10 +289,34 @@ def update_user_email_amount(db, email):
 
 @route('/api/email_update', method="POST")
 def email_update(db):
+	resp = {
+		'status': False,
+		'tokens': {'access_token': "", 'refresh_token': ""}
+	}
 	request_data = json.loads(request.body.read())
 	decoded_data = jwt.decode(jwt=request_data['email_confirm_token'], key=config['keys']['email_confirm'], algorithms=['HS256'])
-	db.execute('update Kvantland.Student set email=%s where login=%s', (decoded_data['email'], decoded_data['login']))
-	return json.dumps({'status': True})
+	if not('request_type' in decoded_data.keys()):
+		return json.dumps(resp)
+	else:
+		request_type = decoded_data['request_type']
+	
+	if request_type == 'updateInfo':
+		db.execute('update Kvantland.Student set email=%s where login=%s', (decoded_data['email'], decoded_data['login']))
+	elif request_type == 'oauthReg':
+		try:
+			print('here!')
+			user_id = add_new_user(db, decoded_data)
+			login = decoded_data['login']
+			print(user_id)
+			access_key = config['keys']['access_key']
+			refresh_key = config['keys']['refresh_key']
+			resp['tokens']['access_token'] = jwt.encode(payload={'login': login, 'user_id': user_id}, key=access_key, algorithm='HS256')
+			resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login, 'user_id': user_id}, key=refresh_key, algorithm='HS256')
+		except:
+			return json.dumps(resp)
+	
+	resp['status'] = True
+	return json.dumps(resp)
 
 
 @route('/api/is_user_info_full', method="POST")

@@ -32,39 +32,45 @@ def resp():
 	response.status = 200
 
 @route('/api/vk_auth', method=["POST"])
-def vk_auth(db):
+def vk_auth():
 	data =  json.loads(request.body.read().decode('utf-8'))
+	print(data)
 	access_token = data['token']
 	user_id = data['user_id']
+	print(access_token, user_id)
 
 	user = get_user_vk_info(access_token, user_id)
+	print('user info: ', user)
 	resp = {
-		'tokens': {
-			'access_token': '',
-			'refresh_token': '',
+		'user_info': {
+			'login': "",
+			'name': "",
+			'surname': "",
+			'city': "",
+			'school': "",
 		}
 	}
 
-	login = 'vk#' + str(user['id'])
-	password, name, surname, city, school = ('some', None, None, None, None)
+	resp['user_info']['login'] = 'vk#' + str(user['id'])
+	#password, name, surname, city, school = ('some', None, None, None, None)
 	if 'first_name' in user.keys():
-		name = user['first_name']
+		resp['user_info']['name'] = user['first_name']
 	if 'last_name' in user.keys():
-		surname = user['last_name']
+		resp['user_info']['surname'] = user['last_name']
 	if 'city' in user.keys():
 		if 'title' in user['city'].keys():
-			city = user['city']['title']
+			resp['user_info']['city'] = user['city']['title']
 	if 'schools' in user.keys():
 		if len(user['schools']) > 0:
-			school = user['schools'][0]['name']
+			resp['user_info']['school'] = user['schools'][0]['name']
 			
-	if (user := vk_check_login(db, login)) == None:	
+	'''if (user := vk_check_login(db, login)) == None:	
 		user = add_user(login, name, surname, city, school, password, db)
-
+	print(user, file=sys.stderr)
 	access_key = config['keys']['access_key']
 	refresh_key = config['keys']['refresh_key']
-	resp['tokens']['access_token'] = jwt.encode(payload={'login': login}, key=access_key, algorithm='HS256')
-	resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login}, key=refresh_key, algorithm='HS256')
+	resp['tokens']['access_token'] = jwt.encode(payload={'login': login, 'user_id': user}, key=access_key, algorithm='HS256')
+	resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login, 'user_id': user}, key=refresh_key, algorithm='HS256')'''
 
 	return json.dumps(resp)
 

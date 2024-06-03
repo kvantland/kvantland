@@ -25,7 +25,6 @@
 <script>
 export default {
     layout: "forms",
-    middleware: "auth",
 
     head() {
         return {
@@ -35,6 +34,7 @@ export default {
 
     data() {
         return {
+            pageMod: 'updateInfo',
             fieldsTypeInfo: [],
             fieldsValueInfo: [],
             fieldsErrors: {},
@@ -46,7 +46,7 @@ export default {
                                     Для подтверждения адреса, перейдите по ссылке в</br>
                                     письме, которое придёт Вам на почту`,
             sendEmailData: {},
-            sendEMailRequestUrl: "/api/send_acc_message_again",
+            sendEMailRequestUrl: "/api/acc_form_request",
         }
     },
 
@@ -57,8 +57,20 @@ export default {
 
     mounted() {
         let fieldsValueInfo = {}
-        for (let key in this.$auth.user) {
-            fieldsValueInfo[key] = this.$auth.user[key]
+        switch (this.$route.query.request) {
+            case "oauthReg": {
+                for (let key in JSON.parse(this.$route.query.user_info)) {
+                    fieldsValueInfo[key] = JSON.parse(this.$route.query.user_info)[key]
+                }
+                this.pageMod = "oauthReg"
+                break;
+            }
+            default: {
+                for (let key in this.$auth.user) {
+                    fieldsValueInfo[key] = this.$auth.user[key]
+                }
+                break;
+            }
         }
         this.fieldsValueInfo = fieldsValueInfo
         switch(this.$route.query.globalError) {
@@ -75,11 +87,11 @@ export default {
             let userInfo = this.fieldsValueInfo
             this.fieldsTypeInfo.forEach((field) => {if (!userInfo[field.name]) userInfo[field.name] = ""})
             if (!userInfo['approval']) userInfo['approval'] = false
-            const requestBody = {'user_info': userInfo}
+            const requestBody = {'user_info': userInfo, 'action_type': this.pageMod}
             let emailChanged = false
             let errors = {}
             let status = false
-            await this.$axios.$post('/api/update_user_info', requestBody)
+            await this.$axios.$post('/api/acc_form_request', requestBody)
                 .then((res) => {
                     status = res.status
                     if (res.email_changed)
