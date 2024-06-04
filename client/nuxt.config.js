@@ -116,7 +116,7 @@ export default {
             authorization: 'http://oauth.vk.com/authorize',
             apiLogin: `${process.env.API}/api/vk_auth`,
             userInfo: `${process.env.API}/api/user`,
-            refresh: { url: '/api/refresh_tokens', method: 'post'}
+            refresh: '/api/refresh_tokens', 
         },
         userId: {
             property: 'user_id',

@@ -107,18 +107,58 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 		}
 		else {
 			if (resp.data.tokens) {
-				this.setUserToken(resp.data.tokens.access_token, resp.data.tokens.refresh_token)
+                console.log(resp.data.tokens)
+                this.token.set(resp.data.tokens[this.options.accessToken.property])
+		        this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])
+				//this.$auth.setUserToken(resp.data.tokens.access_token, resp.data.tokens.refresh_token)
 			}
 		}
 		/*this.token.set(resp.data.tokens[this.options.accessToken.property])
-		this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])
+		this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])*/
 
 		if (this.$auth.options.watchLoggedIn) {
 			await this.fetchUser()
 			this.$auth.redirect('home', true)
 			return true // True means a redirect happened
-		}*/
+		}
 	}
+
+    async refreshTokens() {
+        // Get refresh token
+        const refreshToken = this.refreshToken.get()
+
+        // Refresh token is required but not available
+        if (!refreshToken) {
+        return
+        }
+
+        // Get refresh token status
+        const refreshTokenStatus = this.refreshToken.status()
+
+        // Refresh token is expired. There is no way to refresh. Force reset.
+        if (refreshTokenStatus.expired()) {
+            this.$auth.reset()
+            throw new ExpiredAuthSessionError()
+        }
+
+        // Delete current token from the request header before refreshing
+        this.requestHandler.clearHeader()
+
+        const resp = await this.$auth.request({
+            method: 'post',
+            url: this.options.endpoints.refresh,
+            baseURL: '',
+            data: {
+                refresh_token: refreshToken
+            },
+        })
+        .catch((error) => {
+            this.$auth.callOnError(error, { method: 'refreshToken' })
+            return Promise.reject(error)
+          })
+    
+        this.updateTokens(resp)
+    }
 
 	updateTokens(response) {
 		console.log('update tokens!')

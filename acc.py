@@ -141,12 +141,13 @@ def acc_form_request(db):
 
 	elif request_type in ['oauthReg']:
 		try:
-			login = update_info['login']
+			login = update_info['login']	
+			update_info['password'] = 'vk_password'
 		except:
 			return json.dumps(resp)
 	
 	if 'email' in update_info.keys() and not(resp['errors']):
-		if is_new_email(db, update_info['email'], login) or request_type in ['send_again']:
+		if is_new_email(db, update_info['email'], login) or request_type in ['send_again', 'oauthReg']:
 			if not email_already_exists(db, update_info['email']):
 				origin = request.get_header('Origin')
 				send_status = send_acc_confirm_message(login=login, user_info=update_info, request_type=request_type, origin=origin)
@@ -304,10 +305,8 @@ def email_update(db):
 		db.execute('update Kvantland.Student set email=%s where login=%s', (decoded_data['email'], decoded_data['login']))
 	elif request_type == 'oauthReg':
 		try:
-			print('here!')
 			user_id = add_new_user(db, decoded_data)
 			login = decoded_data['login']
-			print(user_id)
 			access_key = config['keys']['access_key']
 			refresh_key = config['keys']['refresh_key']
 			resp['tokens']['access_token'] = jwt.encode(payload={'login': login, 'user_id': user_id}, key=access_key, algorithm='HS256')

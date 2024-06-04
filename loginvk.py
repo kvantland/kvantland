@@ -34,13 +34,13 @@ def resp():
 @route('/api/vk_auth', method=["POST"])
 def vk_auth(db):
 	data =  json.loads(request.body.read().decode('utf-8'))
-	print(data)
+	print(data, file=sys.stderr)
 	access_token = data['token']
 	user_id = data['user_id']
-	print(access_token, user_id)
+	print(access_token, user_id, file=sys.stderr)
 
 	user = get_user_vk_info(access_token, user_id)
-	print('user info: ', user)
+	print('user info: ', user, file=sys.stderr)
 	resp = {
 		'user_info': {
 			'login': "",

@@ -71,6 +71,14 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
                         })
                     }
                     catch(e) {console.log('Acc update error:', e)}
+                case 'login':
+                    try {
+                        console.log('login!')
+                        const tokens = JSON.parse(this.$route.query.tokens)
+                        console.log(tokens)
+                        this.$auth.setUserToken(tokens.access_token, tokens.refresh_token)
+                    }
+                    catch(e) {console.log('Login error:', e)}
             }
         },
 
