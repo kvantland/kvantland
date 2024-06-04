@@ -82,6 +82,7 @@ export default {
     methods: {
         clearError(name) {
             this.fieldsErrors[name] = ""
+            this.globalError = ""
         },
         async submitAccForm() {
             let userInfo = this.fieldsValueInfo

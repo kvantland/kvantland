@@ -140,7 +140,7 @@ export default {
         scope: [],
         clientId: process.env.VK_CLIENT,
         codeChallengeMethod: '',
-        redirectUri: `${process.env.BASE_URL}/`,
+        redirectUri: false,
         state: 'VK',
       }
     },

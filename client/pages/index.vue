@@ -61,24 +61,19 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
                     }
                     catch(e) {console.log('Login error:', e)}
                 case 'update_acc':
+                    if (this.$auth.loggedIn) {break}
                     try {
                         await this.$axios.$post('/api/email_update', {email_confirm_token: this.$route.query.email_confirm_token})
                         .then((resp) => {
                             console.log(resp)
                             if (resp.status && resp.tokens) {
-                                this.$auth.setUserToken(resp.tokens.access_token, resp.tokens.refresh_token)
+                                this.$auth.strategy.token.set(resp.tokens.access_token)
+                                this.$auth.strategy.refreshToken.set(resp.tokens.refresh_token)
+                                this.$auth.fetchUser()
                             }
                         })
                     }
                     catch(e) {console.log('Acc update error:', e)}
-                case 'login':
-                    try {
-                        console.log('login!')
-                        const tokens = JSON.parse(this.$route.query.tokens)
-                        console.log(tokens)
-                        this.$auth.setUserToken(tokens.access_token, tokens.refresh_token)
-                    }
-                    catch(e) {console.log('Login error:', e)}
             }
         },
 
