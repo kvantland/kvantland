@@ -99,7 +99,7 @@ def get_problem_data(db):
 			'variantParams': "",
 			'hint': {'status':"", 'cost':1, 'description': ''},
 			'inputType': "",
-			'problemComponent': "",
+			'componentType': "",
 			'problemHTML': "",
 			'problemCSS': "",
 			'problemJS': "",
