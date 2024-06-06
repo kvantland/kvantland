@@ -48,19 +48,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.lamp {
-    stroke: grey;
-    stroke-width: 1px;
-    cursor: pointer;
-}
-
-.lamp.on {
-    fill: yellow;
-}
-
-.lamp.off {
-    fill: white;
-}
-</style>

@@ -9,8 +9,8 @@
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
-                <component :is="dynamicProblemComponent" v-show="!answerGiven" :problemParams="variantParams" v-model="currentAnswer"/>
-                <div class="problem_solution" v-html="solution" v-show="answerGiven"></div>
+                <component v-if="!answerGiven" :is="dynamicProblemComponent" :problemParams="variantParams" v-model="currentAnswer"/>
+                <div v-if="answerGiven" v-html="solution" class="problem_solution"></div>
             </div>
             <div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
             <HintContainer v-if="hint.description" :description="hint.description" />
@@ -26,10 +26,19 @@ import ProblemResult from './components/ProblemResult.vue'
 import HintContainer from './components/HintContainer.vue'
 
 export default {
+    head() {
+        return {
+            link: [{
+                rel: 'stylesheet',
+                href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
+                }
+            ]
+        }
+    },
     data() {
         return {
             dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
-            dynamicProblemComponent: () => import(`../../../problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
+            dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
             currentAnswer: '',
         }
     },
@@ -86,6 +95,7 @@ export default {
 <style scoped>
 .problem_solution {
     pointer-events: none;
+    display: inline-flex;
 }
 
 .newTypeProblem {
