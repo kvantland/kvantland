@@ -1,6 +1,6 @@
 <template>
 <g class="towns">
-    <NuxtLink v-for="twn in townsInfo" :class="twn.opened ? 'town' : 'town town_completed'" :transform="`translate(${twn.x} ${twn.y})`" :to="`/town/${twn.townID}/`">
+    <NuxtLink v-for="twn in townsInfo" :class="twn.opened ? 'town' : 'town town_completed'" :transform="`translate(${twn.x} ${twn.y})`" :to="`/town/${twn.townID}/`" :key="`towns_${twn}`">
         <image :href="`town-icon/icon-${twn.townID}.png`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
         <circle class="town-icon" r="33px" />
         <g class="town-name">

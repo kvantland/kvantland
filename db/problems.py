@@ -149,6 +149,24 @@ def IslandOfLiars4(cur):
 def Chiselburg4(cur):
 	problems_list = []
 	variants_list = dict()
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'lock_code', "Код замка")
+	for combinations, correct in [
+		([512, 317, 587], [3, 8, 2]),
+		([748, 142, 762], [1, 6, 8]),
+		([294, 796, 256], [7, 5, 4]),
+		([149, 546, 136], [5, 3, 9]),
+        ]:
+		desc = f"""Код замка состоит из трёх цифр. Петя попытался 
+		        его подобрать и попробовал комбинации {combinations[0]}, {combinations[1]}, 
+				{combinations[2]}. Оказалось, что в каждом варианте он верно набрал ровно 
+				одну цифру. Какой код у замка?"""
+		cont = {
+			'correct': correct,
+			'start_values': ['*', '*', '*'],
+			'componentType': 'lockCode',
+			'inputType': 'InteractiveTypeInput',
+        }
+		variants_list = add_variant_to_list(variants_list, "Код замка", desc, json.dumps(cont))
 
 	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'unusual_number', "Необычное число")
 	for X, Y, A in [
@@ -196,15 +214,15 @@ def Geom4(cur):
 				['',  4, '', '',  8],
 				['', '',  4,  6, ''],
 				['',  8, '', '',  8]
-            ],
+			],
 			[[
 				[1, 1, 2, 3, 3],
 				[4, 2, 2, 3, 3],
 				[4, 5, 6, 6, 6],
 				[7, 7, 8, 9, 9],
 				[7, 7, 0, 0, 0]
-            ]]
-        ),
+			]]
+		),
 		(
 			[
 				['', '',  8,  6, ''],
@@ -212,15 +230,15 @@ def Geom4(cur):
 				['',  8, '', '', ''],
 				[ 6, '', '', '',  6],
 				['',  8,  6, '',  8]
-            ],
+			],
 			[[
 				[1, 1, 1, 2, 2],
 				[3, 4, 4, 5, 5],
 				[6, 4, 4, 5, 0],
 				[6, 7, 8, 9, 0],
 				[7, 7, 8, 9, 9]
-            ]]
-        ),
+			]]
+		),
 		(
 			[
 				['', '', '', '',  4],
@@ -228,15 +246,15 @@ def Geom4(cur):
 				['', '',  8,  6,  6],
 				[ 4, '', '', '',  8],
 				['',  6,  8, '', '']
-            ],
+			],
 			[[
 				[1, 1, 2, 2, 3],
 				[1, 1, 2, 4, 5],
 				[6, 6, 6, 4, 5],
 				[7, 8, 8, 9, 9],
 				[0, 0, 8, 9, 9]
-            ]]
-        )
+			]]
+		)
 	]:
 		desc = '''Квадрат 5×5 разбили на 10 фигурок и в одной из клеток каждой фигуры 
 				записали её периметр. Восстановите разбиение. Используйте 10 цветов справа 
@@ -265,6 +283,22 @@ def make_chess_board(data):
 def Golovolomsk4(cur):
 	problems_list = []
 	variants_list = dict()
+	
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'lamps_on_hexagonal_panel', "Лампочки на шестиугольном табло")
+	for lamps_in_line, side in [    
+		(2, 5),
+	]:
+		desc = f'''На табло расположены лампочки в форме «шестиугольника». Каждое нажатие 
+				на лампочку меняет её состояние (включает или выключает). Включите несколько 
+				лампочек так, чтобы в каждом ряду, параллельном стороне «шестиугольника», 
+				{['горела одна лампочка', 'горели две лампочки', 'горели три лампочки'][lamps_in_line - 1]}.'''
+		cont = {
+			'lamps_in_line': lamps_in_line,
+			'side': side,
+			'inputType': "InteractiveTypeInput",
+			'componentType': "lampsOnHexagonalPanel"
+		}
+		variants_list = add_variant_to_list(variants_list, "Лампочки на шестиугольном табло", desc, json.dumps(cont))
 
 	add_list(problems_list, variants_list)
 

@@ -14,11 +14,11 @@
                     :y="`${yInd * side + rectInd + side / 2}`"> {{ perimeterValue }} </text>
             </g>
         </g>
-        <g class="palette" :transform="`translate(${boardWidth + paletteInd} ${colorCircleRadius})`">
+        <g class="palette" :transform="`translate(${boardWidth + paletteInd} ${side / 2})`">
             <g class="paletteColumns" v-for="(column, columnNum) in paletteColumns" 
                 :transform="`translate(${columnNum * (paletteColumnInd + 2 * colorCircleRadius) + colorCircleRadius} 0)`">
                 <circle v-for="(color, colorNum) in colorsInColumn" :class="`color color-${colorNum + columnNum * colorsInColumn}`" cx="0" 
-                    :cy="`${colorNum * (colorInd + 2*colorCircleRadius)}`" :r="colorCircleRadius" @click="chooseColor(colorNum + columnNum * colorsInColumn)" />
+                    :cy="`${colorNum * side}`" :r="colorCircleRadius" @click="chooseColor(colorNum + columnNum * colorsInColumn)" />
             </g>
         </g>
     </svg>
@@ -41,12 +41,11 @@ export default {
             rectInRow: rectInRow,
             side: 80,
             lineWidth: 2,
-            paletteInd: 40,
+            paletteInd: 120,
             paletteColumns: 2,
-            paletteColumnInd: 10,
+            paletteColumnInd: 40,
             colorsInColumn: 5,
-            colorInd: 10,
-            colorCircleRadius: 20,
+            colorCircleRadius: 30,
             currentColor: null,
             colors: colors,
         }
@@ -81,77 +80,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-.plot_area {
-    margin-top: 50px;
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-} 
-
-line {
-    stroke: black;
-	stroke-linecap: round;
-}
-
-.field {
-    fill: white;
-    cursor: pointer;
-}
-
-text {
-    font-size: 40px;
-    dominant-baseline: central;
-    text-anchor: middle;
-    pointer-events: none;
-}
-
-circle.color {
-    stroke-width: 1px;
-    stroke: black;
-    cursor: pointer;
-}
-
-.color-0 {
-    fill: #DA9899;
-}
-
-.color-1 {
-    fill: #00B7F0;
-}
-
-.color-2 {
-    fill: #B59ACC;
-}
-
-.color-3 {
-    fill: #FFFF00;
-}
-
-.color-4 {
-    fill: #99D54B;
-}
-
-.color-5 {
-    fill: #FFC700;
-}
-
-.color-6 {
-    fill: #FF0000;
-}
-
-.color-7 {
-    fill: #FAC792;
-}
-
-.color-8 {
-    fill: #B8D599;
-}
-
-.color-9 {
-    fill: #00AC53;
-}
-</style>

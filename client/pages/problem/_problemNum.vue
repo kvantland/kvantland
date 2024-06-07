@@ -15,7 +15,8 @@
                             :problemInputType="inputType"
                             :problemComponent="componentType"
                             :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
-                            @updateHint="updateHint" />
+                            @updateHint="updateHint" 
+                            @updateProblemStatus="updateProblemStatus"/>
         <SupportInfoContainer />
     </div>
 </template>
@@ -86,6 +87,20 @@ export default {
     methods: {
         updateHint(hint) {
             this.hint.description = hint
+        },
+        async updateProblemStatus() {
+            let status, problemData
+            await this.$axios.$post("/api/problem_data", {variant: this.problemNum})
+            .then((resp) => {
+                status = resp.status
+                problemData = resp.problem
+            })
+            if (status) {
+                this.answerStatus = problemData.answerStatus
+                this.answerGiven = problemData.answerGiven
+                this.answer = problemData.answer
+                this.solution = problemData.solution
+            }
         }
     }
 }
