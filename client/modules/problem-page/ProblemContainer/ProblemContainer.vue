@@ -94,8 +94,12 @@ export default {
 
 <style scoped>
 .problem_solution {
+    display: flex;
     pointer-events: none;
     display: inline-flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .newTypeProblem {
