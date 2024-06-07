@@ -47,6 +47,10 @@ export default {
         {
             path: '~UI/Headers',
             prefix: false,
+        },
+        {
+            path: '~static/problemModules/components',
+            prefix: false,
         }
     ] 
   },

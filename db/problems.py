@@ -149,6 +149,24 @@ def IslandOfLiars4(cur):
 def Chiselburg4(cur):
 	problems_list = []
 	variants_list = dict()
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'lock_code', "Код замка")
+	for combinations, correct in [
+		([512, 317, 587], [3, 8, 2]),
+		([748, 142, 762], [1, 6, 8]),
+		([294, 796, 256], [7, 5, 4]),
+		([149, 546, 136], [5, 3, 9]),
+        ]:
+		desc = f"""Код замка состоит из трёх цифр. Петя попытался 
+		        его подобрать и попробовал комбинации {combinations[0]}, {combinations[1]}, 
+				{combinations[2]}. Оказалось, что в каждом варианте он верно набрал ровно 
+				одну цифру. Какой код у замка?"""
+		cont = {
+			'correct': correct,
+			'start_values': ['*', '*', '*'],
+			'componentType': 'lockCode',
+			'inputType': 'InteractiveTypeInput',
+        }
+		variants_list = add_variant_to_list(variants_list, "Код замка", desc, json.dumps(cont))
 
 	add_list(problems_list, variants_list)
 
