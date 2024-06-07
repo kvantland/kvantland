@@ -7,9 +7,9 @@
                 :transform="`rotate(${potSizes[potNum].angle} ${potSizes[potNum].width / 2 + potSizes[potNum].x} ${potSizes[potNum].y})`"
                 :x="potSizes[potNum].x" :y="potSizes[potNum].y"
                 :width="potSizes[potNum].width" :height="potSizes[potNum].height">
-                <rect class="liquid" x="1" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height"
+                <rect class="liquid" x="4" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height + 2"
                     :fill="nectarConcentration[potNum] != 0 ? `rgba(255, 139, 31, ${nectarConcentration[potNum]})` : `rgba(204, 247, 247, 1)`" 
-                    :width="potSizes[potNum].width - 1" :height="liquidAmount[potNum] * potSizes[potNum].height" />
+                    :width="potSizes[potNum].width - 8" :height="liquidAmount[potNum] * potSizes[potNum].height - 2" />
                 <image class="pot_form" href="/new-problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
                 <image :class="(transfusionObject[0] == 'pot' && transfusionObject[1] == potNum 
                     || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
@@ -32,8 +32,8 @@ export default {
     },
     data() {
         const firstVolume = this.problemParams.volumes[0]
-        const firstHeight = 80
-        const firstWidth = 60
+        const firstHeight = 100
+        const firstWidth = 90
         const gap = 10
         const configuration  = this.problemParams.configuration
         let x = 0
@@ -93,7 +93,8 @@ export default {
             for(const pot of this.potSizes) {
                 potsWidth += this.gap + pot.width
             }
-            return this.tapWidth + potsWidth
+            console.log(potsWidth)
+            return this.tapSize.width + potsWidth + this.reloadWidth + this.reloadPad
         },
         svgHeight() {
             let maxHeight = 0
