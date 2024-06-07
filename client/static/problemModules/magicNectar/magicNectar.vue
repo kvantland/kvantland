@@ -16,7 +16,10 @@
                 href="/new-problem_assets/pot.svg" @click="choose(['pot', potNum])"
                     :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
             </svg>
+            <image href="/icons/reload.png" :x="potSizes[potSizes.length - 1].x + potSizes[potSizes.length - 1].width + reloadPad" 
+                :y="svgHeight - reloadHeight" :width="reloadWidth" :height="reloadHeight" class="reload" @click="reload" />
         </g>
+        
     </svg>
 </template>
 
@@ -71,6 +74,9 @@ export default {
             },
             tapPadding: 20,
             streamHeight: 15,
+            reloadWidth: 70,
+            reloadHeight: 70,
+            reloadPad: 20,
             gap: gap,
             volumes: this.problemParams.volumes,
             potSizes: potSizes,
@@ -108,6 +114,11 @@ export default {
             else {
                 this.transfusionSubject = Obj
             }
+        },
+        async reload() {
+            this.$emit('xhrRequest', {type: 'reload'})
+            console.log('here!')
+            //this.$emit('updateProblemStatus')
         },
         toDefault() {
             this.transfusionObject = [undefined, -1]
@@ -168,7 +179,7 @@ export default {
             })
             transfusionPromise.then(result => {
                 this.transfusionMode = false
-                this.$emit('uodateAnswer', this.nectarConcentration)
+                this.$emit('xhrRequest', {transfusionObject: this.transfusionObject, transfusionSubject: this.transfusionSubject, type: 'transfusion'})
             })
         }
     }
