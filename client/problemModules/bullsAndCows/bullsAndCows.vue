@@ -1,6 +1,6 @@
 <template>
     <div class="plot_area">
-    <svg version="1.1" :width="`${boardWidth + animalInd}`" 
+    <svg version="1.1" :width="`${boardWidth + (animalInRow - 2)* side + animalColumnInd}`" 
         :height="`${boardHeight}`" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g class="board">
             <line class="horizontal" v-for="(line, num) in rectInColumn  + 1" 
@@ -15,11 +15,9 @@
             </g>
         </g>
         <g class="animals" :transform="`translate(${boardWidth + animalInd} ${side / 2})`">
-            <g class="animalColumns" v-for="(column, animalNum) in animalInRow" 
-                :transform="`translate(${animalNum * (animalColumnInd + 2 * 10) + 10} 0)`">
-                <image v-for="(animal, animalNum) in animalInColumn" href="problem_assets/bulls_and_cows/bull.png" class="animal" :y="`${animalNum * side + side}`" />
-                <circle v-for="(color, colorNum) in animalInColumn" :class="`color color-${colorNum + animalNum * animalInRow}`" cx="0" 
-                    :cy="`${colorNum * side + side}`" :r="10" @click="chooseColor(colorNum + columnNum * animalInRow)" />
+            <g class="animalColumns" v-for="(column, yind) in animalInColumn" 
+                :transform="`translate(0 ${yind * side + side / 2})`">
+                <image v-for="(animal, xind) in animalInRow" :href="problemParams.cows_and_bulls[yind][xind] !== '' ? getImageHref(problemParams.cows_and_bulls[yind][xind]) : null" :class="`animal_${problemParams.cows_and_bulls[yind][xind]}`" :x="`${xind * side + animalColumnInd - side / 2}`" :width="side"/>
             </g>
         </g>
     </svg>
@@ -42,12 +40,19 @@ export default {
             side: 80,
             lineWidth: 2,
             animalInd: 40,
-            animalColumnInd: 40,
+            animalColumnInd: 10,
         }
     },
 
     methods: {
-    
+        getImageHref(animal) {
+            const imagePathMap = {
+                b: '/problem_assets/bulls_and_cows/bull.png',
+                c: '/problem_assets/bulls_and_cows/cow.png',
+            };
+
+            return imagePathMap[animal];
+        }
     },
 
     computed: {
