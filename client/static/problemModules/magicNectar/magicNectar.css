@@ -1,0 +1,15 @@
+.tap {
+    cursor: pointer;
+}
+
+.pot {
+    cursor: pointer;
+}
+
+.tap.choiced {
+    filter: drop-shadow(0px 0px 4px gray);
+}
+
+image.pot.choiced {
+    filter: drop-shadow(0px 0px 4px gray);
+}
