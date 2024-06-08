@@ -19,7 +19,7 @@ function encodeQuery(opts) {
 }
 
 export default class LocalOauth2Scheme extends Oauth2Scheme {
-	async login({state, params, nonce} = {}){ 
+	login({state, params, nonce} = {}){ 
 		console.log('login!')
 		const opts = {
 			protocol: 'oauth2',
@@ -33,7 +33,8 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 		}
 		this.$auth.$storage.setUniversal(this.name + '.state', opts.state)
 		const url = this.options.endpoints.authorization + '?' + encodeQuery(opts)
-		await window.location.replace(url)
+        console.log(url)
+		window.location.replace(url)
 	}
 
 	async fetchUser() {
@@ -124,12 +125,17 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 	}
 
     async refreshTokens() {
+        console.log('refresh attempt!')
         // Get refresh token
-        const refreshToken = this.refreshToken.get()
-
+        try {
+            const refreshToken = this.refreshToken.get()
+        }
+        catch(e) {
+            return
+        }
         // Refresh token is required but not available
         if (!refreshToken) {
-        return
+            return
         }
 
         // Get refresh token status
@@ -139,6 +145,9 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
         if (refreshTokenStatus.expired()) {
             this.$auth.reset()
             throw new ExpiredAuthSessionError()
+        }
+        else {
+            return
         }
 
         // Delete current token from the request header before refreshing

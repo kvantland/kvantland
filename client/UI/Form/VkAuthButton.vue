@@ -9,6 +9,7 @@
 export default {
     methods: {
         vkAuth() {
+            console.log('vk_reg_attempt')
             this.$auth.loginWith('vk')
         }
     }
