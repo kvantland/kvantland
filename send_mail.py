@@ -3,6 +3,7 @@ import smtplib
 from email.message import EmailMessage
 
 def send_mail(email_content, email, subject):
+    print(email)
     localhost = config['recovery']['localhost']
     host = config['recovery']['host']
     port = config['recovery']['port']

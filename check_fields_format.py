@@ -37,6 +37,8 @@ def check_fields_format(data, expected_fields=[], pw_check=[], email_check=[], s
 		
 		if not(field_name in expected_fields):
 			continue
+		if field_name == 'approval':
+			continue
 		try:
 			min_size = config['reg'][f'min_{field_name}_size']
 		except:

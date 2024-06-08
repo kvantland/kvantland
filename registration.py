@@ -165,8 +165,8 @@ def registration(db):
 	return json.dumps(resp)
 		
 def add_new_user(db, info):
-	db.execute("select student from Kvantland.Student where login = %s", (info['login'], ))
 	try:
+		db.execute("select student from Kvantland.Student where login = %s", (info['login'], ))
 		(user, ), = db.fetchall()
 	except:
 		db.execute("insert into Kvantland.Student (login, password, name, surname, school, clas, town, email) values (%s, %s, %s, %s, %s, %s, %s, %s) returning student", 

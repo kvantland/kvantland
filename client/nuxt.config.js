@@ -88,7 +88,7 @@ export default {
         login: '/login',
         logout: '/',
         home: '/',
-        callback: '/'
+        callback: '/login',
     },
     strategies: {
       local: {
@@ -120,6 +120,7 @@ export default {
             authorization: 'http://oauth.vk.com/authorize',
             apiLogin: `${process.env.API}/api/vk_auth`,
             userInfo: `${process.env.API}/api/user`,
+            refresh: '/api/refresh_tokens', 
         },
         userId: {
             property: 'user_id',
@@ -129,9 +130,12 @@ export default {
         },
         accessToken: {
             property: 'access_token',
+            maxAge: 60,
         },
         refreshToken: {
             property: 'refresh_token',
+            data: 'refresh_token',
+            maxAge: 60 * 60 * 24 * 30,
         },
         user: {
             property: 'user',
