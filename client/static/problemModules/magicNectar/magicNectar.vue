@@ -193,7 +193,7 @@ export default {
                     const potNum = this.transfusionObject[1]
                     const nectarAmount = this.liquidAmount[potNum] * this.nectarConcentration[potNum] * this.volumes[potNum]
                     this.tapSize.x = this.potSizes[potNum].x + this.tapSize.width + this.tapPadding 
-                        - (this.tapSize.width - this.potSizes[potNum].width / 2) + this.potSizes[potNum].width * 0.1
+                        - (this.tapSize.width - this.potSizes[potNum].width / 2) + this.potSizes[potNum].width * 0.06
                     this.tapSize.y = this.potSizes[potNum].y - this.tapSize.height - this.streamHeight
                     this.$set(this.liquidAmount, potNum, 1)
                     console.log('concentration: ', nectarAmount/this.volumes[potNum])
