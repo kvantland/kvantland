@@ -1,25 +1,27 @@
 <template>
      <svg version="1.1" :width="svgWidth" :height="svgHeight" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <image class="tap" :class="(transfusionSubject[0] == 'tap') ? 'choiced': 'not-choiced'" 
-            href="/new-problem_assets/tap.svg" :x="tapSize.x" :y="tapSize.y" :width="tapSize.width" :height="tapSize.height" @click="choose(['tap', 0])"/>
-        <g :transform="`translate(${tapSize.width + tapPadding} 0)`">
-            <svg v-for="(pot, potNum) in potSizes" class="pot" overflow="visible"
-                :transform="`rotate(${potSizes[potNum].angle} ${potSizes[potNum].width / 2 + potSizes[potNum].x} ${potSizes[potNum].y})`"
-                :x="potSizes[potNum].x" :y="potSizes[potNum].y"
-                :width="potSizes[potNum].width" :height="potSizes[potNum].height">
-                <rect class="liquid" x="4" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height + 2"
-                    :fill="nectarConcentration[potNum] != 0 ? `rgba(255, 139, 31, ${nectarConcentration[potNum]})` : `rgba(204, 247, 247, 1)`" 
-                    :width="potSizes[potNum].width - 8" :height="liquidAmount[potNum] * potSizes[potNum].height - 2" />
-                <image class="pot_form" href="/new-problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
-                <image :class="(transfusionObject[0] == 'pot' && transfusionObject[1] == potNum 
-                    || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
-                href="/new-problem_assets/pot.svg" @click="choose(['pot', potNum])"
-                    :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
-            </svg>
-            <image href="/icons/reload.png" :x="potSizes[potSizes.length - 1].x + potSizes[potSizes.length - 1].width + reloadPad" 
-                :y="svgHeight - reloadHeight" :width="reloadWidth" :height="reloadHeight" class="reload" @click="reload" />
+        <g :transform="`translate(0 ${svgMarginTop})`">
+            <image class="tap" :class="(transfusionSubject[0] == 'tap') ? 'choiced': 'not-choiced'" 
+                href="/new-problem_assets/tap.svg" :x="tapSize.x" :y="tapSize.y" :width="tapSize.width" :height="tapSize.height" @click="choose(['tap', 0])"/>
+            <g :transform="`translate(${tapSize.width + tapPadding} 0)`">
+                <svg v-for="(pot, potNum) in potSizes" class="pot" overflow="visible"
+                    :x="potSizes[potNum].x" :y="potSizes[potNum].y"
+                    :width="potSizes[potNum].width" :height="potSizes[potNum].height">
+                    <g :transform="`rotate(${potSizes[potNum].angle} ${potSizes[potNum].width / 2} 0)`">
+                        <rect class="liquid" x="4" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height + 2"
+                            :fill="nectarConcentration[potNum] != 0 ? `rgba(255, 139, 31, ${nectarConcentration[potNum]})` : `rgba(204, 247, 247, 1)`" 
+                            :width="potSizes[potNum].width - 8" :height="liquidAmount[potNum] * potSizes[potNum].height - 2" />
+                        <image class="pot_form" href="/new-problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
+                        <image :class="(transfusionObject[0] == 'pot' && transfusionObject[1] == potNum 
+                            || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
+                        href="/new-problem_assets/pot.svg" @click="choose(['pot', potNum])"
+                            :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
+                    </g>
+                </svg>
+                <image href="/icons/reload.png" :x="potsWidth + reloadPad" 
+                    :y="svgHeight - reloadHeight - svgMarginTop" :width="reloadWidth" :height="reloadHeight" class="reload" @click="reload" />
+            </g>
         </g>
-        
     </svg>
 </template>
 
@@ -31,70 +33,88 @@ export default {
         event: 'updateAnswer',
     },
     data() {
-        const firstVolume = this.problemParams.volumes[0]
-        const firstHeight = 100
-        const firstWidth = 90
-        const gap = 10
-        const configuration  = this.problemParams.configuration
-        let x = 0
-        let potSizes = []
-        let maxHeight = 0
-        for (const volume of this.problemParams.volumes) {
-            const scale = Math.sqrt(volume / firstVolume)
-            potSizes.push({width: firstWidth * scale, 
-                    height: firstHeight * scale, 
-                    x: x, y: 0, 
-                    defaultX: x, defaultY:0, angle:0})
-            maxHeight = Math.max(maxHeight, firstHeight * scale)
-            x += firstWidth * scale + gap
-        }
-        for (let potNum=0; potNum < potSizes.length; potNum++) {
-            potSizes[potNum].y = maxHeight - potSizes[potNum].height
-            potSizes[potNum].defaultY = maxHeight - potSizes[potNum].height
-        }
-        let potNum = 0
-        const liquidAmount = Array(configuration.length)
-        const nectarConcentration = Array(configuration.length)
-        for (const potConfig of configuration) {
-            liquidAmount[potNum] = (potConfig['water'] + potConfig['nectar']) / this.problemParams.volumes[potNum]
-            if (liquidAmount[potNum] != 0)
-                nectarConcentration[potNum] = potConfig['nectar'] / (liquidAmount[potNum] * this.problemParams.volumes[potNum])
-            else
-                nectarConcentration[potNum] = 0
-            potNum += 1
-        }
         return {
             tapSize: {
-                width: 60,
-                height: 60,
+                width: 80,
+                height: 80,
                 x: 0,
                 y: 0,
                 defaultX: 0,
                 defaultY: 0,
             },
+            firstPotWidth: 120,
+            firstPotHeight: 140,
             tapPadding: 20,
             streamHeight: 15,
-            reloadWidth: 70,
-            reloadHeight: 70,
+            reloadWidth: 90,
+            reloadHeight: 90,
             reloadPad: 20,
-            gap: gap,
-            volumes: this.problemParams.volumes,
-            potSizes: potSizes,
+            gap: 10,
             transfusionMode: false,
             transfusionObject: [undefined, -1],
             transfusionSubject: [undefined, -1],
-            liquidAmount: liquidAmount,
-            nectarConcentration: nectarConcentration,
+            svgMarginTop: 100,
         }
     },
     computed: {
-        svgWidth() {
+        volumes() {
+            return this.problemParams.volumes
+        },
+        configuration() {
+            return this.problemParams.configuration
+        },
+        potSizes() {
+            let potSizes = []
+            let maxHeight = 0
+            let x = 0
+            const firstVolume = this.volumes[0]
+            for (const volume of this.volumes) {
+                const scale = Math.sqrt(volume / firstVolume)
+                potSizes.push({width: this.firstPotWidth * scale, 
+                        height: this.firstPotHeight * scale, 
+                        x: x, y: 0, 
+                        defaultX: x, defaultY:0, angle:0})
+                maxHeight = Math.max(maxHeight, this.firstPotHeight * scale)
+                x += this.firstPotWidth * scale + this.gap
+            }
+            for (let potNum=0; potNum < potSizes.length; potNum++) {
+                potSizes[potNum].y = maxHeight - potSizes[potNum].height
+                potSizes[potNum].defaultY = maxHeight - potSizes[potNum].height
+            }
+            return potSizes
+        },
+        liquidAmount() {
+            const liquidAmount = Array(this.configuration.length)
+            let potNum = 0
+            for (const potConfig of this.configuration) {
+                liquidAmount[potNum] = (potConfig['water'] + potConfig['nectar']) / this.volumes[potNum]
+                potNum += 1
+            }
+            console.log('liquid amount: ', liquidAmount)
+            return liquidAmount
+        },
+        nectarConcentration() {
+            const nectarConcentration = Array(this.configuration.length)
+            let potNum = 0
+            for (const potConfig of this.configuration) {
+                if (this.liquidAmount[potNum] != 0)
+                    nectarConcentration[potNum] = potConfig['nectar'] / (this.liquidAmount[potNum] * this.volumes[potNum])
+                else
+                    nectarConcentration[potNum] = 0
+                potNum += 1
+            }
+            console.log('nectar concentration: ', nectarConcentration)
+            return nectarConcentration
+        },
+        potsWidth() {
             let potsWidth = 0
             for(const pot of this.potSizes) {
                 potsWidth += this.gap + pot.width
             }
-            console.log(potsWidth)
-            return this.tapSize.width + potsWidth + this.reloadWidth + this.reloadPad
+            return potsWidth
+        },
+        svgWidth() {
+            return this.tapSize.width + this.potsWidth + this.reloadWidth + this.reloadPad
         },
         svgHeight() {
             let maxHeight = 0
@@ -102,24 +122,27 @@ export default {
                 if (pot.height > maxHeight)
                     maxHeight = pot.height
             }
-            return maxHeight
+            return maxHeight + this.svgMarginTop
         }
     },
     methods: {
         choose(Obj) {
             if (this.transfusionSubject[0] && Obj[0] != 'tap') {
-                console.log('start transfusion!')
-                this.transfusionObject = Obj
-                this.transfusionMode = true
+                console.log(Obj, this.transfusionSubject)
+                if (Obj[0] == this.transfusionSubject[0] && Obj[1] == this.transfusionSubject[1]) {
+                    this.transfusionSubject = [undefined, -1]
+                }
+                else {
+                    this.transfusionObject = Obj
+                    this.transfusionMode = true
+                }
             }
             else {
                 this.transfusionSubject = Obj
             }
         },
-        async reload() {
+        reload() {
             this.$emit('xhrRequest', {type: 'reload'})
-            console.log('here!')
-            //this.$emit('updateProblemStatus')
         },
         toDefault() {
             this.transfusionObject = [undefined, -1]

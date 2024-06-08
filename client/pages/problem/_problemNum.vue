@@ -79,7 +79,7 @@ export default {
             else
                 resp.crumbs = []
         })
-        resp.variantParams = JSON.stringify(resp.variantParams)
+        resp.variantParams = resp.variantParams
         resp.problemNum = params.problemNum
         console.log(resp)
         return resp
@@ -98,8 +98,7 @@ export default {
                 problemData = resp.problem
             })
             if (status) {
-                console.log(problemData.variantParams)
-                this.variantParams = JSON.stringify(problemData.variantParams)
+                this.variantParams = problemData.variantParams
                 this.answerStatus = problemData.answerStatus
                 this.answerGiven = problemData.answerGiven
                 this.answer = problemData.answer
@@ -107,11 +106,6 @@ export default {
             }
         }
     },
-    watch: {
-        variantParams(newValue) {
-            console.log('params changed', newValue)
-        }
-    }
 }
 </script>
 

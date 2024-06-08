@@ -10,7 +10,7 @@
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
                 <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData"
-                    :problemParams="JSON.parse(variantParams)" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
+                    :problemParams="variantParams" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
                 <div v-if="answerGiven" v-html="solution" class="problem_solution"></div>
             </div>
             <div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
@@ -63,7 +63,7 @@ export default {
         image: {default: null},
         problemComponent: {default: null},
         problemContent: {default: null},
-        variantParams: {default: null},
+        variantParams: {default: '' },
         problemInputType: {default: 'InteractiveTypeInput'},
     },
 
@@ -90,6 +90,9 @@ export default {
             await this.$axios.$post('/api/xhr', {variant: this.variant, xhr_params: xhrParams})
                 .then((resp) => {
                     this.$emit('updateProblemStatus')
+                    setTimeout(function(){}, 10)
+                    console.log('params: ', this.variantParams)
+                    console.log('title: ', this.title)
                     this.xhrData = resp
                 })
         },
@@ -105,6 +108,9 @@ export default {
     wath: {
         variantParams(newValue) {
             console.log('variant params changed!', newValue)
+        },
+        title(newValue) {
+            console.log('title changed', newValue)
         }
     }
 }
