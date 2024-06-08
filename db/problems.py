@@ -179,6 +179,7 @@ def Chiselburg4(cur):
 		cont = {
 				'inputType': "InteractiveTypeInput",
 				'componentType': "unusualNumber",
+				'fieldsAmount': 5,
 				'correct': A,
 		}
 		variants_list = add_variant_to_list(variants_list, "Необычное число", desc, json.dumps(cont))	
