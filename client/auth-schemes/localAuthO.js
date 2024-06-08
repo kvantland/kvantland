@@ -127,8 +127,9 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
     async refreshTokens() {
         console.log('refresh attempt!')
         // Get refresh token
+        let refreshToken
         try {
-            const refreshToken = this.refreshToken.get()
+            refreshToken = this.refreshToken.get()
         }
         catch(e) {
             return
