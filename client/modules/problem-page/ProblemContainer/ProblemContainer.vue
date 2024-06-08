@@ -74,7 +74,7 @@ export default {
             else {
                 answer = this.currentAnswer
             }
-            const solution = this.$refs['problem'].innerHTML
+            const solution = this.$refs['problem'].innerHTML.replace(/input-save-value/g, 'value')
             await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer, solution: solution})
             this.$emit('updateProblemStatus')
         },
