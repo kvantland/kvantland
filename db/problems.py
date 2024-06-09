@@ -155,9 +155,9 @@ def Chiselburg4(cur):
 		([748, 142, 762], [1, 6, 8]),
 		([294, 796, 256], [7, 5, 4]),
 		([149, 546, 136], [5, 3, 9]),
-        ]:
+		]:
 		desc = f"""Код замка состоит из трёх цифр. Петя попытался 
-		        его подобрать и попробовал комбинации {combinations[0]}, {combinations[1]}, 
+				его подобрать и попробовал комбинации {combinations[0]}, {combinations[1]}, 
 				{combinations[2]}. Оказалось, что в каждом варианте он верно набрал ровно 
 				одну цифру. Какой код у замка?"""
 		cont = {
@@ -165,7 +165,7 @@ def Chiselburg4(cur):
 			'start_values': ['*', '*', '*'],
 			'componentType': 'lockCode',
 			'inputType': 'InteractiveTypeInput',
-        }
+		}
 		variants_list = add_variant_to_list(variants_list, "Код замка", desc, json.dumps(cont))
 
 	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'unusual_number', "Необычное число")
@@ -319,6 +319,25 @@ def CombiRepublic4(cur):
 				'correct': A,
 			}
 			variants_list = add_variant_to_list(variants_list, "Числа без палиндромов", desc, json.dumps(cont))	
+			
+
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'rearranged_weights', "Переставленные гирьки")
+	for changed_weights in [
+			[1, 2],
+			[3, 4],
+			[6, 7],
+			[8, 9]
+			]:
+			desc = """На столе были выставлены в ряд внешне одинаковые гирьки 
+					весом 101 г, 102 г, …, 110 г. Кто-то поменял местами две соседние гирьки. 
+					За два взвешивания определите, какие именно гирьки были переставлены."""
+			cont = {
+				'weightings_amount': 2,
+				'correct': changed_weights,
+				'componentType': "rearrangedWeights",
+				'inputType': "InteractiveTypeInput",
+			}
+			variants_list = add_variant_to_list(variants_list, "Переставленные гирьки", desc, json.dumps(cont))	
 
 	add_list(problems_list, variants_list)
 
