@@ -248,14 +248,12 @@ body {
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
+    overflow: hidden;
 }
 
 #reg .check_cont input.checkbox:checked {
-}
-
-#reg .check_cont input.checkbox:checked:after {
-	content: '✔️';
-	color:white;
+	background: url('./icons/accept.png') no-repeat center center;
+    background-size: 28px 28px;
 }
 
 #reg .check_cont .label {
