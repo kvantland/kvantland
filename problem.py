@@ -14,6 +14,30 @@ import footer
 from config import config
 from login import do_logout, check_token
 
+@route('/api/xhr', method='POST')
+def get_xhr_request(db):
+	print('xhr_request', file=sys.stderr)
+	resp = {
+		'status': False,
+		'xhr_answer': None,
+    }
+	try:
+		var_id = json.loads(request.body.read())['variant']
+		params = json.loads(request.body.read())['xhr_params']
+	except:
+		return json.dumps(resp)
+	
+	token_status = check_token(request)
+	if token_status['error']:
+		return json.dumps(resp)
+	user_id = token_status['user_id']
+	
+	print('var_id: ', var_id, file=sys.stderr)
+	print(xhr_request(db, user_id, var_id, params), file=sys.stderr)
+	resp['xhr_answer'] = xhr_request(db, user_id, var_id, params)
+	resp['status'] = True
+	return json.dumps(resp)
+
 
 @route('/api/get_hint', method="POST")
 def get_hint(db):
@@ -770,7 +794,9 @@ def xhr_request(db, user_id, var_id, params):
 		db.execute('update Kvantland.AvailableProblem set solution=%s where variant = %s and student = %s', (resp['solution'], var_id, user_id))
 	except KeyError:
 		pass
-	return resp['answer']
+	if 'answer' in resp.keys():
+		return resp['answer']
+	return ''
 
 
 @route('/problem/<var_id:int>/xhr', method='GET')

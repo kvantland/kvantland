@@ -9,7 +9,8 @@
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
-                <component v-if="!answerGiven" :is="dynamicProblemComponent" :problemParams="variantParams" v-model="currentAnswer"/>
+                <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData"
+                    :problemParams="variantParams" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
                 <div v-if="answerGiven" v-html="solution" class="problem_solution"></div>
             </div>
             <div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
@@ -40,6 +41,7 @@ export default {
             dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
             dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
             currentAnswer: '',
+            xhrData: undefined,
         }
     },
 
@@ -61,8 +63,8 @@ export default {
         image: {default: null},
         problemComponent: {default: null},
         problemContent: {default: null},
-        variantParams: {default: null},
-        problemInputType: {default: 'InteractiveTypeInput'}
+        variantParams: {default: '' },
+        problemInputType: {default: 'InteractiveTypeInput'},
     },
 
     methods: {
@@ -84,10 +86,32 @@ export default {
             if (response.status)
                 this.$emit('updateHint', response.hint)
         },
+        async xhrRequest(xhrParams) {
+            await this.$axios.$post('/api/xhr', {variant: this.variant, xhr_params: xhrParams})
+                .then((resp) => {
+                    this.$emit('updateProblemStatus')
+                    setTimeout(function(){}, 10)
+                    console.log('params: ', this.variantParams)
+                    console.log('title: ', this.title)
+                    this.xhrData = resp
+                })
+        },
+        async updateProblemStatus() {
+            console.log('update problem status!')
+            //this.$emit('updateProblemStatus')
+        }
     },
 
     mounted() {
         console.log(this.variantParams)
+    },
+    wath: {
+        variantParams(newValue) {
+            console.log('variant params changed!', newValue)
+        },
+        title(newValue) {
+            console.log('title changed', newValue)
+        }
     }
 }
 </script>
