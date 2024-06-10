@@ -9,8 +9,9 @@
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
-                <component :is="dynamicProblemComponent" v-show="!answerGiven" :problemParams="variantParams" v-model="currentAnswer"/>
-                <div class="problem_solution" v-html="solution" v-show="answerGiven"></div>
+                <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData"
+                    :problemParams="variantParams" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
+                <div v-if="answerGiven" v-html="solution" class="problem_solution"></div>
             </div>
             <div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
             <HintContainer v-if="hint.description" :description="hint.description" />
@@ -26,11 +27,21 @@ import ProblemResult from './components/ProblemResult.vue'
 import HintContainer from './components/HintContainer.vue'
 
 export default {
+    head() {
+        return {
+            link: [{
+                rel: 'stylesheet',
+                href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
+                }
+            ]
+        }
+    },
     data() {
         return {
             dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
-            dynamicProblemComponent: () => import(`../../../problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
+            dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
             currentAnswer: '',
+            xhrData: undefined,
         }
     },
 
@@ -52,8 +63,8 @@ export default {
         image: {default: null},
         problemComponent: {default: null},
         problemContent: {default: null},
-        variantParams: {default: null},
-        problemInputType: {default: 'InteractiveTypeInput'}
+        variantParams: {default: '' },
+        problemInputType: {default: 'InteractiveTypeInput'},
     },
 
     methods: {
@@ -65,7 +76,7 @@ export default {
             else {
                 answer = this.currentAnswer
             }
-            const solution = this.$refs['problem'].innerHTML
+            const solution = this.$refs['problem'].innerHTML.replace(/input-save-value/g, 'value')
             await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer, solution: solution})
             this.$emit('updateProblemStatus')
         },
@@ -75,17 +86,44 @@ export default {
             if (response.status)
                 this.$emit('updateHint', response.hint)
         },
+        async xhrRequest(xhrParams) {
+            await this.$axios.$post('/api/xhr', {variant: this.variant, xhr_params: xhrParams})
+                .then((resp) => {
+                    this.$emit('updateProblemStatus')
+                    setTimeout(function(){}, 10)
+                    console.log('params: ', this.variantParams)
+                    console.log('title: ', this.title)
+                    this.xhrData = resp
+                })
+        },
+        async updateProblemStatus() {
+            console.log('update problem status!')
+            //this.$emit('updateProblemStatus')
+        }
     },
 
     mounted() {
         console.log(this.variantParams)
+    },
+    wath: {
+        variantParams(newValue) {
+            console.log('variant params changed!', newValue)
+        },
+        title(newValue) {
+            console.log('title changed', newValue)
+        }
     }
 }
 </script>
 
 <style scoped>
 .problem_solution {
+    display: flex;
     pointer-events: none;
+    display: inline-flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .newTypeProblem {

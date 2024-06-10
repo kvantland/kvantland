@@ -113,6 +113,7 @@ def check_token(request):
 	token = auth_header.replace('Bearer ', '')
 	try:
 		payload = jwt.decode(jwt=token, key=config['keys']['access_key'], algorithms=['HS256'])
+		print(payload, file=sys.stderr)
 	except:
 		return {'error': "Not correct token", 'login': ""}
 	user_login = payload['login']

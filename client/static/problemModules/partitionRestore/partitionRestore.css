@@ -1,0 +1,62 @@
+line {
+    stroke: black;
+	stroke-linecap: round;
+}
+
+.field {
+    fill: white;
+    cursor: pointer;
+}
+
+text {
+    font-size: 40px;
+    dominant-baseline: central;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+circle.color {
+    stroke-width: 1px;
+    stroke: black;
+    cursor: pointer;
+}
+
+.color-0 {
+    fill: #DA9899;
+}
+
+.color-1 {
+    fill: #00B7F0;
+}
+
+.color-2 {
+    fill: #B59ACC;
+}
+
+.color-3 {
+    fill: #FFFF00;
+}
+
+.color-4 {
+    fill: #99D54B;
+}
+
+.color-5 {
+    fill: #FFC700;
+}
+
+.color-6 {
+    fill: #FF0000;
+}
+
+.color-7 {
+    fill: #FAC792;
+}
+
+.color-8 {
+    fill: #B8D599;
+}
+
+.color-9 {
+    fill: #00AC53;
+}
