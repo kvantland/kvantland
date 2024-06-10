@@ -1,0 +1,27 @@
+.plot_area {
+    margin-top: 50px;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+} 
+
+line {
+    stroke: black;
+	stroke-linecap: round;
+}
+
+.field {
+    fill: white;
+}
+
+.questionField {
+    fill: grey;
+}
+
+text {
+    font-size: 40px;
+    dominant-baseline: central;
+    text-anchor: middle;
+    pointer-events: none;
+}
