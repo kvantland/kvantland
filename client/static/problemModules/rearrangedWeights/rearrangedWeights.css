@@ -13,6 +13,12 @@ text.name {
     color: white
 }
 
+text.boardName {
+    dominant-baseline: central;
+    text-anchor:middle;
+    color: #502D16;
+}
+
 .choiced {
     cursor: grabbing;
     z-index: 10;

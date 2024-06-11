@@ -10,13 +10,19 @@
                 <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
                 <g class="rows" :transform="`translate(0 ${weightGap})`">
                     <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${weightGap} ${(weightGap + weightWidth) * rowNum})`">
-                        <g v-for="(weight, weightNum) in inRow" v-if="startAreaWeights[weightNum + rowNum * inRow]" 
+                        <g v-for="(weight, weightNum) in inRow" 
+                            :transform="`translate(${weightCoordinates[weightNum + rowNum * inRow].x} ${weightCoordinates[weightNum + rowNum * inRow].y})`">
+                            <g v-if="startAreaWeights[weightNum + rowNum * inRow]" 
                             @touchstart="moveFromStartArea(weightNum + rowNum * inRow, $event.touches[0])" 
                             @mousedown="moveFromStartArea(weightNum + rowNum * inRow, $event)"
-                            :transform="`translate(${weightCoordinates[weightNum + rowNum * inRow].x} ${weightCoordinates[weightNum + rowNum * inRow].y})`"
                             :class="`weight weight_${weightNum + rowNum * inRow}`">
-                            <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
-                            <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
+                                <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
+                                <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
+                            </g>
+                            <g class="board" :transform="`translate(0 ${weightHeight})`">
+                                <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                                <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
+                            </g>
                         </g>
                     </g>
                 </g>
@@ -63,10 +69,12 @@ export default {
             scalesHeight: 0,
             scalesWidth: 0,
             cupCoordinates: {},
-            weightCoordinates: [], //not important, declared in methods and mounted
+            weightCoordinates: [], //not important, declared in methods
 
-            names: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
+            names: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
+            boardNames: [101, 102, 103, 104, 105, 106, 107, 108, 109, 110],
             nameYPad: 10,
+            boardHeight: 30,
             dragAreaMarginTop: 30,
             inRow: 5,
             rows: 2,
@@ -88,6 +96,9 @@ export default {
         }
     },
     computed: {
+        boardWidth() {
+            return this.weightWidth
+        },
         weightingHistory() {
             if (!this.problemParams.history)
                 return []
@@ -97,7 +108,7 @@ export default {
             return this.inRow * (this.weightWidth + this.weightGap) + this.weightGap
         },
         dragAreaHeight() {
-            return this.rows * (this.weightHeight + this.weightGap) + this.weightGap
+            return this.rows * (this.weightHeight + this.weightGap + this.boardHeight) + this.weightGap
         },
         answerAreaWidth() {
             return this.weightGap * 2 + this.weightWidth
@@ -367,7 +378,7 @@ export default {
         let startWeights = {}
         for (let row = 1; row <= this.rows; row++) {
             for (let column = 1; column <= this.inRow; column++) {
-                coordinates.push({x: (column - 1) * (this.weightGap + this.weightWidth), y: 0})
+                coordinates.push({x: (column - 1) * (this.weightGap + this.weightWidth), y: this.boardHeight * (row - 1)})
                 startWeights[(column - 1) + this.inRow * (row - 1)] = true
             }
         }
