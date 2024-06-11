@@ -343,16 +343,16 @@ def CombiRepublic4(cur):
 
 	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'rearranged_weights', "Переставленные гирьки")
 	for changed_weights in [
-			[1, 2],
-			[3, 4],
-			[6, 7],
-			[8, 9]
+			[0, 1],
+			[2, 3],
+			[5, 6],
+			[7, 8]
 			]:
 			desc = """На столе были выставлены в ряд внешне одинаковые гирьки 
 					весом 101 г, 102 г, …, 110 г. Кто-то поменял местами две соседние гирьки. 
 					За два взвешивания определите, какие именно гирьки были переставлены."""
 			cont = {
-				'weightings_amount': 2,
+				'weightings_amount': 3,
 				'correct': changed_weights,
 				'componentType': "rearrangedWeights",
 				'inputType': "InteractiveTypeInput",

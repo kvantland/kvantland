@@ -3,8 +3,8 @@
     <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
             :width="svgWidth" :height="svgHeight"
             overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <Scales @svgHeight="getSvgHeight" @svgWidth="getSvgWidth" @moveFromCup="moveFromCup" :scale="0.8" 
-            :leftCupObjects="cupWeights.left" :rightCupObjects="cupWeights.right" />
+        <Scales @svgHeight="getSvgHeight" @svgWidth="getSvgWidth" @moveFromCup="moveFromCup" :scale="0.8" @stopMove="stopWeight"
+            :leftCupObjects="cupWeights.left" :rightCupObjects="cupWeights.right" :moveTo="newSide" />
         <g class="containers" :transform="`translate(${(scalesWidth - containersAreaWidth) / 2} ${scalesHeight + dragAreaMarginTop})`">
             <g class="drag_container">
                 <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
@@ -35,11 +35,14 @@
         </g>
     </svg>
     <div class="buttons">
-        <button class="weight_button"> Взвесить </button>
+        <button class="weight_button" @click="startWeight"> Взвесить </button>
         <button class="clear_button" @click="clearScales"> Очистить весы </button>
         <div class="remaining_weightings"> Осталось взвешиваний: {{ problemParams.weightings_amount }}</div>
         <div class="history" v-if="weightingHistory.length">
-            <p v-for="item in weightingHistory"> {{ item }} </p>
+            <p v-for="(item, itemNum) in weightingHistory"> 
+                <span style="font-weight: 600;"> Взвешивание {{ itemNum + 1 }}: </span> <br/>
+                {{ item }} 
+            </p>
         </div>
     </div>
     </div>
@@ -47,7 +50,7 @@
 
 <script>
 export default {
-    props: ['problemParams'],
+    props: ['problemParams', 'xhrData', 'newXhr'],
     model: {
         prop: 'answer',
         event: 'updateAnswer'
@@ -78,6 +81,8 @@ export default {
             answerAreaWeights: [],
             cupWeights: {'left': [], 'right': []},
 
+            newSide: 'equal',
+            weightMode: false,
             dragMode: false, //is drag?
         }
     },
@@ -103,6 +108,21 @@ export default {
             return this.dragAreaWidth + this.answerAreaWidth + this.containersGap
         }
     },
+    watch: {
+        newXhr(isNew) {  
+            console.log('newXhr: ', isNew)
+            if (isNew) {
+                this.$emit('xhrGet')
+                if (this.xhrData.xhr_answer != this.newSide) {
+                    this.newSide = this.xhrData.xhr_answer
+                    this.weightMode = true
+                }
+            }            
+        },
+        newSide(newValue) {
+            console.log('new side: ', newValue)
+        },
+    },
     methods: {
         getSvgHeight(scalesHeight) {
             this.svgHeight = scalesHeight + this.dragAreaHeight + this.dragAreaMarginTop
@@ -112,8 +132,27 @@ export default {
             this.scalesWidth = scalesWidth
             this.svgWidth = Math.max(scalesWidth, this.dragAreaWidth)
         },
+        startWeight() {
+            if (this.weightMode) {
+                return
+            }
+            let leftCupWeights = []
+            let rightCupWeights = []
+            for (let weight of this.cupWeights.left) {
+                leftCupWeights.push(weight.payload.index)
+            }
+            for (let weight of this.cupWeights.right) {
+                rightCupWeights.push(weight.payload.index)
+            }
+            this.$emit('xhrRequest', {left: leftCupWeights, right: rightCupWeights})
+        },
+        stopWeight(currentSide) {
+            this.weightMode = false
+        },
         clearScales() {
             this.dragMode = false
+            this.weightMode = false
+            this.newSide = 'equal'
             this.$set(this.cupWeights, 'left', [])
             this.$set(this.cupWeights, 'right', [])
             for (let weight in this.startAreaWeights) {
@@ -245,11 +284,9 @@ export default {
             for (const answerWeight of this.answerAreaWeights) {
                 console.log(answerWeight.index, weight.index)
                 if (answerWeight.index != weight.index) {
-                    console.log('not equal!')
                     newAnswerAreaWeights.push(answerWeight)
                 }
             }
-            console.log('new answer area weights: ', newAnswerAreaWeights)
             this.answerAreaWeights = newAnswerAreaWeights
             this.startDrag(weight.index, window.event)
         }
@@ -291,7 +328,6 @@ export default {
             this.cupCoordinates = cupCoordinates
             this.svgX = svgX
             this.svgY = svgY
-            console.log(this.svgX)
         }.bind(this))
     }
 }

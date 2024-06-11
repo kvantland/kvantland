@@ -9,7 +9,7 @@
             <p v-if="description" v-html="description"></p>
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
-                <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData"
+                <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData" :newXhr="newXhr" @xhrGet="xhrGet"
                     :problemParams="variantParams" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
                 <div v-if="answerGiven" v-html="solution" class="problem_solution"></div>
             </div>
@@ -38,6 +38,7 @@ export default {
     },
     data() {
         return {
+            newXhr: false,
             dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
             dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
             currentAnswer: '',
@@ -68,6 +69,9 @@ export default {
     },
 
     methods: {
+        xhrGet() {
+            this.newXhr = false
+        },
         async sendAnswer(integerAnswer=false) {
             console.log('send answer!')
             let answer
@@ -89,11 +93,13 @@ export default {
         async xhrRequest(xhrParams) {
             await this.$axios.$post('/api/xhr', {variant: this.variant, xhr_params: xhrParams})
                 .then((resp) => {
+                    console.log('xhrData: ', resp)
                     this.$emit('updateProblemStatus')
                     setTimeout(function(){}, 10)
                     console.log('params: ', this.variantParams)
                     console.log('title: ', this.title)
                     this.xhrData = resp
+                    this.newXhr = true
                 })
         },
         async updateProblemStatus() {

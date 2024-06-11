@@ -3,20 +3,20 @@
         <ScalesDefs />
         <g :transform="`scale(${scale})`" class="scaling">
             <g class="scales" :transform="`translate(${cupInnerRadiusX} 0)`">
-                <g class="plank_with_cups" :transform="`translate(0 ${horizontalPlankMarginTop})`">
+                <g class="plank_with_cups" :transform="`translate(0 ${horizontalPlankMarginTop}) rotate(${angle} ${horizontalPlankWidth / 2} ${horizontalPlankHeight / 2})`">
                     <rect class="plank" 
                                 x="0"
                                 y="0"
                                 :width="`${horizontalPlankWidth}`"
                                 :height="`${horizontalPlankHeight}`" />
-                    <g ref="left_cup" :transform="`translate(0 ${horizontalPlankHeight / 2})`">
+                    <g ref="left_cup" :transform="`translate(0 ${horizontalPlankHeight / 2}) rotate(${-angle})`">
                         <CupWithRope class="left_cup_with_rope" :name="'left_cup'" :objects="leftCupObjects"
                                     :cupWidth="cupWidth" :cupInnerRadiusX="cupInnerRadiusX" @moveFromCup="moveFromCup"
                                     :cupInnerRadiusY="cupInnerRadiusY" :cupOuterRadiusX="cupOuterRadiusX" 
                                     :cupOuterRadiusY="cupOuterRadiusY" :hingeR="hingeR" :ropeHight="ropeHight" :ropeWidth="ropeWidth">
                         </CupWithRope>
                     </g>
-                    <g ref="right_cup_with_rope" :transform="`translate(${horizontalPlankWidth} ${horizontalPlankHeight / 2})`">
+                    <g ref="right_cup_with_rope" :transform="`translate(${horizontalPlankWidth} ${horizontalPlankHeight / 2}) rotate(${-angle})`">
                         <CupWithRope :name="'right_cup'" :objects="rightCupObjects"
                                     :cupWidth="cupWidth" :cupInnerRadiusX="cupInnerRadiusX" ref="right_cup"
                                     :cupInnerRadiusY="cupInnerRadiusY" :cupOuterRadiusX="cupOuterRadiusX" @moveFromCup="moveFromCup"
@@ -67,6 +67,7 @@ import CupWithRope from './components/CupWithRope.vue'
 
 export default {
     props: {
+        moveTo: {default: 'equal'}, // weaviest side
         scale: {default: 1},
         rightCupObjects: {default: function(){return []}}, //in format {html: '', payload: ''}
         leftCupObjects: {default: function(){return []}},
@@ -90,6 +91,11 @@ export default {
             hingeR: 8,
             ropeHight: 200,
             ropeWidth: 2,
+
+            angleStep: 0.4,
+            stopAngle: 20,
+            angleSign: 1, // 1 or -1 - rotation sgn
+            angle: 0,
         }
     },
     computed: {
@@ -117,6 +123,38 @@ export default {
         svgHeight() {
             return (this.verticalPlankHeight + this.baseHeight + this.baseOuterRadiusY ) * this.scale
         },
+    },
+    watch: {
+        moveTo(newSide, prevSide) {
+            console.log(prevSide, newSide)
+            if (newSide == 'left' || (prevSide == 'right' && newSide == 'equal')) {
+                this.angleSign = -1
+                this.angle += this.angleSign * this.angleStep
+            }
+            else if (newSide == 'right' || (prevSide == 'left' && newSide == 'equal')) {
+                this.angleSign = 1
+                this.angle += this.angleSign * this.angleStep
+            }
+            if (newSide == 'equal') {
+                this.stopAngle = 0
+            }
+            else {
+                this.stopAngle = 20
+            }
+        },
+        async angle(newValue) {
+            if (this.angleSign == 1 && newValue >= this.stopAngle) {
+                this.$emit('stopMove', this.moveTo)
+                return
+            }
+            else if (this.angleSign == -1 && newValue <=  -this.stopAngle) {
+                this.$emit('stopMove', this.moveTo)
+                return
+            }
+            setTimeout(function(){
+                this.angle += this.angleSign * this.angleStep
+            }.bind(this), 10)
+        }
     },
     methods: {
         moveFromCup(data) {
