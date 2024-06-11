@@ -300,6 +300,26 @@ def Golovolomsk4(cur):
 			'componentType': "lampsOnHexagonalPanel"
 		}
 		variants_list = add_variant_to_list(variants_list, "Лампочки на шестиугольном табло", desc, json.dumps(cont))
+	
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'magic_nectar', "Волшебный нектар")
+	for volumes, configuration, purpose in [
+		([4, 5, 9], [{'water': 0, 'nectar': 4}, {'water': 0, 'nectar': 0}, {'water': 0, 'nectar': 0}], {'nectar': 0.6}),
+	]:
+		desc=f'''У вас имеется три сосуда ёмкостью {volumes[0]}, {volumes[1]} и {volumes[2]} литров и источник воды. 
+			В меньшем сосуде 4 литра эликсира, а два других пустые. Как сделать несколько 
+			литров волшебного нектара, в котором содержание эликсира составляет 60%? Воду 
+			можно выливать, но ни одна капля эликсира не должна пропасть. Для того чтобы 
+			перелить воду из одной ёмкости (или источника) в другую, нужно последовательно 
+			выбрать, откуда и куда переливаем и нажать кнопку «Перелить». Воду можно выливать. 
+			Для этого сначала нужно выбрать откуда, а потом источник и нажать «Перелить». '''
+		cont = {
+			'volumes': volumes,
+			'configuration': configuration,
+			'purpose': purpose,
+			'inputType': "InteractiveTypeInput",
+			'componentType': "magicNectar",
+		}
+		variants_list = add_variant_to_list(variants_list, "Волшебный нектар", desc, json.dumps(cont))
 
 	add_list(problems_list, variants_list)
 
