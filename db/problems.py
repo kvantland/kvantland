@@ -155,9 +155,9 @@ def Chiselburg4(cur):
 		([748, 142, 762], [1, 6, 8]),
 		([294, 796, 256], [7, 5, 4]),
 		([149, 546, 136], [5, 3, 9]),
-        ]:
+		]:
 		desc = f"""Код замка состоит из трёх цифр. Петя попытался 
-		        его подобрать и попробовал комбинации {combinations[0]}, {combinations[1]}, 
+				его подобрать и попробовал комбинации {combinations[0]}, {combinations[1]}, 
 				{combinations[2]}. Оказалось, что в каждом варианте он верно набрал ровно 
 				одну цифру. Какой код у замка?"""
 		cont = {
@@ -165,7 +165,7 @@ def Chiselburg4(cur):
 			'start_values': ['*', '*', '*'],
 			'componentType': 'lockCode',
 			'inputType': 'InteractiveTypeInput',
-        }
+		}
 		variants_list = add_variant_to_list(variants_list, "Код замка", desc, json.dumps(cont))
 
 	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'unusual_number', "Необычное число")
@@ -183,6 +183,79 @@ def Chiselburg4(cur):
 				'correct': A,
 		}
 		variants_list = add_variant_to_list(variants_list, "Необычное число", desc, json.dumps(cont))	
+
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Быки и коровы")
+	for start_board, cows_and_bulls, correct in [
+		(
+			[
+				[ '?', '?', '?', '?', '?', '?'],
+				[ '5', '3', '1', '4', '', ''],
+				[ '', '2', '5', '6', '3', ''],
+				[ '', '', '6', '4', '2', '1'],
+			],
+			[
+				[ 'b', 'c', 'c', '', '', ''],
+				[ '', 'b', 'c', '', '', ''],
+				[ 'c', 'c', 'c', 'c', '', ''],
+			],
+			351642
+   		),
+		(
+			[
+				[ '?', '?', '?', '?', '?', '?'],
+				[ '6', '4', '2', '5', '', ''],
+				[ '', '3', '6', '1', '4', ''],
+				[ '', '', '1', '5', '3', '2'],
+			],
+			[
+				[ 'b', 'c', 'c', '', '', ''],
+				[ '', 'b', 'c', '', '', ''],
+				[ 'c', 'c', 'c', 'c', '', ''],
+			],
+			462153
+   		),
+   		(
+			[
+				[ '?', '?', '?', '?', '?', '?'],
+				[ '1', '5', '3', '6', '', ''],
+				[ '', '4', '1', '2', '5', ''],
+				[ '', '', '2', '6', '4', '3'],
+			],
+			[
+				[ 'b', 'c', 'c', '', '', ''],
+				[ '', 'b', 'c', '', '', ''],
+				[ 'c', 'c', 'c', 'c', '', ''],
+			],
+			513264
+   		),
+   		(
+			[
+				[ '?', '?', '?', '?', '?', '?'],
+				[ '2', '6', '4', '1', '', ''],
+				[ '', '5', '2', '3', '6', ''],
+				[ '', '', '3', '1', '5', '4'],
+			],
+			[
+				[ 'b', 'c', 'c', '', '', ''],
+				[ '', 'b', 'c', '', '', ''],
+				[ 'c', 'c', 'c', 'c', '', ''],
+			],
+			624315
+   		),
+		
+	]:
+		desc = '''В верхней строке таблицы расположены цифры от 1 до 6, каждая по одному разу. 
+		В каждой из следующих строк написаны четыре цифры и указано, что именно угадано: бык ставится за каждую цифру, 
+		которая стоит в нужном столбце, а корова – за каждую цифру, которая есть в этих четырёх столбцах искомой комбинации, 
+		но стоит не на своём месте. В каком порядке расположены цифры в верхней строке?'''
+		cont = {
+			'start_board': start_board,
+			'cows_and_bulls': cows_and_bulls,
+			'inputType': "IntegerTypeInput",
+			'componentType': "bullsAndCows",
+			'correct': correct,
+		}
+		variants_list = add_variant_to_list(variants_list, "Быки и коровы", desc, json.dumps(cont))
 
 	add_list(problems_list, variants_list)
 
@@ -300,6 +373,26 @@ def Golovolomsk4(cur):
 			'componentType': "lampsOnHexagonalPanel"
 		}
 		variants_list = add_variant_to_list(variants_list, "Лампочки на шестиугольном табло", desc, json.dumps(cont))
+	
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'magic_nectar', "Волшебный нектар")
+	for volumes, configuration, purpose in [
+		([4, 5, 9], [{'water': 0, 'nectar': 4}, {'water': 0, 'nectar': 0}, {'water': 0, 'nectar': 0}], {'nectar': 0.6}),
+	]:
+		desc=f'''У вас имеется три сосуда ёмкостью {volumes[0]}, {volumes[1]} и {volumes[2]} литров и источник воды. 
+			В меньшем сосуде 4 литра эликсира, а два других пустые. Как сделать несколько 
+			литров волшебного нектара, в котором содержание эликсира составляет 60%? Воду 
+			можно выливать, но ни одна капля эликсира не должна пропасть. Для того чтобы 
+			перелить воду из одной ёмкости (или источника) в другую, нужно последовательно 
+			выбрать, откуда и куда переливаем и нажать кнопку «Перелить». Воду можно выливать. 
+			Для этого сначала нужно выбрать откуда, а потом источник и нажать «Перелить». '''
+		cont = {
+			'volumes': volumes,
+			'configuration': configuration,
+			'purpose': purpose,
+			'inputType': "InteractiveTypeInput",
+			'componentType': "magicNectar",
+		}
+		variants_list = add_variant_to_list(variants_list, "Волшебный нектар", desc, json.dumps(cont))
 
 	add_list(problems_list, variants_list)
 

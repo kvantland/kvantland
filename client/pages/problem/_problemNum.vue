@@ -79,6 +79,7 @@ export default {
             else
                 resp.crumbs = []
         })
+        resp.variantParams = resp.variantParams
         resp.problemNum = params.problemNum
         console.log(resp)
         return resp
@@ -89,6 +90,7 @@ export default {
             this.hint.description = hint
         },
         async updateProblemStatus() {
+            console.log('update_req')
             let status, problemData
             await this.$axios.$post("/api/problem_data", {variant: this.problemNum})
             .then((resp) => {
@@ -96,13 +98,14 @@ export default {
                 problemData = resp.problem
             })
             if (status) {
+                this.variantParams = problemData.variantParams
                 this.answerStatus = problemData.answerStatus
                 this.answerGiven = problemData.answerGiven
                 this.answer = problemData.answer
                 this.solution = problemData.solution
             }
         }
-    }
+    },
 }
 </script>
 
