@@ -17,8 +17,11 @@
         <g class="palette" :transform="`translate(${boardWidth + paletteInd} ${side / 2})`">
             <g class="paletteColumns" v-for="(column, columnNum) in paletteColumns" 
                 :transform="`translate(${columnNum * (paletteColumnInd + 2 * colorCircleRadius) + colorCircleRadius} 0)`">
-                <circle v-for="(color, colorNum) in colorsInColumn" :class="`color color-${colorNum + columnNum * colorsInColumn}`" cx="0" 
-                    :cy="`${colorNum * side}`" :r="colorCircleRadius" @click="chooseColor(colorNum + columnNum * colorsInColumn)" />
+                <g v-for="(color, colorNum) in colorsInColumn" @click="chooseColor(colorNum + columnNum * colorsInColumn)" 
+                    :transform="`translate(0 ${colorNum * side})`">
+                    <circle :class="`color color-${colorNum + columnNum * colorsInColumn}`" cx="0" cy="0" :r="colorCircleRadius"  />
+                    <text v-if="currentColor == colorNum + columnNum * colorsInColumn" x="0" y="0"> ✔️ </text>
+                </g>
             </g>
         </g>
     </svg>
@@ -53,7 +56,10 @@ export default {
 
     methods: {
         chooseColor(colorNum) {
-            this.currentColor = colorNum
+            if(this.currentColor == colorNum)
+                this.currentColor = null
+            else 
+                this.currentColor = colorNum
         },
         paint(xInd, yInd) {
             this.$set(this.colors[yInd], xInd, this.currentColor)
