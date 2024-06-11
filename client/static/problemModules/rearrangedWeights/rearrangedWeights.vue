@@ -138,7 +138,11 @@ export default {
         newXhr(isNew) {  
             if (isNew) {
                 this.$emit('xhrGet')
-                if (this.xhrData.xhr_answer != this.newSide) {
+                if (this.xhrData.xhr_answer == "Out of limit") {
+                    console.log('out of limit!')
+                    this.$emit('showXhrDialog', "Попытки закончились!")
+                }
+                else if (this.xhrData.xhr_answer != this.newSide) {
                     this.newSide = this.xhrData.xhr_answer
                     this.weightMode = true
                 }
