@@ -48,7 +48,7 @@
             </g>
         </g>
         <g  v-if="dragMode" class="choiced" :transform="`translate(${targetWeight.x} ${targetWeight.y})`" ref="choiced">
-            <image :x="-weightWidth / 2" :y="-weightHeight / 2" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
+            <image :x="-weightWidth / 2" :y="-weightHeight / 2" :height="weightHeight" :width="weightWidth" href="/new-problem_assets/weight.svg" />
             <text class="name" x="0" :y="nameYPad"> {{ names[targetWeight.index] }} </text>
         </g>
     </svg>
