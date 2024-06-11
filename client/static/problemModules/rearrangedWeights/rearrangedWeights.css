@@ -7,10 +7,22 @@ svg {
     position: relative;
 }
 
+rect.container_header {
+    fill: lightgrey;
+    stroke-width: 1px;
+    stroke: grey;
+}
+
+text.container_title {
+    dominant-baseline: central;
+    text-anchor: middle;
+    color: #696f8bff;
+}
+
 text.name {
     dominant-baseline: central;
     text-anchor: middle;
-    color: white
+    color: white;
 }
 
 text.boardName {

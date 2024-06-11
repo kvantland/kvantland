@@ -7,31 +7,43 @@
             :leftCupObjects="cupWeights.left" :rightCupObjects="cupWeights.right" :moveTo="newSide" />
         <g class="containers" :transform="`translate(${(scalesWidth - containersAreaWidth) / 2} ${scalesHeight + dragAreaMarginTop})`">
             <g class="drag_container">
-                <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
-                <g class="rows" :transform="`translate(0 ${weightGap})`">
-                    <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${weightGap} ${(weightGap + weightWidth) * rowNum})`">
-                        <g v-for="(weight, weightNum) in inRow" 
-                            :transform="`translate(${weightCoordinates[weightNum + rowNum * inRow].x} ${weightCoordinates[weightNum + rowNum * inRow].y})`">
-                            <g v-if="startAreaWeights[weightNum + rowNum * inRow]" 
-                            @touchstart="moveFromStartArea(weightNum + rowNum * inRow, $event.touches[0])" 
-                            @mousedown="moveFromStartArea(weightNum + rowNum * inRow, $event)"
-                            :class="`weight weight_${weightNum + rowNum * inRow}`">
-                                <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
-                                <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
-                            </g>
-                            <g class="board" :transform="`translate(0 ${weightHeight})`">
-                                <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
-                                <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
+                <g class="container_header">
+                    <rect class="container_header" :width="dragAreaWidth" :height="containerHeaderHeight" x="0" y="0" />
+                    <text class="container_title" :x="dragAreaWidth / 2" :y="containerHeaderHeight / 2"> Зона для перетаскивания </text>
+                </g>
+                <g class="content" :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
+                    <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
+                    <g class="rows" :transform="`translate(0 ${weightGap})`">
+                        <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${weightGap} ${(weightGap + weightWidth) * rowNum})`">
+                            <g v-for="(weight, weightNum) in inRow" 
+                                :transform="`translate(${weightCoordinates[weightNum + rowNum * inRow].x} ${weightCoordinates[weightNum + rowNum * inRow].y})`">
+                                <g v-if="startAreaWeights[weightNum + rowNum * inRow]" 
+                                @touchstart="moveFromStartArea(weightNum + rowNum * inRow, $event.touches[0])" 
+                                @mousedown="moveFromStartArea(weightNum + rowNum * inRow, $event)"
+                                :class="`weight weight_${weightNum + rowNum * inRow}`">
+                                    <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
+                                    <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
+                                </g>
+                                <g class="board" :transform="`translate(0 ${weightHeight})`">
+                                    <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                                    <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
+                                </g>
                             </g>
                         </g>
                     </g>
                 </g>
             </g>
             <g class="answer_container" :transform="`translate(${containersGap + dragAreaWidth} 0)`" ref="ans_container">
-                <rect class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" fill="lightgrey" />
-                <g :transform="`translate(${weightWidth / 2 + weightGap} ${weightHeight / 2 + weightGap})`">
-                    <g class="weight" v-for="(weight, weightNum) in answerAreaWeights" @mousedown="moveFromAnsArea(weight)" @touchstart="moveFromAnsArea(weight)"
-                        :transform="`translate(0 ${(weightGap + weightHeight) * weightNum})`" v-html="weight.html" />
+                <g class="container_header">
+                    <rect class="container_header" x="0" y="0" :width="answerAreaWidth" :height="containerHeaderHeight" />
+                    <text class="container_title" :x="answerAreaWidth / 2" :y="containerHeaderHeight / 2"> Ответ </text>
+                </g>
+                <g :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
+                    <rect class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" fill="lightgrey" />
+                    <g :transform="`translate(${weightWidth / 2 + weightGap} ${weightHeight / 2 + weightGap})`">
+                        <g class="weight" v-for="(weight, weightNum) in answerAreaWeights" @mousedown="moveFromAnsArea(weight)" @touchstart="moveFromAnsArea(weight)"
+                            :transform="`translate(0 ${(weightGap + weightHeight) * weightNum})`" v-html="weight.html" />
+                    </g>
                 </g>
             </g>
         </g>
@@ -81,6 +93,8 @@ export default {
             weightGap: 15,
             weightHeight: 65,
             weightWidth: 65,
+            containerHeaderHeight: 30,
+            containerHeaderMarginBottom: 5,
             containersGap: 20, //distance between containers in svg
             dropAllowDistance: 70, //svg distance
             
@@ -191,7 +205,7 @@ export default {
             scrollBy(scrollX, scrollY)
         },
         getSvgHeight(scalesHeight) {
-            this.svgHeight = scalesHeight + this.dragAreaHeight + this.dragAreaMarginTop
+            this.svgHeight = scalesHeight + this.dragAreaHeight + this.dragAreaMarginTop + this.containerHeaderHeight + this.containerHeaderMarginBottom
             this.scalesHeight = scalesHeight
         },
         getSvgWidth(scalesWidth) {
