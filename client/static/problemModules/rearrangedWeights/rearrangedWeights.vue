@@ -160,7 +160,26 @@ export default {
                 return false
             return true
         },
-
+        autoscroll() {
+            const targetX = this.targetWeight.x + this.svgX
+            const targetY = this.targetWeight.y + this.svgY
+            const xDiff = 100
+            const yDiff = 100
+            let [scrollX, scrollY] = [0, 0]
+            if (targetX + xDiff > window.innerWidth) {
+                scrollX = targetX + xDiff - window.innerWidth
+            }
+            else if (targetX - xDiff < 0) {
+                scrollX = targetX - xDiff
+            }
+            if (targetY + yDiff > window.innerHeight) {
+                scrollY = targetY + yDiff - window.innerHeight
+            }
+            else if (targetY - yDiff < 0) {
+                scrollY = targetY - yDiff
+            }
+            scrollBy(scrollX, scrollY)
+        },
         getSvgHeight(scalesHeight) {
             this.svgHeight = scalesHeight + this.dragAreaHeight + this.dragAreaMarginTop
             this.scalesHeight = scalesHeight
@@ -215,6 +234,7 @@ export default {
                 return
             this.$set(this.targetWeight, 'x', x - this.svgX)
             this.$set(this.targetWeight, 'y', y - this.svgY)
+            this.autoscroll()
             if (!this.inAllowedArea()) {
                 this.endDrag()
             }
