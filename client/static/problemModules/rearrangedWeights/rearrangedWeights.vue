@@ -10,15 +10,14 @@
                 <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
                 <g class="rows" :transform="`translate(0 ${weightGap})`">
                     <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${weightGap} ${(weightGap + weightWidth) * rowNum})`">
-                        <image v-for="(weight, weightNum) in inRow" 
-                            v-if="startAreaWeights[weightNum + rowNum * inRow]"
-                            :x="weightCoordinates[weightNum + rowNum * inRow].x" 
-                            :y="weightCoordinates[weightNum + rowNum * inRow].y" 
+                        <g v-for="(weight, weightNum) in inRow" v-if="startAreaWeights[weightNum + rowNum * inRow]" 
                             @touchstart="moveFromStartArea(weightNum + rowNum * inRow, $event.touches[0])" 
                             @mousedown="moveFromStartArea(weightNum + rowNum * inRow, $event)"
-                            :class="`weight weight_${weightNum + rowNum * inRow}`" 
-                            :height="weightHeight" :width="weightWidth" 
-                            href="/icons/weight.svg" />
+                            :transform="`translate(${weightCoordinates[weightNum + rowNum * inRow].x} ${weightCoordinates[weightNum + rowNum * inRow].y})`"
+                            :class="`weight weight_${weightNum + rowNum * inRow}`">
+                            <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
+                            <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
+                        </g>
                     </g>
                 </g>
             </g>
@@ -30,8 +29,9 @@
                 </g>
             </g>
         </g>
-        <g class="choiced" :transform="`translate(${targetWeight.x} ${targetWeight.y})`" ref="choiced">
-            <image v-if="dragMode" :x="-weightWidth / 2" :y="-weightHeight / 2" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
+        <g  v-if="dragMode" class="choiced" :transform="`translate(${targetWeight.x} ${targetWeight.y})`" ref="choiced">
+            <image :x="-weightWidth / 2" :y="-weightHeight / 2" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
+            <text class="name" x="0" :y="nameYPad"> {{ names[targetWeight.index] }} </text>
         </g>
     </svg>
     <div class="buttons">
@@ -57,7 +57,6 @@ export default {
     },
     data() {
         return {
-            svgX: 0,
             svgY: 0,
             svgHeight: 0,
             svgWidth: 0,
@@ -66,6 +65,8 @@ export default {
             cupCoordinates: {},
             weightCoordinates: [], //not important, declared in methods and mounted
 
+            names: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
+            nameYPad: 10,
             dragAreaMarginTop: 30,
             inRow: 5,
             rows: 2,
@@ -160,9 +161,7 @@ export default {
                 return false
             return true
         },
-        autoscroll() {
-            const targetX = this.targetWeight.x + this.svgX
-            const targetY = this.targetWeight.y + this.svgY
+        autoscroll(targetX, targetY) {
             const xDiff = 100
             const yDiff = 100
             let [scrollX, scrollY] = [0, 0]
@@ -232,9 +231,9 @@ export default {
             const cupUpdateStatus = this.updateCupCoordinates()
             if (!svgUpdateStatus || !cupUpdateStatus)
                 return
+            this.autoscroll(x, y)
             this.$set(this.targetWeight, 'x', x - this.svgX)
             this.$set(this.targetWeight, 'y', y - this.svgY)
-            this.autoscroll()
             if (!this.inAllowedArea()) {
                 this.endDrag()
             }

@@ -7,6 +7,12 @@ svg {
     position: relative;
 }
 
+text.name {
+    dominant-baseline: central;
+    text-anchor: middle;
+    color: white
+}
+
 .choiced {
     cursor: grabbing;
     z-index: 10;
