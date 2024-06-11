@@ -45,4 +45,7 @@ def steps(step_num, params, data):
         return {'answer', "Unknown error"}
 
 def validate(data, answer):
-    return True
+    try:
+        return set(data['correct']) == set(answer)
+    except:
+        return False

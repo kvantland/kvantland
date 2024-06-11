@@ -352,7 +352,7 @@ def CombiRepublic4(cur):
 					весом 101 г, 102 г, …, 110 г. Кто-то поменял местами две соседние гирьки. 
 					За два взвешивания определите, какие именно гирьки были переставлены."""
 			cont = {
-				'weightings_amount': 3,
+				'weightings_amount': 2,
 				'correct': changed_weights,
 				'componentType': "rearrangedWeights",
 				'inputType': "InteractiveTypeInput",

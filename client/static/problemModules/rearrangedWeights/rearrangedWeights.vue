@@ -110,7 +110,6 @@ export default {
     },
     watch: {
         newXhr(isNew) {  
-            console.log('newXhr: ', isNew)
             if (isNew) {
                 this.$emit('xhrGet')
                 if (this.xhrData.xhr_answer != this.newSide) {
@@ -119,11 +118,38 @@ export default {
                 }
             }            
         },
-        newSide(newValue) {
-            console.log('new side: ', newValue)
-        },
     },
     methods: {
+        updateSvgCoordinates() {
+            try {
+                const svgRect = this.$refs['svg'].getBoundingClientRect()
+                this.svgX = svgRect.left
+                this.svgY = svgRect.top
+                return true
+            }
+            catch(e) {
+                return false
+            }
+        },
+        updateCupCoordinates() {
+            try {
+                const cupCoordinates = {
+                    left: {x: 0, y: 0},
+                    right: {x: 0, y: 0},
+                }
+                const leftCupRect = document.querySelector('.left_cup').getBoundingClientRect()
+                const rightCupRect = document.querySelector('.right_cup').getBoundingClientRect()
+                cupCoordinates.left.x = leftCupRect.left + leftCupRect.width / 2 - this.svgX
+                cupCoordinates.left.y = leftCupRect.top + leftCupRect.height / 2 - this.svgY
+                cupCoordinates.right.x = rightCupRect.left + rightCupRect.width / 2 - this.svgX
+                cupCoordinates.right.y = rightCupRect.top + rightCupRect.height / 2 - this.svgY
+                this.cupCoordinates = cupCoordinates
+                return true
+            }
+            catch(e) {
+                return false
+            }
+        },
         getSvgHeight(scalesHeight) {
             this.svgHeight = scalesHeight + this.dragAreaHeight + this.dragAreaMarginTop
             this.scalesHeight = scalesHeight
@@ -153,11 +179,14 @@ export default {
             this.dragMode = false
             this.weightMode = false
             this.newSide = 'equal'
+            for (const weight of this.cupWeights.left) {
+                this.$set(this.startAreaWeights, weight.payload.index, true)
+            }
+            for (const weight of this.cupWeights.right) {
+                this.$set(this.startAreaWeights, weight.payload.index, true)
+            }
             this.$set(this.cupWeights, 'left', [])
             this.$set(this.cupWeights, 'right', [])
-            for (let weight in this.startAreaWeights) {
-                this.$set(this.startAreaWeights, weight, true)
-            }
         },
         inRect(x, y, rect){
             if (x + this.svgX > rect.right || x + this.svgX < rect.left) {
@@ -169,6 +198,10 @@ export default {
             return true
         },
         moveAt(x, y) {
+            const svgUpdateStatus = this.updateSvgCoordinates()
+            const cupUpdateStatus = this.updateCupCoordinates()
+            if (!svgUpdateStatus || !cupUpdateStatus)
+                return
             this.$set(this.targetWeight, 'x', x - this.svgX),
             this.$set(this.targetWeight, 'y', y - this.svgY)
         },
@@ -249,6 +282,11 @@ export default {
             })
             console.log(newAnswerAreaWeights)
             this.answerAreaWeights = newAnswerAreaWeights
+            let newAnswerAreaWeightsIndex = []
+            for (const weight of newAnswerAreaWeights) {
+                newAnswerAreaWeightsIndex.push(weight.index)
+            }
+            this.$emit('updateAnswer', newAnswerAreaWeightsIndex)
         },
         backToStartArea() {
             const dragIndex = this.targetWeight.index
@@ -308,27 +346,6 @@ export default {
         document.addEventListener('touchmove', this.drag, {passive: false})
         document.addEventListener('touchend', this.endDrag)
         document.addEventListener('mouseup', this.endDrag)
-        document.addEventListener('DOMContentLoaded', function(){
-            const svgRect = this.$refs['svg'].getBoundingClientRect()
-            const svgX = svgRect.left
-            const svgY = svgRect.top
-
-            const cupCoordinates = {
-                left: {x: 0, y: 0},
-                right: {x: 0, y: 0},
-            }
-            const leftCupRect = document.querySelector('.left_cup').getBoundingClientRect()
-            const rightCupRect = document.querySelector('.right_cup').getBoundingClientRect()
-            cupCoordinates.left.x = leftCupRect.left + leftCupRect.width / 2 - svgX
-            cupCoordinates.left.y = leftCupRect.top + leftCupRect.height / 2 - svgY
-            cupCoordinates.right.x = rightCupRect.left + rightCupRect.width / 2 - svgX
-            cupCoordinates.right.y = rightCupRect.top + rightCupRect.height / 2 - svgY
-            console.log(cupCoordinates.left, cupCoordinates.right)
-            console.log(cupCoordinates)
-            this.cupCoordinates = cupCoordinates
-            this.svgX = svgX
-            this.svgY = svgY
-        }.bind(this))
     }
 }
 </script>
