@@ -150,6 +150,17 @@ export default {
                 return false
             }
         },
+        inAllowedArea() { // if target object in allowed aarea
+            const targetX = this.targetWeight.x + this.svgX
+            const targetY = this.targetWeight.y + this.svgY
+            console.log(targetX, targetY)
+            if (targetX < 0 || targetX > window.innerWidth)
+                return false
+            if (targetY < 0 || targetY > window.innerHeight)
+                return false
+            return true
+        },
+
         getSvgHeight(scalesHeight) {
             this.svgHeight = scalesHeight + this.dragAreaHeight + this.dragAreaMarginTop
             this.scalesHeight = scalesHeight
@@ -202,8 +213,11 @@ export default {
             const cupUpdateStatus = this.updateCupCoordinates()
             if (!svgUpdateStatus || !cupUpdateStatus)
                 return
-            this.$set(this.targetWeight, 'x', x - this.svgX),
+            this.$set(this.targetWeight, 'x', x - this.svgX)
             this.$set(this.targetWeight, 'y', y - this.svgY)
+            if (!this.inAllowedArea()) {
+                this.endDrag()
+            }
         },
         startDrag(index, event) {
             let x, y
