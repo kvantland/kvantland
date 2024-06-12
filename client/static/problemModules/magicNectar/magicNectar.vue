@@ -7,15 +7,16 @@
                 <svg v-for="(pot, potNum) in potSizes" class="pot" overflow="visible"
                     :x="potSizes[potNum].x" :y="potSizes[potNum].y"
                     :width="potSizes[potNum].width" :height="potSizes[potNum].height">
-                    <g :transform="`rotate(${potSizes[potNum].angle} ${potSizes[potNum].width / 2} 0)`">
+                    <g :transform="`rotate(${potSizes[potNum].angle} ${potSizes[potNum].width / 2} 0)`" @click="choose(['pot', potNum])">
                         <rect class="liquid" x="4" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height + 2"
                             :fill="nectarConcentration[potNum] != 0 ? `rgba(255, 139, 31, ${nectarConcentration[potNum]})` : `rgba(204, 247, 247, 1)`" 
                             :width="potSizes[potNum].width - 8" :height="liquidAmount[potNum] * potSizes[potNum].height - 2" />
                         <image class="pot_form" href="/new-problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
                         <image :class="(transfusionObject[0] == 'pot' && transfusionObject[1] == potNum 
                             || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
-                        href="/new-problem_assets/pot.svg" @click="choose(['pot', potNum])"
+                        href="/new-problem_assets/pot.svg"  
                             :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
+                        <text class="volumeText" :x="potSizes[potNum].width / 2" :y="potSizes[potNum].height - volumeTitleMarinBottom"> {{ volumes[potNum] }} </text>
                     </g>
                 </svg>
                 <image href="/icons/reload.png" :x="potsWidth + reloadPad" 
@@ -42,6 +43,7 @@ export default {
                 defaultX: 0,
                 defaultY: 0,
             },
+            volumeTitleMarinBottom: 65,
             firstPotWidth: 120,
             firstPotHeight: 140,
             tapPadding: 20,
