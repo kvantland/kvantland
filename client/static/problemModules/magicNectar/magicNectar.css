@@ -21,3 +21,10 @@ image.pot.choiced {
 .reload {
     cursor: pointer;
 }
+
+.volumeText {
+    dominant-baseline: central;
+    text-anchor: middle;
+    font-size: 60px;
+    color: black;
+}
