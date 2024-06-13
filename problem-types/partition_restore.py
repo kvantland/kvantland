@@ -1,32 +1,64 @@
 import sys
 
-def replace(arr, prev_value, new_value):
-    for arr_row in range(len(arr)):
-        for arr_item in range(len(arr[arr_row])):
-            if arr[arr_row][arr_item] == prev_value:
-                arr[arr_row][arr_item] = new_value
-    return arr
-
-
 def validate(data, answer):
-    # print(replace(data['correct'][0], 1, 'c3'), file=sys.stderr)
-    print('answer: ', answer, file=sys.stderr)
+    parents = dict()
+
+    def make_set(v):
+        parents[v] = v  
+
+    def find_set(v):
+        if v == parents[v]:
+            return v
+        return find_set(parents[v])
+
+    def union_sets(a, b):
+        a = find_set(a)
+        b = find_set(b)
+        if a != b:
+            parents[a] = b
+
+    def same_color_near_amount(color, row, column):
+        amount = 0
+        if (row > 0):
+            if answer[row - 1][column] == color:
+                amount += 1
+                union_sets((row, column), (row - 1, column))
+        if (column > 0):
+            if  answer[row][column - 1] == color:
+                amount += 1
+                union_sets((row, column), (row, column - 1))
+        return amount
+    
     try:
-        if len(answer) != len(data['correct'][0]):
-            return False
-        for row_ind in range(len(answer)):
-            if len(answer[row_ind]) != len(data['correct'][0][row_ind]):
-                return False
-            for column_ind in range(len(answer[row_ind])):
-                if not str(answer[row_ind][column_ind]) in [str(i) for i in range(10)]:
-                    return False
-                answer[row_ind][column_ind] = 'c' + str(answer[row_ind][column_ind])
-                prev_value = data['correct'][0][row_ind][column_ind]
-                if not 'c' in str(prev_value):
-                    data['correct'][0] = replace(data['correct'][0], prev_value, answer[row_ind][column_ind])
-                print(data['correct'][0])
-        print('final_data: ', data['correct'][0], file=sys.stderr)
-        print('final_answer: ', answer, file=sys.stderr)
-        return data['correct'][0] == answer
-    except:
+        board_numbers = data['start_board']
+        current_perimeters = dict()
+        expected_perimeters = dict()
+        component_colors = dict()
+        board_side = len(data['start_board'])
+
+        for row in range(board_side):
+            for column in range(board_side):
+                field_color = answer[row][column]
+                make_set((row, column))
+                if not field_color in current_perimeters.keys():
+                    current_perimeters[field_color] = 4
+                else:
+                    amount = same_color_near_amount(field_color, row, column)
+                    current_perimeters[field_color] += 4 - 2 * amount
+                if expected_perimeter := board_numbers[row][column]:
+                    if field_color in expected_perimeters.keys():
+                        return False
+                    expected_perimeters[field_color] = expected_perimeter
+
+        for row in range(board_side):
+            for column in range(board_side):
+                head_row, head_column = find_set((row, column))
+                component_color = answer[head_row][head_column]
+                if component_color in component_colors.keys():
+                    if component_colors[component_color] != (head_row, head_column):
+                        return False
+                component_colors[component_color] = (head_row, head_column)
+
+        return expected_perimeters == current_perimeters
+    except: 
         return False
