@@ -10,7 +10,7 @@
             <g v-for="(rect_row, yInd) in rectInColumn" :key="`row_${yInd}`">
                 <rect :class="{ 'field': true, 'questionField': problemParams.start_board[yInd][xInd] === '?' }" v-for="(rect, xInd) in rectInRow"
                     :x="`${xInd * side + rectInd}`" :y="`${yInd * side + rectInd}`" :width="innerSide" :height="innerSide" :key="`rect_${xInd}_${yInd}`"/>
-                <text v-for="(perimeterValue, xInd) in problemParams.start_board[yInd]" :x="`${xInd * side + rectInd + side / 2}`" 
+                <text v-for="(perimeterValue, xInd) in problemParams.start_board[yInd]" :x="`${xInd * side + rectInd + side / 2}`" dy="0.35em"
                     :y="`${yInd * side + rectInd + side / 2}`"> {{ perimeterValue }} </text>
             </g>
         </g>
