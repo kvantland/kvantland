@@ -375,6 +375,25 @@ def CombiRepublic4(cur):
 				'correct': A,
 			}
 			variants_list = add_variant_to_list(variants_list, "Числа без палиндромов", desc, json.dumps(cont))	
+			
+
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'rearranged_weights', "Переставленные гирьки")
+	for changed_weights in [
+			[0, 1],
+			[2, 3],
+			[5, 6],
+			[7, 8]
+			]:
+			desc = """На столе были выставлены в ряд внешне одинаковые гирьки 
+					весом 101 г, 102 г, …, 110 г. Кто-то поменял местами две соседние гирьки. 
+					За два взвешивания определите, какие именно гирьки были переставлены."""
+			cont = {
+				'weightings_amount': 2,
+				'correct': changed_weights,
+				'componentType': "rearrangedWeights",
+				'inputType': "InteractiveTypeInput",
+			}
+			variants_list = add_variant_to_list(variants_list, "Переставленные гирьки", desc, json.dumps(cont))	
 
 	add_list(problems_list, variants_list)
 

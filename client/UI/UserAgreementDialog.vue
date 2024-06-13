@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <div class="shadow"></div>
+    <DialogShadowScreen>
         <div class="dialog">
             <div class="dialog_header">
                 <p> {{ title }} </p>
@@ -10,10 +9,12 @@
                 <p v-for="par in pars" v-html="par"></p>
             </div>
         </div>
-    </div>
+    </DialogShadowScreen>
 </template>
 
 <script>
+import DialogShadowScreen from './DialogShadowScreen.vue';
+
 export default {
     data() {
         return {
@@ -36,6 +37,16 @@ export default {
 </script>
 
 <style scoped>
+.dialog {
+    opacity: 1;
+    animation: show 0.4s;
+}
+
+@keyframes show {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
 .dialog_header {
     display: inline-flex;
     justify-content: space-between;
