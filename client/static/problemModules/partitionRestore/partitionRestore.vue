@@ -11,7 +11,7 @@
                 <rect :class="['field', 'color-' + colors[yInd][xInd]]" v-for="(rect, xInd) in rectInRow" @click="paint(xInd, yInd)"
                     :x="`${xInd * side + rectInd}`" :y="`${yInd * side + rectInd}`" :width="innerSide" :height="innerSide" :key="`rect_${xInd}_${yInd}`"/>
                 <text v-for="(perimeterValue, xInd) in problemParams.start_board[yInd]" :x="`${xInd * side + rectInd + side / 2}`" 
-                    :y="`${yInd * side + rectInd + side / 2}`"> {{ perimeterValue }} </text>
+                    :y="`${yInd * side + rectInd + side / 2}`" dy="0.35em"> {{ perimeterValue }} </text>
             </g>
         </g>
         <g class="palette" :transform="`translate(${boardWidth + paletteInd} ${side / 2})`">
@@ -20,7 +20,7 @@
                 <g v-for="(color, colorNum) in colorsInColumn" @click="chooseColor(colorNum + columnNum * colorsInColumn)" 
                     :transform="`translate(0 ${colorNum * side})`">
                     <circle :class="`color color-${colorNum + columnNum * colorsInColumn}`" cx="0" cy="0" :r="colorCircleRadius"  />
-                    <text v-if="currentColor == colorNum + columnNum * colorsInColumn" x="0" y="0"> ✔️ </text>
+                    <text v-if="currentColor == colorNum + columnNum * colorsInColumn" x="0" y="0" dy="0.35em"> ✔️ </text>
                 </g>
             </g>
         </g>
