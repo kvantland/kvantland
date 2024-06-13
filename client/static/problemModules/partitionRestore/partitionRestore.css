@@ -1,3 +1,7 @@
+svg {
+    width: 60%;
+}
+
 line {
     stroke: black;
 	stroke-linecap: round;

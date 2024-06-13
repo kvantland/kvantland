@@ -1,5 +1,8 @@
 <template>
-     <svg version="1.1" :width="svgWidth" :height="svgHeight" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+     <svg version="1.1"
+        :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
+        preserveAspectRatio="xMidYMid meet" 
+        overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g :transform="`translate(0 ${svgMarginTop})`">
             <image class="tap" :class="(transfusionSubject[0] == 'tap') ? 'choiced': 'not-choiced'" 
                 href="/new-problem_assets/tap.svg" :x="tapSize.x" :y="tapSize.y" :width="tapSize.width" :height="tapSize.height" @click="choose(['tap', 0])"/>

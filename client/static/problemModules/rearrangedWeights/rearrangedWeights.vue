@@ -1,7 +1,7 @@
 <template>
     <div class="svg_with_buttons">
     <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
-            :width="svgWidth" :height="svgHeight"
+            preserveAspectRatio="xMidYMid meet" 
             overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <Scales @svgHeight="getSvgHeight" @svgWidth="getSvgWidth" @moveFromCup="moveFromCup" :scale="0.8" @stopMove="stopWeight"
             :leftCupObjects="cupWeights.left" :rightCupObjects="cupWeights.right" :moveTo="newSide" />
@@ -22,7 +22,7 @@
                                 @mousedown="moveFromStartArea(weightNum + rowNum * inRow, $event)"
                                 :class="`weight weight_${weightNum + rowNum * inRow}`">
                                     <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
-                                    <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad" dy="0.35em"> {{ names[weightNum + rowNum * inRow] }} </text>
+                                    <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
                                 </g>
                                 <g class="board" :transform="`translate(0 ${weightHeight})`">
                                     <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
@@ -36,7 +36,7 @@
             <g class="answer_container" :transform="`translate(${containersGap + dragAreaWidth} 0)`" ref="ans_container">
                 <g class="container_header">
                     <rect class="container_header" x="0" y="0" :width="answerAreaWidth" :height="containerHeaderHeight" />
-                    <text class="container_title" :x="answerAreaWidth / 2" :y="containerHeaderHeight / 2"> Ответ </text>
+                    <text class="container_title" :x="answerAreaWidth / 2" :y="containerHeaderHeight / 2" dy="0.35em"> Ответ </text>
                 </g>
                 <g :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
                     <rect class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" fill="lightgrey" />
@@ -85,7 +85,7 @@ export default {
 
             names: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
             boardNames: [101, 102, 103, 104, 105, 106, 107, 108, 109, 110],
-            nameYPad: 10,
+            nameYPad: 17,
             boardHeight: 30,
             dragAreaMarginTop: 30,
             inRow: 5,
