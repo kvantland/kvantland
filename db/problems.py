@@ -407,6 +407,22 @@ def CombiRepublic4(cur):
 				'componentType': "rearrangedWeights",
 				'inputType': "InteractiveTypeInput",
 			}
+			variants_list = add_variant_to_list(variants_list, "Переставленные гирьки", desc, json.dumps(cont))
+
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'airlines', "Авиалинии")
+	for N, A in [
+			(9, 8),
+			(10, 9),
+			(11, 10),
+			(12, 11),
+			]:
+			desc = f"""В стране {N} городов, из каждого из которых есть не более четырёх авиалиний в другие города. 
+			Известно, что из любого города можно долететь в любой другой, сделав не более трёх пересадок. Какое наименьшее число авиалиний может быть в этой стране?"""
+			cont = {
+				'correct': A,
+				'componentType': "airlines",
+				'inputType': "InteractiveTypeInput",
+			}
 			variants_list = add_variant_to_list(variants_list, "Переставленные гирьки", desc, json.dumps(cont))	
 
 	add_list(problems_list, variants_list)
