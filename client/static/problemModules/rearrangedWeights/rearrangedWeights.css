@@ -14,19 +14,16 @@ rect.container_header {
 }
 
 text.container_title {
-    dominant-baseline: central;
     text-anchor: middle;
     color: #696f8bff;
 }
 
 text.name {
-    dominant-baseline: central;
     text-anchor: middle;
     color: white;
 }
 
 text.boardName {
-    dominant-baseline: central;
     text-anchor:middle;
     color: #502D16;
 }

@@ -9,7 +9,7 @@
             <g class="drag_container">
                 <g class="container_header">
                     <rect class="container_header" :width="dragAreaWidth" :height="containerHeaderHeight" x="0" y="0" />
-                    <text class="container_title" :x="dragAreaWidth / 2" :y="containerHeaderHeight / 2"> Зона для перетаскивания </text>
+                    <text class="container_title" :x="dragAreaWidth / 2" :y="containerHeaderHeight / 2" dy="0.35em"> Зона для перетаскивания </text>
                 </g>
                 <g class="content" :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
                     <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
@@ -22,11 +22,11 @@
                                 @mousedown="moveFromStartArea(weightNum + rowNum * inRow, $event)"
                                 :class="`weight weight_${weightNum + rowNum * inRow}`">
                                     <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
-                                    <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
+                                    <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad" dy="0.35em"> {{ names[weightNum + rowNum * inRow] }} </text>
                                 </g>
                                 <g class="board" :transform="`translate(0 ${weightHeight})`">
                                     <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
-                                    <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
+                                    <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
                                 </g>
                             </g>
                         </g>
