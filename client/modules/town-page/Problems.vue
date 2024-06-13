@@ -2,7 +2,7 @@
 <g class="problems">
 	<NuxtLink v-for="prb in problems_data" :to="`/problem/${prb.variantID}/`" :class="`level level_${prb.status}`" :transform="`translate(${prb.x} ${prb.y})`" :key="`problem_${prb}`"><title>{{prb.name}}</title>
 		<circle class="level-icon" r="0.65em" />
-		<text class="level-value">{{prb.points}}</text>
+		<text class="level-value" dy="0.35em">{{prb.points}}</text>
     </NuxtLink>
 </g>
 </template>
@@ -14,7 +14,6 @@ export default {
 <style scoped>
 .level {
     text-anchor: middle;
-    dominant-baseline: central;
     font-size: 60px;
     font-weight: bold;
 
