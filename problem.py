@@ -20,7 +20,7 @@ def get_xhr_request(db):
 	resp = {
 		'status': False,
 		'xhr_answer': None,
-    }
+	}
 	try:
 		var_id = json.loads(request.body.read())['variant']
 		params = json.loads(request.body.read())['xhr_params']
@@ -276,7 +276,15 @@ def check_user_answer(db):
 	print(answer, file=sys.stderr)
 	is_answer_correct = typedesc.validate(content, answer)
 	
-	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, json.dumps(answer), solution, variant, user_id))
+	try:
+		if isinstance(answer, str):
+			answer_to_str = answer
+		else:
+			answer_to_str = json.dumps(answer)
+	except:
+		answer_to_str = ''
+	
+	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, answer_to_str, solution, variant, user_id))
 	if is_answer_correct:
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))
 		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (variant, user_id, config["tournament"]["version"]))
