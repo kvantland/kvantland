@@ -16,7 +16,8 @@
                             || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
                         href="/new-problem_assets/pot.svg"  
                             :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
-                        <text class="volumeText" :x="potSizes[potNum].width / 2" :y="potSizes[potNum].height - volumeTitleMarinBottom"> {{ volumes[potNum] }} </text>
+                        <text class="volumeText" :x="potSizes[potNum].width / 2" dy="0.35em"
+                            :y="potSizes[potNum].height - volumeTitleMarinBottom"> {{ volumes[potNum] }} </text>
                     </g>
                 </svg>
                 <image href="/icons/reload.png" :x="potsWidth + reloadPad" 
