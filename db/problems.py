@@ -304,6 +304,20 @@ def Geom4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Восстановите разбиение", desc, json.dumps(cont))
 
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Два куба")
+	for N, A in [
+			('1', 102),
+			('2', 98),
+			('3', 94),
+			('4', 92),
+			]:
+			desc = f"""Два куба, состоящие из 27 единичных кубиков каждый, расположены так, что имеют ровно {N} общих кубиков 
+			(один общий кубик, два общих кубика, три общих кубика, четыре общих кубика). Найдите площадь поверхности такой фигуры."""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Два куба", desc, json.dumps(cont))
+
 	add_list(problems_list, variants_list)
 
 
