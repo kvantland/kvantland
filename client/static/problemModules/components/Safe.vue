@@ -16,16 +16,16 @@
                     <svg v-for="(slot, slotNum) in slotsAmount" class="slot" :x="slotNum * (gap + slotWidth)" y="0" :width="slotWidth" :height="slotHeight" :key="`slot_${slotNum}`">
                         <rect class="slot_display" x="0" y="0" :width="slotWidth" :height="slotHeight" :fill="`url(#slotShadow)`" />
                         <g class="text" :transform="`translate(${slotWidth / 2} ${slotHeight / 2})`">
-                            <svg x="0" :y="Math.sin(scrollAngles[slotNum] - Math.PI/5) * slotRadius" overflow="visible">
+                            <svg x="0" :y="Math.sin(scrollAngles[slotNum] - Math.PI/5) * slotRadius" overflow="visible" dy="0.35em">
                                 <text class="prev_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum] - Math.PI/5)})`"> 
                                     {{ currentValues[slotNum][0] }} </text>
                             </svg>
                             <svg x="0" :y="Math.sin(scrollAngles[slotNum]) * slotRadius" overflow="visible">
-                                <text class="current_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum])})`">
+                                <text class="current_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum])})`" dy="0.35em">
                                     {{ currentValues[slotNum][1] }} </text>  
                             </svg>
                             <svg x="0" :y="Math.sin(scrollAngles[slotNum] + Math.PI/5) * slotRadius" overflow="visible">
-                                <text class="next_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum] + Math.PI/5)})`"> 
+                                <text class="next_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum] + Math.PI/5)})`" dy="0.35em"> 
                                     {{ currentValues[slotNum][2] }} </text>
                             </svg>
                         </g>
@@ -174,7 +174,6 @@ text.number_value{
 text{
 	font-size: 30px;
 	text-anchor: middle;
-	dominant-baseline: central;
 	font-family: inherit;
 	font-weight: 1000
 }
