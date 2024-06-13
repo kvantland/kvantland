@@ -20,6 +20,7 @@
 	text-align: center;
 	width: max(60px, min(8vw, 96px));
 	align-items: center;
+	border-color: darkblue;
 }
 
 .fieldInput {
@@ -33,6 +34,7 @@
     height: 80%;
     text-align: center;
     background: none;
+    color: red;
 }
 
 .fieldinput:focus{
