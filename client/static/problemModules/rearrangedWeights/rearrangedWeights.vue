@@ -1,6 +1,6 @@
 <template>
     <div class="svg_with_buttons">
-    <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
+    <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
             preserveAspectRatio="xMidYMid meet" 
             overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <Scales @svgHeight="getSvgHeight" @svgWidth="getSvgWidth" @moveFromCup="moveFromCup" :scale="0.8" @stopMove="stopWeight"
@@ -75,7 +75,8 @@ export default {
     },
     data() {
         return {
-            svgY: 0,
+            cursorX: 0,
+            cursorY: 0,
             svgHeight: 0,
             svgWidth: 0,
             scalesHeight: 0,
@@ -150,12 +151,11 @@ export default {
         },
     },
     methods: {
-        updateSvgCoordinates() {
+        convertDOMtoSVG(x, y) {
             try {
-                const svgRect = this.$refs['svg'].getBoundingClientRect()
-                this.svgX = svgRect.left
-                this.svgY = svgRect.top
-                return true
+                const pt = new DOMPoint(x, y)
+	            const svgP = pt.matrixTransform(this.$refs['svg'].getScreenCTM().inverse())
+                return {x: svgP.x, y: svgP.y}
             }
             catch(e) {
                 return false
@@ -169,10 +169,8 @@ export default {
                 }
                 const leftCupRect = document.querySelector('.left_cup').getBoundingClientRect()
                 const rightCupRect = document.querySelector('.right_cup').getBoundingClientRect()
-                cupCoordinates.left.x = leftCupRect.left + leftCupRect.width / 2 - this.svgX
-                cupCoordinates.left.y = leftCupRect.top + leftCupRect.height / 2 - this.svgY
-                cupCoordinates.right.x = rightCupRect.left + rightCupRect.width / 2 - this.svgX
-                cupCoordinates.right.y = rightCupRect.top + rightCupRect.height / 2 - this.svgY
+                cupCoordinates.left = this.convertDOMtoSVG(leftCupRect.left + leftCupRect.width / 2, leftCupRect.top + leftCupRect.height / 2)
+                cupCoordinates.right = this.convertDOMtoSVG(rightCupRect.left + rightCupRect.width / 2, rightCupRect.top + rightCupRect.height / 2)
                 this.cupCoordinates = cupCoordinates
                 return true
             }
@@ -181,8 +179,8 @@ export default {
             }
         },
         inAllowedArea() { // if target object in allowed aarea
-            const targetX = this.targetWeight.x + this.svgX
-            const targetY = this.targetWeight.y + this.svgY
+            const targetX = window.event.clientX
+            const targetY = window.event.clientY
             console.log(targetX, targetY)
             if (targetX < 0 || targetX > window.innerWidth)
                 return false
@@ -190,7 +188,9 @@ export default {
                 return false
             return true
         },
-        autoscroll(targetX, targetY) {
+        autoscroll() {
+            const targetX = window.event.clientX
+            const targetY = window.event.clientY
             const xDiff = 100
             const yDiff = 100
             let [scrollX, scrollY] = [0, 0]
@@ -247,22 +247,22 @@ export default {
             this.$set(this.cupWeights, 'right', [])
         },
         inRect(x, y, rect){
-            if (x + this.svgX > rect.right || x + this.svgX < rect.left) {
+            if (x > rect.right || x < rect.left) {
                 return false
             }
-            if (y + this.svgY > rect.bottom || y + this.svgY < rect.top) {
+            if (y > rect.bottom || y < rect.top) {
                 return false
             }
             return true
         },
         moveAt(x, y) {
-            const svgUpdateStatus = this.updateSvgCoordinates()
+            const newCursorCoordinates = this.convertDOMtoSVG(x, y)
             const cupUpdateStatus = this.updateCupCoordinates()
-            if (!svgUpdateStatus || !cupUpdateStatus)
+            if (!newCursorCoordinates || !cupUpdateStatus)
                 return
-            this.autoscroll(x, y)
-            this.$set(this.targetWeight, 'x', x - this.svgX)
-            this.$set(this.targetWeight, 'y', y - this.svgY)
+            this.autoscroll()
+            this.$set(this.targetWeight, 'x', newCursorCoordinates.x)
+            this.$set(this.targetWeight, 'y', newCursorCoordinates.y)
             if (!this.inAllowedArea()) {
                 this.endDrag()
             }
