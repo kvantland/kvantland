@@ -1,6 +1,6 @@
 <template>
 <g class="problems">
-	<NuxtLink v-for="prb in problems_data" :to="`/problem/${prb.variantID}/`" :class="`level level_${prb.status}`" :transform="`translate(${prb.x} ${prb.y})`" :key="`problem_${prb}`"><title>{{prb.name}}</title>
+	<NuxtLink v-for="prb in problems_data" :to="`/problem/${prb.variantID}/`" :class="`level level_${prb.status}`" :transform="`translate(${prb.x} ${prb.y})`" :key="`problem_${prb.variantID}`"><title>{{prb.name}}</title>
 		<circle class="level-icon" r="0.65em" />
 		<text class="level-value" dy="0.35em">{{prb.points}}</text>
     </NuxtLink>
