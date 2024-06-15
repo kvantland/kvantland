@@ -102,7 +102,7 @@ def IslandOfLiars4(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Соседи лжецы", image="liar.png")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Соседи лжецы", image="liar.png", hint="Разделите сидящих за круглым столом на тройки соседей и подумайте, какое наибольшее число рыцарей может быть в каждой тройке.")
 	for N, A in [
 			('12', 8),
 			('15', 10),
@@ -116,7 +116,7 @@ def IslandOfLiars4(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Соседи лжецы", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'radio', "Трёхцветные колпаки")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'radio', "Трёхцветные колпаки", hint="Рассмотрите отдельно каждый цвет и подумайте, сколько человек могут угадать этот цвет.")
 	for a, b, c, A in [
 			("«Я знаю, что на мне красный колпак»", "«А я так и не знаю, какого цвета на мне колпак»", "«А на мне точно жёлтый колпак».", 2),
 			("«Я знаю, что на мне жёлтый колпак»", "«А я так и не знаю, какого цвета на мне колпак»", "«А на мне точно зелёный колпак»", 0),
@@ -149,7 +149,7 @@ def IslandOfLiars4(cur):
 def Chiselburg4(cur):
 	problems_list = []
 	variants_list = dict()
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'lock_code', "Код замка")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 1, 'lock_code', "Код замка", hint="Для каждой комбинации рассмотрите все возможные случаи, какая именно цифра в ней может оказаться верной.")
 	for combinations, correct in [
 		([512, 317, 587], [3, 8, 2]),
 		([748, 142, 762], [1, 6, 8]),
@@ -168,7 +168,7 @@ def Chiselburg4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Код замка", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'unusual_number', "Необычное число")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 3, 'unusual_number', "Необычное число", hint="Попробуйте найти подходящее число, которое заканчивается на несколько девяток.")
 	for X, Y, A in [
 			(6, 9, 53999),
 			(9, 3, 49999),
@@ -184,7 +184,7 @@ def Chiselburg4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Необычное число", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Быки и коровы")
+	problems_list = add_problem_to_list(problems_list, cur, "Чиселбург", 2, 'integer', "Быки и коровы", hint="Начните рассуждения с последней строки таблицы.")
 	for start_board, cows_and_bulls, correct in [
 		(
 			[
@@ -263,7 +263,8 @@ def Geom4(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'partition_restore', "Восстановите разбиение")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'partition_restore', "Восстановите разбиение", hint ="""Сначала выделите одноклеточные фигуры с числом 4. Затем рассмотрите фигуры с числом 6 (это прямоугольники 1×2).
+	 С числом 8 бывают либо уголки из трёх клеток, либо прямоугольники 1×3, либо квадраты 2×2. Помните, что все числа в таблице принадлежат разным фигурам.""")
 	for start_board in [
 			[
 				[ 8, '', '', '', ''],
@@ -304,7 +305,7 @@ def Geom4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Восстановите разбиение", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Два куба")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Два куба", hint="Сначала попробуйте понять, какие именно кубики могут быть общими.")
 	for N, A in [
 			('1', 102),
 			('2', 98),
@@ -335,7 +336,8 @@ def Golovolomsk4(cur):
 	problems_list = []
 	variants_list = dict()
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'lamps_on_hexagonal_panel', "Лампочки на шестиугольном табло")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'lamps_on_hexagonal_panel', "Лампочки на шестиугольном табло", hint="""Удобней начинать с крайних рядов, поскольку в них меньше вариантов. 
+		При этом учитывайте, что каждая лампочка расположена в трёх рядах.""")
 	for lamps_in_line, side in [    
 		(2, 5),
 	]:
@@ -351,7 +353,7 @@ def Golovolomsk4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Лампочки на шестиугольном табло", desc, json.dumps(cont))
 	
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'magic_nectar', "Волшебный нектар")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'magic_nectar', "Волшебный нектар", hint="Перелейте весь эликсир в большую ёмкость. Получите ровно 2 литра воды в ёмкости 5 литров, затем добавьте туда эликсир.")
 	for volumes, configuration, purpose in [
 		([4, 5, 9], [{'water': 0, 'nectar': 4}, {'water': 0, 'nectar': 0}, {'water': 0, 'nectar': 0}], {'nectar': 0.6}),
 	]:
@@ -377,7 +379,7 @@ def CombiRepublic4(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Числа без палиндромов")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Числа без палиндромов", hint="Сколько вариантов есть для первой цифры числа? А для второй? А для третьей?")
 	for N, A in [
 			('111', 6),
 			('222', 6),
@@ -391,7 +393,8 @@ def CombiRepublic4(cur):
 			variants_list = add_variant_to_list(variants_list, "Числа без палиндромов", desc, json.dumps(cont))	
 			
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'rearranged_weights', "Переставленные гирьки")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 4, 'rearranged_weights', "Переставленные гирьки", hint="""Всего возможно 9 вариантов, какая пара гирек переставлена. Придумайте такое первое взвешивание, чтобы каждому результату 
+		(равновесие, перевесила левая чаша или перевесила правая чаша) соответствовало ровно 3 варианта.""")
 	for changed_weights in [
 			[0, 1],
 			[2, 3],
