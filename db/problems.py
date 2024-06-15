@@ -102,7 +102,7 @@ def IslandOfLiars4(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Соседи лжецы")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 3, 'integer', "Соседи лжецы", image="liar.png")
 	for N, A in [
 			('12', 8),
 			('15', 10),

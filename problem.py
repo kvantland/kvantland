@@ -173,7 +173,7 @@ def get_problem_data(db):
 	resp['problem']['description'] = description
 	resp['problem']['title'] = name
 	if image:
-		resp['problem']['image'] = f'/old_problem-assests/integer_img/{image}'
+		resp['problem']['image'] = f'/old-problem_assets/integer_img/{image}'
 	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 	resp['problem']['type'] = type_
 	if 'correct' in content.keys(): # пользователь не должен знать ответ)
