@@ -305,6 +305,19 @@ def Geom4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Восстановите разбиение", desc, json.dumps(cont))
 
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'integer', "Точка на гипотенузе", hint="На продолжении ED за точку D возьмите точку F так, что DF = CD, и рассмотрите четырёхугольник ACEF.")
+	for N, A in [
+			(21, 48),
+			(23, 44),
+			(25, 40),
+			(27, 36),
+			]:
+			desc = f"""На гипотенузе AB прямоугольного треугольника ABC отмечена точка D, из которой опущен перпендикуляр DE на катет BC. Найдите угол BCD, если AC = CD + DE, а угол CAE равен {N}°."""
+			cont = {
+				'correct': A,
+			}
+			variants_list = add_variant_to_list(variants_list, "Точка на гипотенузе", desc, json.dumps(cont))
+
 	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Два куба", hint="Сначала попробуйте понять, какие именно кубики могут быть общими.")
 	for N, A in [
 			('1', 102),
