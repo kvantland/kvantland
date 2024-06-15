@@ -318,7 +318,7 @@ export default {
                 }
             }
             const AnsContainerRect = this.$refs['ans_container'].getBoundingClientRect()
-            if (this.inRect(this.targetWeight.x, this.targetWeight.y, AnsContainerRect)) {
+            if (this.inRect(window.event.x, window.event.y, AnsContainerRect)) {
                 console.log('drop to ans area')
                 this.dropToAnsArea()
             }
