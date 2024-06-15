@@ -409,7 +409,7 @@ def CombiRepublic4(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Переставленные гирьки", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'airlines', "Авиалинии")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'airlines', "Авиалинии", hint = "Постройте пример, в котором никакой набор авиалиний не образует цикл (граф является деревом).")
 	for N, A in [
 			(9, 3),
 			(10, 3),
