@@ -36,6 +36,7 @@ export default {
     font-weight: 600;
     text-align: center;
     justify-self: flex-end;
+    cursor: pointer;
 }
 
 .hint_icon {
