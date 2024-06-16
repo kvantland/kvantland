@@ -1,5 +1,7 @@
 <template>
-    <svg version="1.1" :width="svgWidth" :height="svgHeight" overflow="visible" 
+    <svg version="1.1" overflow="visible" 
+        preserveAspectRatio="xMidYMid meet" 
+        :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
             <linearGradient id="slotShadow" x1="0" x2="0" y1="0" y2="1">
