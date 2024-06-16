@@ -116,7 +116,7 @@ def IslandOfLiars4(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Соседи лжецы", desc, json.dumps(cont))	
 
-	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'radio', "Трёхцветные колпаки", hint="Рассмотрите отдельно каждый цвет и подумайте, сколько человек могут угадать этот цвет.")
+	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 4, 'radio', "Трёхцветные колпаки", image="three_colored.png", hint="Рассмотрите отдельно каждый цвет и подумайте, сколько человек могут угадать этот цвет.")
 	for a, b, c, A in [
 			("«Я знаю, что на мне красный колпак»", "«А я так и не знаю, какого цвета на мне колпак»", "«А на мне точно жёлтый колпак».", 2),
 			("«Я знаю, что на мне жёлтый колпак»", "«А я так и не знаю, какого цвета на мне колпак»", "«А на мне точно зелёный колпак»", 0),
@@ -305,7 +305,7 @@ def Geom4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Восстановите разбиение", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 2, 'integer', "Точка на гипотенузе", hint="На продолжении ED за точку D возьмите точку F так, что DF = CD, и рассмотрите четырёхугольник ACEF.")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 4, 'integer', "Точка на гипотенузе", image="geoma3_4.svg", hint="На продолжении ED за точку D возьмите точку F так, что DF = CD, и рассмотрите четырёхугольник ACEF.")
 	for N, A in [
 			(21, 48),
 			(23, 44),
@@ -318,7 +318,7 @@ def Geom4(cur):
 			}
 			variants_list = add_variant_to_list(variants_list, "Точка на гипотенузе", desc, json.dumps(cont))
 
-	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Два куба", hint="Сначала попробуйте понять, какие именно кубики могут быть общими.")
+	problems_list = add_problem_to_list(problems_list, cur, "Геома", 3, 'integer', "Два куба", image="two_cubes.png", hint="Сначала попробуйте понять, какие именно кубики могут быть общими.")
 	for N, A in [
 			('1', 102),
 			('2', 98),
@@ -392,7 +392,7 @@ def CombiRepublic4(cur):
 	problems_list = []
 	variants_list = dict()
 
-	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Числа без палиндромов", hint="Сколько вариантов есть для первой цифры числа? А для второй? А для третьей?")
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'integer', "Числа без палиндромов", image="palindrome.png", hint="Сколько вариантов есть для первой цифры числа? А для второй? А для третьей?")
 	for N, A in [
 			('111', 6),
 			('222', 6),
