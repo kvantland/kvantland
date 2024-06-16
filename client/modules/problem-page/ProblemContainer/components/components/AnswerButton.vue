@@ -1,12 +1,12 @@
 <template>
     <div>
-        <ConfirmDialog v-if="confirmMode" @sendAnswer="sendAnswer" @hideConfirmDialog="hideConfirmDialog"> </ConfirmDialog>
+        <ConfirmAnswerDialog v-if="confirmMode" @sendAnswer="sendAnswer" @hideConfirmDialog="hideConfirmDialog" />
         <button class="submit_button" type="submit" form="problem_form" @click="showConfirmDialog"> Отправить </button>
     </div>
 </template>
 
 <script scoped>
-import ConfirmDialog from  './ConfirmDialog.vue'
+import ConfirmAnswerDialog from  './ConfirmAnswerDialog.vue'
 
 export default {
     data() {
@@ -16,7 +16,7 @@ export default {
     },
 
     components: {
-        ConfirmDialog,
+        ConfirmAnswerDialog,
     },
 
     methods: {

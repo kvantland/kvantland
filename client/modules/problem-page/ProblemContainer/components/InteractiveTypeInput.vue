@@ -1,7 +1,7 @@
 <template>
     <div class="problem_input">
         <AnswerButton @sendAnswer="sendAnswer"/>
-        <HintButton v-if="hasHint" @getHint="getHint"/>
+        <HintButton v-if="hasHint" @getHint="getHint" :hintCost="hintCost" />
     </div>
 </template>
 
@@ -17,6 +17,7 @@ export default {
     
     props: {
         hasHint: {default: false},
+        hintCost: {default: "1 квантик"},
     },
 
     methods: {
