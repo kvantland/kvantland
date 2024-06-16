@@ -27,3 +27,7 @@ image.pot.choiced {
     font-size: 60px;
     color: black;
 }
+
+svg {
+    width: 60%;
+}
