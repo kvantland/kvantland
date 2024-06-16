@@ -28,6 +28,8 @@ num = '0123456789'
 
 _key = config['keys']['mail_confirm']
 
+MODE = config['tournament']['mode']
+
 all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
 			['email', 'email', 'E-mail'],
@@ -79,6 +81,9 @@ def lang_form(num):
 
 @route('/reg')
 def reg_from(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	if current_user(db) != None:
 		redirect('/')
 	yield from display_registration_form(empty_user_info())
@@ -260,6 +265,9 @@ def check_format(user_info):
 
 @route('/reg', method='POST')
 def login_attempt(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 
 	user_info = dict()
 
@@ -473,6 +481,9 @@ def send_reg_confirm_message(db, info, only_send=False):
 
 @route('/reg_confirm')
 def check(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	user_info = request.query.decode()
 	email = user_info['email']
 	token = user_info['token']
@@ -488,6 +499,9 @@ def check(db):
 
 @route('/reg/send_again', method="POST")
 def send_again(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	try:
 		info = json.loads(request.body.read())
 		email = info['email'].strip()

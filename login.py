@@ -13,11 +13,15 @@ _key = config['keys']['cookie']
 client_id = config['vk']['client_id']
 redirect_uri = config['vk']['redirect_uri']
 auth_url = config['vk']['auth_url']
+MODE = config['tournament']['mode']
 
 params = {'client_id': 	client_id, 'redirect_uri': redirect_uri, 'response_type': 'code'}
 
 @route('/login')
 def login_form(db):
+	if MODE == 'public':
+		do_logout()
+		do_redirect()
 	if current_user(db) != None:
 		do_redirect()
 	yield from display_login_form()
@@ -123,6 +127,9 @@ def do_redirect_to_root():
 
 @route('/login', method='POST')
 def login_attempt(db):
+	if MODE=='public':
+		do_logout()
+		do_redirect()
 	if (user := check_login(db, request.forms.login, request.forms.password)) != None:
 		do_login(user, request.forms.login)
 		do_redirect()

@@ -14,7 +14,7 @@ import smtplib
 from html import escape
 import time
 
-from login import do_login, current_user
+from login import do_login, current_user, do_logout
 from config import config
 import user
 
@@ -24,9 +24,14 @@ num = '0123456789'
 
 _key = config['keys']['recovery']
 
+MODE = config['tournament']['mode']
+
 
 @route('/pw_recovery')
 def display_recovery_form(err=None):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	yield '<!DOCTYPE html>'
 	yield '<title>Восстановление пароля</title>'
 	yield '<link rel="stylesheet" type="text/css" href="/static/design/user.css">'
@@ -127,6 +132,9 @@ def update_email_amount(db, email):
 
 @route('/pw_recovery', method="POST")
 def recovery_attempt(db, only_send=False, email=''):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	if not email:
 		_email = request.forms.email
 	else:
@@ -223,6 +231,9 @@ def recovery_attempt(db, only_send=False, email=''):
 
 @route('/pw_recovery/new_password')
 def display_new_password_form(err=None):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	user_info = request.query.decode()
 	email = user_info['mail']
 	token = user_info['token']
@@ -277,6 +288,9 @@ def display_new_password_form(err=None):
 
 @route('/pw_recovery/new_password', method="POST")
 def new_password_attempt(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	email = request.get_cookie('email', secret=_key)
 	password = request.forms.password
 	password_confirm = request.forms.password_confirm
@@ -321,6 +335,9 @@ def update_user(db, email, password):
 
 @route('/pw_recovery/send_again', method="POST")
 def send_again(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	try:
 		info = json.loads(request.body.read())
 		email = info['email'].strip()

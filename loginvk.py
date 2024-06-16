@@ -5,7 +5,7 @@ from bottle import route, request, response, redirect
 from config import config
 import json
 import urllib.request as urllib2
-from login import do_login, current_user
+from login import do_login, current_user, do_logout
 from passlib.hash import pbkdf2_sha256 as pwhash
 
 import urllib.parse
@@ -18,8 +18,13 @@ client_id = config['vk']['client_id']
 token_url = config['vk']['token_url']
 info_url = config['vk']['info_url']
 
+MODE = config['tournament']['mode']
+
 @route('/login/vk')	
 def login_attempt(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	user = get_user()
 	login = 'vk#' + str(user['id'])
 	password, name, surname, city, school = ('some', None, None, None, None)

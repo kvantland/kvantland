@@ -1,12 +1,17 @@
 from bottle import route
 
 from config import config
+from login import do_logout
 import user
 
 import footer
 
+MODE = config['tournament']['mode']
+
 @route('/policy')
 def display_confidentiality(db):
+	if MODE=='public':
+		do_logout()
 	yield '<!DOCTYPE html>'
 	yield '<html lang="ru" class="map">'
 	yield f'<title>Квантландия</title>'

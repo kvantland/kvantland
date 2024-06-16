@@ -5,7 +5,7 @@ from bottle import route, request, response, redirect
 import nav
 import user
 import sys
-from login import current_user, do_login
+from login import current_user, do_login, do_logout
 import approv
 import hmac
 import email.message
@@ -19,6 +19,8 @@ import urllib.parse
 import json
 
 _key = config['keys']['mail_confirm']
+
+MODE = config['tournament']['mode']
 
 all_info = [['name', 'text', 'Имя'],
 			['surname', 'text', 'Фамилия'],
@@ -145,6 +147,9 @@ def lang_form(score):
 
 @route('/acc')
 def display_pers_acc(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	if current_user(db) == None:
 		redirect('/')
 	try:
@@ -371,6 +376,9 @@ def update_info(user_info, err_dict):
 
 @route('/acc', method="POST")
 def check_new_params(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	user_info = dict()
 
 	for field in all_info:
@@ -603,6 +611,9 @@ def update_email(db, info):
 
 @route('/acc_confirm')
 def check(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	user_info = request.query.decode()
 	email = user_info['email']
 	token = user_info['token']
@@ -618,6 +629,9 @@ def check(db):
 
 @route('/acc/send_again', method="POST")
 def send_again(db):
+	if MODE=='public':
+		do_logout()
+		redirect('/')
 	try:
 		info = json.loads(request.body.read())
 		email = info['email'].strip()
