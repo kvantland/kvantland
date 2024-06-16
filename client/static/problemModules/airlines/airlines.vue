@@ -40,7 +40,7 @@ export default {
                     const [index1, index2] = this.selectedPoints;
                     const point1 = this.points[index1];
                     const point2 = this.points[index2];
-                    if (!this.lineExists(point1, point2) && this.countLinesFromPoint(point1) < 4 && this.countLinesFromPoint(point2) < 4) {
+                    if (!this.lineExists(point1, point2) && point1 != point2 && this.countLinesFromPoint(point1) < 4 && this.countLinesFromPoint(point2) < 4) {
                         this.lines.push({
                             x1: point1.x,
                             y1: point1.y,

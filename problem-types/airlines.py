@@ -33,7 +33,7 @@ def validate(data, answer):
     for node in graph:
         distances = bfs_shortest_path(graph, node)
         for other_node in graph:
-            if distances[other_node] >= data['correct']:
+            if distances[other_node] > data['correct']:
                 return False
     
     return True
