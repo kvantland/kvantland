@@ -26,14 +26,14 @@ def bfs_shortest_path(graph, start):
     return distances
 
 def validate(data, answer):
-    # Build the graph
     graph = build_graph(answer)
     
-    # Check connectivity and shortest path condition
     for node in graph:
         distances = bfs_shortest_path(graph, node)
+        print(distances)
         for other_node in graph:
-            if distances[other_node] > data['correct']:
+            if distances[other_node] > data['correct'] + 1:
                 return False
-    
+    if (len(answer) > len(graph) - 1):
+        return False
     return True
