@@ -2,6 +2,14 @@ import sys
 
 
 def steps(step_num, params, data):
+    def weights_nums_to_letters(array):
+        alphabet = "ABCDEFGHIJ"
+        resp = []
+        for num in array:
+            resp.append(alphabet[num])
+        return resp
+    
+
     print(params, data, sep='\n', file=sys.stderr)
     try:
         if data['weightings_amount'] <= 0:
@@ -29,8 +37,8 @@ def steps(step_num, params, data):
         print('right_weight: ', right_weight, file=sys.stderr)
         if not ('history' in data.keys()):
             data['history'] = []
-        left_str_weights = ', '.join(list(map(str, params['left'])))
-        right_str_weights = ', '.join(list(map(str, params['right'])))
+        left_str_weights = ', '.join(weights_nums_to_letters(params['left']))
+        right_str_weights = ', '.join(weights_nums_to_letters(params['right']))
         if (right_weight > left_weight):
             history_item = f"({left_str_weights}) < ({right_str_weights})"
             data['history'].append(history_item)

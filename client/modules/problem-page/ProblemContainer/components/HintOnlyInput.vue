@@ -1,6 +1,6 @@
 <template>
     <div class="problem_input">
-        <HintButton @getHint="getHint" />
+        <HintButton @getHint="getHint" :hintCost="hintCost" />
     </div>
 </template>
 
@@ -8,6 +8,10 @@
 import HintButton from './components/HintButton.vue';
 
 export default {
+    props: {
+        hintCost: {default: "1 квантик"},
+    },
+    
     components: {
         HintButton,
     },

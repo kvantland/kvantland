@@ -1,7 +1,7 @@
 <template>
-    <div class="plot_area">
-    <svg version="1.1" :width="`${boardWidth + paletteInd + colorCircleRadius * 2 * paletteColumns + paletteColumnInd + (paletteColumns - 1)}`" 
-        :height="`${boardHeight}`" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
+        preserveAspectRatio="xMidYMid meet" 
+        overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g class="board">
             <line class="horizontal" v-for="(line, num) in rectInColumn  + 1" 
                 x1="0" :y1="`${side * num}`" :x2="`${rectInRow * side}`" :y2="`${side * num}`" :stroke-width="lineWidth" />
@@ -11,7 +11,7 @@
                 <rect :class="['field', 'color-' + colors[yInd][xInd]]" v-for="(rect, xInd) in rectInRow" @click="paint(xInd, yInd)"
                     :x="`${xInd * side + rectInd}`" :y="`${yInd * side + rectInd}`" :width="innerSide" :height="innerSide" :key="`rect_${xInd}_${yInd}`"/>
                 <text v-for="(perimeterValue, xInd) in problemParams.start_board[yInd]" :x="`${xInd * side + rectInd + side / 2}`" 
-                    :y="`${yInd * side + rectInd + side / 2}`"> {{ perimeterValue }} </text>
+                    :y="`${yInd * side + rectInd + side / 2}`" dy="0.35em"> {{ perimeterValue }} </text>
             </g>
         </g>
         <g class="palette" :transform="`translate(${boardWidth + paletteInd} ${side / 2})`">
@@ -20,12 +20,11 @@
                 <g v-for="(color, colorNum) in colorsInColumn" @click="chooseColor(colorNum + columnNum * colorsInColumn)" 
                     :transform="`translate(0 ${colorNum * side})`">
                     <circle :class="`color color-${colorNum + columnNum * colorsInColumn}`" cx="0" cy="0" :r="colorCircleRadius"  />
-                    <text v-if="currentColor == colorNum + columnNum * colorsInColumn" x="0" y="0"> ✔️ </text>
+                    <text v-if="currentColor == colorNum + columnNum * colorsInColumn" x="0" y="0" dy="0.35em"> ✔️ </text>
                 </g>
             </g>
         </g>
     </svg>
-    </div>
 </template>
 
 <script>
@@ -79,6 +78,12 @@ export default {
         },
         rectInd() {
             return this.lineWidth / 2
+        },
+        svgHeight() {
+            return this.boardHeight
+        },
+        svgWidth() {
+            return this.boardWidth + this.paletteInd +this.colorCircleRadius * 2 * this.paletteColumns + this.paletteColumnInd * (this.paletteColumns - 1)
         },
     },
     mounted() {

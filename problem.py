@@ -20,7 +20,7 @@ def get_xhr_request(db):
 	resp = {
 		'status': False,
 		'xhr_answer': None,
-    }
+	}
 	try:
 		var_id = json.loads(request.body.read())['variant']
 		params = json.loads(request.body.read())['xhr_params']
@@ -65,6 +65,7 @@ def get_hint(db):
 		(score, ), = db.fetchall()
 		if score >= hint_cost:
 			db.execute('update Kvantland.Student set score=%s where student=%s', (score - hint_cost, user_id, ))
+			db.execute('update Kvantland.AvailableProblem set hint_taken=True where student=%s and variant=%s', (user_id, variant, ))
 			resp['hint'] = hint
 	except:
 		return json.dumps(resp)
@@ -145,7 +146,7 @@ def get_problem_data(db):
 		resp['problem']['answerGiven'] = True
 		resp['problem']['answerStatus'] = is_answer_correct
 		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-		(answer, solution, ), = db.fetchall()
+		(answer, solution, hint_taken, ), = db.fetchall()
 		resp['problem']['answer'] = answer
 		resp['problem']['solution'] = solution
 	
@@ -173,15 +174,21 @@ def get_problem_data(db):
 	resp['problem']['description'] = description
 	resp['problem']['title'] = name
 	if image:
-		resp['problem']['image'] = f'/old_problem-assests/integer_img/{image}'
+		resp['problem']['image'] = f'/old-problem_assets/integer_img/{image}'
 	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 	resp['problem']['type'] = type_
 	if 'correct' in content.keys(): # пользователь не должен знать ответ)
 		del content['correct']
 	print(content, file=sys.stderr)
 	resp['problem']['variantParams'] = content
-	resp['problem']['hint']['status'] = bool(hint)
+
+	db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+	(hint_taken, ), = db.fetchall()
+	print('hint_taken', hint_taken, file=sys.stderr)
+	resp['problem']['hint']['status'] = not(hint_taken)
 	resp['problem']['hint']['cost'] = hint_cost
+	if hint_taken:
+		resp['problem']['hint']['description'] = hint
 	
 	try:
 		typedesc.entry_form()
@@ -276,7 +283,15 @@ def check_user_answer(db):
 	print(answer, file=sys.stderr)
 	is_answer_correct = typedesc.validate(content, answer)
 	
-	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, json.dumps(answer), solution, variant, user_id))
+	try:
+		if isinstance(answer, str):
+			answer_to_str = answer
+		else:
+			answer_to_str = json.dumps(answer)
+	except:
+		answer_to_str = ''
+	
+	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, answer_to_str, solution, variant, user_id))
 	if is_answer_correct:
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))
 		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (variant, user_id, config["tournament"]["version"]))

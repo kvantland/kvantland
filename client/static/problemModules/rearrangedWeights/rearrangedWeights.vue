@@ -1,7 +1,7 @@
 <template>
     <div class="svg_with_buttons">
-    <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
-            :width="svgWidth" :height="svgHeight"
+    <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
+            preserveAspectRatio="xMidYMid meet" 
             overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <Scales @svgHeight="getSvgHeight" @svgWidth="getSvgWidth" @moveFromCup="moveFromCup" :scale="0.8" @stopMove="stopWeight"
             :leftCupObjects="cupWeights.left" :rightCupObjects="cupWeights.right" :moveTo="newSide" />
@@ -9,7 +9,7 @@
             <g class="drag_container">
                 <g class="container_header">
                     <rect class="container_header" :width="dragAreaWidth" :height="containerHeaderHeight" x="0" y="0" />
-                    <text class="container_title" :x="dragAreaWidth / 2" :y="containerHeaderHeight / 2"> Зона для перетаскивания </text>
+                    <text class="container_title" :x="dragAreaWidth / 2" :y="containerHeaderHeight / 2" dy="0.35em"> Зона для перетаскивания </text>
                 </g>
                 <g class="content" :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
                     <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
@@ -26,7 +26,7 @@
                                 </g>
                                 <g class="board" :transform="`translate(0 ${weightHeight})`">
                                     <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
-                                    <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
+                                    <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
                                 </g>
                             </g>
                         </g>
@@ -36,7 +36,7 @@
             <g class="answer_container" :transform="`translate(${containersGap + dragAreaWidth} 0)`" ref="ans_container">
                 <g class="container_header">
                     <rect class="container_header" x="0" y="0" :width="answerAreaWidth" :height="containerHeaderHeight" />
-                    <text class="container_title" :x="answerAreaWidth / 2" :y="containerHeaderHeight / 2"> Ответ </text>
+                    <text class="container_title" :x="answerAreaWidth / 2" :y="containerHeaderHeight / 2" dy="0.35em"> Ответ </text>
                 </g>
                 <g :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
                     <rect class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" fill="lightgrey" />
@@ -75,7 +75,8 @@ export default {
     },
     data() {
         return {
-            svgY: 0,
+            cursorX: 0,
+            cursorY: 0,
             svgHeight: 0,
             svgWidth: 0,
             scalesHeight: 0,
@@ -85,7 +86,7 @@ export default {
 
             names: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
             boardNames: [101, 102, 103, 104, 105, 106, 107, 108, 109, 110],
-            nameYPad: 10,
+            nameYPad: 17,
             boardHeight: 30,
             dragAreaMarginTop: 30,
             inRow: 5,
@@ -150,12 +151,11 @@ export default {
         },
     },
     methods: {
-        updateSvgCoordinates() {
+        convertDOMtoSVG(x, y) {
             try {
-                const svgRect = this.$refs['svg'].getBoundingClientRect()
-                this.svgX = svgRect.left
-                this.svgY = svgRect.top
-                return true
+                const pt = new DOMPoint(x, y)
+	            const svgP = pt.matrixTransform(this.$refs['svg'].getScreenCTM().inverse())
+                return {x: svgP.x, y: svgP.y}
             }
             catch(e) {
                 return false
@@ -169,10 +169,8 @@ export default {
                 }
                 const leftCupRect = document.querySelector('.left_cup').getBoundingClientRect()
                 const rightCupRect = document.querySelector('.right_cup').getBoundingClientRect()
-                cupCoordinates.left.x = leftCupRect.left + leftCupRect.width / 2 - this.svgX
-                cupCoordinates.left.y = leftCupRect.top + leftCupRect.height / 2 - this.svgY
-                cupCoordinates.right.x = rightCupRect.left + rightCupRect.width / 2 - this.svgX
-                cupCoordinates.right.y = rightCupRect.top + rightCupRect.height / 2 - this.svgY
+                cupCoordinates.left = this.convertDOMtoSVG(leftCupRect.left + leftCupRect.width / 2, leftCupRect.top + leftCupRect.height / 2)
+                cupCoordinates.right = this.convertDOMtoSVG(rightCupRect.left + rightCupRect.width / 2, rightCupRect.top + rightCupRect.height / 2)
                 this.cupCoordinates = cupCoordinates
                 return true
             }
@@ -181,8 +179,8 @@ export default {
             }
         },
         inAllowedArea() { // if target object in allowed aarea
-            const targetX = this.targetWeight.x + this.svgX
-            const targetY = this.targetWeight.y + this.svgY
+            const targetX = window.event.clientX
+            const targetY = window.event.clientY
             console.log(targetX, targetY)
             if (targetX < 0 || targetX > window.innerWidth)
                 return false
@@ -190,7 +188,9 @@ export default {
                 return false
             return true
         },
-        autoscroll(targetX, targetY) {
+        autoscroll() {
+            const targetX = window.event.clientX
+            const targetY = window.event.clientY
             const xDiff = 100
             const yDiff = 100
             let [scrollX, scrollY] = [0, 0]
@@ -247,22 +247,22 @@ export default {
             this.$set(this.cupWeights, 'right', [])
         },
         inRect(x, y, rect){
-            if (x + this.svgX > rect.right || x + this.svgX < rect.left) {
+            if (x > rect.right || x < rect.left) {
                 return false
             }
-            if (y + this.svgY > rect.bottom || y + this.svgY < rect.top) {
+            if (y > rect.bottom || y < rect.top) {
                 return false
             }
             return true
         },
         moveAt(x, y) {
-            const svgUpdateStatus = this.updateSvgCoordinates()
+            const newCursorCoordinates = this.convertDOMtoSVG(x, y)
             const cupUpdateStatus = this.updateCupCoordinates()
-            if (!svgUpdateStatus || !cupUpdateStatus)
+            if (!newCursorCoordinates || !cupUpdateStatus)
                 return
-            this.autoscroll(x, y)
-            this.$set(this.targetWeight, 'x', x - this.svgX)
-            this.$set(this.targetWeight, 'y', y - this.svgY)
+            this.autoscroll()
+            this.$set(this.targetWeight, 'x', newCursorCoordinates.x)
+            this.$set(this.targetWeight, 'y', newCursorCoordinates.y)
             if (!this.inAllowedArea()) {
                 this.endDrag()
             }
@@ -318,7 +318,7 @@ export default {
                 }
             }
             const AnsContainerRect = this.$refs['ans_container'].getBoundingClientRect()
-            if (this.inRect(this.targetWeight.x, this.targetWeight.y, AnsContainerRect)) {
+            if (this.inRect(window.event.x, window.event.y, AnsContainerRect)) {
                 console.log('drop to ans area')
                 this.dropToAnsArea()
             }

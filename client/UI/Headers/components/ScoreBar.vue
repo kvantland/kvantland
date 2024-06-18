@@ -1,20 +1,9 @@
 <template>
     <div class="score_bar">
-        <p> {{ login }} </p>
-        <p> Счёт: {{ score }} </p>
+        <p> {{ $auth.user.name }} </p>
+        <p> Счёт: {{ $auth.user.score }} </p>
     </div>
 </template>
-
-<script>
-    export default {
-        data({$auth}) {
-            return {
-                login: $auth.user.name,
-                score: $auth.user.score
-            }
-        }
-    }
-</script>
 
 <style scoped>
 .score_bar {

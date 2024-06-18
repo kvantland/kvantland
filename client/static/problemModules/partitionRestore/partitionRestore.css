@@ -1,3 +1,7 @@
+svg {
+    width: 60%;
+}
+
 line {
     stroke: black;
 	stroke-linecap: round;
@@ -10,7 +14,6 @@ line {
 
 text {
     font-size: 40px;
-    dominant-baseline: central;
     text-anchor: middle;
     pointer-events: none;
 }

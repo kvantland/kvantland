@@ -87,7 +87,10 @@ export default {
 
     methods: {
         updateHint(hint) {
-            this.hint.description = hint
+            console.log(hint)
+            this.$set(this.hint, 'description', hint)
+            this.$set(this.hint, 'status', false)
+            this.$auth.fetchUser()
         },
         async updateProblemStatus() {
             console.log('update_req')

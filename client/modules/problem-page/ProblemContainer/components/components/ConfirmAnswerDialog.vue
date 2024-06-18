@@ -1,13 +1,13 @@
 <template>
-    <div class="shadow">
-        <div class="confirm_notification">
+    <DialogShadowScreen>
+        <div class="confirm_notification dialog">
             <p class="confirm_text">Готовы отправить ответ? <br/>Изменить его позже будет нельзя!</p>
             <div class="button_area">
                 <button @click="sendAnswer"> Да </button>
                 <button @click="hideConfirmDialog"> Нет </button>
             </div>
         </div>
-    </div>
+    </DialogShadowScreen>
 </template>
 
 <script>

@@ -1,5 +1,10 @@
 <template>
-    <Safe :slotsAmount="3" :startValues="startValues" @changeConfig="changeConfig"/>
+    <div class="inRow">
+        <img class="diplomat" src="/new-problem_assets/diplomat.png" />
+        <div class="lockBorder">
+            <Safe :slotsAmount="3" :startValues="startValues" @changeConfig="changeConfig" style="width: 95%; height: 95%;"/>
+        </div>
+    </div>
 </template>
 
 <script>

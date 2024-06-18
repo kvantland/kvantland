@@ -8,7 +8,7 @@
 
 <script>
 import AnswerButton from './AnswerButton.vue'
-import ConfirmDialog from './ConfirmDialog.vue'
+import ConfirmDialog from './ConfirmAnswerDialog.vue'
 
 export default {
     components: {

@@ -53,6 +53,7 @@ def get_user_info(db):
 			'school': '',
 			'clas': '',
 			'town': '',
+			'score': '',
 		}
 	}
 	if user:

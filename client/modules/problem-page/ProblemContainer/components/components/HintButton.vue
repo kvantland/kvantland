@@ -1,19 +1,39 @@
 <template>
-    <button class="hint_button" :title="hintTitle" @click="getHint"> 
-        <img class="hint_icon" src="/icons/hint_icon.svg" />
-        <p> Подсказка </p>
-    </button>
+    <div>
+        <ConfirmHintDialog v-if="dialogMode" @hideHintConfirmDialog="hideHintConfirmDialog" @getHint="getHint" :hintCost="hintCost" />
+        <button class="hint_button" :title="hintTitle" @click="showConfirmHintDialog"> 
+            <img class="hint_icon" src="/icons/hint_icon.svg" />
+            <p> Подсказка </p>
+        </button>
+    </div>
 </template>
 
 <script>
+import ConfirmHintDialog from './ConfirmHintDialog'
+
 export default {
+    props: {
+        hintCost: {default: "1 квантик"},
+    },
+
+    components: {
+        ConfirmHintDialog,
+    },
+
     data() {
         return {
             hintTitle: 'Получить подсказку (стоимость: 1)',
+            dialogMode: false,
         }
     },
     
     methods: {
+        showConfirmHintDialog() {
+            this.dialogMode = true
+        },
+        hideHintConfirmDialog() {
+            this.dialogMode = false
+        },
         getHint() {
             this.$emit('getHint')
         }
@@ -36,6 +56,7 @@ export default {
     font-weight: 600;
     text-align: center;
     justify-self: flex-end;
+    cursor: pointer;
 }
 
 .hint_icon {
