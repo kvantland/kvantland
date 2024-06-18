@@ -64,9 +64,8 @@ export default {
         },
         handleCircleClick(index) {
             this.selectedPoints.push(index);
-            if (this.selectedPoints.length === 1) {
-                this.$set(this.points[index], 'color', 'green');
-            } else {
+            this.$set(this.points[index], 'color', 'green');
+            if (this.selectedPoints.length === 2) {
                 const [index1, index2] = this.selectedPoints;
                 const point1 = index1;
                 const point2 = index2;
@@ -84,17 +83,16 @@ export default {
         },
         lineExists(point1, point2) {
             return this.lines.some(line => 
-                (line.point1 === index1 && line.point2 === index2) ||
-                (line.point1 === index2 && line.point2 === index1)
+                (line.point1 === point1 && line.point2 === point2) ||
+                (line.point1 === point2 && line.point2 === point1)
             );
 
         },
-        countLinesFromPoint(point) {
+        countLinesFromPoint(pointIndex) {
             return this.lines.filter(line => line.point1 === pointIndex || line.point2 === pointIndex).length;
         },
     },
     created() {
-        // Initialize points when the component is created
         this.points = this.initialPoints();
     },
 }
