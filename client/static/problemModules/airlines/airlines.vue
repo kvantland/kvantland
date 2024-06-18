@@ -5,9 +5,10 @@
         <line v-for="(line, index) in lines" :key="`line_${index}`"
                 :x1="points[line.point1].x" :y1="points[line.point1].y"
                 :x2="points[line.point2].x" :y2="points[line.point2].y"
-                stroke="black" />
+                stroke="black" stroke-width="20px" class="lines"/>
         <g v-for="(point, index) in points" :key="`city_${index}`" :class="`city_${index}`" :transform="`translate(${point.x} ${point.y})`" @click="handleCircleClick(index)">
-            <circle :r="point.r" :fill="point.color" class="circle"/>
+            <image :href="`/problem_assets/airlines/city${index % 3}.png`" x="-40px" y ="-40px" width="80px"/>
+            <circle :r="point.r" :color="point.color" class="circles"/>
         </g>
     </svg>
     </div>
@@ -30,8 +31,7 @@ export default {
             svgHeight: 400,
             center: { x: 200, y: 200 }, // Center of the main circle
             mainCircleRadius: 150,
-            numberOfCircles: 10,
-            radius: 10,
+            radius: 33,
             selectedPoints: [],
             lines: [],
             points: this.initialPoints(),
