@@ -5,6 +5,7 @@ from bottle import route, HTTPError, redirect
 
 from config import config
 from login import do_logout
+from problem import import_module
 import nav
 import user
 import footer
@@ -82,7 +83,7 @@ def show_town(db, town):
 		else:
 			db.execute('select null, position, points, name, null from Kvantland.Problem where town = %s', (town,))
 	elif MODE == 'public':
-		db.execute('select variant, position, points, name, answer_true from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and tournament = %s', (town, config["tournament"]["version"]))
+		db.execute('select variant, position, points, name, null from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and tournament = %s', (town, config["tournament"]["version"]))
 	for variant, position, points, name, ans_true in db.fetchall():
 		try:
 			x, y = position
@@ -99,10 +100,21 @@ def show_town(db, town):
 			link = f'/problem/{variant}/' if user_id is not None else f'/login?path=/town/{town}/'
 		elif MODE == 'public':
 			link = f'/problem/{variant}/'
-		yield f'<a xlink:href="{link}" class="level level_{status}" transform="translate({x} {y})"><title>{name}</title>'
-		yield f'<circle class="level-icon" r="0.65em" />'
-		yield f'<text class="level-value">{points}</text>'
-		yield f'</a>'
+		db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Type_ using (type_) where name=%s', (name, ))
+		(type_, ), = db.fetchall()
+		typedesc = import_module(f'problem-types.{type_}')
+		available = True
+		if MODE == 'public':
+			try:
+				typedesc.steps
+				available = False
+			except AttributeError:
+				available = True
+		if available:
+			yield f'<a xlink:href="{link}" class="level level_{status}" transform="translate({x} {y})"><title>{name}</title>'
+			yield f'<circle class="level-icon" r="0.65em" />'
+			yield f'<text class="level-value">{points}</text>'
+			yield f'</a>'
 	yield '</svg>'
 	yield '</div>'
 	yield from footer.display_basement()
