@@ -146,7 +146,7 @@ def get_problem_data(db):
 		resp['problem']['answerGiven'] = True
 		resp['problem']['answerStatus'] = is_answer_correct
 		db.execute('select answer, solution from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-		(answer, solution, hint_taken, ), = db.fetchall()
+		(answer, solution, ), = db.fetchall()
 		resp['problem']['answer'] = answer
 		resp['problem']['solution'] = solution
 	
