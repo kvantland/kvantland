@@ -29,5 +29,6 @@ export default {
     display: inline-flex;
     align-self: stretch;
     justify-content: flex-end;
+    align-items: center;
 }
 </style>

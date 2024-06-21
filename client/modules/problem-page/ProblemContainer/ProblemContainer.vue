@@ -217,7 +217,7 @@ export default {
 
 .problem_img{
     max-height: 512px;
-    width: 100%;
+    width: 60%;
     display: block;
     margin-left: auto;
     margin-right: auto;

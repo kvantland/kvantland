@@ -36,5 +36,6 @@ export default {
     display: inline-flex;
     align-self: stretch;
     justify-content: space-between;
+    align-items: center;
 }
 </style>
