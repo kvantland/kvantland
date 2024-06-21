@@ -83,7 +83,7 @@ def show_town(db, town):
 		else:
 			db.execute('select null, position, points, name, null from Kvantland.Problem where town = %s', (town,))
 	elif MODE == 'public':
-		db.execute('select variant, position, points, name, null from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and tournament = %s', (town, config["tournament"]["version"]))
+		db.execute('select variant, position, points, name, null from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = %s and tournament = %s and student=1', (town, config["tournament"]["version"]))
 	for variant, position, points, name, ans_true in db.fetchall():
 		try:
 			x, y = position
