@@ -385,6 +385,18 @@ def Golovolomsk4(cur):
 			'componentType': "magicNectar",
 		}
 		variants_list = add_variant_to_list(variants_list, "Волшебный нектар", desc, json.dumps(cont))
+		
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'rooks_on_board', "Ладьи на доске")
+	for rooks_amount in [11, 13, 17, 17]:
+		desc = f"""Расставьте на шахматной доске {rooks_amount} ладей так, чтобы все они 
+				били одинаковое число других ладей (ладьи бьют насквозь, то есть 
+				если три ладьи стоят в ряд, то крайние тоже бьют друг друга)."""
+		cont = {
+			'rooks_amount': rooks_amount,
+			'inputType': "InteractiveTypeInput",
+			'componentType': "rooksOnBoard",
+		}
+		variants_list = add_variant_to_list(variants_list, "Ладьи на доске", desc, json.dumps(cont))
 
 	add_list(problems_list, variants_list)
 
