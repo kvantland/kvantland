@@ -26,14 +26,17 @@ def bfs_shortest_path(graph, start):
     return distances
 
 def validate(data, answer):
-    graph = build_graph(answer)
-    
-    for node in graph:
-        distances = bfs_shortest_path(graph, node)
-        print(distances)
-        for other_node in graph:
-            if distances[other_node] > data['correct'] + 1:
+    try:
+        graph = build_graph(answer)
+        
+        for node in graph:
+            if (len(node) > 4)
                 return False
-    if (len(answer) > len(graph) - 1):
-        return False
-    return True
+            distances = bfs_shortest_path(graph, node)
+            print(distances)
+            for other_node in graph:
+                if distances[other_node] > data['transfers'] + 1:
+                    return False
+        if (len(answer) > len(graph) - 1): #Check if graph is tree
+            return False
+        return True

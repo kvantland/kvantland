@@ -1,17 +1,25 @@
 <template>
-    <div class="plot_area">
-    <svg version="1.1" :width="svgWidth" 
-        :height="svgHeight" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" preserveAspectRatio="xMidYMid meet"  overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+            <clipPath id="city_border">
+                <path d="
+                    M -30 0
+                    a 30 30 0 0 0 30 30 
+                    a 30 30 0 0 0 30 -30
+                    a 30 30 0 0 0 -30 -30
+                    a 30 30 0 0 0 -30 30
+                    z" />
+            </clipPath>
+        </defs>
         <line v-for="(line, index) in lines" :key="`line_${index}`"
                 :x1="points[line.point1].x" :y1="points[line.point1].y"
                 :x2="points[line.point2].x" :y2="points[line.point2].y"
                 stroke="black" stroke-width="20px" class="lines"/>
-        <g v-for="(point, index) in points" :key="`city_${index}`" :class="`city_${index}`" :transform="`translate(${point.x} ${point.y})`" @click="handleCircleClick(index)">
-            <image :href="`/problem_assets/airlines/city${index % 3}.png`" :x="cityImgX" :y ="cityImgY" :width="cityImgWidth"/>
-            <circle :r="point.r" :color="point.color" class="circles"/>
+        <g v-for="(point, index) in points" :key="`city_${index}`" :class="`city city_${index}`" :transform="`translate(${point.x} ${point.y})`" @click="handleCircleClick(index)">
+            <image :href="`/new-problem_assets/airlines/city${index % 3}.png`" :x="cityImgX" :y ="cityImgY" :width="cityImgWidth" clip-path="url(#city_border)"/>
+            <circle :r="point.r" :color="selectedPoints.includes(index) ? 'green': 'black'" class="circles"/>
         </g>
     </svg>
-    </div>
 </template>
 
 <script>
@@ -22,49 +30,38 @@ export default {
         event: 'updateAnswer'
     },
     data() {
-        const amount = this.problemParams['amount']
-        let ans = []
         return {
-            amount: amount,
-            side: 80,
             svgWidth: 400,
             svgHeight: 400,
             cityImgX: -40,
             cityImgY: -40,
             cityImgWidth: 80,
-            center: { x: 200, y: 200 }, // Center of the main circle
+            minCircleCenter: { x: 200, y: 200 }, 
             mainCircleRadius: 150,
-            radius: 33,
+            radius: 30,
             selectedPoints: [],
             lines: [],
-            points: this.initialPoints(),
-            ans: ans,
+            ans: [],
         }
     },
     computed: {
-        computedPoints() {
+        points() {
             const angleIncrement = (2 * Math.PI) / this.amount;
             let points = []
             for (let i = 0; i < this.amount; i++) {
                 const angle = i * angleIncrement;
-                const x = this.center.x + this.mainCircleRadius * Math.cos(angle);
-                const y = this.center.y + this.mainCircleRadius * Math.sin(angle);
+                const x = this.minCircleCenter.x + this.mainCircleRadius * Math.cos(angle);
+                const y = this.minCircleCenter.y + this.mainCircleRadius * Math.sin(angle);
                 const r = this.radius;
-                const color = "black"
-                points.push({ x, y, r, color});
+                points.push({ x, y, r});
             }
             return points;
         },
-    },
-    watch: {
-        computedPoints(newPoints) {
-            this.points = newPoints;
+        amount() {
+            return this.problemParams['amount'];
         }
     },
     methods: {
-        initialPoints() {
-            return this.computedPoints;
-        },
         handleCircleClick(index) {
             this.selectedPoints.push(index);
             this.$set(this.points[index], 'color', 'green');
@@ -82,8 +79,6 @@ export default {
                     this.$emit('updateAnswer', this.ans)
                     //console.log(this.ans)
                 }
-                this.$set(this.points[index1], 'color', 'black');
-                this.$set(this.points[index2], 'color', 'black');
                 this.selectedPoints = [];
             }
         },
@@ -97,9 +92,6 @@ export default {
         countLinesFromPoint(pointIndex) {
             return this.lines.filter(line => line.point1 === pointIndex || line.point2 === pointIndex).length;
         },
-    },
-    created() {
-        this.points = this.initialPoints();
     },
 }
 </script>
