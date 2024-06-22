@@ -1,6 +1,7 @@
 <template>
     <chessProblemLayout :dragFigures="dragFigures" :boardConfiguration="boardConfiguration" 
-        @updateConfig="updateConfig" style="width: 57%"/>
+        @updateConfig="updateConfig"
+        @updateFiguresAmount="updateFiguresAmount" style="width: 57%"/>
 </template>
 
 <script>
@@ -16,6 +17,15 @@ export default {
         updateConfig(newConfig) {
             console.log(newConfig)
             this.boardConfiguration = newConfig
+        },
+        updateFiguresAmount(newValue) {
+            console.log(newValue)
+            if (this.dragFigures[newValue.index] === 'inf') {
+                return
+            }
+            else {
+                this.$set(this.dragFigures[newValue.index], 'amount', newValue.amount)
+            }
         }
     }
 }

@@ -23,16 +23,16 @@
             <g v-for="(dragFigure, dragFigureIndex) in dragFigures" 
                 :transform="`translate(0 ${boardItemSide * dragFigureIndex})`">
                 <template v-if="dragFigure.amount != 'inf'">
-                    <image class="dragFigure active" :width="dragFigureWidth" 
-                        @touchstart="startDrag(dragFigure.type, $event)" 
-                        @mousedown="startDrag(dragFigure.type, $event)"
+                    <image :class="[dragFigure.amount > 0 ? 'active' : 'passive', 'dragFigure']" :width="dragFigureWidth" 
+                        @touchstart="moveFromDragZone(dragFigure.type, dragFigureIndex, $event)" 
+                        @mousedown="moveFromDragZone(dragFigure.type, dragFigureIndex, $event)"
                         :height="dragFigureHeight" x="0" y="0" :href="`/problem_assets/chess/${dragFigure.type}.png`"/>
                     <text v-if="dragFigure.amount != 'inf'" style="font-size: 11px; font-weight: 600;" :transform="`translate(0 ${dragFigureHeight + dragFigureTextHeight})`"> Осталось: {{ dragFigure.amount }} </text>
                 </template>
                 <image v-else class="dragFigure active" :width="dragFigureWidth" 
                     :height="dragFigureHeight" :x="figureMarginTop" 
-                    @touchstart="startDrag(dragFigure.type, $event)" 
-                    @mousedown="startDrag(dragFigure.type, $event)"
+                    @touchstart="moveFromDragZone(dragFigure.type, dragFigureIndex, $event)" 
+                    @mousedown="moveFromDragZone(dragFigure.type, dragFigureIndex, $event)"
                     :y="figureMarginTop" :href="`/problem_assets/chess/${dragFigure.type}.png`" />
             </g>
         </g>
@@ -201,6 +201,7 @@ export default {
                 return
             }
             const boardItems = document.querySelectorAll('.item')
+            let backToDragZone = true
             for (let boardItem of boardItems) {
                 const itemRect = boardItem.getBoundingClientRect()
                 if (this.inRect(window.event.x, window.event.y, itemRect)) {
@@ -212,11 +213,31 @@ export default {
                     }
                     currentConfig[rowIndex][columnIndex].type = this.target.type
                     currentConfig[rowIndex][columnIndex].moveStatus = 'active'
+                    backToDragZone = false
                     this.$emit('updateConfig', currentConfig)
                     break;
                 }
             }
+            if (backToDragZone) {
+                console.log('here!')
+                for(let index = 0; index < this.dragFigures.length; index++) {
+                    if (this.dragFigures[index].type === this.target.type) {
+                        this.$emit('updateFiguresAmount', {index: index, amount: this.dragFigures[index].amount + 1})
+                    }
+                }
+            }
             this.dragMode = false
+        },
+        moveFromDragZone(type, index, event) {
+            console.log(index, this.dragFigures[index])
+            if (this.dragFigures[index].amount <= 0) {
+                return
+            }
+            else {
+                console.log('update amount')
+                this.$emit('updateFiguresAmount', {index: index, amount: this.dragFigures[index].amount - 1})
+                this.startDrag(type, event)
+            }
         }
     },
     mounted() {
