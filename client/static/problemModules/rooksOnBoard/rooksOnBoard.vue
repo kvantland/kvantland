@@ -7,6 +7,10 @@
 <script>
 export default {
     props: ['problemParams'],
+    model: {
+        prop: 'answer',
+        event: 'updateAnswer'
+    },
     data() {
         return {
             boardConfiguration: 'empty',
@@ -17,6 +21,7 @@ export default {
         updateConfig(newConfig) {
             console.log(newConfig)
             this.boardConfiguration = newConfig
+            this.$emit('updateAnswer', newConfig)
         },
         updateFiguresAmount(newValue) {
             console.log(newValue)
