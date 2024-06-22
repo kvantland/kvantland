@@ -1,4 +1,4 @@
-.weight {
+.boy {
     cursor: grab;
 }
 
@@ -51,48 +51,4 @@ text.boardName {
     align-items: stretch;
     font-size: max(14px, 1.5vw);
     font-family: Montserrat;
-}
-
-.weight_button {
-    border-radius: 5px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    font: inherit;
-    cursor: pointer;
-}
-
-.clear_button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    font: inherit;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.remaining_weightings {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 30px 10px;
-    font: inherit;
-    border-radius: 8px;
-    background-color: white;
-    border: 1px black solid;
-}
-
-.history {
-    display: inline-flex;
-    flex-direction: column;
-    padding: 20px 20px;
-    font-size: 20px;
-    gap: 20px;
-    background-color: white;
-    border: 1px black solid;
-    border-radius: 8px;
-    justify-content: center;
 }

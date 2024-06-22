@@ -5,20 +5,19 @@
             <g class="drag_container">
                 <g class="content" :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
                     <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
-                    <g class="rows" :transform="`translate(0 ${weightGap})`">
-                        <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${weightGap} ${(weightGap + weightWidth) * rowNum})`">
-                            <g v-for="(weight, weightNum) in inRow" 
-                                :transform="`translate(${weightCoordinates[weightNum + rowNum * inRow].x} ${weightCoordinates[weightNum + rowNum * inRow].y})`">
-                                <g v-if="startAreaWeights[weightNum + rowNum * inRow]" 
-                                @touchstart="moveFromStartArea(weightNum + rowNum * inRow, $event.touches[0])" 
-                                @mousedown="moveFromStartArea(weightNum + rowNum * inRow, $event)"
-                                :class="`weight weight_${weightNum + rowNum * inRow}`">
-                                    <image x="0" y="0" :height="weightHeight" :width="weightWidth" href="/icons/weight.svg" />
-                                    <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
-                                </g>
-                                <g class="board" :transform="`translate(0 ${weightHeight})`">
-                                    <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
-                                    <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
+                    <g class="rows" :transform="`translate(0 ${boyGap})`">
+                        <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${boyGap} ${(boyGap + boyWidth) * rowNum})`">
+                            <g v-for="(boy, boyNum) in inRow" 
+                                :transform="`translate(${boyCoordinates[boyNum + rowNum * inRow].x} ${boyCoordinates[boyNum + rowNum * inRow].y})`">
+                                <g v-if="startAreaBoys[boyNum + rowNum * inRow]" 
+                                @touchstart="moveFromStartArea(boyNum + rowNum * inRow, $event.touches[0])" 
+                                @mousedown="moveFromStartArea(boyNum + rowNum * inRow, $event)"
+                                :class="`boy boy_${boyNum + rowNum * inRow}`">
+                                    <image x="0" y="0" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${boyNum + rowNum * inRow + 1}.png`" />
+                                    <g class="board" :transform="`translate(0 ${boyHeight})`">
+                                        <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                                        <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[boyNum + rowNum * inRow] }} </text>
+                                    </g>
                                 </g>
                             </g>
                         </g>
@@ -28,22 +27,25 @@
             <g class="answer_container" :transform="`translate(${containersGap + dragAreaWidth} 0)`" ref="ans_container">
                 <g :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom })`">
                     <rect class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" fill="lightgrey" />
-                    <g :transform="`translate(${weightWidth / 2 + weightGap} ${weightHeight / 2 + weightGap})`">
-                        <g class="weight" v-for="(weight, weightNum) in answerAreaWeights" @mousedown="moveFromAnsArea(weight)" @touchstart="moveFromAnsArea(weight)"
-                            :transform="`translate(0 ${(weightGap + weightHeight) * weightNum})`" v-html="weight.html" />
+                    <g :transform="`translate(${boyWidth / 2 + boyGap} ${boyHeight / 2 + boyGap})`">
+                        <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
+                            :transform="`translate(0 ${(boyGap + boyHeight) * boyNum})`" v-html="boy.html" />
                     </g>
                 </g>
             </g>
-        <g  v-if="dragMode" class="choiced" :transform="`translate(${targetWeight.x} ${targetWeight.y})`" ref="choiced">
-            <image :x="-weightWidth / 2" :y="-weightHeight / 2" :height="weightHeight" :width="weightWidth" href="/new-problem_assets/weight.svg" />
-            <text class="name" x="0" :y="nameYPad"> {{ names[targetWeight.index] }} </text>
+        <g  v-if="dragMode" class="choiced" :transform="`translate(${targetBoy.x} ${targetBoy.y})`" ref="choiced">           
+            <image :x="-boyWidth / 2" :y="-boyHeight / 2" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${targetBoy.index+1}.png`" />
+            <g class="board" :transform="`translate(${-boyWidth / 2} ${boyHeight / 2})`">
+                <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[targetBoy.index] }} </text>
+            </g>
         </g>
     </svg>
 </template>
 
 <script>
 export default {
-    props: ['problemParams', 'xhrData', 'newXhr'],
+    props: ['problemParams'],
     model: {
         prop: 'answer',
         event: 'updateAnswer'
@@ -52,7 +54,7 @@ export default {
         return {
             cursorX: 0,
             cursorY: 0,
-            weightCoordinates: [], //not important, declared in methods
+            boyCoordinates: [], 
             boardNames: ['Алёша', 'Боря', 'Вася', 'Гриша'],
             names: [1, 2, 3, 4],
             nameYPad: 17,
@@ -60,18 +62,17 @@ export default {
             dragAreaMarginTop: 30,
             inRow: 2,
             rows: 2,
-            weightGap: 15,
-            weightHeight: 65,
-            weightWidth: 65,
+            boyGap: 15,
+            boyHeight: 65,
+            boyWidth: 65,
             containerHeaderHeight: 30,
             containerHeaderMarginBottom: 5,
-            containersGap: 20, //distance between containers in svg
-            dropAllowDistance: 70, //svg distance
-            targetWeight: {x: 0, y:0, index: undefined}, //current dragging object
+            containersGap: 20,
+            dropAllowDistance: 70,
+            targetBoy: {x: 0, y:0, index: undefined},
 
-            startAreaWeights: {},   
-            answerAreaWeights: [],
-            cupWeights: {'left': [], 'right': []},
+            startAreaBoys: {},   
+            answerAreaBoys: [],
 
             newSide: 'equal',
             weightMode: false,
@@ -80,7 +81,7 @@ export default {
     },
     computed: {
         boardWidth() {
-            return this.weightWidth
+            return this.boyWidth
         },
         weightingHistory() {
             if (!this.problemParams.history)
@@ -88,16 +89,16 @@ export default {
             return this.problemParams.history
         },
         dragAreaWidth() {
-            return this.inRow * (this.weightWidth + this.weightGap) + this.weightGap
+            return this.inRow * (this.boyWidth + this.boyGap) + this.boyGap
         },
         dragAreaHeight() {
-            return this.rows * (this.weightHeight + this.weightGap + this.boardHeight) + this.weightGap
+            return this.rows * (this.boyHeight + this.boyGap + this.boardHeight) + this.boyGap
         },
         answerAreaWidth() {
-            return this.weightGap * 2 + this.weightWidth
+            return this.boyGap * 2 + this.boyWidth
         },
         answerAreaHeight(){
-            return this.weightGap * 3 + this.weightWidth * 2
+            return this.boyGap * 3 + this.boyWidth * 2
         },
         containersAreaWidth() {
             return this.dragAreaWidth + this.answerAreaWidth + this.containersGap
@@ -168,8 +169,8 @@ export default {
             if (!newCursorCoordinates)
                 return
             this.autoscroll()
-            this.$set(this.targetWeight, 'x', newCursorCoordinates.x)
-            this.$set(this.targetWeight, 'y', newCursorCoordinates.y)
+            this.$set(this.targetBoy, 'x', newCursorCoordinates.x)
+            this.$set(this.targetBoy, 'y', newCursorCoordinates.y)
             if (!this.inAllowedArea()) {
                 this.endDrag()
             }
@@ -186,14 +187,14 @@ export default {
                 y = event.clientY
             }
             this.dragMode = true
-            this.$set(this.targetWeight, 'index', index)
+            this.$set(this.targetBoy, 'index', index)
             this.moveAt(x, y)
         },
         drag(event) {
             if (!this.dragMode) {
                 return
             }
-            if (this.targetWeight.index == undefined)
+            if (this.targetBoy.index == undefined)
                 return
             let x, y
             if (event.touches) {
@@ -223,54 +224,51 @@ export default {
             this.dragMode = false
         },
         dropToAnsArea() {
-            if (this.answerAreaWeights.length >= 2) {
-                return
-            }
-            let newAnswerAreaWeights = JSON.parse(JSON.stringify(this.answerAreaWeights))
-            newAnswerAreaWeights.push({
-                index: this.targetWeight.index,
+            let newanswerAreaBoys = JSON.parse(JSON.stringify(this.answerAreaBoys))
+            newanswerAreaBoys.push({
+                index: this.targetBoy.index,
                 html: this.$refs.choiced.innerHTML
             })
-            console.log(newAnswerAreaWeights)
-            this.answerAreaWeights = newAnswerAreaWeights
-            let newAnswerAreaWeightsIndex = []
-            for (const weight of newAnswerAreaWeights) {
-                newAnswerAreaWeightsIndex.push(weight.index)
+            console.log(newanswerAreaBoys)
+            this.answerAreaBoys = newanswerAreaBoys
+            let newanswerAreaBoysIndex = []
+            for (const boy of newanswerAreaBoys) {
+                newanswerAreaBoysIndex.push(boy.index)
             }
-            this.$emit('updateAnswer', newAnswerAreaWeightsIndex)
+            this.$emit('updateAnswer', newanswerAreaBoysIndex)
         },
         backToStartArea() {
-            const dragIndex = this.targetWeight.index
-            this.startAreaWeights[dragIndex] = true
+            const dragIndex = this.targetBoy.index
+            this.startAreaBoys[dragIndex] = true
         },
         moveFromStartArea(index, event) {
-            this.$set(this.startAreaWeights, index, false)
+            this.$set(this.startAreaBoys, index, false)
             this.startDrag(index, event)
         },
-        moveFromAnsArea(weight) {
-            console.log(weight)
-            let newAnswerAreaWeights = []
-            for (const answerWeight of this.answerAreaWeights) {
-                console.log(answerWeight.index, weight.index)
-                if (answerWeight.index != weight.index) {
-                    newAnswerAreaWeights.push(answerWeight)
+        moveFromAnsArea(boy) {
+            console.log(boy)
+            let newanswerAreaBoys = []
+            for (const answerBoy of this.answerAreaBoys) {
+                console.log(answerBoy.index, boy.index)
+                if (answerBoy.index != boy.index) {
+                    newanswerAreaBoys.push(answerBoy)
                 }
             }
-            this.answerAreaWeights = newAnswerAreaWeights
-            this.startDrag(weight.index, window.event)
+            this.answerAreaBoys = newanswerAreaBoys
+            this.startDrag(boy.index, window.event)
         }
     },
     created() {
         let coordinates = []
-        let startWeights = {}
+        let startBoys = {}
         for (let row = 1; row <= this.rows; row++) {
             for (let column = 1; column <= this.inRow; column++) {
-                coordinates.push({x: (column - 1) * (this.weightGap + this.weightWidth), y: this.boardHeight * (row - 1)})
-                startWeights[(column - 1) + this.inRow * (row - 1)] = true
+                coordinates.push({x: (column - 1) * (this.boyGap + this.boyWidth), y: this.boardHeight * (row - 1)})
+                startBoys[(column - 1) + this.inRow * (row - 1)] = true
             }
         }
-        this.weightCoordinates = coordinates
-        this.startAreaWeights = startWeights
+        this.boyCoordinates = coordinates
+        this.startAreaBoys = startBoys
     },
     mounted() {
         document.addEventListener('mousemove', this.drag, {passive: false})
