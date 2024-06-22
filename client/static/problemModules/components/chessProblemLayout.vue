@@ -1,34 +1,43 @@
 <template>
     <svg version="1.1" overflow="visible" ref="svg"
+        style="-webkit-user-select: none; user-select: none;"
         preserveAspectRatio="xMidYMid meet" 
         :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g class="board">
             <g class="row" v-for="(row, rowIndex) in boardSide" :transform="`translate(0 ${rowIndex * boardItemSide})`">
-                <g class="item" v-for="(column, columnIndex) in boardSide" :transform="`translate(${columnIndex * boardItemSide} 0)`">
-                    
+                <g class="item" v-for="(column, columnIndex) in boardSide" :transform="`translate(${columnIndex * boardItemSide} 0)`" 
+                    :row="rowIndex" :column="columnIndex">
                     <rect v-if="(rowIndex + columnIndex) % 2 == 0" fill="white" stroke="black" :width="boardItemSide" :height="boardItemSide" x="0" y="0" />
                     <rect v-else fill="orange" stroke="black" :width="boardItemSide" :height="boardItemSide" x="0" y="0" />
+                    <image v-if="boardArrayConfiguration[rowIndex][columnIndex].type" 
+                        :class="`dragFigure ${boardArrayConfiguration[rowIndex][columnIndex].moveStatus}`"
+                        @touchstart="startDrag(boardArrayConfiguration[rowIndex][columnIndex].type, $event, rowIndex, columnIndex)" 
+                        @mousedown="startDrag(boardArrayConfiguration[rowIndex][columnIndex].type, $event, rowIndex, columnIndex)"
+                        :href="`/problem_assets/chess/${boardArrayConfiguration[rowIndex][columnIndex].type}.png`"
+                        :width="dragFigureWidth" :height="dragFigureWidth" :x="figureMarginTop" :y="figureMarginTop" />
                 </g>
             </g>
         </g>
         <g class="interactiveZone" :transform="`translate(${boardWidth + gap} 0)`">
             <g v-for="(dragFigure, dragFigureIndex) in dragFigures" 
-                :transform="`translate(0 ${(dragFigureHeight + dragFigureTextHeight) * dragFigureIndex})`">
+                :transform="`translate(0 ${boardItemSide * dragFigureIndex})`">
                 <template v-if="dragFigure.amount != 'inf'">
-                    <image class="dragFigure" :width="dragFigureWidth" 
+                    <image class="dragFigure active" :width="dragFigureWidth" 
+                        @touchstart="startDrag(dragFigure.type, $event)" 
+                        @mousedown="startDrag(dragFigure.type, $event)"
                         :height="dragFigureHeight" x="0" y="0" :href="`/problem_assets/chess/${dragFigure.type}.png`"/>
-                    <text v-if="dragFigure.amount != 'inf'" style="font-size: 11px; font-weight: 600;" :transform="`translate(0 ${dragFigureHeight})`"> Осталось: {{ dragFigure.amount }} </text>
+                    <text v-if="dragFigure.amount != 'inf'" style="font-size: 11px; font-weight: 600;" :transform="`translate(0 ${dragFigureHeight + dragFigureTextHeight})`"> Осталось: {{ dragFigure.amount }} </text>
                 </template>
-                <image v-else class="dragFigure" :width="dragFigureWidth" 
+                <image v-else class="dragFigure active" :width="dragFigureWidth" 
                     :height="dragFigureHeight" :x="figureMarginTop" 
                     @touchstart="startDrag(dragFigure.type, $event)" 
                     @mousedown="startDrag(dragFigure.type, $event)"
                     :y="figureMarginTop" :href="`/problem_assets/chess/${dragFigure.type}.png`" />
             </g>
         </g>
-        <image v-if="target.type" class="targeted" :href="`/problem_assets/chess/${target.type}.png`" 
-            :x="target.x - dragFigureWidth / 2" :y="target.y - dragFigureHeight / 2"
+        <image v-if="dragMode" class="targeted" :href="`/problem_assets/chess/${target.type}.png`" 
+            :x="target.x" :y="target.y"
             :width="dragFigureWidth" :height="dragFigureHeight"  />
     </svg>
 </template>
@@ -38,7 +47,7 @@ export default {
     props: {
         boardSide: {default: 8},
         boardItemSide: {default: 60},
-        startConfiguration: {default: 'empty'},
+        boardConfiguration: {default: 'empty'},
         gap: {default: 20},
         dragFigures: {default() {return []}},
         dragFigureTextHeight: {default: 11},
@@ -49,24 +58,20 @@ export default {
             dragMode: false, // is drag?
         }
     },
-    watch: {
-        dragFigures(newValue) {
-            console.log(newValue)
-        }
-    },
     computed: {
-        startBoardConfiguration() {
+        boardArrayConfiguration() {
             let configuration = []
-            if (this.startConfiguration === 'empty') {
+            if (this.boardConfiguration === 'empty') {
                 for (let row = 0; row < this.boardSide; row++) {
                     configuration.push([])
-                    for (let column = 0; column < boardSide; column++) {
-                        configuration[row].push('')
+                    for (let column = 0; column < this.boardSide; column++) {
+                        configuration[row].push({type: '', moveStatus: ''})
                     }
                 }
+                return configuration
             }
             else {
-                return this.startConfiguration
+                return this.boardConfiguration
             }
         },
         boardWidth() {
@@ -102,7 +107,6 @@ export default {
         inAllowedArea() { // if target object in allowed aarea
             const targetX = window.event.clientX
             const targetY = window.event.clientY
-            console.log(targetX, targetY)
             if (targetX < 0 || targetX > window.innerWidth)
                 return false
             if (targetY < 0 || targetY > window.innerHeight)
@@ -143,15 +147,21 @@ export default {
             if (!newCursorCoordinates)
                 return
             this.autoscroll()
-            this.$set(this.target, 'x', newCursorCoordinates.x)
-            this.$set(this.target, 'y', newCursorCoordinates.y)
+            this.$set(this.target, 'x', newCursorCoordinates.x - this.dragFigureWidth / 2)
+            this.$set(this.target, 'y', newCursorCoordinates.y - this.dragFigureHeight / 2)
             if (!this.inAllowedArea()) {
                 this.endDrag()
             }
         },
-        startDrag(type, event) {
+        startDrag(type, event, fromRow=undefined, fromColumn=undefined) {
+            if (fromRow != undefined && fromColumn != undefined) {
+                if (this.boardArrayConfiguration[fromRow][fromColumn].moveStatus == 'passive') {
+                    return
+                }
+            }
             let x, y
             if (event.touches) {
+                event.preventDefault()
                 x = event.touches[0].clientX
                 y = event.touches[0].clientY
             }
@@ -159,9 +169,14 @@ export default {
                 x = event.clientX
                 y = event.clientY
             }
-            this.dragMode = true
             this.$set(this.target, 'type', type)
+            if (fromRow != undefined && fromColumn != undefined) {
+                let currentConfig = this.boardArrayConfiguration
+                currentConfig[fromRow][fromColumn].type = ''
+                this.$emit('updateConfig', currentConfig)
+            }
             this.moveAt(x, y)
+            this.dragMode = true
         },
         drag(event) {
             if (!this.dragMode) {
@@ -186,17 +201,20 @@ export default {
                 return
             }
             const boardItems = document.querySelectorAll('.item')
-            let num = 0
             for (let boardItem of boardItems) {
                 const itemRect = boardItem.getBoundingClientRect()
-                //console.log(itemRect)
                 if (this.inRect(window.event.x, window.event.y, itemRect)) {
-                    console.log(itemRect, num)
-                    this.$set(this.target, 'x', boardItem.getAttribute('x'))
-                    this.$set(this.target, 'y', boardItem.getAttribute('y'))
+                    const rowIndex = boardItem.getAttribute('row')
+                    const columnIndex = boardItem.getAttribute('column')
+                    let currentConfig = this.boardArrayConfiguration
+                    if (currentConfig[rowIndex][columnIndex].moveStatus === 'passive') {
+                        break;
+                    }
+                    currentConfig[rowIndex][columnIndex].type = this.target.type
+                    currentConfig[rowIndex][columnIndex].moveStatus = 'active'
+                    this.$emit('updateConfig', currentConfig)
                     break;
                 }
-                num++
             }
             this.dragMode = false
         }
@@ -211,7 +229,7 @@ export default {
 </script>
 
 <style scoped>
-.dragFigure {
+.dragFigure.active{
     cursor: grab;
 }
 .targeted {
