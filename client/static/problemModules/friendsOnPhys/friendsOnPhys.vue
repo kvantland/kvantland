@@ -2,17 +2,12 @@
     <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
         preserveAspectRatio="xMidYMid meet" 
         overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <g class="answer_container" :transform="`translate(0 0)`" ref="ans_container">
-            <g :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom })`">
-                <image class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" href="/new-problem_assets/friend_on_phys/field.png" />
-                <g :transform="`translate(${boyWidth / 2 + boyGap} ${boyHeight / 2 + boyGap})`">
-                    <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
-                        :transform="`translate(${(boyGap + boyHeight) * boyNum} 0)`" v-html="boy.html" />
-                </g>
-            </g>
+        <g class="answer_container" ref="ans_container">
+                <image class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="dragAreaHeight" href="/new-problem_assets/friend_on_phys/field.png" />
+                <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
+                    :transform="`translate(${(boyGap + boyHeight) * boyNum} 0)`" v-html="boy.html" />
         </g>
-        <g class="drag_container">
-            <g class="content" :transform="`translate(${containersGap + dragAreaWidth} 0)`">
+        <g class="drag_container" :transform="`translate(${answerAreaWidth} 0)`">
                 <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
                 <g class="rows" :transform="`translate(0 ${boyGap})`">
                     <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${boyGap} ${(boyGap + boyWidth) * rowNum})`">
@@ -31,7 +26,6 @@
                         </g>
                     </g>
                 </g>
-            </g>
         </g>
         <g v-if="dragMode" class="choiced" :transform="`translate(${targetBoy.x} ${targetBoy.y})`" ref="choiced">           
             <image :x="-boyWidth / 2" :y="-boyHeight / 2" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${targetBoy.index+1}.png`" />
@@ -42,6 +36,7 @@
         </g>
     </svg>
 </template>
+
 
 <script>
 export default {
@@ -73,7 +68,6 @@ export default {
 
             startAreaBoys: {},   
             answerAreaBoys: [],
-
             newSide: 'equal',
             weightMode: false,
             dragMode: false, //is drag?
@@ -104,10 +98,10 @@ export default {
             return this.dragAreaWidth + this.answerAreaWidth + this.containersGap
         },
         svgHeight() {
-            return this.dragAreaHeight + this.dragAreaMarginTop + this.containerHeaderHeight + this.containerHeaderMarginBottom
+            return this.dragAreaHeight
         },
         svgWidth() {
-            return this.dragAreaWidth
+            return this.answerAreaWidth + this.dragAreaWidth
         }
     },
     methods: {
