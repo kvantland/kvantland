@@ -185,7 +185,7 @@ def get_problem_data(db):
 	db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 	(hint_taken, ), = db.fetchall()
 	print('hint_taken', hint_taken, file=sys.stderr)
-	resp['problem']['hint']['status'] = not(hint_taken)
+	resp['problem']['hint']['status'] = not(hint_taken) and hint
 	resp['problem']['hint']['cost'] = hint_cost
 	if hint_taken:
 		resp['problem']['hint']['description'] = hint
