@@ -423,7 +423,24 @@ def CombiRepublic4(cur):
 				'componentType': "rearrangedWeights",
 				'inputType': "InteractiveTypeInput",
 			}
-			variants_list = add_variant_to_list(variants_list, "Переставленные гирьки", desc, json.dumps(cont))	
+			variants_list = add_variant_to_list(variants_list, "Переставленные гирьки", desc, json.dumps(cont))
+
+	problems_list = add_problem_to_list(problems_list, cur, "Республика Комби", 2, 'airlines', "Авиалинии", hint = "Постройте пример, в котором никакой набор авиалиний не образует цикл (граф является деревом).")
+	for amount, transfers in [
+			(9, 3),
+			(10, 3),
+			(11, 3),
+			(12, 3),
+			]:
+			desc = f"""В стране {N} городов, из каждого из которых есть не более четырёх авиалиний в другие города. 
+			Известно, что из любого города можно долететь в любой другой, сделав не более трёх пересадок. Какое наименьшее число авиалиний может быть в этой стране?"""
+			cont = {
+				'amount': amount,
+				'transfers': transfers,
+				'componentType': "airlines",
+				'inputType': "InteractiveTypeInput",
+			}
+			variants_list = add_variant_to_list(variants_list, "Авиалинии", desc, json.dumps(cont))	
 
 	add_list(problems_list, variants_list)
 
