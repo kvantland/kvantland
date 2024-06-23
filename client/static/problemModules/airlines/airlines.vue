@@ -31,13 +31,13 @@ export default {
     },
     data() {
         return {
-            svgWidth: 400,
-            svgHeight: 400,
+            svgWidth: 600,
+            svgHeight: 600,
             cityImgX: -40,
             cityImgY: -40,
             cityImgWidth: 80,
-            minCircleCenter: { x: 200, y: 200 }, 
-            mainCircleRadius: 150,
+            minCircleCenter: { x: 300, y: 300 }, 
+            mainCircleRadius: 200,
             radius: 30,
             selectedPoints: [],
             lines: [],
