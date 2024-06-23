@@ -27,6 +27,7 @@ text.name {
 text.boardName {
     text-anchor:middle;
     color: #502D16;
+    font-size: 18px;
 }
 
 .choiced {
@@ -35,20 +36,4 @@ text.boardName {
     position: relative;
 }
 
-.svg_with_buttons {
-    width: 100%;
-    justify-content: center;
-    align-items: stretch;
-    display: inline-flex;
-    gap: 80px;
-}
 
-.buttons {
-    display: inline-flex;
-    flex-direction: column;
-    gap: 15px;
-    max-width: 20%;
-    align-items: stretch;
-    font-size: max(14px, 1.5vw);
-    font-family: Montserrat;
-}

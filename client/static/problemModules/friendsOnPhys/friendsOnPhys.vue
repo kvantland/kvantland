@@ -1,39 +1,39 @@
 <template>
     <svg version="1.1" ref="svg" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
-            preserveAspectRatio="xMidYMid meet" 
-            overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <g class="drag_container">
-                <g class="content" :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom})`">
-                    <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
-                    <g class="rows" :transform="`translate(0 ${boyGap})`">
-                        <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${boyGap} ${(boyGap + boyWidth) * rowNum})`">
-                            <g v-for="(boy, boyNum) in inRow" 
-                                :transform="`translate(${boyCoordinates[boyNum + rowNum * inRow].x} ${boyCoordinates[boyNum + rowNum * inRow].y})`">
-                                <g v-if="startAreaBoys[boyNum + rowNum * inRow]" 
-                                @touchstart="moveFromStartArea(boyNum + rowNum * inRow, $event.touches[0])" 
-                                @mousedown="moveFromStartArea(boyNum + rowNum * inRow, $event)"
-                                :class="`boy boy_${boyNum + rowNum * inRow}`">
-                                    <image x="0" y="0" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${boyNum + rowNum * inRow + 1}.png`" />
-                                    <g class="board" :transform="`translate(0 ${boyHeight})`">
-                                        <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
-                                        <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[boyNum + rowNum * inRow] }} </text>
-                                    </g>
+        preserveAspectRatio="xMidYMid meet" 
+        overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g class="answer_container" :transform="`translate(0 0)`" ref="ans_container">
+            <g :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom })`">
+                <image class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" href="/new-problem_assets/friend_on_phys/field.png" />
+                <g :transform="`translate(${boyWidth / 2 + boyGap} ${boyHeight / 2 + boyGap})`">
+                    <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
+                        :transform="`translate(${(boyGap + boyHeight) * boyNum} 0)`" v-html="boy.html" />
+                </g>
+            </g>
+        </g>
+        <g class="drag_container">
+            <g class="content" :transform="`translate(${containersGap + dragAreaWidth} 0)`">
+                <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
+                <g class="rows" :transform="`translate(0 ${boyGap})`">
+                    <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${boyGap} ${(boyGap + boyWidth) * rowNum})`">
+                        <g v-for="(boy, boyNum) in inRow" 
+                            :transform="`translate(${boyCoordinates[boyNum + rowNum * inRow].x} ${boyCoordinates[boyNum + rowNum * inRow].y})`">
+                            <g v-if="startAreaBoys[boyNum + rowNum * inRow]" 
+                            @touchstart="moveFromStartArea(boyNum + rowNum * inRow, $event.touches[0])" 
+                            @mousedown="moveFromStartArea(boyNum + rowNum * inRow, $event)"
+                            :class="`boy boy_${boyNum + rowNum * inRow}`">
+                                <image x="0" y="0" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${boyNum + rowNum * inRow + 1}.png`" />
+                                <g class="board" :transform="`translate(0 ${boyHeight})`">
+                                    <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                                    <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[boyNum + rowNum * inRow] }} </text>
                                 </g>
                             </g>
                         </g>
                     </g>
                 </g>
             </g>
-            <g class="answer_container" :transform="`translate(${containersGap + dragAreaWidth} 0)`" ref="ans_container">
-                <g :transform="`translate(0 ${containerHeaderHeight + containerHeaderMarginBottom })`">
-                    <rect class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" fill="lightgrey" />
-                    <g :transform="`translate(${boyWidth / 2 + boyGap} ${boyHeight / 2 + boyGap})`">
-                        <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
-                            :transform="`translate(0 ${(boyGap + boyHeight) * boyNum})`" v-html="boy.html" />
-                    </g>
-                </g>
-            </g>
-        <g  v-if="dragMode" class="choiced" :transform="`translate(${targetBoy.x} ${targetBoy.y})`" ref="choiced">           
+        </g>
+        <g v-if="dragMode" class="choiced" :transform="`translate(${targetBoy.x} ${targetBoy.y})`" ref="choiced">           
             <image :x="-boyWidth / 2" :y="-boyHeight / 2" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${targetBoy.index+1}.png`" />
             <g class="board" :transform="`translate(${-boyWidth / 2} ${boyHeight / 2})`">
                 <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
@@ -95,10 +95,10 @@ export default {
             return this.rows * (this.boyHeight + this.boyGap + this.boardHeight) + this.boyGap
         },
         answerAreaWidth() {
-            return this.boyGap * 2 + this.boyWidth
+            return this.boyGap * 5 + this.boyWidth * 4
         },
         answerAreaHeight(){
-            return this.boyGap * 3 + this.boyWidth * 2
+            return this.boyGap * 2 + this.boyWidth
         },
         containersAreaWidth() {
             return this.dragAreaWidth + this.answerAreaWidth + this.containersGap
@@ -233,9 +233,10 @@ export default {
             this.answerAreaBoys = newanswerAreaBoys
             let newanswerAreaBoysIndex = []
             for (const boy of newanswerAreaBoys) {
-                newanswerAreaBoysIndex.push(boy.index)
+                newanswerAreaBoysIndex.push(boy.index + 1)
             }
             this.$emit('updateAnswer', newanswerAreaBoysIndex)
+            console.log('ans', newanswerAreaBoysIndex)
         },
         backToStartArea() {
             const dragIndex = this.targetBoy.index
@@ -255,6 +256,11 @@ export default {
                 }
             }
             this.answerAreaBoys = newanswerAreaBoys
+            let newanswerAreaBoysIndex = []
+            for (const boy of newanswerAreaBoys) {
+                newanswerAreaBoysIndex.push(boy.index + 1)
+            }
+            this.$emit('updateAnswer', newanswerAreaBoysIndex)
             this.startDrag(boy.index, window.event)
         }
     },
