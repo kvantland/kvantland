@@ -1,0 +1,16 @@
+svg {
+    width: 70%;
+}
+.city {
+    cursor: pointer
+}
+.circles {
+    stroke: currentColor;
+    stroke-width: 4;
+    fill: transparent;
+}
+
+.lines {
+    stroke-width: 4;
+    stroke: green;
+}
