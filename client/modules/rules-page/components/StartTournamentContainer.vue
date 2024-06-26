@@ -65,5 +65,6 @@
     text-align: center;
     color: black;
     font-size: max(17px, min(24px, 1.8vw));
+    font-weight: 600;
 }
 </style>
