@@ -388,6 +388,7 @@ export default {
                 }
             }
             this.answerAreaWeights = newAnswerAreaWeights
+            this.$emit('updateAnswer', newAnswerAreaWeightsIndex)
             this.startDrag(weight.index, window.event)
         }
     },
