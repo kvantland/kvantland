@@ -1,5 +1,7 @@
 <template>
-    <svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" preserveAspectRatio="xMidYMid meet"  overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
+        preserveAspectRatio="xMidYMid meet"  overflow="visible" 
+        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <defs>
             <clipPath id="city_border">
                 <path d="
@@ -31,12 +33,9 @@ export default {
     },
     data() {
         return {
-            svgWidth: 600,
-            svgHeight: 600,
             cityImgX: -40,
             cityImgY: -40,
             cityImgWidth: 80,
-            minCircleCenter: { x: 300, y: 300 }, 
             mainCircleRadius: 200,
             radius: 30,
             selectedPoints: [],
@@ -45,13 +44,19 @@ export default {
         }
     },
     computed: {
+        mainCircleCenter() {
+            let x, y
+            x = this.mainCircleRadius + this.radius
+            y = this.mainCircleRadius + this.radius
+            return {x: x, y: y}
+        },
         points() {
             const angleIncrement = (2 * Math.PI) / this.amount;
             let points = []
             for (let i = 0; i < this.amount; i++) {
                 const angle = i * angleIncrement;
-                const x = this.minCircleCenter.x + this.mainCircleRadius * Math.cos(angle);
-                const y = this.minCircleCenter.y + this.mainCircleRadius * Math.sin(angle);
+                const x = this.mainCircleCenter.x + this.mainCircleRadius * Math.cos(angle);
+                const y = this.mainCircleCenter.y + this.mainCircleRadius * Math.sin(angle);
                 const r = this.radius;
                 points.push({ x, y, r});
             }
@@ -59,7 +64,13 @@ export default {
         },
         amount() {
             return this.problemParams['amount'];
-        }
+        },
+        svgWidth() {
+            return (this.mainCircleRadius + this.radius) * 2
+        },
+        svgHeight() {
+            return this.svgWidth
+        },
     },
     methods: {
         handleCircleClick(index) {
