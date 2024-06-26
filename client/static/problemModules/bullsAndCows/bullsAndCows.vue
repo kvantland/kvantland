@@ -1,7 +1,7 @@
 <template>
-    <div class="plot_area">
-    <svg version="1.1" :width="`${boardWidth + animalWidth}`" 
-        :height="`${boardHeight}`" overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
+        preserveAspectRatio="xMidYMid"  overflow="visible" 
+        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g class="board">
             <line class="horizontal" v-for="(line, num) in rectInColumn  + 1" 
                 x1="0" :y1="`${side * num}`" :x2="`${rectInRow * side}`" :y2="`${side * num}`" :stroke-width="lineWidth" />
@@ -21,7 +21,6 @@
             </g>
         </g>
     </svg>
-    </div>
 </template>
 
 <script>
@@ -74,6 +73,12 @@ export default {
         cowsAndBulls(){
             return this.problemParams['cows_and_bulls']
         },
+        svgWidth() {
+            return this.boardWidth + this.animalWidth
+        },
+        svgHeight() {
+            return this.boardHeight
+        }
     },
     mounted() {
         console.log(this.colors)
