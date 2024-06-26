@@ -5,10 +5,9 @@
         <g class="answer_container" ref="ans_container">
                 <image class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="dragAreaHeight" href="/new-problem_assets/friend_on_phys/field.png" />
                 <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
-                    :transform="`translate(${(boyGap + boyHeight) * boyNum} 0)`" v-html="boy.html" />
+                    :transform="`translate(${(boyGap + boyHeight) * boyNum + gap} ${dragAreaHeight / 2})`" v-html="boy.html" />
         </g>
         <g class="drag_container" :transform="`translate(${answerAreaWidth} 0)`">
-                <rect class="drag_container" :width="dragAreaWidth" :height="dragAreaHeight" x="0" y="0" fill="lightgrey" />
                 <g class="rows" :transform="`translate(0 ${boyGap})`">
                     <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${boyGap} ${(boyGap + boyWidth) * rowNum})`">
                         <g v-for="(boy, boyNum) in inRow" 
@@ -58,8 +57,9 @@ export default {
             inRow: 2,
             rows: 2,
             boyGap: 15,
-            boyHeight: 65,
-            boyWidth: 65,
+            gap: 75,
+            boyHeight: 140,
+            boyWidth: 140,
             containerHeaderHeight: 30,
             containerHeaderMarginBottom: 5,
             containersGap: 20,
