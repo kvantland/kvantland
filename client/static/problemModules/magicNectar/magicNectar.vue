@@ -1,33 +1,36 @@
 <template>
-     <svg version="1.1"
-        :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
-        preserveAspectRatio="xMidYMid meet" 
-        overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <g :transform="`translate(0 ${svgMarginTop})`">
-            <image class="tap" :class="(transfusionSubject[0] == 'tap') ? 'choiced': 'not-choiced'" 
-                href="/problem_assets/tap.svg" :x="tapSize.x" :y="tapSize.y" :width="tapSize.width" :height="tapSize.height" @click="choose(['tap', 0])"/>
-            <g :transform="`translate(${tapSize.width + tapPadding} 0)`">
-                <svg v-for="(pot, potNum) in potSizes" class="pot" overflow="visible"
-                    :x="potSizes[potNum].x" :y="potSizes[potNum].y"
-                    :width="potSizes[potNum].width" :height="potSizes[potNum].height">
-                    <g :transform="`rotate(${potSizes[potNum].angle} ${potSizes[potNum].width / 2} 0)`" @click="choose(['pot', potNum])">
-                        <rect class="liquid" x="4" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height + 2"
-                            :fill="nectarConcentration[potNum] != 0 ? `rgba(255, 139, 31, ${nectarConcentration[potNum]})` : `rgba(204, 247, 247, 1)`" 
-                            :width="potSizes[potNum].width - 8" :height="liquidAmount[potNum] * potSizes[potNum].height - 2" />
-                        <image class="pot_form" href="/problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
-                        <image :class="(transfusionObject[0] == 'pot' && transfusionObject[1] == potNum 
-                            || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
-                        href="/problem_assets/pot.svg"  
-                            :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
-                        <text class="volumeText" :x="potSizes[potNum].width / 2" dy="0.35em"
-                            :y="potSizes[potNum].height - volumeTitleMarinBottom"> {{ volumes[potNum] }} </text>
-                    </g>
-                </svg>
-                <image href="/icons/reload.png" :x="potsWidth + reloadPad" 
-                    :y="svgHeight - reloadHeight - svgMarginTop" :width="reloadWidth" :height="reloadHeight" class="reload" @click="reload" />
+    <div class="svg_with_clear_button">
+            <svg version="1.1"
+            :viewBox="`0 0 ${svgWidth} ${svgHeight}`" 
+            preserveAspectRatio="xMidYMid meet" 
+            overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g :transform="`translate(0 ${svgMarginTop})`">
+                <image class="tap" :class="(transfusionSubject[0] == 'tap') ? 'choiced': 'not-choiced'" 
+                    href="/problem_assets/tap.svg" :x="tapSize.x" :y="tapSize.y" :width="tapSize.width" :height="tapSize.height" @click="choose(['tap', 0])"/>
+                <g :transform="`translate(${tapSize.width + tapPadding} 0)`">
+                    <svg v-for="(pot, potNum) in potSizes" class="pot" overflow="visible"
+                        :x="potSizes[potNum].x" :y="potSizes[potNum].y"
+                        :width="potSizes[potNum].width" :height="potSizes[potNum].height">
+                        <g :transform="`rotate(${potSizes[potNum].angle} ${potSizes[potNum].width / 2} 0)`" @click="choose(['pot', potNum])">
+                            <rect class="liquid" x="4" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height + 2"
+                                :fill="nectarConcentration[potNum] != 0 ? `rgba(255, 139, 31, ${nectarConcentration[potNum]})` : `rgba(204, 247, 247, 1)`" 
+                                :width="potSizes[potNum].width - 8" :height="liquidAmount[potNum] * potSizes[potNum].height - 2" />
+                            <image class="pot_form" href="/problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
+                            <image :class="(transfusionObject[0] == 'pot' && transfusionObject[1] == potNum 
+                                || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
+                            href="/problem_assets/pot.svg"  
+                                :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
+                            <text class="volumeText" :x="potSizes[potNum].width / 2" dy="0.35em"
+                                :y="potSizes[potNum].height - volumeTitleMarinBottom"> {{ volumes[potNum] }} </text>
+                        </g>
+                    </svg>
+                    <image href="/icons/reload.png" :x="potsWidth + reloadPad" 
+                        :y="svgHeight - reloadHeight - svgMarginTop" :width="reloadWidth" :height="reloadHeight" class="reload" @click="reload" />
+                </g>
             </g>
-        </g>
-    </svg>
+        </svg>
+        <button class="clear_button" @click="clearPot"> Вылить </button>
+    </div>
 </template>
 
 <script>
@@ -89,7 +92,7 @@ export default {
             }
             return potSizes
         },
-        liquidAmount() {
+        liquidAmount() { //percents
             const liquidAmount = Array(this.configuration.length)
             let potNum = 0
             for (const potConfig of this.configuration) {
@@ -162,6 +165,16 @@ export default {
             }
             this.tapSize.y = this.tapSize.defaultY
             this.tapSize.x = this.tapSize.defaultX
+        },
+        clearPot() {
+            if (this.transfusionObject[0] == 'tap') {
+                return;
+            }
+            else {
+                this.transfusionMode = false
+                this.$emit('xhrRequest', {transfusionSubject: this.transfusionSubject, type: 'clear'})
+                this.toDefault()
+            }
         }
     },
     watch: {

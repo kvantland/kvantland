@@ -2,6 +2,21 @@ import sys
 from copy import deepcopy
 
 def steps(step_num, params, data):
+    if params['type'] == "clear":
+        transfusion_subject= params['transfusionSubject']
+        print(transfusion_subject, file=sys.stderr)
+        subject_num = transfusion_subject[1]
+        subject_type = transfusion_subject[0]
+        if subject_type != "pot":
+            return {'answer': "wrong object type"}
+        configuration = deepcopy(data['configuration'])
+        configuration[subject_num]['water'] = 0
+        configuration[subject_num]['nectar'] = 0
+        if not 'default' in data.keys():
+            data['default'] = {'configuration': deepcopy(data['configuration'])}
+        data['configuration'] = configuration
+        print(configuration, file=sys.stderr)
+        return {'answer': "success", 'data_update': data}
     if params['type'] == "reload":
         if 'default' in data.keys():
             data['configuration'] = data['default']['configuration']
