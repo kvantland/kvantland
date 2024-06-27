@@ -87,4 +87,27 @@ export default {
 .object {
     cursor: grab;
 }
+
+line{
+	stroke: #484848;
+	stroke-width: 2;
+}
+
+.hinge{
+	fill: #A7763D;
+	stroke: #815A30;
+	stroke-width: 4;
+}
+
+.outside{
+	fill: url(#cupShadowOutside);
+	stroke: #949494;
+	stroke-width: 2;
+}
+
+.inside{
+	fill: url(#cupShadowInside);
+	stroke: #949494;
+	stroke-width: 2;
+}
 </style>
