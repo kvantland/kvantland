@@ -18,7 +18,7 @@
                 :x2="points[line.point2].x" :y2="points[line.point2].y"
                 stroke="black" stroke-width="20px" class="lines"/>
         <g v-for="(point, index) in points" :key="`city_${index}`" :class="`city city_${index}`" :transform="`translate(${point.x} ${point.y})`" @click="handleCircleClick(index)">
-            <image :href="`/new-problem_assets/airlines/city${index % 3}.png`" :x="cityImgX" :y ="cityImgY" :width="cityImgWidth" clip-path="url(#city_border)"/>
+            <image :href="`/problem_assets/airlines/city${index % 3}.png`" :x="cityImgX" :y ="cityImgY" :width="cityImgWidth" clip-path="url(#city_border)"/>
             <circle :r="point.r" :color="selectedPoints.includes(index) ? 'green': 'black'" class="circles"/>
         </g>
     </svg>

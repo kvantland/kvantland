@@ -5,7 +5,7 @@
         overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g :transform="`translate(0 ${svgMarginTop})`">
             <image class="tap" :class="(transfusionSubject[0] == 'tap') ? 'choiced': 'not-choiced'" 
-                href="/new-problem_assets/tap.svg" :x="tapSize.x" :y="tapSize.y" :width="tapSize.width" :height="tapSize.height" @click="choose(['tap', 0])"/>
+                href="/problem_assets/tap.svg" :x="tapSize.x" :y="tapSize.y" :width="tapSize.width" :height="tapSize.height" @click="choose(['tap', 0])"/>
             <g :transform="`translate(${tapSize.width + tapPadding} 0)`">
                 <svg v-for="(pot, potNum) in potSizes" class="pot" overflow="visible"
                     :x="potSizes[potNum].x" :y="potSizes[potNum].y"
@@ -14,10 +14,10 @@
                         <rect class="liquid" x="4" :y="potSizes[potNum].height - liquidAmount[potNum] * potSizes[potNum].height + 2"
                             :fill="nectarConcentration[potNum] != 0 ? `rgba(255, 139, 31, ${nectarConcentration[potNum]})` : `rgba(204, 247, 247, 1)`" 
                             :width="potSizes[potNum].width - 8" :height="liquidAmount[potNum] * potSizes[potNum].height - 2" />
-                        <image class="pot_form" href="/new-problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
+                        <image class="pot_form" href="/problem_assets/pot_form.svg" x="0" y="0" :width="potSizes[potNum].width" :height="potSizes[potNum].height" />
                         <image :class="(transfusionObject[0] == 'pot' && transfusionObject[1] == potNum 
                             || transfusionSubject[0] == 'pot' && transfusionSubject[1] == potNum) ? 'pot choiced' : 'pot not-choiced'"
-                        href="/new-problem_assets/pot.svg"  
+                        href="/problem_assets/pot.svg"  
                             :width="potSizes[potNum].width" :height="potSizes[potNum].height" x="0" y="0"/>
                         <text class="volumeText" :x="potSizes[potNum].width / 2" dy="0.35em"
                             :y="potSizes[potNum].height - volumeTitleMarinBottom"> {{ volumes[potNum] }} </text>

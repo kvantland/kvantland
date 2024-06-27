@@ -25,7 +25,7 @@
                                     <text class="name" :x="weightWidth / 2" :y="weightHeight / 2 + nameYPad"> {{ names[weightNum + rowNum * inRow] }} </text>
                                 </g>
                                 <g class="board" :transform="`translate(0 ${weightHeight})`">
-                                    <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                                    <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/problem_assets/board.svg" />
                                     <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[weightNum + rowNum * inRow] }} </text>
                                 </g>
                             </g>
@@ -48,7 +48,7 @@
             </g>
         </g>
         <g  v-if="dragMode" class="choiced" :transform="`translate(${targetWeight.x} ${targetWeight.y})`" ref="choiced">
-            <image :x="-weightWidth / 2" :y="-weightHeight / 2" :height="weightHeight" :width="weightWidth" href="/new-problem_assets/weight.svg" />
+            <image :x="-weightWidth / 2" :y="-weightHeight / 2" :height="weightHeight" :width="weightWidth" href="/problem_assets/weight.svg" />
             <text class="name" x="0" :y="nameYPad"> {{ names[targetWeight.index] }} </text>
         </g>
     </svg>
