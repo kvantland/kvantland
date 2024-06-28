@@ -386,7 +386,8 @@ def Golovolomsk4(cur):
 		}
 		variants_list = add_variant_to_list(variants_list, "Волшебный нектар", desc, json.dumps(cont))
 		
-	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'rooks_on_board', "Ладьи на доске")
+	problems_list = add_problem_to_list(problems_list, cur, "Головоломск", 2, 'rooks_on_board', "Ладьи на доске", hint="""Попробуйте выбрать на доске несколько разных 
+									 клетчатых прямоугольников одного периметра и поставить ладьи в каждую клетку этих прямоугольников.""")
 	for rooks_amount in [11, 13, 17, 17]:
 		desc = f"""Расставьте на шахматной доске {rooks_amount} ладей так, чтобы все они 
 				били одинаковое число других ладей (ладьи бьют насквозь, то есть 
