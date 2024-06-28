@@ -3,11 +3,11 @@
         preserveAspectRatio="xMidYMid meet" 
         overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g class="answer_container" ref="ans_container">
-                <image class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="dragAreaHeight" href="/new-problem_assets/friend_on_phys/field.png" />
+                <image class="answer_container" x="0" y="0" :width="answerAreaWidth" :height="answerAreaHeight" href="/problem_assets/friend_on_phys/field.png" />
                 <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
-                    :transform="`translate(${(boyGap + boyHeight) * boyNum + gap} ${dragAreaHeight / 2})`" v-html="boy.html" />
+                    :transform="`translate(${(boyGap + boyHeight) * boyNum + fieldGap} ${answerAreaHeight / 2})`" v-html="boy.html" />
         </g>
-        <g class="drag_container" :transform="`translate(${answerAreaWidth} 0)`">
+        <g class="drag_container" :transform="`translate(${dragAreaWidth} 0)`">
                 <g class="rows" :transform="`translate(0 ${boyGap})`">
                     <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${boyGap} ${(boyGap + boyWidth) * rowNum})`">
                         <g v-for="(boy, boyNum) in inRow" 
@@ -16,9 +16,9 @@
                             @touchstart="moveFromStartArea(boyNum + rowNum * inRow, $event.touches[0])" 
                             @mousedown="moveFromStartArea(boyNum + rowNum * inRow, $event)"
                             :class="`boy boy_${boyNum + rowNum * inRow}`">
-                                <image x="0" y="0" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${boyNum + rowNum * inRow + 1}.png`" />
+                                <image x="0" y="0" :height="boyHeight" :width="boyWidth" :href="`/problem_assets/friend_on_phys/boy${boyNum + rowNum * inRow + 1}.png`" />
                                 <g class="board" :transform="`translate(0 ${boyHeight})`">
-                                    <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                                    <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/problem_assets/board.svg" />
                                     <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[boyNum + rowNum * inRow] }} </text>
                                 </g>
                             </g>
@@ -27,9 +27,9 @@
                 </g>
         </g>
         <g v-if="dragMode" class="choiced" :transform="`translate(${targetBoy.x} ${targetBoy.y})`" ref="choiced">           
-            <image :x="-boyWidth / 2" :y="-boyHeight / 2" :height="boyHeight" :width="boyWidth" :href="`/new-problem_assets/friend_on_phys/boy${targetBoy.index+1}.png`" />
+            <image :x="-boyWidth / 2" :y="-boyHeight / 2" :height="boyHeight" :width="boyWidth" :href="`/problem_assets/friend_on_phys/boy${targetBoy.index+1}.png`" />
             <g class="board" :transform="`translate(${-boyWidth / 2} ${boyHeight / 2})`">
-                <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/new-problem_assets/board.svg" />
+                <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/problem_assets/board.svg" />
                 <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[targetBoy.index] }} </text>
             </g>
         </g>
@@ -46,41 +46,26 @@ export default {
     },
     data() {
         return {
-            cursorX: 0,
-            cursorY: 0,
             boyCoordinates: [], 
             boardNames: ['Алёша', 'Боря', 'Вася', 'Гриша'],
-            names: [1, 2, 3, 4],
-            nameYPad: 17,
             boardHeight: 30,
-            dragAreaMarginTop: 30,
             inRow: 2,
             rows: 2,
             boyGap: 15,
-            gap: 75,
+            fieldGap: 75,
             boyHeight: 140,
             boyWidth: 140,
-            containerHeaderHeight: 30,
-            containerHeaderMarginBottom: 5,
-            containersGap: 20,
             dropAllowDistance: 70,
             targetBoy: {x: 0, y:0, index: undefined},
 
             startAreaBoys: {},   
             answerAreaBoys: [],
-            newSide: 'equal',
-            weightMode: false,
             dragMode: false, //is drag?
         }
     },
     computed: {
         boardWidth() {
             return this.boyWidth
-        },
-        weightingHistory() {
-            if (!this.problemParams.history)
-                return []
-            return this.problemParams.history
         },
         dragAreaWidth() {
             return this.inRow * (this.boyWidth + this.boyGap) + this.boyGap
@@ -89,19 +74,19 @@ export default {
             return this.rows * (this.boyHeight + this.boyGap + this.boardHeight) + this.boyGap
         },
         answerAreaWidth() {
-            return this.boyGap * 5 + this.boyWidth * 4
+            return this.boyGap * (this.boysAmount + 1) + this.boyWidth * this.boysAmount
         },
         answerAreaHeight(){
-            return this.boyGap * 2 + this.boyWidth
-        },
-        containersAreaWidth() {
-            return this.dragAreaWidth + this.answerAreaWidth + this.containersGap
+            return this.dragAreaHeight
         },
         svgHeight() {
             return this.dragAreaHeight
         },
         svgWidth() {
             return this.answerAreaWidth + this.dragAreaWidth
+        }
+        boysAmount() {
+            return this.boardNames.length
         }
     },
     methods: {
@@ -124,9 +109,6 @@ export default {
             if (targetY < 0 || targetY > window.innerHeight)
                 return false
             return true
-        },
-        stopWeight(currentSide) {
-            this.weightMode = false
         },
         autoscroll() {
             const targetX = window.event.clientX
@@ -218,19 +200,19 @@ export default {
             this.dragMode = false
         },
         dropToAnsArea() {
-            let newanswerAreaBoys = JSON.parse(JSON.stringify(this.answerAreaBoys))
-            newanswerAreaBoys.push({
+            let newAnswerAreaBoys = JSON.parse(JSON.stringify(this.answerAreaBoys))
+            newAnswerAreaBoys.push({
                 index: this.targetBoy.index,
                 html: this.$refs.choiced.innerHTML
             })
-            console.log(newanswerAreaBoys)
-            this.answerAreaBoys = newanswerAreaBoys
-            let newanswerAreaBoysIndex = []
-            for (const boy of newanswerAreaBoys) {
-                newanswerAreaBoysIndex.push(boy.index + 1)
+            console.log(newAnswerAreaBoys)
+            this.answerAreaBoys = newAnswerAreaBoys
+            let newAnswerAreaBoysIndex = []
+            for (const boy of newAnswerAreaBoys) {
+                newAnswerAreaBoysIndex.push(boy.index + 1)
             }
-            this.$emit('updateAnswer', newanswerAreaBoysIndex)
-            console.log('ans', newanswerAreaBoysIndex)
+            this.$emit('updateAnswer', newAnswerAreaBoysIndex)
+            console.log('ans', newAnswerAreaBoysIndex)
         },
         backToStartArea() {
             const dragIndex = this.targetBoy.index
@@ -242,19 +224,19 @@ export default {
         },
         moveFromAnsArea(boy) {
             console.log(boy)
-            let newanswerAreaBoys = []
+            let newAnswerAreaBoys = []
             for (const answerBoy of this.answerAreaBoys) {
                 console.log(answerBoy.index, boy.index)
                 if (answerBoy.index != boy.index) {
-                    newanswerAreaBoys.push(answerBoy)
+                    newAnswerAreaBoys.push(answerBoy)
                 }
             }
-            this.answerAreaBoys = newanswerAreaBoys
-            let newanswerAreaBoysIndex = []
-            for (const boy of newanswerAreaBoys) {
-                newanswerAreaBoysIndex.push(boy.index + 1)
+            this.answerAreaBoys = newAnswerAreaBoys
+            let newAnswerAreaBoysIndex = []
+            for (const boy of newAnswerAreaBoys) {
+                newAnswerAreaBoysIndex.push(boy.index + 1)
             }
-            this.$emit('updateAnswer', newanswerAreaBoysIndex)
+            this.$emit('updateAnswer', newAnswerAreaBoysIndex)
             this.startDrag(boy.index, window.event)
         }
     },

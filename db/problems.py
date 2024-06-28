@@ -103,7 +103,7 @@ def IslandOfLiars4(cur):
 	variants_list = dict()
 
 	problems_list = add_problem_to_list(problems_list, cur, "Остров Лжецов", 2, 'friends_on_phys', "Друзья на физкультуре", hint="Про одного из мальчиков известно, что рядом с ним не стоят два других мальчика. Что в таком случае можно сказать о его местоположении?")
-	for A, B, C, D, E, correct in [
+	for A, B, C, D, E, permutation in [
 			("Вася", "Алёшей", "Гришей", "Гриша", "Борей", ["4132", "2314"]),
 			("Гриша", "Борей", "Алёшей", "Алёша", "Васей", ["1243", "3421"]),
 			("Алёша", "Васей", "Борей", "Боря", "Гришей", ["2314", "4132"]),
@@ -114,7 +114,7 @@ def IslandOfLiars4(cur):
 			cont = {
 				'inputType': "InteractiveTypeInput",
 				'componentType': "friendsOnPhys",
-				'correct': correct,
+				'permutation': permutation,
 			}
 			variants_list = add_variant_to_list(variants_list, "Друзья на физкультуре", desc, json.dumps(cont))	
 
