@@ -73,3 +73,6 @@ mode = 'private'
 [mail_check]
 allowed_period = 86400
 allowed_amount = 10
+
+[client]
+url = 'client url'
