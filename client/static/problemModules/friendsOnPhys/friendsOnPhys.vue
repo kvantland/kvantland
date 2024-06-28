@@ -7,12 +7,11 @@
                 <g class="boy" v-for="(boy, boyNum) in answerAreaBoys" @mousedown="moveFromAnsArea(boy)" @touchstart="moveFromAnsArea(boy)"
                     :transform="`translate(${(boyGap + boyHeight) * boyNum + fieldGap} ${answerAreaHeight / 2})`" v-html="boy.html" />
         </g>
-        <g class="drag_container" :transform="`translate(${dragAreaWidth} 0)`">
+        <g class="drag_container" :transform="`translate(${answerAreaWidth} 0)`">
                 <g class="rows" :transform="`translate(0 ${boyGap})`">
                     <g v-for="(row, rowNum) in rows" class="row" :transform="`translate(${boyGap} ${(boyGap + boyWidth) * rowNum})`">
-                        <g v-for="(boy, boyNum) in inRow" 
-                            :transform="`translate(${boyCoordinates[boyNum + rowNum * inRow].x} ${boyCoordinates[boyNum + rowNum * inRow].y})`">
-                            <g v-if="startAreaBoys[boyNum + rowNum * inRow]" 
+                        <g v-for="(boy, boyNum) in inRow" v-if="startAreaBoys[boyNum + rowNum * inRow]" 
+                            :transform="`translate(${boyCoordinates[boyNum + rowNum * inRow].x} ${boyCoordinates[boyNum + rowNum * inRow].y})`"
                             @touchstart="moveFromStartArea(boyNum + rowNum * inRow, $event.touches[0])" 
                             @mousedown="moveFromStartArea(boyNum + rowNum * inRow, $event)"
                             :class="`boy boy_${boyNum + rowNum * inRow}`">
@@ -21,7 +20,6 @@
                                     <image class="board" x="0" y="0" :width="boardWidth" :height="boardHeight" href="/problem_assets/board.svg" />
                                     <text class="boardName" :x="boardWidth / 2" :y="boardHeight / 2" dy="0.35em"> {{ boardNames[boyNum + rowNum * inRow] }} </text>
                                 </g>
-                            </g>
                         </g>
                     </g>
                 </g>
@@ -84,7 +82,7 @@ export default {
         },
         svgWidth() {
             return this.answerAreaWidth + this.dragAreaWidth
-        }
+        },
         boysAmount() {
             return this.boardNames.length
         }
