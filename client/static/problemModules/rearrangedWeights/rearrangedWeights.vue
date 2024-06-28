@@ -388,6 +388,10 @@ export default {
                 }
             }
             this.answerAreaWeights = newAnswerAreaWeights
+            let newAnswerAreaWeightsIndex = []
+            for (const weight of newAnswerAreaWeights) {
+                newAnswerAreaWeightsIndex.push(weight.index)
+            }
             this.$emit('updateAnswer', newAnswerAreaWeightsIndex)
             this.startDrag(weight.index, window.event)
         }
