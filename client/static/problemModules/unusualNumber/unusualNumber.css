@@ -20,7 +20,6 @@
 	text-align: center;
 	width: max(60px, min(8vw, 96px));
 	align-items: center;
-	border-color: darkblue;
 }
 
 .fieldInput {
@@ -34,9 +33,24 @@
     height: 80%;
     text-align: center;
     background: none;
-    color: red;
 }
 
 .fieldinput:focus{
 	outline: none;
+}
+
+.fieldInput_1 {
+	color: #FF3D00;
+}
+.fieldInput_2 {
+	color: #0066FF;
+}
+.fieldInput_3 {
+	color: #C414F0;
+}
+.fieldInput_4 {
+	color: #FF9900;
+}
+.fieldInput_5 {
+	color: #67C91A;
 }
