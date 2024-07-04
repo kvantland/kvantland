@@ -26,7 +26,7 @@ def resp():
 	print(dict(request.headers), file=sys.stderr)
 	response.iter_headers(
 		('Allow', 'POST'),
-		('Access-Control-Allow-Origin', 'http://localhost:3000'),
+		('Access-Control-Allow-Origin', config['client']['url']),
 		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
 	)
 	response.status = 200

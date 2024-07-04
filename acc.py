@@ -27,7 +27,7 @@ import json
 def resp():
 	response.iter_headers(
 		('Allow', 'GET'),
-		('Access-Control-Allow-Origin', 'http://localhost:3000'),
+		('Access-Control-Allow-Origin', config['client']['url']),
 		('Access-Control-Allow-Methods', ['GET', 'OPTIONS']),
 	)
 	response.status = 200
