@@ -141,7 +141,7 @@ def get_token():
 		params = {'client_id': client_id,
 		'client_secret': client_secret,
 		'code': request.query['code'],
-		'redirect_uri': 'http://localhost:8080/api/vk_auth'}
+		'redirect_uri': config['client']['url'] + '/api/vk_auth'}
 		token_path = token_url + '?' + urllib.parse.urlencode(params)
 		try:
 			cont = urllib2.urlopen(token_path)
