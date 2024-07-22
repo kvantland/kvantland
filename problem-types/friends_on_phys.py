@@ -4,4 +4,4 @@ def validate(data, answer):
 		result_string = ''.join(converted)
 		return result_string in data['permutation']
 	except:
-        return False
+		return False
