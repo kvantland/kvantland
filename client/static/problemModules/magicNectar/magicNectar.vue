@@ -218,7 +218,7 @@ export default {
                     console.log('concentration: ', nectarAmount/this.volumes[potNum])
                     this.$set(this.nectarConcentration, potNum, nectarAmount/this.volumes[potNum])
                 }
-                setTimeout(() => {resolve('success')}, 1000)
+                setTimeout(() => {resolve('success')}, 300)
             })
             transfusionPromise.then(result => {
                 this.transfusionMode = false
