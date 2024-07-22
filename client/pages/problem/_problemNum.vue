@@ -99,6 +99,7 @@ export default {
             .then((resp) => {
                 status = resp.status
                 problemData = resp.problem
+                this.$auth.fetchUser()
             })
             if (status) {
                 this.variantParams = problemData.variantParams
