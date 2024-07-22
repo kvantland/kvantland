@@ -36,4 +36,11 @@ text.boardName {
     position: relative;
 }
 
+.answer_rect {
+    fill: none;
+}
 
+.answer_rect.active {
+    stroke: cyan;
+    stroke-width: 2px;
+}
