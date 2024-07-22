@@ -1,7 +1,7 @@
 <template>
     <div>
         <ConfirmAnswerDialog v-if="confirmMode" @sendAnswer="sendAnswer" @hideConfirmDialog="hideConfirmDialog" />
-        <button class="submit_button" type="submit" form="problem_form" @click="showConfirmDialog"> Отправить </button>
+        <button class="answer_button" type="submit" form="problem_form" @click="showConfirmDialog"> Отправить </button>
     </div>
 </template>
 
@@ -33,7 +33,9 @@ export default {
 }
 </script>
 <style scoped>
-.submit_button {
+.answer_button {
+    cursor: pointer;
+    border: none;
     align-self: center;
     padding: 10px 0;
     border-radius: 10px;
