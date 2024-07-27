@@ -18,14 +18,10 @@
 import ContactButton from "./components/ContactButton.vue"
 
 export default {
+    props: ['contacts'],
+    
     components: {
         ContactButton,
-    },
-
-    data() {
-        return {
-            contacts: {},
-        }
     },
 
     computed: {
@@ -39,11 +35,6 @@ export default {
             }
         },
     },
-
-    async fetch() {
-        const contactsData = await this.$axios.$get('/api/contacts')
-        this.contacts = contactsData
-    }
 }
 </script>
 

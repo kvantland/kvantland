@@ -16,6 +16,8 @@ import ProblemExample from "./components/ProblemExample.vue"
 import ProblemExampleNav from "./components/ProblemExampleNav.vue"
 
 export default {
+    props: ['problemExamples'],
+
     components: {
         ProblemExample,
         ProblemExampleNav,
@@ -23,7 +25,6 @@ export default {
 
     data() {
         return {
-            problemExamples: {},
             currentExampleProblemNum: 0,
             dialogType: null,
             dialogData: null,
@@ -34,11 +35,6 @@ export default {
         problemAmount() {
             return this.problemExamples.length
         }
-    },
-
-    async fetch() {
-        const problemExamplesData = await this.$axios.$get('/api/problem_examples')
-        this.problemExamples = problemExamplesData
     },
 
     methods: {

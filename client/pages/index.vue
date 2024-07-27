@@ -1,10 +1,10 @@
 <template>
     <div class="content_wrapper">
-        <TournamentInfo />
-        <CommonInfo />
-        <ProblemExamples @showDialog="displayDialog" />
-        <TeamInfo />
-        <ContactsArea />
+        <TournamentInfo :tournamentHistory="tournamentHistoryData"/>
+        <CommonInfo :infoCards="infoCardsData"/>
+        <ProblemExamples :problemExamples="problemExamplesData" @showDialog="displayDialog" />
+        <TeamInfo :teamInfoCards="teamInfoCards" />
+        <ContactsArea :contacts="contactsData" />
         <ProblemExampleDialog v-if="activeDialog" :dialogType="dialogType" 
             :dialogData="dialogData" @closeDialog="hideDialog" 
             @changeDialog="displayDialog" />
@@ -41,6 +41,21 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
                 dialogType: null,
                 dialogData: null,
             };
+        },
+
+        async asyncData({$axios}) {
+            const tournamentHistoryData = await $axios.$get('/api/tournament_history')
+            const problemExamplesData = await $axios.$get('/api/problem_examples')
+            const teamInfoCards = await $axios.$get('/api/team_cards')
+            const contactsData = await $axios.$get('/api/contacts')
+            const infoCardsData = await $axios.$get('/api/info_cards')
+            return {
+                tournamentHistoryData: tournamentHistoryData,
+                problemExamplesData: problemExamplesData,
+                teamInfoCards: teamInfoCards,
+                contactsData: contactsData,
+                infoCardsData: infoCardsData,
+            }
         },
 
         async mounted() {

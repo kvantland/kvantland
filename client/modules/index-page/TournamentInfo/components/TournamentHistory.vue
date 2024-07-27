@@ -15,16 +15,7 @@
 
 <script>
 export default {
-    data() {
-        return {
-            tournamentHistory: {}
-        }
-    },
-
-    async fetch() {
-        const tournamentHistoryData = await this.$axios.$get('/api/tournament_history')
-        this.tournamentHistory = tournamentHistoryData
-    },
+    props: ['tournamentHistory']
 };
 </script>
 

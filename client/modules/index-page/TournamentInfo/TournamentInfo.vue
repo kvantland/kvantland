@@ -14,7 +14,7 @@
                 </NuxtLink>
             </div>
         </div>
-        <TournamentHistory />
+        <TournamentHistory :tournamentHistory="tournamentHistory" />
     </div>
 </template>
 
@@ -22,6 +22,8 @@
 import TournamentHistory from "./components/TournamentHistory.vue"
 
 export default {
+    props: ['tournamentHistory'],
+
     components: {
         TournamentHistory,
     }

@@ -12,19 +12,10 @@
 import CommonInfoCard from "./components/CommonInfoCard.vue"
 
 export default {
+    props: ['infoCards'],
+
     components: {
         CommonInfoCard,
-    },
-
-    data() {
-        return {
-            infoCards: {},
-        }
-    },
-
-    async fetch() {
-        const infoCardsData = await this.$axios.$get('/api/info_cards')
-        this.infoCards = infoCardsData
     },
 }
 </script>

@@ -11,19 +11,10 @@
 import TeamInfoCard from "./components/TeamInfoCard.vue"
 
 export default {
+    props: ['teamInfoCards'],
+
     components: {
         TeamInfoCard,
-    },
-
-    data(){
-        return {
-            teamInfoCards: {},
-        }
-    },
-
-    async fetch() {
-        const teamInfoCards = await this.$axios.$get('/api/team_cards')
-        this.teamInfoCards = teamInfoCards
     },
 }
 </script>
