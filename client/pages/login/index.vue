@@ -16,6 +16,13 @@ export default {
         AuthForm,
         RegForm,
     },
+
+    head() {
+        return {
+            title: 'Квантандия - авторизация',
+        }
+    },
+
     data() {
         return {
             mode: 'auth',
