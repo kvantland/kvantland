@@ -8,10 +8,16 @@ import jwt
 import urllib.request as urllib2
 from login import do_login, current_user
 from passlib.hash import pbkdf2_sha256 as pwhash
+import pkce
+
 import certifi
 from urllib.error import HTTPError, URLError
 
 import urllib.parse
+
+import string
+import secrets
+import random
 
 import sys
 
@@ -20,6 +26,28 @@ redirect_uri = config['vk']['redirect_uri']
 client_id = config['vk']['client_id']
 token_url = config['vk']['token_url']
 info_url = config['vk']['info_url']
+
+
+@route('/api/vk_PKCE', method=["OPTIONS"])
+def resp():
+	response.iter_headers(
+		('Allow', 'POST'),
+		('Access-Control-Allow-Origin', config['client']['url']),
+		('Access-Control-Allow-Methods', ['POST', 'OPTIONS']),
+	)
+	response.status = 200
+
+
+@route('/api/vk_PKCE', method=["POST"])
+def generate_vk_PKCE():
+	code_verifier = pkce.generate_code_verifier(length=128)
+	code_challenge = pkce.get_code_challenge(code_verifier)
+	print(code_verifier, code_challenge)
+	return json.dumps({
+			'code_verifier': code_verifier,
+			'code_challenge': code_challenge,
+			})
+
 
 @route('/api/vk_auth', method=["OPTIONS"])
 def resp():
@@ -31,13 +59,21 @@ def resp():
 	)
 	response.status = 200
 
+
 @route('/api/vk_auth', method=["POST"])
 def vk_auth(db):
 	data =  json.loads(request.body.read().decode('utf-8'))
 	print(data, file=sys.stderr)
-	access_token = data['token']
-	user_id = data['user_id']
-	print(access_token, user_id, file=sys.stderr)
+	code = data['code']
+	code_verifier = data['code_verifier']
+	device_id = data['device_id']
+	state = data['state']
+	
+	print(code, device_id, file=sys.stderr)
+	
+	access_info = get_vk_access_token(code=code, code_verifier=code_verifier, device_id=device_id, state=state)
+	access_token = access_info['access_token']
+	user_id = access_info['user_id']
 
 	user = get_user_vk_info(access_token, user_id)
 	print('user info: ', user, file=sys.stderr)
@@ -80,6 +116,30 @@ def vk_auth(db):
 	return json.dumps(resp)
 
 
+def get_vk_access_token(code, code_verifier, device_id, state):
+	params = {
+		'grant_type': "authorization_code",
+		'code_verifier': code_verifier,
+		'redirect_uri': config['client']['url'],
+		'code': code,
+		'client_id': client_id,
+		'device_id': device_id,
+		'state': state,
+	}
+	request = urllib2.Request(url=token_url, data=urllib.parse.urlencode(params).encode('utf-8'), 
+						   headers={'Content-Type': "application/x-www-form-urlencoded"}, method='POST')
+	try:
+		cont = urllib2.urlopen(request, cafile=certifi.where())
+	except HTTPError as e:
+		print(f"HTTP Error: {e.code}")
+	except URLError as e:
+		print(f"URL Error: {e.reason}")
+	response = json.loads(cont.read())
+	print(response, file=sys.stderr)
+	
+	return {'access_token': response['access_token'], 'user_id': response['user_id']}
+
+
 def get_user_vk_info(access_token, user_id):
 	params = {
 		'user_ids': user_id,
@@ -95,7 +155,8 @@ def get_user_vk_info(access_token, user_id):
 	except URLError as e:
 		print(f"URL Error: {e.reason}")
 	user_info = json.loads(cont.read())
-
+	print(user_info, file=sys.stderr)
+	
 	return user_info['response'][0]
 
 

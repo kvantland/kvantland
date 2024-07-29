@@ -19,19 +19,29 @@ function encodeQuery(opts) {
 }
 
 export default class LocalOauth2Scheme extends Oauth2Scheme {
-	login({state, params, nonce} = {}){ 
+	async login({state, params, nonce} = {}){ 
 		console.log('login!')
+
+        const PKCE = await this.$auth.request({
+			method: 'post',
+			url: this.options.endpoints.PKCEurl,
+		})
+
+		console.log(PKCE.data)
+
 		const opts = {
-			protocol: 'oauth2',
 			response_type: this.options.responseType,
-			access_type: this.options.accessType,
 			client_id: this.options.clientId,
 			redirect_uri: this.options.redirectUri,
 			scope: this.options.scope,
 			state: this.options.state,
-			code_challenge_method: '',
+            code_challenge: PKCE.data.code_challenge,
+            code_challenge_method: this.options.codeChallengeMethod,    
 		}
+            
 		this.$auth.$storage.setUniversal(this.name + '.state', opts.state)
+        this.$auth.$storage.setUniversal(this.name + '.code_verifier', PKCE.data.code_verifier)
+
 		const url = this.options.endpoints.authorization + '?' + encodeQuery(opts)
         console.log(url)
 		window.location.replace(url)
@@ -73,13 +83,15 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 		if (process.server) {
 		  return
 		}
-	
-		const parsedQuery = parseQuery(this.$auth.ctx.route.hash.substr(1))
-		const vk_token = parsedQuery[this.options.token.property]
-		const user_id = parsedQuery[this.options.userId.property]
-		console.log(vk_token, user_id)
 
-		if (!(vk_token || user_id))
+        console.log(this.$auth.ctx.route)
+		const parsedQuery = this.$auth.ctx.route.query
+		const vk_code = parsedQuery[this.options.code.property]
+		const device_id = parsedQuery[this.options.deviceId.property]
+        const code_verifier = this.$auth.$storage.getUniversal(this.name + '.code_verifier')
+		console.log(vk_code, device_id, code_verifier)
+
+		if (!(vk_code || device_id))
 			return
 	
 		// Validate state
@@ -89,17 +101,19 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 		  return
 		}
 
-		const resp = await this.$auth.request({
-			method: 'post',
-			url: this.options.endpoints.apiLogin,
-			baseURL: '',
-			data: {
-				token: vk_token,
-				user_id: user_id,
-			}
-		})
+        console.log('state approved!')
 
-		console.log(resp.data)
+        const resp = await this.$auth.request({
+            method: 'post',
+            url: this.options.endpoints.apiLogin,
+            data: {
+                device_id: device_id,
+                code: vk_code,
+                code_verifier: code_verifier,
+                state: this.options.state,
+            }
+        })
+
 		if (!resp.data.user_exists) {
 			const redirect_to_acc = `/acc/editInfo?${encodeQuery({'user_info': JSON.stringify(resp.data.user_info), 
 				'request': "oauthReg", 'globalError':"fillFields"})}`
@@ -116,7 +130,6 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 		}
 		/*this.token.set(resp.data.tokens[this.options.accessToken.property])
 		this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])*/
-
 		if (this.$auth.options.watchLoggedIn) {
 			await this.fetchUser()
 			this.$auth.redirect('home', true)
