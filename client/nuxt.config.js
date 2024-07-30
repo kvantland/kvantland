@@ -117,16 +117,17 @@ export default {
       vk: {
         scheme: '~auth-schemes/localAuthO',
         endpoints: {
-            authorization: 'http://oauth.vk.com/authorize',
+            authorization: 'https://id.vk.com/authorize',
             apiLogin: `${process.env.API}/api/vk_auth`,
             userInfo: `${process.env.API}/api/user`,
+            PKCEurl: `${process.env.API}/api/vk_PKCE`,
             refresh: '/api/refresh_tokens', 
         },
-        userId: {
-            property: 'user_id',
+        deviceId: {
+            property: 'device_id',
         },
-        token: {
-            property: 'access_token',
+        code: {
+            property: 'code',
         },
         accessToken: {
             property: 'access_token',
@@ -140,11 +141,11 @@ export default {
         user: {
             property: 'user',
         },
-        responseType: 'token',
+        responseType: 'code',
         scope: [],
         clientId: process.env.VK_CLIENT,
-        codeChallengeMethod: '',
-        redirectUri: `${process.env.BASE_URL}/`,
+        codeChallengeMethod: 's256',
+        redirectUri: process.env.BASE_URL,
         state: 'VK',
       }
     },
@@ -152,6 +153,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  target: 'static',
 
   layout: 'default',
 }
