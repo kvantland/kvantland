@@ -141,6 +141,12 @@ export default {
 </script>
 
 <style scoped>
+
+.problem {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 .problem_solution {
     display: flex;
     pointer-events: none;
