@@ -43,6 +43,8 @@ export default {
 
 <style scoped>
 .hint_button {
+    user-select: none;
+    -webkit-user-select: none;
     padding: 10px 20px;
     background: #FFC400;
     box-shadow: 7px 7px 7px #1A5866;

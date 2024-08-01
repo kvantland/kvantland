@@ -35,6 +35,8 @@ export default {
 <style scoped>
 .answer_button {
     cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
     border: none;
     align-self: center;
     padding: 10px 0;
