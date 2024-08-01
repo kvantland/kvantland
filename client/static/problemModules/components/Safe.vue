@@ -152,6 +152,8 @@ export default {
 .arrow{
 	fill:red;
 	stroke: darkred;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .outerRect{
