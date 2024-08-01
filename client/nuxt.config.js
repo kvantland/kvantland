@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -69,7 +71,6 @@ export default {
     '@nuxtjs/recaptcha', 
     '@nuxtjs/proxy',
   ],
-
   proxy: {
     '/api/': {
         target: process.env.API,
@@ -78,8 +79,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     proxy: true,
+    baseUrl: process.env.API
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: process.env.API,
   },
 
   auth: {
@@ -156,5 +157,13 @@ export default {
 
   target: 'static',
 
+  generate: {
+    routes() {
+        return axios.get(`${process.env.API}/api/dynamic_routes`).then(res => {
+          return res.data })
+        }
+  },
+  
   layout: 'default',
 }
+
