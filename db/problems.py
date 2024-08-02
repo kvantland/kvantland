@@ -114,7 +114,7 @@ def IslandOfLiars4(cur):
 			cont = {
 				'inputType': "InteractiveTypeInput",
 				'componentType': "friendsOnPhys",
-				'permutation': permutation,
+				'correct': permutation,
 			}
 			variants_list = add_variant_to_list(variants_list, "Друзья на физкультуре", desc, json.dumps(cont))	
 
