@@ -208,7 +208,7 @@ export default {
                     const rowIndex = boardItem.getAttribute('row')
                     const columnIndex = boardItem.getAttribute('column')
                     let currentConfig = this.boardArrayConfiguration
-                    if (currentConfig[rowIndex][columnIndex].moveStatus === 'passive') {
+                    if (currentConfig[rowIndex][columnIndex].moveStatus) {
                         break;
                     }
                     currentConfig[rowIndex][columnIndex].type = this.target.type
