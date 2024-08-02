@@ -10,7 +10,7 @@ def build_graph(data):
 	return graph
 
 def bfs_shortest_path(graph, start):
-	distances = {node: float('inf') for node in graph}
+	distances = {node: float('inf') for node in graph.keys()}
 	distances[start] = 0
 	queue = [start]
 	
@@ -27,10 +27,11 @@ def bfs_shortest_path(graph, start):
 
 def validate(data, answer):
 	try:
+		print(answer)
 		graph = build_graph(answer)
 		
-		for node in graph:
-			if len(node) > 4:
+		for node in graph.keys():
+			if len(graph[node]) > 4:
 				return False
 			distances = bfs_shortest_path(graph, node)
 			print(distances)
