@@ -117,7 +117,7 @@ export default {
         },
         getNearestRectNum(x, y) {
             let minDist = 1000000000000
-            let optimalNum = null
+            let optimalNum = undefined
             for(let rectNum = 0; rectNum < this.boysAmount; rectNum++) {
                 let rect = document.querySelector(`.rect_${rectNum}`).getBoundingClientRect()
                 let rectCenterCoordinates = {
@@ -132,7 +132,7 @@ export default {
             }
             if (minDist <= this.allowedDistToDrop)
                 return optimalNum
-            return null
+            return undefined
         },
         autoscroll() {
             const targetX = window.event.clientX
