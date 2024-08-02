@@ -4,7 +4,7 @@
         <g :transform="`scale(${scale})`" class="scaling">
             <g class="scales" :transform="`translate(${cupInnerRadiusX} 0)`">
                 <g class="plank_with_cups" :transform="`translate(0 ${horizontalPlankMarginTop}) rotate(${angle} ${horizontalPlankWidth / 2} ${horizontalPlankHeight / 2})`">
-                    <rect class="plank" 
+                    <rect class="plank" style="fill: url(#blankShadow);	stroke: #976B38; stroke-width: 2;"
                                 x="0"
                                 y="0"
                                 :width="`${horizontalPlankWidth}`"
@@ -26,14 +26,14 @@
                 </g>
                 <g class="base_with_plank" :transform="`translate(${horizontalPlankWidth / 2} 0)`">
                     <g class="basement" :transform="`translate(${-baseWidth / 2} ${verticalPlankHeight})`">
-                        <path class="base_outside"
+                        <path class="base_outside" style="stroke: #86755B; stroke-width: 2; fill: url(#baseBlankShadow);"
                                 :d="`M 0 0 
                                 V ${baseHeight}
                                 a ${baseOuterRadiusX} ${baseOuterRadiusY} 0 0 0 ${baseWidth} 0
                                 V 0
                                 H 0`" />
-                        <g class="base_top" :transform="`translate(${baseWidth / 2} 0)`">
-                            <ellipse class="base_outside_top"
+                        <g class="base_top" :transform="`translate(${baseWidth / 2} 0)`" style="fill: #B68645; stroke: #976B38;	stroke-width: 2;">
+                            <ellipse class="base_outside_top" style="fill: url(#baseBlankShadow);"
                                     cx="0"
                                     cy="0"
                                     :rx="`${baseOuterRadiusX}`"
@@ -45,14 +45,14 @@
                                     :ry="`${baseInnerRadiusY}`" />
                         </g>
                     </g>
-                    <path class="base_plank"
+                    <path class="base_plank" style="fill: url(#baseBlankShadow); stroke: #976B38; stroke-width: 2;"
                             :transform="`translate(${-verticalPlankWidth / 2} 0)`"
                             :d="`M 0 0
                             V ${verticalPlankHeight}
                             A ${verticalPlankWidth / 2} ${verticalPlankWidth / 2 * ellipseAlpha} 0 0 0 ${verticalPlankWidth} ${verticalPlankHeight}
                             V 0
                             A ${verticalPlankWidth / 2} ${verticalPlankWidth / 2 * ellipseAlpha} 0 0 0 0 0`"/>
-                    <circle class="hinge"
+                    <circle class="hinge" style="fill: #A7763D;	stroke: #815A30; stroke-width: 4;"
                         cx="0"
                         :cy="`${horizontalPlankMarginTop + horizontalPlankHeight / 2}`"
                         :r="`${hingeR * 2}`" />
@@ -169,7 +169,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-@import "./Scales.css" 
-</style>

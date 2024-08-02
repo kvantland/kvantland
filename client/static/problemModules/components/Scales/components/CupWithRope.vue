@@ -1,7 +1,7 @@
 <template>
     <g>
         <g :class= "`cup ${name}`" :transform="`translate(0 ${ropeHight})`">
-            <ellipse class="inside" 
+            <ellipse class="inside" style="fill: url(#cupShadowInside);	stroke: #949494; stroke-width: 2;" 
                         cx="0"
                         cy="0"
                         :rx="`${cupInnerRadiusX}`"
@@ -10,13 +10,14 @@
                 <g v-for="(object, objectNum) in objects" v-html="object.html" class="object" @mousedown="moveFromCup(object.payload)"
                     :transform="`translate(${objectsCoordinates[objectNum].x} ${objectsCoordinates[objectNum].y})`"></g>
             </g>
-            <path class="outside" :d="`
+            <path class="outside" style="fill: url(#cupShadowOutside); stroke: #949494;	stroke-width: 2;"
+                    :d="`
                         M  ${-cupOuterRadiusX} 0 
                         a ${cupOuterRadiusX} ${cupOuterRadiusY} 0 0 0 ${cupWidth} 0
                         A ${cupInnerRadiusX} ${cupInnerRadiusY} 0 0 1 ${-cupWidth / 2} 0 `" />
         </g>
 
-        <g class="ropes">
+        <g class="ropes" style="stroke: #484848; stroke-width: 2;">
             <line 
                 x1="0"
                 y1="0"
@@ -34,7 +35,7 @@
                 :y2="ropeHight" />
         </g>
             
-        <circle class="hinge"
+        <circle class="hinge" style="fill: #A7763D;	stroke: #815A30; stroke-width: 4;"
                     cx="0"
                     cy="0"
                     :r="`${hingeR}`"/>
@@ -84,30 +85,9 @@ export default {
 </script>
 
 <style scoped>
+
 .object {
     cursor: grab;
 }
 
-line{
-	stroke: #484848;
-	stroke-width: 2;
-}
-
-.hinge{
-	fill: #A7763D;
-	stroke: #815A30;
-	stroke-width: 4;
-}
-
-.outside{
-	fill: url(#cupShadowOutside);
-	stroke: #949494;
-	stroke-width: 2;
-}
-
-.inside{
-	fill: url(#cupShadowInside);
-	stroke: #949494;
-	stroke-width: 2;
-}
 </style>
