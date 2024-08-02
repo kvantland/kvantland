@@ -11,23 +11,26 @@
             </linearGradient>
         </defs>
         <g :transform="`translate(0 ${arrowsHeight + arrowsPad})`" class="safe_without_arrows"> 
-            <rect class="outerRect" x="0" y="0" :width="outerRectWidth" :height="outerRectHeight" />
+            <rect class="outerRect" x="0" y="0" :width="outerRectWidth" :height="outerRectHeight" style="fill:rgb(96,96,96);" />
             <g :transform="`translate(${paddingLeft} ${paddingTop})`" class="slots_container">
-                <rect class="innerRect" x="0" y="0" :width="innerRectWidth" :height="innerRectHeight" />
+                <rect class="innerRect" x="0" y="0" :width="innerRectWidth" :height="innerRectHeight" style="fill: black" />
                 <g class="slots" :transform="`translate(${gap} ${gap})`">
                     <svg v-for="(slot, slotNum) in slotsAmount" class="slot" :x="slotNum * (gap + slotWidth)" y="0" :width="slotWidth" :height="slotHeight" :key="`slot_${slotNum}`">
                         <rect class="slot_display" x="0" y="0" :width="slotWidth" :height="slotHeight" :fill="`url(#slotShadow)`" />
                         <g class="text" :transform="`translate(${slotWidth / 2} ${slotHeight / 2})`">
                             <svg x="0" :y="Math.sin(scrollAngles[slotNum] - Math.PI/5) * slotRadius" overflow="visible" dy="0.35em">
-                                <text class="prev_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum] - Math.PI/5)})`"> 
+                                <text class="prev_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum] - Math.PI/5)})`"
+                                    style="font-size: 30px; text-anchor: middle; font-family: inherit; font-weight: 1000"> 
                                     {{ currentValues[slotNum][0] }} </text>
                             </svg>
                             <svg x="0" :y="Math.sin(scrollAngles[slotNum]) * slotRadius" overflow="visible">
-                                <text class="current_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum])})`" dy="0.35em">
+                                <text class="current_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum])})`" dy="0.35em"
+                                    style="font-size: 30px; text-anchor: middle; font-family: inherit; font-weight: 1000">
                                     {{ currentValues[slotNum][1] }} </text>  
                             </svg>
                             <svg x="0" :y="Math.sin(scrollAngles[slotNum] + Math.PI/5) * slotRadius" overflow="visible">
-                                <text class="next_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum] + Math.PI/5)})`" dy="0.35em"> 
+                                <text class="next_number" :transform="`scale(1 ${Math.cos(scrollAngles[slotNum] + Math.PI/5)})`" dy="0.35em"
+                                    style="font-size: 30px; text-anchor: middle; font-family: inherit; font-weight: 1000"> 
                                     {{ currentValues[slotNum][2] }} </text>
                             </svg>
                         </g>
@@ -35,7 +38,7 @@
                 </g>
             </g>
         </g>
-        <g class="arrows" :transform="`translate(${paddingLeft + gap} 0)`">
+        <g class="arrows" :transform="`translate(${paddingLeft + gap} 0)`" style="fill:red; stroke: darkred; user-select: none; -webkit-user-select: none;">
             <path v-for="(slot, slotNum) in slotsAmount" v-if="startValues[slotNum] == '*'" :key="`arrow_up_${slotNum}`"
                 :transform="`translate(${slotNum * (slotWidth + gap)} ${arrowsHeight})`" @click="scrollUp(slotNum)"
                 :d="`M 0 0 h ${slotWidth} l ${-slotWidth/2},${-arrowsHeight/2} z`" class="up_arrow arrow" ></path>
@@ -149,25 +152,6 @@ export default {
 
 <style scoped>
 
-.arrow{
-	fill:red;
-	stroke: darkred;
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-.outerRect{
-	fill:rgb(96,96,96);
-}
-
-text.number_value{
-	font-family:Agency FB;
-	font-size: 50px;
-}
-.innerRect{
-    fill: black;
-}
-
 @media(hover:hover) and (pointer:fine) {
 	.arrow:hover {
 		cursor:pointer;
@@ -175,10 +159,4 @@ text.number_value{
 	}
 }
 
-text{
-	font-size: 30px;
-	text-anchor: middle;
-	font-family: inherit;
-	font-weight: 1000
-}
 </style>
