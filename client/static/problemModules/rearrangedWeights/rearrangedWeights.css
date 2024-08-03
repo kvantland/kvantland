@@ -86,14 +86,20 @@ text.boardName {
 }
 
 .history {
-    white-space: nowrap;
+    padding: 1vh 5%;
+    gap: max(15px, 1.8vw);
     display: inline-flex;
     flex-direction: column;
-    padding: 0.9em 0.9em;
-    font-size: 0.9em;
-    gap: 20px;
+    font-size: 1.1vw;
     background-color: white;
     border: 1px black solid;
     border-radius: 8px;
     justify-content: center;
+}
+
+.history p {
+    display: inline-block;
+    flex-direction: column;
+    font-size: max(8px, 0.9vw);
+    white-space: nowrap;
 }
