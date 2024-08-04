@@ -83,13 +83,15 @@ export default {
                 console.log(this.countLinesFromPoint(point1), this.countLinesFromPoint(point2))
                 const curIndex = this.lineIndex(point1, point2)
                 if (curIndex !== -1) {
-                    this.lines.splice(curIndex, 1);
+                    this.lines.splice(curIndex, 1)
+                    this.ans.splice(curIndex, 1)
+                    this.$emit('updateAnswer', this.ans)
                 } else if (point1 !== point2 && this.countLinesFromPoint(point1) < 4 && this.countLinesFromPoint(point2) < 4) {
                     this.lines.push({ point1, point2 });
                     this.ans.push([index1, index2]);
                     this.$emit('updateAnswer', this.ans)
-                    //console.log(this.ans)
                 }
+                console.log(this.ans)
                 this.selectedPoints = [];
             }
         },
