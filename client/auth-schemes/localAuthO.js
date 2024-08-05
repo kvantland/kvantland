@@ -154,16 +154,18 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 
         // Get refresh token status
         const refreshTokenStatus = this.refreshToken.status()
+        const accessTokenStatus = this.accessToken.status()
 
         // Refresh token is expired. There is no way to refresh. Force reset.
         if (refreshTokenStatus.expired()) {
             this.$auth.reset()
             throw new ExpiredAuthSessionError()
         }
-        else {
+
+        if (!accessTokenStatus.expired()) {
             return
         }
-
+        
         // Delete current token from the request header before refreshing
         this.requestHandler.clearHeader()
 
