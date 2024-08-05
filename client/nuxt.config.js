@@ -95,7 +95,7 @@ export default {
       local: {
         scheme: 'refresh',
         token: {
-          property: 'token',
+          property: 'access_token',
           global: true,
           type: 'Bearer',
           maxAge: 1800,
@@ -161,6 +161,8 @@ export default {
           return res.data })
         }
   },
+
+  target: 'static',
   
   layout: 'default',
 }
