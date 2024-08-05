@@ -82,7 +82,7 @@ def vk_auth(db):
 			'login': "",
 			'name': "",
 			'surname': "",
-			'city': "",
+			'town': "",
 			'school': "",
 		},
 		'user_exists': False,
@@ -100,7 +100,7 @@ def vk_auth(db):
 		resp['user_info']['surname'] = user['last_name']
 	if 'city' in user.keys():
 		if 'title' in user['city'].keys():
-			resp['user_info']['city'] = user['city']['title']
+			resp['user_info']['town'] = user['city']['title']
 	if 'schools' in user.keys():
 		if len(user['schools']) > 0:
 			resp['user_info']['school'] = user['schools'][0]['name']
