@@ -10,9 +10,8 @@ if [ -z "$postgres" ]; then
 	postgres="$(PYTHONPATH="$dir/.." python3 -c "from config import config; print(config['db']['url'])")"
 fi
  
-"$dir/set-current-tournament.py" "$postgres"
+python "$dir/set-current-tournament.py" "$postgres"
 psql "$postgres" -1 -f "$dir/update-score.sql"
-"$dir/insert-new-tournament.py" "$postgres"
-"$dir/problems.py" "$postgres"
+python "$dir/problems.py" "$postgres"
 psql "$postgres" -1 -f "$dir/assign-problems.sql"
 
