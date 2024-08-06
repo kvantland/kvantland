@@ -1,6 +1,3 @@
-#!/bin/python3
-
-import base64
 import sys
 import psycopg
 
@@ -11,7 +8,6 @@ project_root = os.path.dirname(current_path)
 sys.path.append(project_root)
 from config import config
 
-
 current_tournament = config['tournament']['version']
 current_season = config['tournament']['season']
 
@@ -21,5 +17,4 @@ if len(sys.argv) > 1:
 with psycopg.connect(db) as con:
 	with con.transaction():
 		with con.cursor() as cur:
-			cur.execute('update Kvantland.CurrentTournament set tournament=%s, season=%s', (current_tournament, current_season))
-			#cur.execute('insert into Kvantland.CurrentTournament values(%s, %s)', (current_tournament, current_season)) #только для первого использования!
+			cur.execute('insert into Kvantland.Season values(%s, %s)', (current_season, current_tournament))
