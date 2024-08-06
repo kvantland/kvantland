@@ -21,4 +21,6 @@ if len(sys.argv) > 1:
 with psycopg.connect(db) as con:
 	with con.transaction():
 		with con.cursor() as cur:
-			cur.execute('insert into Kvantland.CurrentTournament values(%s, %s)', (current_tournament, current_season))
+			cur.execute('update Kvantland.CurrentTournament set tournament=%s, season=%s', (current_tournament, current_season))
+			cur.execute('insert into Kvantland.Season values(%s, %s)', (current_season, current_tournament))
+			#cur.execute('insert into Kvantland.CurrentTournament values(%s, %s)', (current_tournament, current_season)) #только для первого использования!
