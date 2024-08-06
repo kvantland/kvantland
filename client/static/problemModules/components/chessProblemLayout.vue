@@ -172,7 +172,8 @@ export default {
             this.$set(this.target, 'type', type)
             if (fromRow != undefined && fromColumn != undefined) {
                 let currentConfig = this.boardArrayConfiguration
-                currentConfig[fromRow][fromColumn].type = ''
+                currentConfig[fromRow][fromColumn].type = undefined
+                currentConfig[fromRow][fromColumn].moveStatus = undefined
                 this.$emit('updateConfig', currentConfig)
             }
             this.moveAt(x, y)
