@@ -440,9 +440,16 @@ def get_tournament_amount(db, tournament, season):
 	return len(tournaments)
 
 def get_score_text(db, tournament):
+	token_check_status = check_token(request)
+	print(token_check_status, file=sys.stderr)
+	if token_check_status['error']:
+		response.status = 400
+		return "Ошибка авторизации!"
+	else:
+		user = token_check_status['user_id']
 	if tournament == config['tournament']['version']:
 		return "Идёт сейчас"
-	db.execute('select score from Kvantland.Score where student=%s and tournament=%s', (current_user(db), tournament, ))
+	db.execute('select score from Kvantland.Score where student=%s and tournament=%s', (user, tournament, ))
 	try:
 		(score, ), = db.fetchall()
 	except ValueError:
