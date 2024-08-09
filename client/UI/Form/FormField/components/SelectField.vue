@@ -2,7 +2,7 @@
     <div>
         <div class="select_line" @click="showSelect">
             <input name="fieldInfo.name" :value="selectedOption"
-            readonly /> 
+            readonly > 
             <img class="arrow" src="/icons/down_arrow.svg" />
         </div>
         <SelectList ref="SelectList" v-if="showSelectList" :options="fieldInfo.options" 

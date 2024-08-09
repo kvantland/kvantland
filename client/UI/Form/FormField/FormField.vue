@@ -4,7 +4,7 @@
             <div class="content">
                 <span class="placeholder"> {{ fieldInfo.placeholder }} </span>
                 <input :name="fieldInfo.name" :type="fieldInfo.inputType" v-if="fieldInfo.type=='input'" 
-                @input="changeValue($event.target.value)" :value="value" :readonly="readonly" />
+                @input="changeValue($event.target.value)" :value="value" :readonly="readonly" >
                 <SelectField v-else-if="fieldInfo.type=='select'" @selectOption="selectOption" 
                     :fieldInfo="fieldInfo" :selectedOption="currentValue" />
             </div>

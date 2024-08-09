@@ -4,7 +4,7 @@
         <div class="field_with_error">
             <div class="check_cont">
                 <input class="checkbox" type="checkbox" name="approval"
-                    id="approval" v-model="check" />
+                    id="approval" v-model="check" >
                 <div class="label"> Я принимаю условия 
                     <NuxtLink to="/policy"> <span class="underline">Политики конфиденциальности</span> </NuxtLink> и даю 
                     <span class="underline approval" @click="showDialog"> согласие на обработку своих персональных данных</span>
