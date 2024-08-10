@@ -9,7 +9,7 @@ header {
 	justify-content: space-between; 
 	align-items: center; 
 	display: inline-flex;
-	z-index: 3;
+	z-index: 10;
 	box-shadow: 0 1px 5px #C2C2C2;
     transition: transform 0.3s;
 }
