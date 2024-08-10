@@ -4,7 +4,7 @@
 
 svg {
     width: 50%;
-    z-index: 2;
+    z-index: 1;
     position: relative;
 }
 
