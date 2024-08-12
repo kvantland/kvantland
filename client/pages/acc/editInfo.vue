@@ -29,54 +29,47 @@ export default {
     head() {
         return {
             title: ' Личный кабинет — Квантландия '
+        };
+    },
+
+    async asyncData({ $axios, route, app }) {
+        const fieldsTypeInfo = await $axios.$get('/api/acc_fields');
+        let fieldsValueInfo = {};
+        switch (route.query.request) {
+            case 'oauthReg': {
+                fieldsValueInfo = JSON.parse(route.query.user_info);
+                break;
+            }
+            default: {
+                fieldsValueInfo = JSON.parse(JSON.stringify(app.$auth.user)) || {};
+                break;
+            }
         }
+
+        return {
+            fieldsTypeInfo: fieldsTypeInfo,
+            fieldsValueInfo: fieldsValueInfo,
+            globalError: route.query.globalError === 'fillFields'
+                ? 'Все поля в личном кабинете обязательны </br> для заполнения'
+                : ''
+        };
     },
 
     data() {
         return {
             pageMod: 'updateInfo',
+            fieldsErrors: {},
             fieldsTypeInfo: [],
             fieldsValueInfo: [],
-            fieldsErrors: {},
-            globalError: "",
             checkEmailMode: false,
             sendEmailDescription: `Письмо для подтверждения адреса
                                     электронной почты,</br> 
-                                    привязанной	к Вашему аккаунту, успешно отправлено!</br>
+                                    привязанной к Вашему аккаунту, успешно отправлено!</br>
                                     Для подтверждения адреса, перейдите по ссылке в</br>
                                     письме, которое придёт Вам на почту`,
             sendEmailData: {},
             sendEMailRequestUrl: "/api/acc_form_request",
-        }
-    },
-
-    async fetch() {
-        let fieldsTypeInfoData = await this.$axios.$get('/api/acc_fields')
-        this.fieldsTypeInfo = fieldsTypeInfoData
-    },
-
-    mounted() {
-        let fieldsValueInfo = {}
-        switch (this.$route.query.request) {
-            case "oauthReg": {
-                for (let key in JSON.parse(this.$route.query.user_info)) {
-                    fieldsValueInfo[key] = JSON.parse(this.$route.query.user_info)[key]
-                }
-                this.pageMod = "oauthReg"
-                break;
-            }
-            default: {
-                for (let key in this.$auth.user) {
-                    fieldsValueInfo[key] = this.$auth.user[key]
-                }
-                break;
-            }
-        }
-        this.fieldsValueInfo = fieldsValueInfo
-        switch(this.$route.query.globalError) {
-            case 'fillFields':
-                this.globalError = "Все поля в личном кабинете обязательны </br> для заполнения"
-        }
+        };
     },
 
     methods: {
@@ -84,11 +77,14 @@ export default {
             this.fieldsErrors[name] = ""
             this.globalError = ""
         },
+
         async submitAccForm() {
-            let userInfo = this.fieldsValueInfo
-            this.fieldsTypeInfo.forEach((field) => {if (!userInfo[field.name]) userInfo[field.name] = ""})
+            const userInfo = { ...this.fieldsValueInfo };
+            this.fieldsTypeInfo.forEach((field) => {
+                if (!userInfo[field.name]) userInfo[field.name] = ""
+            })
             if (!userInfo['approval']) userInfo['approval'] = false
-            const requestBody = {'user_info': userInfo, 'action_type': this.pageMod}
+            const requestBody = { user_info: userInfo, action_type: this.pageMod }
             let emailChanged = false
             let errors = {}
             let status = false
@@ -98,17 +94,16 @@ export default {
                     if (res.email_changed)
                         emailChanged = true
                     errors = res.errors
-                })
-            console.log(errors)
-            this.fieldsErrors = errors
+                });
+            console.log(errors);
+            this.fieldsErrors = errors;
             if (status) {
                 this.checkEmailMode = emailChanged
                 this.sendEmailData = requestBody
             }
         },
-    }
-
-}
+    },
+};
 </script>
 
 <style scoped>
