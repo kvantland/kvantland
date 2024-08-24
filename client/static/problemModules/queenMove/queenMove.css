@@ -1,0 +1,26 @@
+svg {
+	width: 50%;
+}
+
+.item {
+	stroke-width: 1px;
+	stroke: black;
+}
+
+.orange {
+	fill: orange;
+}
+
+.white {
+	fill: white;
+}
+
+.active {
+    cursor: pointer;
+}
+
+.possible_position {
+    fill: lightgreen;
+    stroke: none;
+    filter: blur(1px);
+}
