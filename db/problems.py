@@ -149,7 +149,7 @@ def Games():
 				'horse_config': horse_config,
 				'queen_position': [9, 0], 
 				'componentType': 'queenMove',
-				'inputType': 'InteractiveTypeInput',
+				'inputType': 'HintOnlyInput',
 			}
 		})
 	
