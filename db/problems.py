@@ -34,7 +34,11 @@ class Town:
 		if problem.hint:
 			cur.execute("insert into Kvantland.Hint (problem, content, cost) values (%s, %s, %s)", (problem.id, problem.hint, problem.hint_cost))
 		for variant in problem.variants:
-			cur.execute("insert into Kvantland.Variant (problem, description, content) values (%s, %s, %s)", (problem.id, variant['description'], json.dumps(variant['content'])))	
+			try:
+				description = variant['description']
+			except:
+				description = ''
+			cur.execute("insert into Kvantland.Variant (problem, description, content) values (%s, %s, %s)", (problem.id, description, json.dumps(variant['content'])))	
 
 	def add_problems(self, problem_list):
 		for problem in problem_list:
@@ -138,13 +142,6 @@ def Games():
 		],
 	]:
 		problem_1.add_variant({
-			'description': '''Сыграйте с компьютером в игру!
-						Перед вами квадратное шахматное поле 10 х 10, на некоторых клетках которого стоят шахматные кони. 
-						В левом нижнем углу доски стоит ферзь. За один ход игрокам по очереди разрешается передвинуть 
-						ферзя на произвольное число клеток либо вправо по горизонтали, либо вверх по вертикали, либо вправо-вверх 
-						по диагонали. Однако запрещено “перепрыгивать” коней и останавливаться в клетках, которые бьют кони. 
-						Проигрывает тот, кто не сможет сделать ход. Вы можете выбрать, ходить первым или вторым. 
-						Не упустите возможность и выиграйте у компьютера!''',
 			'content': {
 				'turn': 'player',
 				'horse_config': horse_config,

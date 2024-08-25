@@ -155,7 +155,13 @@ def get_problem_data(db):
 				description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost 
 				from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join 
 				Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s''', (variant,))
-		(town, town_name, type_, name, description, image, points, content, hint, hint_cost), = db.fetchall()
+		(town, town_name, type_, name, db_description, image, points, content, hint, hint_cost), = db.fetchall()
+		try:
+			typedesc = import_module(f'problem-types.{type_}')
+			description = typedesc.description(content)
+		except:
+			description = db_description
+		print('description:', description)
 		default = content
 		db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
 		(step, curr, ), = db.fetchall()
