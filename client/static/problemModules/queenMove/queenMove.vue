@@ -1,29 +1,36 @@
 <template>
-	<svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
-		preserveAspectRatio="xMidYMid meet" 
-		overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-		<g class="board">
-			<g class="row" v-for="(row_index, row) in boardSide" :transform="`translate(0 ${row * (boardItemHeight)})`" :key="`row_${row}`">
-				<g class="item" v-for="(column_index, column) in boardSide" :transform="`translate(${column * (boardItemWidth)} 0)`" :key="`item_${row}_${column}`">
-					<rect :class="(column + row) % 2 == 0 ? 'item orange' : 'item white'"
-						:width="boardItemWidth" :height="boardItemHeight" x="0" y="0" />
-					<image v-if="horseConfig[row][column] === 'H'"
-						class="horse" 
-						href="/problem_assets/chess/horse_b.png" :key="`horse_${row}_${column}`"
-						:width="boardItemWidth" :height="boardItemHeight" x="0" y="0" />
-					<circle v-if="possiblePositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([row, column])})" class="possible_position"
-						:cx="boardItemWidth / 2" :cy="boardItemHeight / 2" :r="boardItemWidth * 0.2" />
+	<div class="game_plot">
+		<p :class="['turn_sign', this.turn]"> {{ this.turn === 'player' ? 'Ваш ход' : 'Ход компьютера' }} </p>
+		<svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
+			preserveAspectRatio="xMidYMid meet" 
+			overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+			<g class="board">
+				<g class="row" v-for="(row_index, row) in boardSide" :transform="`translate(0 ${row * (boardItemHeight)})`" :key="`row_${row}`">
+					<g :class="possiblePositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([row, column])}) ? 'possible item' : 'item'" 
+						v-for="(column_index, column) in boardSide" :transform="`translate(${column * (boardItemWidth)} 0)`" :key="`item_${row}_${column}`"
+						@click="endPlayerMove(row, column)">
+						<rect :class="(column + row) % 2 == 0 ? 'item orange' : 'item white'"
+							:width="boardItemWidth" :height="boardItemHeight" x="0" y="0" />
+						<image v-if="horseConfig[row][column] === 'H'"
+							class="horse" 
+							href="/problem_assets/chess/horse_b.png" :key="`horse_${row}_${column}`"
+							:width="boardItemWidth" :height="boardItemHeight" x="0" y="0" />
+						<circle v-if="possiblePositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([row, column])})" class="possible_position"
+							:cx="boardItemWidth / 2" :cy="boardItemHeight / 2" :r="boardItemWidth * 0.2" />
+					</g>
 				</g>
 			</g>
-		</g>
-		<image class="queen active" href="/problem_assets/chess/queen_w.png" @click="startMove"
-			:width="boardItemWidth" :height="boardItemHeight" :x="queenPosition[1] * boardItemWidth" :y="queenPosition[0] * boardItemHeight" />
-	</svg>
+			<image :class="[mode == 'move' ? turn : null, 'queen', 'active']" href="/problem_assets/chess/queen_w.png" @click="startPlayerMove"
+				:width="boardItemWidth" :height="boardItemHeight" 
+				:x="turn === 'computer' ? queenComputerPosition[1] * boardItemWidth : queenPosition[1] * boardItemWidth" 
+				:y="turn === 'computer' ? queenComputerPosition[0] * boardItemHeight : queenPosition[0] * boardItemHeight" />
+		</svg>
+	</div>
 </template>
 
 <script>
 export default {
-	props: ["problemParams"],
+	props: ["problemParams", "newXhr", "xhrData"],
 	model: {
 		prop: 'answer',
 		event: 'updateAnswer'
@@ -31,10 +38,12 @@ export default {
 
 	data() {
 		return {
+			turn: 'player',
 			mode: 'await',
 			possiblePositions: [],
 			boardItemWidth: 20,
 			boardItemHeight: 20,
+			queenComputerPosition: undefined,
 		}
 	},
 
@@ -82,14 +91,42 @@ export default {
 		},
 	},
 
+	watch: {
+		newXhr(isNew) {
+			if (isNew) {
+				console.log('newXhr')
+				this.$emit('xhrGet')
+				console.log(this.turn, this.xhrData)
+				if (this.xhrData.xhr_answer.status === 'accepted') {
+					if (this.xhrData.xhr_answer.turn === 'computer' && this.mode == 'await') {
+						console.log(this.queenComputerPosition)
+						this.startComputerMove(this.xhrData.xhr_answer.row, this.xhrData.xhr_answer.column)
+					}
+					else if (this.xhrData.xhr_answer.turn === 'player') {
+						console.log('computer turn!')
+						setTimeout(function(){this.$emit('xhrRequest', {turn: 'computer', 'solution': document.querySelector('.game_plot').outerHTML})}.bind(this), 10)
+					}
+				}
+			}
+		},
+		mode(newValue) {
+			console.log(newValue)
+			if (newValue === 'await') {
+				this.possiblePositions = []
+			}
+		},
+	},
+
 	methods: {
-		startMove() {
+		startPlayerMove() {
+			if (this.turn !== 'player') {
+				return;
+			} 
 			console.log('move start!')
-			if (this.mode == 'await')
+			if (this.mode === 'await')
 				this.mode = 'move';
 			else {
 				this.mode = 'await';
-				this.possiblePositions = []
 				return;
 			}
 			let currentPossiblePositions = []
@@ -120,6 +157,39 @@ export default {
 				currentPossiblePositions.push([newY, newX])
 			}
 			this.possiblePositions = currentPossiblePositions
+		},
+
+		endPlayerMove(row, column) {
+			if (!this.mode == 'move') {
+				return
+			}
+			if (this.possiblePositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([row, column])})) {
+				this.queenComputerPosition = [row, column]
+				this.turn = 'computer'
+				this.mode = 'await'
+				this.$emit('xhrRequest', {row: row, column: column, turn: 'player'})
+			}
+		},
+
+		startComputerMove(row, column) {
+			this.mode = 'move'
+			const step = [(row - this.queenComputerPosition[0]) / 30, (column - this.queenComputerPosition[1]) / 30]
+			console.log(step)	
+			console.log(this.queenComputerPosition, row, column)
+			const movement = setInterval(function(){
+				console.log(this.queenComputerPosition, row, column)
+				if (Math.abs(this.queenComputerPosition[0] - row) >= 0.1 || Math.abs(this.queenComputerPosition[1] - column) >= 0.1) {
+					console.log('iteration', [this.queenComputerPosition[0] + step[0], this.queenComputerPosition[1] + step[1]]);
+					this.queenComputerPosition = [this.queenComputerPosition[0] + step[0], this.queenComputerPosition[1] + step[1]];
+				}
+				else {
+					console.log('stop computer movement')
+					clearInterval(movement);
+					this.turn = 'player'
+					this.mode = 'await'
+					setTimeout(function(){this.$emit('xhrRequest', {'check': true, 'solution': document.querySelector('.game_plot').outerHTML})}.bind(this), 20)
+				}
+			}.bind(this), 15)
 		}
 	}
 }
