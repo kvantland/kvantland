@@ -34,7 +34,11 @@ class Town:
 		if problem.hint:
 			cur.execute("insert into Kvantland.Hint (problem, content, cost) values (%s, %s, %s)", (problem.id, problem.hint, problem.hint_cost))
 		for variant in problem.variants:
-			cur.execute("insert into Kvantland.Variant (problem, description, content) values (%s, %s, %s)", (problem.id, variant['description'], json.dumps(variant['content'])))	
+			try:
+				description = variant['description']
+			except:
+				description = ''
+			cur.execute("insert into Kvantland.Variant (problem, description, content) values (%s, %s, %s)", (problem.id, description, json.dumps(variant['content'])))	
 
 	def add_problems(self, problem_list):
 		for problem in problem_list:
@@ -42,8 +46,6 @@ class Town:
 
 
 class Problem:
-	variants = []
-	id = None
 	
 	def __init__(self, name='', points=0, type_='', hint=None, hint_cost=None, image=None):
 		self.name = name
@@ -56,6 +58,8 @@ class Problem:
 			self.hint_cost = 1
 		self.image = image
 		self.type_id = self.get_type_id(type_)
+		self.variants = []
+		self.id = None
 
 	def get_type_id(self, type_):
 		cur.execute("select type_ from Kvantland.Type_ where code = %s", (type_, ))
@@ -138,22 +142,34 @@ def Games():
 		],
 	]:
 		problem_1.add_variant({
-			'description': '''Сыграйте с компьютером в игру!
-						Перед вами квадратное шахматное поле 10 х 10, на некоторых клетках которого стоят шахматные кони. 
-						В левом нижнем углу доски стоит ферзь. За один ход игрокам по очереди разрешается передвинуть 
-						ферзя на произвольное число клеток либо вправо по горизонтали, либо вверх по вертикали, либо вправо-вверх 
-						по диагонали. Однако запрещено “перепрыгивать” коней и останавливаться в клетках, которые бьют кони. 
-						Проигрывает тот, кто не сможет сделать ход. Вы можете выбрать, ходить первым или вторым. 
-						Не упустите возможность и выиграйте у компьютера!''',
 			'content': {
+				'turn': 'player',
 				'horse_config': horse_config,
 				'queen_position': [9, 0], 
 				'componentType': 'queenMove',
-				'inputType': 'InteractiveTypeInput',
+				'inputType': 'HintOnlyInput',
+			}
+		})
+
+	problem_2 = Problem(
+		name = 'Звёздные войны',
+		points = 3,
+		type_ = 'star_wars',
+	)
+
+	for dron_amount, board_side in [
+		(7, 10),
+	]:
+		problem_2.add_variant({
+			'content': {
+				'dron_amount': dron_amount,
+				'board_side': board_side,
+				'componentType': "starWars",
+				'inputType': "HintOnlyInput",
 			}
 		})
 	
-	current_town.add_problems([problem_1, ])
+	current_town.add_problems([problem_1, problem_2, ])
 	
 
 def Algorithms():
