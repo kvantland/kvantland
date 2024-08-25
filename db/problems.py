@@ -157,15 +157,22 @@ def Games():
 		type_ = 'star_wars',
 	)
 
-	for dron_amount, board_side in [
-		(7, 10),
+	for dron_amount, board_side, correct in [
+		(7, 10, [2, 2]),
+		(7, 10, [3, 7]),
+		(7, 10, [1, 9]),
+		(7, 10, [5, 6]),
 	]:
 		problem_2.add_variant({
 			'content': {
+				'result': [],
+				'board': [['#E8E8E8' for i in range(board_side)] for j in range(board_side)],
+				'correct': correct,
+				'search_num': 0,
 				'dron_amount': dron_amount,
 				'board_side': board_side,
 				'componentType': "starWars",
-				'inputType': "HintOnlyInput",
+				'inputType': "InteractiveTypeInput",
 			}
 		})
 	

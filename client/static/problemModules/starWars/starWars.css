@@ -1,0 +1,29 @@
+svg {
+    width: 40%;
+}
+
+.item {
+    opacity: 0.7;
+    cursor: pointer;
+    stroke-width: 1px;
+    stroke: black;
+}
+
+.dron_num {
+    text-anchor: middle;
+    font-size: 0.5em;
+}
+
+.start_point {
+    pointer-events: none;
+    fill: red;
+}
+
+text.final_text {
+    text-anchor: middle;
+    font-size: 0.3em;
+}
+
+.item.choiced {
+    stroke-width: 3px;
+}
