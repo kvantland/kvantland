@@ -58,6 +58,10 @@ def steps(step_num, params, data):
 				return {'answer': {'message': "you lose!"}, 'answer_correct': False, 'user_answer': [queen_y, queen_x], 'solution': params['solution']}
 				
 		if params['turn'] == 'player':
+			if data['turn'] != 'player':
+				return {'answer': {'status': "not accepted", 'message': "incorrect turn"}}
+			else:
+				data['turn'] = 'computer'
 			if [params['row'], params['column']] in possible_positions:
 				data['queen_position'] = [params['row'], params['column']]
 				print('accepted movement')
@@ -67,6 +71,10 @@ def steps(step_num, params, data):
 				return {'answer': {'status': "Impossible movement"}}
 			
 		elif params['turn'] == 'computer':
+			if data['turn'] != 'computer':
+				return {'answer': {'status': "not accepted", 'message': "incorrect turn"}}
+			else:
+				data['turn'] = 'player'
 			if len(possible_positions) == 0:
 				return {'answer': {'message': "you won!"}, 'answer_correct': True,  'user_answer': [queen_y, queen_x], 'solution': params['solution']}
 			print('here_0')

@@ -146,6 +146,7 @@ def Games():
 						Проигрывает тот, кто не сможет сделать ход. Вы можете выбрать, ходить первым или вторым. 
 						Не упустите возможность и выиграйте у компьютера!''',
 			'content': {
+				'turn': 'player',
 				'horse_config': horse_config,
 				'queen_position': [9, 0], 
 				'componentType': 'queenMove',

@@ -123,7 +123,7 @@ export default {
 				return;
 			} 
 			console.log('move start!')
-			if (this.mode == 'await')
+			if (this.mode === 'await')
 				this.mode = 'move';
 			else {
 				this.mode = 'await';
