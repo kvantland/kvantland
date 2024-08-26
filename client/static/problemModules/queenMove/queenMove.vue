@@ -1,6 +1,10 @@
 <template>
 	<div class="game_plot">
-		<p :class="['turn_sign', this.turn]"> {{ this.turn === 'player' ? 'Ваш ход' : 'Ход компьютера' }} </p>
+		<div class="turn_choose" v-if="mode === 'turnChoose'">
+			<div class="first_turn turn_button" @click="turnChoose('first')"> Ходить первым </div>
+			<div class="second_turn turn_button" @click="turnChoose('second')"> Ходить вторым </div>
+		</div>
+		<p v-if="mode !== 'turnChoose'" :class="['turn_sign', this.turn]"> {{ this.turn === 'player' ? 'Ваш ход' : 'Ход компьютера' }} </p>
 		<svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
 			preserveAspectRatio="xMidYMid meet" 
 			overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -39,7 +43,7 @@ export default {
 	data() {
 		return {
 			turn: 'player',
-			mode: 'await',
+			mode: this.problemParams.turn ? 'await' : 'turnChoose',
 			possiblePositions: [],
 			boardItemWidth: 20,
 			boardItemHeight: 20,
@@ -118,8 +122,23 @@ export default {
 	},
 
 	methods: {
+		turnChoose(turn) {
+			if (turn !== 'first' && turn !== 'second') {
+				return;
+			}
+			else {
+				this.$emit('xhrRequest', {type: "turn_choose", turn: turn})
+				this.mode = 'await'
+				if (turn === 'second') {
+					this.turn = 'computer'
+					this.queenComputerPosition = [this.boardSide - 1, 0]
+					setTimeout(function(){this.$emit('xhrRequest', {turn: 'computer', 'solution': document.querySelector('.game_plot').outerHTML})}.bind(this), 10)
+				}
+			}
+		},
+
 		startPlayerMove() {
-			if (this.turn !== 'player') {
+			if (this.turn !== 'player' || this.mode !== 'await') {
 				return;
 			} 
 			console.log('move start!')
