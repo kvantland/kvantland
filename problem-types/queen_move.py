@@ -4,6 +4,16 @@ from random import choice
 
 def steps(step_num, params, data):
 	try:
+		
+		if 'type' in params.keys():
+			if params['type'] == 'turn_choose':
+				if params['turn'] == 'first':
+					data['turn'] = 'player'
+				else:
+					data['turn'] = 'computer'
+				return {'answer': {'message': "Turn choosed"}, 'data_update': data}
+			else:
+				return {'answer': {'message': "Incorrect turn error!"}}
 
 		def possible_coordinates(y, x, board_side):
 			return y >= 0 and y < board_side and x >= 0 and x < board_side

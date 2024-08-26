@@ -143,7 +143,7 @@ def Games():
 	]:
 		problem_1.add_variant({
 			'content': {
-				'turn': 'player',
+				'turn': None,
 				'horse_config': horse_config,
 				'queen_position': [9, 0], 
 				'componentType': 'queenMove',

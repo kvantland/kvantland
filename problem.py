@@ -343,3 +343,37 @@ def is_current_tournament(db, var_id):
 	db.execute('select tournament from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s', (var_id,))
 	tourn, = db.fetchall()
 	return tourn[0] == config["tournament"]["version"]
+
+
+def xhr_request(db, user_id, var_id, params):
+	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
+	(xhr_amount, ), = db.fetchall()
+	if (xhr_amount >= config['xhr']['dead_step']):
+		raise Exception("Слишком много запросов!")
+	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
+	(type_, ), = db.fetchall()
+	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
+	(cont, ), = db.fetchall()
+	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
+	(curr, ), = db.fetchall()
+	if curr:
+		cont = curr
+	typedesc = import_module(f'problem-types.{type_}')
+	resp = typedesc.steps(xhr_amount, params, cont)
+	try: 
+		db.execute('update Kvantland.AvailableProblem set curr = %s where variant = %s and student= %s', (json.dumps(resp['data_update']), var_id, user_id))
+	except KeyError:
+		pass
+	try: 
+		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (resp['answer_correct'], resp['user_answer'], var_id, user_id))
+		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) * %s where student = %s', (var_id, int(resp['answer_correct']), user_id))
+		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
+	except KeyError:
+		pass
+	try:
+		db.execute('update Kvantland.AvailableProblem set solution=%s where variant = %s and student = %s', (resp['solution'], var_id, user_id))
+	except KeyError:
+		pass
+	if 'answer' in resp.keys():
+		return resp['answer']
+	return ''
