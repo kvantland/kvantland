@@ -19,7 +19,7 @@
 					:style="`fill: ${board[rowNum][columnNum]}`" :key="`item_${rowNum}_${columnNum}`" 
 					:x="columnNum * boardItemSide" y="0" :width="boardItemSide" :height="boardItemSide" @click="selection(rowNum, columnNum)"/>
 			</g>
-			<circle v-if="leftBottomItem" class="start_point" :cx="(leftBottomItem[1] + 0.5) * boardItemSide" 
+			<circle v-if="leftBottomItem && mode === 'select'" class="start_point" :cx="(leftBottomItem[1] + 0.5) * boardItemSide" 
 				:cy="(leftBottomItem[0] + 0.5) * boardItemSide" :r="boardItemSide / 4" />
 		</g>
 		
