@@ -1,9 +1,10 @@
 <template>
 	<div class="game_plot">
+        <p> Осталось попыткок: {{ remainingTries }} </p>
 		<div class="turn_choose" v-if="mode === 'turnChoose'">
 			<div class="first_turn turn_button" @click="turnChoose('first')"> Ходить первым </div>
 			<div class="second_turn turn_button" @click="turnChoose('second')"> Ходить вторым </div>
-		</div>
+        </div>
 		<p v-if="mode !== 'turnChoose'" :class="['turn_sign', this.turn]"> {{ this.turn === 'player' ? 'Ваш ход' : 'Ход компьютера' }} </p>
 		<svg version="1.1" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
 			preserveAspectRatio="xMidYMid meet" 
@@ -52,6 +53,9 @@ export default {
 	},
 
 	computed: {
+        remainingTries(){
+            return this.problemParams.remaining_tries
+        },
 		horseConfig() {
 			console.log(this.problemParams.horse_config)
 			return this.problemParams.horse_config
@@ -111,6 +115,9 @@ export default {
 						setTimeout(function(){this.$emit('xhrRequest', {turn: 'computer', 'solution': document.querySelector('.game_plot').outerHTML})}.bind(this), 10)
 					}
 				}
+                else if (this.xhrData.xhr_answer.status === 'new try') {
+                    this.mode = 'turnChoose'
+                }
 			}
 		},
 		mode(newValue) {
@@ -166,7 +173,7 @@ export default {
 				currentPossiblePositions.push([queenY, x])
 			}
 			let diagonalStepsAmount = Math.min(queenY, this.boardSide - queenX)
-			for (let diagonalStep = 1; diagonalStep < diagonalStepsAmount; diagonalStep++) {
+			for (let diagonalStep = 1; diagonalStep <= diagonalStepsAmount; diagonalStep++) {
 				let newX = queenX + diagonalStep
 				let newY = queenY - diagonalStep
 				if (this.stopPositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([newY, newX])}))

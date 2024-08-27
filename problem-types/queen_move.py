@@ -65,7 +65,13 @@ def steps(step_num, params, data):
 			print('check!')
 			print(possible_positions)
 			if len(possible_positions) == 0:
-				return {'answer': {'message': "you lose!"}, 'answer_correct': False, 'user_answer': [queen_y, queen_x], 'solution': params['solution']}
+				data['remaining_tries'] -= 1
+				if data['remaining_tries'] <= 0:
+					return {'answer': {'message': "you lose!"}, 'answer_correct': False, 'user_answer': [queen_y, queen_x], 'solution': params['solution']}
+				else:
+					data['turn'] = None
+					data['queen_position'] = [9, 0]
+					return {'answer': {'message': "you lose!", 'status': "new try"}, 'data_update': data}
 				
 		if params['turn'] == 'player':
 			if data['turn'] != 'player':
