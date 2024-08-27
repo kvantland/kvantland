@@ -143,6 +143,7 @@ def Games():
 	]:
 		problem_1.add_variant({
 			'content': {
+				'remaining_tries': 3,
 				'turn': None,
 				'horse_config': horse_config,
 				'queen_position': [9, 0], 
