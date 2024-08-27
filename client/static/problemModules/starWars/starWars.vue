@@ -28,7 +28,7 @@
 
 <script>
 export default {
-	props: ['problemParams', 'xhrData', 'newXhr'],
+	props: ['problemParams', 'xhrData', 'newXhr', 'confirmActionResult'],
 
 	model: {
 		prop: 'answer',
@@ -43,13 +43,15 @@ export default {
 			mode: this.problemParams.search_num === this.problemParams.dron_amount ? 'final' : 'await',
 			gap: 15,
 			dronGap: 2,
-			dronSide: 15,
 			boardItemSide: 20,
 			colors: ['#FCD770', '#70FC8680', '#32D2E8', '#3265E8', '#D932E8', '#FF0606', '#FF8C06'],
 		}
 	},
 
 	computed: {
+		confirmSelection() {
+			return this.confirmActionResult
+		},
 		result() {
 			return this.problemParams.result
 		},
@@ -71,6 +73,9 @@ export default {
 		boardHeight() {
 			return this.boardItemSide * this.boardSide
 		},
+		dronSide() {
+            return (this.boardWidth - (this.dronAmount - 1) * this.dronGap) / this.dronAmount
+        },
 		dronZoneWidth() {
 			return (this.dronSide + this.dronGap) * this.dronAmount - this.dronGap
 		},
@@ -92,6 +97,14 @@ export default {
 	},
 
 	watch: {
+
+		confirmSelection(newConfirm) {
+			if (newConfirm) {
+				this.$emit('xhrRequest', {left_bottom_item: this.leftBottomItem, right_top_item: this.rightTopItem, color: this.colors[this.searchNum]})
+				this.leftBottomItem = undefined
+			}
+		},
+
 		newXhr(isNew) {
 			if (isNew) {
 				this.$emit('xhrGet')
@@ -125,8 +138,7 @@ export default {
 					return;
 				}
 				this.mode = 'await'
-				this.$emit('xhrRequest', {left_bottom_item: this.leftBottomItem, right_top_item: this.rightTopItem, color: this.colors[this.searchNum]})
-				this.leftBottomItem = undefined
+				this.$emit('showConfirmDialog', {content: "Вы уверены, что хотите отправить дрон?", acceptText: "Да", refuseText: "Нет"})
 			}
 			else if (this.mode === 'final') {
 				this.choicedSquare = [row, column]
