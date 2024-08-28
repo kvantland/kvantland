@@ -86,13 +86,14 @@ def checkout_reg(db, required_captcha=True):
 		if check_email_amount(db, user_info):
 			resp['status'] = True
 			send_status = send_registration_confirm_message(user_info, request.get_header('Origin'))
+			print('send status: ', send_status)
 			if send_status['status']:
 				update_email_amount(db, user_info)
 			else:
 				resp['errors']['email'] = send_status['error']	
 		else:
 			resp['errors']['email'] = "Превышен лимит писем за день!"
-	print('resp: ', resp, file=sys.stderr)
+	print('fields check status: ', resp, file=sys.stderr)
 	return json.dumps(resp)
 
 
