@@ -46,8 +46,6 @@ class Town:
 
 
 class Problem:
-	variants = []
-	id = None
 	
 	def __init__(self, name='', points=0, type_='', hint=None, hint_cost=None, image=None):
 		self.name = name
@@ -60,6 +58,8 @@ class Problem:
 			self.hint_cost = 1
 		self.image = image
 		self.type_id = self.get_type_id(type_)
+		self.variants = []
+		self.id = None
 
 	def get_type_id(self, type_):
 		cur.execute("select type_ from Kvantland.Type_ where code = %s", (type_, ))
@@ -151,8 +151,33 @@ def Games():
 				'inputType': 'HintOnlyInput',
 			}
 		})
+
+	problem_2 = Problem(
+		name = 'Звёздные войны',
+		points = 3,
+		type_ = 'star_wars',
+	)
+
+	for dron_amount, board_side, correct in [
+		(7, 10, [2, 2]),
+		(7, 10, [3, 7]),
+		(7, 10, [1, 9]),
+		(7, 10, [5, 6]),
+	]:
+		problem_2.add_variant({
+			'content': {
+				'result': [],
+				'board': [['#E8E8E8' for i in range(board_side)] for j in range(board_side)],
+				'correct': correct,
+				'search_num': 0,
+				'dron_amount': dron_amount,
+				'board_side': board_side,
+				'componentType': "starWars",
+				'inputType': "InteractiveTypeInput",
+			}
+		})
 	
-	current_town.add_problems([problem_1, ])
+	current_town.add_problems([problem_1, problem_2, ])
 	
 
 def Algorithms():

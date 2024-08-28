@@ -10,7 +10,8 @@
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
                 <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData" :newXhr="newXhr" 
-                    @xhrGet="xhrGet" @showXhrDialog="showXhrDialog" 
+                    :confirmActionResult="confirmActionResult"
+                    @xhrGet="xhrGet" @showXhrDialog="showXhrDialog" @showConfirmDialog="showConfirmDialog"
                     :problemParams="variantParams" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
                 <div v-if="answerGiven" v-html="solution" class="problem_solution"></div>
             </div>
@@ -21,6 +22,7 @@
         <component v-if="!answerGiven" :is="dynamicInput" :hasHint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
         <ProblemResult v-if="answerGiven" :answer="answer" :answerStatus="answerStatus" :isInteger="problemInputType=='IntegerTypeInput'" />
         <XhrDialog v-if="xhrDialogMode" @close="hideXhrDialog"> {{ xhrDialogContent }} </XhrDialog>
+        <ConfirmDialog v-if="confirmDialogMode" @confirmAction="confirmAction" :params="confirmDialogParams"></ConfirmDialog>
     </div>
 </template>
 
@@ -43,10 +45,13 @@ export default {
             newXhr: false,
             xhrDialogMode: false,
             xhrDialogContent: '',
+            confirmDialogMode: false,
+            confirmDialogParams: {},
             dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
             dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
             currentAnswer: '',
             xhrData: undefined,
+            confirmActionResult: undefined,
         }
     },
 
@@ -75,6 +80,17 @@ export default {
     methods: {
         xhrGet() {
             this.newXhr = false
+        },
+        showConfirmDialog(params) {
+            console.log('show confirm dialog!', params)
+            this.confirmDialogMode = true
+            this.confirmDialogParams = params
+        },
+        confirmAction(status) {
+            console.log('confirmAction !')
+            this.confirmDialogMode = false
+            this.confirmActionResult = status
+            setTimeout(function(){this.confirmActionResult = undefined}.bind(this), 10)
         },
         showXhrDialog(content) {
             console.log('show xhr dialog')
