@@ -1,7 +1,3 @@
-svg {
-	width: 50%;
-}
-
 .item {
 	stroke-width: 1px;
 	stroke: black;
@@ -16,11 +12,75 @@ svg {
 }
 
 .active {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .possible_position {
-    fill: lightgreen;
-    stroke: none;
-    filter: blur(1px);
+	fill: lightgreen;
+	stroke: none;
+	filter: blur(1px);
+}
+
+.possible.item {
+	cursor: pointer;
+}
+
+.queen.player {
+	-webkit-filter: drop-shadow(0 0 0.07rem green);
+  	filter: drop-shadow(0 0 0.07rem green);
+}
+
+.queen.computer {
+	-webkit-filter: drop-shadow(0 0 0.07rem red);
+  	filter: drop-shadow(0 0 0.07rem red);
+}
+
+.game_plot {
+	width: 50%;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.turn_sign {
+	font-weight: 600;
+	font-size: 3vw;
+}
+
+.turn_sign.player {
+	color: lightgreen;
+	text-stroke: 1px darkgreen;
+	-webkit-text-stroke: 1px darkgreen;
+}
+
+.turn_sign.computer {
+	text-stroke: 1px darkred;
+	-webkit-text-stroke: 1px darkred;
+	color: lightcoral;
+}
+
+.turn_choose {
+    display: inline-flex;
+    flex-direction: row;
+    align-self: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.turn_button {
+    display: inline-flex;
+    padding: 10px 20px;
+    background-color: #1E8B93;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-family: Montserrat Alternates;
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    .turn_button:hover {
+        opacity: 0.4;
+    }
 }
