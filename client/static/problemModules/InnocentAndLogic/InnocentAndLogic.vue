@@ -18,7 +18,9 @@
         <div class="answer_area_with_sign">
             <p class="answer_sign"> Ответ </p>
             <div class="answer_area" ref="answerArea">
-                <div v-for="(block, blockNum) in expression" :key="`expression_block_${blockNum}`" :class="['block', block.type]"> {{ block.text }} </div>
+                <div v-for="(block, blockNum) in expression" :key="`expression_block_${blockNum}`" :class="['block', block.type]"
+                @touchstart="moveFromAnswerArea(blockNum, $event.touches[0])"
+                @mousedown="moveFromAnswerArea(blockNum, $event)"> {{ block.text }} </div>
             </div>
         </div>
         <div class="target_block" v-if="targetBlock" :class="['block', targetBlock.type]" 
@@ -97,7 +99,7 @@ export default {
             for (let block of blocks) {
                 console.log(block.getBoundingClientRect())
                 let blockRect = block.getBoundingClientRect()
-                if (x >= blockRect.right && !block.classList.contains('select_block')){
+                if (x >= (blockRect.left + blockRect.right) / 2 && !block.classList.contains('select_block')){
                     index += 1
                 }
             }
@@ -118,6 +120,7 @@ export default {
         updateNearestPlaceToInsert(x, y) {
             if (!this.inRect(x, y, this.$refs.answerArea.getBoundingClientRect())) {
                 this.removeSelectedBlock()
+                this.nearestPlaceToInsert = undefined
                 return;
             }
             this.removeSelectedBlock()
@@ -146,6 +149,14 @@ export default {
 
         moveFromStartArea(text, type, event) {
             this.targetBlock = {text: text, type: type}
+            this.startDrag(event)
+        },
+
+        moveFromAnswerArea(num, event) {
+            this.targetBlock = this.expression[num]
+            let newExpression = JSON.parse(JSON.stringify(this.expression))
+            newExpression.splice(num, 1)
+            this.expression = newExpression
             this.startDrag(event)
         },
 

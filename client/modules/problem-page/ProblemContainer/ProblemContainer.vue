@@ -6,7 +6,7 @@
         </div>
 
         <div class="problem_body">
-            <p v-if="description" v-html="description"></p>
+            <div v-if="description" v-html="description"></div>
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
                 <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData" :newXhr="newXhr" 
