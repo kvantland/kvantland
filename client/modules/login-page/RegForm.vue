@@ -4,6 +4,7 @@
             :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
         <Form v-else>
             <FormHeader mode="reg" @changeHeaderMode="changeHeaderMode" />
+            <p class="attention"> Рекомендуется не использовать <br/> gmail адреса при регистрации! </p>
             <form method="post" :id="id" @submit.prevent="onSubmitRegForm">
                 <FieldsArea>
                     <FormField v-for="field in regFields" :fieldInfo="field" :key="field.name" 
@@ -97,4 +98,9 @@ export default {
 </script>
 
 <style scoped>
+.attention {
+    color: red;
+    font-size: 1em;
+    align-self: center;
+}
 </style>
