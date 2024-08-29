@@ -183,6 +183,25 @@ def Games():
 def Algorithms():
 	global cur
 	current_town = Town('Алгоритмы')
+	
+	problem_1 = Problem(
+		name="Иннокентий и логика",
+		points=1,
+		type_="Innocent_and_logic",
+	)
+
+	for blocks in [
+		['Жарко', 'Светит солнце', 'Дует ветер', 'Идёт дождь']
+	]:
+		problem_1.add_variant({
+			'content': {
+				'blocks': blocks,
+				'componentType': "InnocentAndLogic",
+				'inputType': "InteractiveTypeInput",
+			}
+		})
+
+	current_town.add_problems([problem_1, ])
 
 
 def Blocks():

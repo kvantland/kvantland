@@ -1,0 +1,85 @@
+.game_plot {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+
+.start_area {
+    display: inline-flex;
+    flex-direction: column;
+    align-self: center;
+    gap: 20px;
+}
+
+.block_line {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.block {
+    white-space: nowrap;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.main_block {
+    color: white;
+    background-color: #494D9B;
+}
+
+.logical_block {
+    color: #494D9B;
+    background-color: white;
+    border: 1px solid #494D9B;
+}
+
+.syntax_block {
+    color: #DB00FF;
+    background-color: white;
+    border: 1px solid #DB00FF;
+}
+
+.select_block {
+    background-color: none;
+    color: coral;
+    border: 1px solid coral;
+}
+
+.answer_area_with_sign {
+    width: 100%;
+    display: inline-flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.answer_sign {
+    font-size: 37.5px;
+    font-weight: 500;
+}
+
+.answer_area {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 10px;
+    overflow-x: scroll;
+    background-color: #787DED;
+    padding: 10px 15px;
+    border-radius: 5px;
+    width: 100%;
+    scrollbar-width: thin;
+}
+
+.answer_area::-webkit-scrollbar {
+    height: 1px;
+}
+
+.target_block {
+    transform: translate(-50%, -50%);
+    position: fixed;
+}
