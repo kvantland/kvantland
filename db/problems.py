@@ -196,8 +196,24 @@ def Algorithms():
 		problem_1.add_variant({
 			'content': {
 				'blocks': blocks,
+				'translation': {
+					'Жарко': "A",
+					'Светит солнце': "B",
+					'Дует ветер': "C",
+					'Идёт дождь': "D",
+					'XOR': " ^ ",
+					'НЕ': "-~",
+					'ИЛИ': " | ",
+					'И': " & ",
+					'(': "(",
+					')': ")",
+                },
 				'componentType': "InnocentAndLogic",
 				'inputType': "InteractiveTypeInput",
+				'correct': [
+                    "A & (B & -~(C & D))",
+                    "-~A & (B |  -~C) & -~(B & -~C)"
+                ],
 			}
 		})
 

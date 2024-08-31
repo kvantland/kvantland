@@ -32,6 +32,11 @@
 export default {
     props: ['problemParams'],
 
+    model: {
+        prop: 'answer',
+        event: 'updateAnswer'
+    },
+
     data() {
         return {
             logicalBlocks: ['И', 'ИЛИ', 'НЕ', 'XOR'],
@@ -115,6 +120,7 @@ export default {
                 }
             }
             this.expression = newExpression
+            this.$emit('updateAnswer', this.expression)
         },
 
         updateNearestPlaceToInsert(x, y) {
@@ -136,6 +142,7 @@ export default {
                 newExpression.splice(newIndex, 0, {text: this.targetBlock.text, type: 'select_block'})
             }
             this.expression = newExpression
+            this.$emit('updateAnswer', this.expression)
         },
 
         moveAt(x, y) {
@@ -157,6 +164,7 @@ export default {
             let newExpression = JSON.parse(JSON.stringify(this.expression))
             newExpression.splice(num, 1)
             this.expression = newExpression
+            this.$emit('updateAnswer', this.expression)
             this.startDrag(event)
         },
 
@@ -195,6 +203,7 @@ export default {
             if (this.nearestPlaceToInsert !== undefined) {
                 console.log('end move', this.targetBlock, this.nearestPlaceToInsert)
                 this.$set(this.expression, this.nearestPlaceToInsert, this.targetBlock)
+                this.$emit('updateAnswer', this.expression)
             }
             this.dragMode = false
             this.targetBlock = undefined

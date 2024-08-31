@@ -70,6 +70,7 @@
     overflow-x: scroll;
     background-color: #787DED;
     padding: 10px 15px;
+    padding-right: 70px;
     border-radius: 5px;
     width: 100%;
     scrollbar-width: thin;
