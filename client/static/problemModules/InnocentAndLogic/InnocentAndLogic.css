@@ -74,6 +74,7 @@
     border-radius: 5px;
     width: 100%;
     scrollbar-width: thin;
+    pointer-events: initial;
 }
 
 .answer_area::-webkit-scrollbar {
