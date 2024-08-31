@@ -19,6 +19,7 @@
     height: 600px;
     overflow-y: scroll;
     scrollbar-width: thin;
+    pointer-events: initial;
 }
 
 .start_area {
