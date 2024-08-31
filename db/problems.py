@@ -207,13 +207,13 @@ def Algorithms():
 					'И': " & ",
 					'(': "(",
 					')': ")",
-                },
+				},
 				'componentType': "InnocentAndLogic",
 				'inputType': "InteractiveTypeInput",
 				'correct': [
-                    "A & (B & -~(C & D))",
-                    "-~A & (B |  -~C) & -~(B & -~C)"
-                ],
+					"A & (B & -~(C & D))",
+					"-~A & (B |  -~C) & -~(B & -~C)"
+				],
 			}
 		})
 
@@ -223,6 +223,25 @@ def Algorithms():
 def Blocks():
 	global cur
 	current_town = Town('Блоки')
+	
+	problem_1 = Problem(
+		name='Соберите Решето',
+		points=2,
+		type_='assemble_the_sieve',
+	)
+	for correct_permutations in [
+		[[2, 1, 4, 0, 6, 3, 5],
+		[2, 1, 4, 6, 0, 3, 5],],
+	]:
+		problem_1.add_variant({
+			'content': {
+				'correct': correct_permutations,
+				'componentType': "assembleTheSieve",
+				'inputType': "InteractiveTypeInput",
+			},
+
+		})
+	current_town.add_problems([problem_1, ])
 
 def Proga():
 	global cur

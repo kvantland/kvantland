@@ -1,0 +1,58 @@
+.game_plot {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 40px;
+    width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.answer_area {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #EEEEEE;
+    border-radius: 10px;
+    align-self: stretch;
+    width: 100%;
+    padding: 20px;
+    height: 600px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}
+
+.start_area {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 20px;
+    align-self: center;
+    width: 55%;
+}
+
+img.block {
+    cursor: pointer;
+    width: 100%;
+    height: auto;
+}
+
+.answer_area .header {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+img.target_block {
+    position: fixed;
+    width: 30%;
+    transform: translate(-50%, -50%);
+    height: auto;
+}
+
+.block.select {
+    opacity: 0.3;
+}
+
+.answer_area .block {
+    width: 60%;
+    height: auto;
+    align-self: center;
+}
