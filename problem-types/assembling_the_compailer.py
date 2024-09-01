@@ -22,7 +22,7 @@ def validate(data, answer):
 			[0, 0, 5],
 			[64, 76, 86],
 			]
-		nums = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+		M = 2 ** 32
 
 		for test in tests:
 			print('test: ', test)
@@ -54,16 +54,16 @@ def validate(data, answer):
 				
 				if block_type == 'Add':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] += operands[first_field]
+						operands[second_field] = (operands[second_field] + operands[first_field]) % M
 				if block_type == 'Sub':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] -= operands[first_field]
+						operands[second_field] = (operands[second_field] - operands[first_field]) % M
 				if block_type == 'ShiftLeft':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] *= 2 ** operands[first_field]
+						operands[second_field] = (operands[second_field] * 2 ** operands[first_field]) % M
 				if block_type == 'ShiftRight':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] = operands[second_field] // (2 ** operands[second_field])
+						operands[second_field] = operands[second_field] // ((2 ** operands[second_field]) % M)
 				if block_type == 'Move':
 					operands[second_field] = operands[first_field]
 
