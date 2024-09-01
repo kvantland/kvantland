@@ -256,7 +256,71 @@ def Blocks():
 		}
 	})
 
-	current_town.add_problems([problem_1, problem_2, ])
+	problem_3 = Problem(
+		name='Робот в лабиринте',
+		points=1,
+		type_='robot_in_maze',
+	)
+	for maze, start_position, start_diraction in [
+		([
+			'._._._._._._._.',
+			'| | . | . . . |',
+			'| ._._. ._._. |',
+			'| | . | | . . |',
+			'| . ._._| | . |',
+			'| . | ._._| . |',
+			'| . . | . . ._|',
+			'|_._._|_._._._|'
+		], [7, 0], 'right'),
+		([
+			'._._._._._._._.',
+			'| | . | . . . |',
+			'| ._._. ._._. |',
+			'| | . | | . . |',
+			'| . ._._| | . |',
+			'| . | ._._| . |',
+			'| . . | . . ._|',
+			'|_._._|_._._._|'
+		], [0, 7], 'left'),
+		([
+			'._._._._._._._.',
+			'| . . . | . | |',
+			'| ._._. ._._. |',
+			'| . . | | . | |',
+			'| . | |_._. . |',
+			'| . |_._. | . |',
+			'|_. . . | . . |',
+			'|_._._._|_._._|'
+		], [7, 7], 'left'),
+		([
+			'._._._._._._._.',
+			'| . . . | . | |',
+			'| ._._. ._._. |',
+			'| . . | | . | |',
+			'| . | |_._. . |',
+			'| . |_._. | . |',
+			'|_. . . | . . |',
+			'|_._._._|_._._|'	
+		], [0, 0], 'right'),
+	]:
+		problem_3.add_variant({
+			'content': {
+				'allowed_blocks_amount': 7,
+				'componentType': "robotInMaze",
+				'inputType': "InteractiveTypeInput",
+				'maze': maze,
+				'start_position': start_position,
+				'start_direction': start_diraction,
+				'commands': [
+					{'text': "Повернуть влево", 'type': 'usual'},
+					{'text': "Повернуть вправо", 'type': "usual"},
+					{'text': "Пройти вперед на 1 клетку", 'type': "usual"},
+					{'text': "Пока нет препятствия", 'type': "cycle"},
+				],
+			}
+		})
+
+	current_town.add_problems([problem_1, problem_2, problem_3, ])
 
 def Proga():
 	global cur
