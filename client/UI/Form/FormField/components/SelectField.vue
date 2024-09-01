@@ -59,7 +59,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .select_line {
     display: flex;
     justify-content: space-between;

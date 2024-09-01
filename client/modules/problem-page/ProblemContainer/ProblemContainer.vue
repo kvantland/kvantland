@@ -7,9 +7,10 @@
 
         <div class="problem_body">
             <div v-if="description" v-html="description"></div>
+			<component v-if="!description" :is="dynamicDescription" :problemParams="variantParams" />
             <img v-if="image" class="problem_img" :src="image" />
             <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
-                <component v-if="!answerGiven" :is="dynamicProblemComponent" :xhrData="xhrData" :newXhr="newXhr" 
+                <component v-if="!answerGiven && dynamicProblemComponent" :is="dynamicProblemComponent" :xhrData="xhrData" :newXhr="newXhr" 
                     :confirmActionResult="confirmActionResult"
                     @xhrGet="xhrGet" @showXhrDialog="showXhrDialog" @showConfirmDialog="showConfirmDialog"
                     :problemParams="variantParams" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
@@ -49,6 +50,7 @@ export default {
             confirmDialogParams: {},
             dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
             dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
+			dynamicDescription: () => import(`../../../static/problemModules/${this.problemComponent}/description.vue`),
             currentAnswer: '',
             xhrData: undefined,
             confirmActionResult: undefined,

@@ -241,7 +241,22 @@ def Blocks():
 			},
 
 		})
-	current_town.add_problems([problem_1, ])
+		
+	problem_2 = Problem(
+		name='Ассемблирует компайлер',
+		points=3,
+		type_='assembling_the_compailer',
+	)
+	problem_2.add_variant({
+		'content': {
+			'max_lines_amount': 10,
+			'blockTypes': ["Add", "Sub", "ShiftLeft", "ShiftRight", "Move"],
+			'componentType': "assemblingTheCompiler",
+			'inputType': "InteractiveTypeInput",
+		}
+	})
+
+	current_town.add_problems([problem_1, problem_2, ])
 
 def Proga():
 	global cur
@@ -284,3 +299,15 @@ with psycopg.connect(db) as con:
 			Blocks()
 			Proga()
 			update_positions()
+
+
+
+
+
+
+
+
+
+
+def vasua_function(a, b, c):
+	return a - b // 4 + 63  
