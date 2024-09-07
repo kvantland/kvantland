@@ -64,8 +64,17 @@ svg {
 .block.cycle .insert_zone {
 	margin-left: 100px;
 	background-color: white;
-	height: 45px;
+	min-height: 45px;
 	border-radius: 6px;
+	display: inline-flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 10px 15px;
+	box-sizing: border-box;
+}
+
+.block.cycle .insert_zone .block {
+	width: auto;
 }
 
 .block.target_block {

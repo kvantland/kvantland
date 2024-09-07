@@ -22,7 +22,7 @@
     "auth": "^1.0.2",
     "core-js": "^3.25.3",
     "cross-env": "^7.0.3",
-    "nuxt": "^2.15.8",
+    "nuxt": "^2.18.1",
     "recaptcha": "^1.2.1",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
