@@ -39,10 +39,20 @@
 				@touchstart="moveFromAnswerArea(block.id, $event.touches[0])"> 
 					<p>{{ block.text }} </p>
 						<div v-if="block.type === 'cycle'" class="insert_zone">
-							<div v-for="(chieldBlock, chieldBlockNum) in block.children" :key="`chield_block_${chieldBlockNum}_of_${block.id}`"
-								:class="['block', chieldBlock.type]"  in_cycle="true"  @mousedown="moveFromAnswerArea(chieldBlock.id, $event)"
-								@touchstart="moveFromAnswerArea(chieldBlock.id, $event.touches[0])">
-								<p>{{ chieldBlock.text }} </p>
+							<div v-for="(childBlock, childBlockNum) in block.children" :key="`child_block_${childBlockNum}_of_${block.id}`"
+								:block_id="childBlock.id"
+								:class="['block', childBlock.type]"  in_cycle="true"  @mousedown="moveFromAnswerArea(childBlock.id, $event)"
+								@touchstart="moveFromAnswerArea(childBlock.id, $event.touches[0])">
+								<p>{{ childBlock.text }} </p>
+								<div v-if="childBlock.type === 'cycle'" class="insert_zone">
+									<div v-for="(childChildBlock, childChildBlockNum) in childBlock.children" v-if="childChildBlock.type !== 'cycle'"
+									:key="`child_child_block_${childChildBlockNum}_of_${childChildBlock.id}`" :block_id="childChildBlock.id"
+									:class="['block', childChildBlock.type]"  in_cycle="true"  @mousedown="moveFromAnswerArea(childChildBlock.id, $event)"
+									@touchstart="moveFromAnswerArea(childChildBlock.id, $event.touches[0])">
+									<p>{{ childChildBlock.text }} </p>
+									<div v-if="childChildBlock.type === 'cycle'" class="insert_zone"></div>
+									</div>
+								</div>
 							</div>
 						</div>
 				</div>
@@ -169,24 +179,38 @@ export default {
 		findNewNearestPlaceToInsert(y) {
 			let index = 0
 			const blocks = document.querySelectorAll('.answer_area .block')
-			console.log(blocks)
 			let parentId = this.currentBlockId
 			for (const block of blocks) {
-				console.log(block.getBoundingClientRect())
 				const blockRect = block.getBoundingClientRect()
 				if (block.classList.contains('cycle') && !block.classList.contains('select')) {
 					if (y >= blockRect.top && y <= blockRect.bottom) {
 						index = 0
 						const childrenBlocks = document.querySelectorAll(`.answer_area .cycle.block[block_id='${block.getAttribute('block_id')}'] .block`)
-						console.log(childrenBlocks.length)
 						for (const childBlock of childrenBlocks) {
 							const childBlockRect = childBlock.getBoundingClientRect()
+							if (childBlock.classList.contains('cycle') && !childBlock.classList.contains('select')) {
+								if (y >= childBlockRect.top && y <= childBlockRect.bottom) {
+									if (this.targetBlock.type === 'cycle') {
+										return undefined
+									}
+									index = 0
+									const childrenChildrenBlocks = document.querySelectorAll(`.answer_area .cycle.block[block_id='${childBlock.getAttribute('block_id')}'] .block`)
+									for (const childChildBlock of childrenChildrenBlocks) {
+										const childChildBlockRect = childChildBlock.getBoundingClientRect()
+										if (y >= (childChildBlockRect.top + childChildBlockRect.bottom) / 2 && !childChildBlock.classList.contains('select')){
+											index++
+										}
+									}
+									parentId = childBlock.getAttribute('block_id')
+									return {index, parent: parentId}
+								}
+							}
 							if (y >= (childBlockRect.top + childBlockRect.bottom) / 2 && !childBlock.classList.contains('select')){
 								index++
 							}
 						}
 						parentId = block.getAttribute('block_id')
-						break
+						return {index, parent: parentId}
 					}
 				}
 				if (y >= (blockRect.top + blockRect.bottom) / 2 && !block.classList.contains('select')){
@@ -204,8 +228,18 @@ export default {
 				const newChildren = []
 				if (block.children) {
 					for (const childBlock of block.children) {
-						if (childBlock.type.split(' ')[0] !== 'select') {
-							newChildren.push(childBlock)
+						const newChildBlock = JSON.parse(JSON.stringify(childBlock))
+						const newChildrenChildren = []
+						if (childBlock.children) {
+							for (const childChildBlock of childBlock.children) {
+								if (childChildBlock.type.split(' ')[0] !== 'select') {
+									newChildrenChildren.push(childChildBlock)
+								}
+							}
+							newChildBlock.children = newChildrenChildren
+						}
+						if (newChildBlock.type.split(' ')[0] !== 'select') {
+							newChildren.push(newChildBlock)
 						}
 					}
 					newBlock.children = newChildren
@@ -214,6 +248,7 @@ export default {
 					newAnswerAreaBlocks.push(newBlock)
 				}
 			}
+			console.log('after remove: ', newAnswerAreaBlocks)
 			this.answerAreaBlocks = newAnswerAreaBlocks
 			this.$emit('updateAnswer', this.answerAreaBlocks)
 		},
@@ -226,6 +261,11 @@ export default {
 			}
 			this.removeSelectedBlock()
 			const newIndex = this.findNewNearestPlaceToInsert(y)
+			if (!newIndex) {
+				this.nearestPlaceToInsert = undefined
+				this.endDrag()
+				return
+			}
 			console.log('index to insert: ', newIndex)
 			this.nearestPlaceToInsert = newIndex
 			const newAnswerAreaBlocks = JSON.parse(JSON.stringify(this.answerAreaBlocks))
@@ -240,13 +280,24 @@ export default {
 						}
 						break
 					}
+					for (const childBlock of block.children) {
+						if (childBlock.id == this.nearestPlaceToInsert.parent) {
+							if (!childBlock.children) {
+								childBlock.children = [{text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, parent: newIndex.parent, id: this.currentBlockId}]
+							}
+							else {
+								childBlock.children.splice(newIndex.index, 0, {text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, parent: newIndex.parent, id: this.currentBlockId})
+							}
+							break
+						}
+					}
 				}
 			}
 			else if (newIndex.index >= newAnswerAreaBlocks.length) {
-					newAnswerAreaBlocks.push({text: this.targetBlock.text, type: `select ${this.targetBlock.type}`})
+					newAnswerAreaBlocks.push({text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, id: this.currentBlockId})
 				}
 				else {
-					newAnswerAreaBlocks.splice(newIndex.index, 0, {text: this.targetBlock.text, type: `select ${this.targetBlock.type}`})
+					newAnswerAreaBlocks.splice(newIndex.index, 0, {text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, id: this.currentBlockId})
 				}
 			this.answerAreaBlocks = newAnswerAreaBlocks
 			this.$emit('updateAnswer', this.answerAreaBlocks)
@@ -332,22 +383,27 @@ export default {
 				return
 			}
 			if (this.nearestPlaceToInsert !== undefined) {
-				console.log('end move', this.targetBlock, this.nearestPlaceToInsert)
 				this.targetBlock.parent = this.nearestPlaceToInsert.parent
 				if (this.nearestPlaceToInsert.parent !== this.currentBlockId) {
-					console.log('block inside cycle with id: ', this.nearestPlaceToInsert.parent)
 					for (const block of this.answerAreaBlocks) {
-						console.log('block: ', block)
-						console.log('block id: ', block.id)
 						if (block.id == this.nearestPlaceToInsert.parent) {
-							console.log('parent block successfully found')
 							if (!block.children) {
-								console.log('first child!')
 								block.children = [this.targetBlock]
 							}
 							else {
-								console.log('one more child!')
 								block.children.splice(this.nearestPlaceToInsert.index, 0, this.targetBlock)
+							}
+						}
+						if (block.children) {
+							for (const childBlock of block.children) {
+								if (childBlock.id == this.nearestPlaceToInsert.parent) {
+									if (!childBlock.children) {
+										childBlock.children = [this.targetBlock]
+									}
+									else {
+										childBlock.children.splice(this.nearestPlaceToInsert.index, 0, this.targetBlock)
+									}
+								}
 							}
 						}
 					}
