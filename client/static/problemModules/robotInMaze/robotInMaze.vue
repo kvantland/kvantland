@@ -12,16 +12,15 @@
 						</g>
 						<g v-for="(column, columnNum) in horizontalWalls(row)" :key="`horizontal_line_${columnNum}`">
 							<line :class="column ? 'border' : 'usual'" :x1="columnNum * mazeSide" y1="0" :x2="(columnNum + 1) * mazeSide" y2="0" />
-							<g v-if="rowNum === startPosition[0] && columnNum === startPosition[1]" class="robot" 
-							:transform="`translate(${columnNum * mazeSide} 0) `">
-								<image  href="/problem_assets/robot.svg" class="robot" transform="scale(0.8)" :transform-origin="`${mazeSide / 2} ${mazeSide / 2}`"
-								:width="mazeSide" :height="mazeSide" x="0" y="0" />
-								<image href="/problem_assets/direction_arrow.svg" :width="mazeSide" :height="mazeSide" x="0" y="0" 
-								:transform-origin="`${mazeSide / 2} ${mazeSide / 2}`" :transform="`rotate(${startDirection})`" />
-							</g>
 							<text v-if="rowNum === endPosition[0] && columnNum === endPosition[1]" class="end_point" 
 							:x="columnNum * mazeSide + mazeSide / 2" dy="0.35em" :y="mazeSide / 2"> F </text>
 						</g>
+					</g>
+					<g class="robot" :transform="`translate(${realPosition[0] * mazeSide} ${realPosition[1] * mazeSide})`">
+						<image  href="/problem_assets/robot.svg" class="robot" transform="scale(0.8)" :transform-origin="`${mazeSide / 2} ${mazeSide / 2}`"
+						:width="mazeSide" :height="mazeSide" x="0" y="0" />
+						<image href="/problem_assets/direction_arrow.svg" :width="mazeSide" :height="mazeSide" x="0" y="0" 
+						:transform-origin="`${mazeSide / 2} ${mazeSide / 2}`" :transform="`rotate(${realDirection})`" />
 					</g>
 				</svg>
 			</div>
@@ -48,6 +47,18 @@
 					@updateAnswerArea="updateAnswerArea" @updateTargetBlock="updateTargetBlock" @startDrag="startDrag($event)"></answerBlock>
 			</div>
 		</div>
+
+		<div class="button_area">
+			<div class="start button" @click="startMovement">
+				<img class="start_buttom_image" :src="`/problem_assets/start_button_image.svg`" />
+				<p> Выполнить </p>
+			</div>
+			<div class="reload button">
+				<img class="reload_button_image" :src="`/problem_assets/reload_button_image.svg`" />
+				<p> Перезапустить </p>
+			</div>
+		</div>
+
 		<div v-if="targetBlock" :class="['block', targetBlock.type, 'target_block']" 
 			:style="`left: ${targetBlock.x}px; top: ${targetBlock.y}px	;`"> {{ targetBlock.text }} </div>
 	</div>
@@ -65,6 +76,16 @@ export default {
 			default() {
 				return {}
 			},
+		},
+		xhrData: {
+			type: Object,
+			default() {
+				return {}
+			},
+		},
+		newXhr: {
+			type: Boolean,
+			default: false,
 		}
 	},
 
@@ -73,9 +94,12 @@ export default {
 			mazeSide: 30,
 			answerAreaBlocks: [],
 			dragMode: false,
+			animationMode: false,
 			nearestPlaceToInsert: undefined,
 			targetBlock: undefined,
 			currentBlockId: 1,
+			currentAnimationPosition: undefined,
+			currentAnimationDirection: undefined,
 		}
 	},
 
@@ -93,17 +117,41 @@ export default {
 			return this.problemParams.commands
 		},
 		allowedBlocksAmount() {
-			return this.problemParams.allowed_blocks_amount
+			return this.problemParams.allowed_blocks_amount * 10
 		},
-		startPosition() {
-			return this.problemParams.start_position
+		currentPosition() {
+			return this.problemParams.current_position
 		},
-		startDirection() {
+		currentDirection() {
 			const rotationDict = {left: 180, right: 0, top: 270, bottom: 90}
-			return rotationDict[this.problemParams.start_direction]
+			return rotationDict[this.problemParams.current_direction]
 		},
 		endPosition() {
 			return this.problemParams.end_position
+		},
+		realPosition() {
+			console.log(this.animationMode)
+			if (this.currentAnimationPosition && this.animationMode) {
+				return this.currentAnimationPosition
+			}
+			return this.currentPosition
+		},
+		realDirection() {
+			if (this.currentAnimationDirection && this.animationMode) {
+				return this.currentAnimationDirection
+			} 
+			return this.currentDirection
+		}
+	},
+
+	watch: {
+		newXhr(isNew) {
+			if (isNew) {
+				console.log('newXhr')
+				this.$emit('xhrGet')
+				this.currentAnimationPosition = JSON.parse(JSON.stringify(this.currentPosition))
+				this.startAnimation(this.xhrData.xhr_answer.command_list)
+			}
 		}
 	},
 
@@ -115,6 +163,42 @@ export default {
 	},
 
 	methods: {
+		startAnimation(commands) {
+			let commandNum = 0
+			if (commands.length < 1) {
+				return
+			}
+			let step = [(commands[0][0] - this.currentAnimationPosition[0]) / 30, (commands[0][1] - this.currentAnimationPosition[1]) / 30]
+			console.log(step)
+			console.log(commands[commandNum])
+			const rotationDict = {left: 180, right: 0, top: 270, bottom: 90}
+			this.animationMode = true
+			const animation = setInterval(() => {
+				if (this.currentAnimationDirection !== rotationDict[commands[commandNum][2]]) {
+					this.currentAnimationDirection = rotationDict[commands[commandNum][2]]
+				}
+				if (Math.abs(this.currentAnimationPosition[0] - commands[commandNum][0]) >= 0.1 || 
+						Math.abs(this.currentAnimationPosition[1] - commands[commandNum][1]) >= 0.1) {
+							this.currentAnimationPosition = [this.currentAnimationPosition[0] + step[0], this.currentAnimationPosition[1] + step[1]]
+					}
+				else {
+					this.currentAnimationPosition = [commands[commandNum][0], commands[commandNum][1]]
+					commandNum += 1
+					if (commandNum >= commands.length) {
+						clearInterval(animation)
+						this.animationMode = false
+					}
+					else {
+						step = [(commands[commandNum][0] - this.currentAnimationPosition[0]) / 30, (commands[commandNum][1] - this.currentAnimationPosition[1]) / 30]
+					}
+				}
+			}, 15)
+		},
+
+		startMovement() {
+			this.$emit('xhrRequest', {program: JSON.stringify(this.answerAreaBlocks)})
+		},
+
 		currentBlocksAmount(level=this.answerAreaBlocks) {
 			let amount = 0
 			for (const block of level) {

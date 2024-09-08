@@ -261,7 +261,7 @@ def Blocks():
 		points=1,
 		type_='robot_in_maze',
 	)
-	for maze, start_position, start_diraction in [
+	for maze, start_position, start_diraction, end_position in [
 		([
 			'._._._._._._._.',
 			'| | . | . . . |',
@@ -271,7 +271,7 @@ def Blocks():
 			'| . | ._._| . |',
 			'| . . | . . ._|',
 			'|_._._|_._._._|'
-		], [7, 0], 'right'),
+		], [6, 0], 'right', [0, 6]),
 		([
 			'._._._._._._._.',
 			'| | . | . . . |',
@@ -281,7 +281,7 @@ def Blocks():
 			'| . | ._._| . |',
 			'| . . | . . ._|',
 			'|_._._|_._._._|'
-		], [0, 7], 'left'),
+		], [0, 6], 'left', [6, 0]),
 		([
 			'._._._._._._._.',
 			'| . . . | . | |',
@@ -291,7 +291,7 @@ def Blocks():
 			'| . |_._. | . |',
 			'|_. . . | . . |',
 			'|_._._._|_._._|'
-		], [7, 7], 'left'),
+		], [6, 6], 'left', [0, 0]),
 		([
 			'._._._._._._._.',
 			'| . . . | . | |',
@@ -301,7 +301,7 @@ def Blocks():
 			'| . |_._. | . |',
 			'|_. . . | . . |',
 			'|_._._._|_._._|'	
-		], [0, 0], 'right'),
+		], [0, 0], 'right', [6, 6]),
 	]:
 		problem_3.add_variant({
 			'content': {
@@ -309,8 +309,9 @@ def Blocks():
 				'componentType': "robotInMaze",
 				'inputType': "InteractiveTypeInput",
 				'maze': maze,
-				'start_position': start_position,
-				'start_direction': start_diraction,
+				'current_position': start_position,
+				'end_position': end_position,
+				'current_direction': start_diraction,
 				'commands': [
 					{'text': "Повернуть влево", 'type': 'usual'},
 					{'text': "Повернуть вправо", 'type': "usual"},

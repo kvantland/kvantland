@@ -122,3 +122,23 @@ svg {
 .end_point {
 	text-anchor: middle;
 }
+
+.button_area {
+	display: inline-flex;
+	flex-direction: row;
+	gap: 40px;
+	align-self: center;
+}
+
+.button_area .button {
+	display: inline-flex;
+	flex-direction: row;
+	gap: 10px;
+	padding: 10px 20px;
+	color: white;
+	border-radius: 10px;
+	background-color: #1E8B93;
+	box-shadow: 4px 4px 10px 0px #00000040;
+	font-family: Montserrat Alternates;
+	cursor: pointer;
+}
