@@ -12,6 +12,15 @@
 						</g>
 						<g v-for="(column, columnNum) in horizontalWalls(row)" :key="`horizontal_line_${columnNum}`">
 							<line :class="column ? 'border' : 'usual'" :x1="columnNum * mazeSide" y1="0" :x2="(columnNum + 1) * mazeSide" y2="0" />
+							<g v-if="rowNum === startPosition[0] && columnNum === startPosition[1]" class="robot" 
+							:transform="`translate(${columnNum * mazeSide} 0) `">
+								<image  href="/problem_assets/robot.svg" class="robot" transform="scale(0.8)" :transform-origin="`${mazeSide / 2} ${mazeSide / 2}`"
+								:width="mazeSide" :height="mazeSide" x="0" y="0" />
+								<image href="/problem_assets/direction_arrow.svg" :width="mazeSide" :height="mazeSide" x="0" y="0" 
+								:transform-origin="`${mazeSide / 2} ${mazeSide / 2}`" :transform="`rotate(${startDirection})`" />
+							</g>
+							<text v-if="rowNum === endPosition[0] && columnNum === endPosition[1]" class="end_point" 
+							:x="columnNum * mazeSide + mazeSide / 2" dy="0.35em" :y="mazeSide / 2"> F </text>
 						</g>
 					</g>
 				</svg>
@@ -27,7 +36,7 @@
 			</div>
 		</div>
 		<div class="description">
-			<p><b>Соберите код, который поможет роботу дойти из клетки S в клетку F.</b></p>
+			<p><b>Соберите код, который поможет роботу дойти в клетку F.</b></p>
 			<p>Суммарно разрешено использовать не более 7 блоков (блоком считается и цикловая конструкция, и команда). 
 			Также роботу следует выполнить не более 100 поворотов или шагов вперед.</p>
 		</div>
@@ -82,6 +91,19 @@ export default {
 		},
 		commands() {
 			return this.problemParams.commands
+		},
+		allowedBlocksAmount() {
+			return this.problemParams.allowed_blocks_amount
+		},
+		startPosition() {
+			return this.problemParams.start_position
+		},
+		startDirection() {
+			const rotationDict = {left: 180, right: 0, top: 270, bottom: 90}
+			return rotationDict[this.problemParams.start_direction]
+		},
+		endPosition() {
+			return this.problemParams.end_position
 		}
 	},
 
@@ -93,6 +115,17 @@ export default {
 	},
 
 	methods: {
+		currentBlocksAmount(level=this.answerAreaBlocks) {
+			let amount = 0
+			for (const block of level) {
+				if (block.children) {
+					amount += this.currentBlocksAmount(block.children)
+				}
+				amount += 1
+			}
+			return amount
+		},
+
 		verticalWalls(row) {
 			const walls = []
 			for (const symb of row.toString()) {
@@ -260,9 +293,14 @@ export default {
 		},
 
 		moveFromStartArea(block, event) {
-			this.targetBlock = block
-			this.targetBlock.id = this.currentBlockId
-			this.startDrag(event)
+			if (this.currentBlocksAmount() >= this.allowedBlocksAmount) {
+				this.$emit('showXhrDialog', `Блоков в выражении должно быть не больше ${this.allowedBlocksAmount}.`)
+			}
+			else {
+				this.targetBlock = block
+				this.targetBlock.id = this.currentBlockId
+				this.startDrag(event)
+			}
 		},
 
 		startDrag(event) {
