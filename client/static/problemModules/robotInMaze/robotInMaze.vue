@@ -35,27 +35,8 @@
 			<p style="font-size: 30px; font-weight: 700;"> Код: </p>
 			<div v-for="(block, blockNum) in answerAreaBlocks" :key="`block_with_num_${blockNum}`" class="block_with_num">
 				<div class="block_num"> {{ blockNum + 1 }}. </div>
-				<div :class="['block', block.type, block.select ? 'select' : 'not_select']" :block_id="block.id"  @mousedown="moveFromAnswerArea(block.id, $event)" 
-				@touchstart="moveFromAnswerArea(block.id, $event.touches[0])"> 
-					<p>{{ block.text }} </p>
-						<div v-if="block.type === 'cycle'" class="insert_zone">
-							<div v-for="(childBlock, childBlockNum) in block.children" :key="`child_block_${childBlockNum}_of_${block.id}`"
-								:block_id="childBlock.id"
-								:class="['block', childBlock.type, childBlock.select ? 'select' : 'not_select']"  in_cycle="true"  @mousedown="moveFromAnswerArea(childBlock.id, $event)"
-								@touchstart="moveFromAnswerArea(childBlock.id, $event.touches[0])">
-								<p>{{ childBlock.text }} </p>
-								<div v-if="childBlock.type === 'cycle'" class="insert_zone">
-									<div v-for="(childChildBlock, childChildBlockNum) in childBlock.children" v-if="childChildBlock.type !== 'cycle'"
-									:key="`child_child_block_${childChildBlockNum}_of_${childChildBlock.id}`" :block_id="childChildBlock.id"
-									:class="['block', childChildBlock.type]"  in_cycle="true"  @mousedown="moveFromAnswerArea(childChildBlock.id, $event)"
-									@touchstart="moveFromAnswerArea(childChildBlock.id, $event.touches[0])">
-									<p>{{ childChildBlock.text }} </p>
-									<div v-if="childChildBlock.type === 'cycle'" class="insert_zone"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-				</div>
+				<answerBlock :blockData="block" :answerAreaBlocks="answerAreaBlocks" :targetBlock="targetBlock"
+					@updateAnswerArea="updateAnswerArea" @updateTargetBlock="updateTargetBlock" @startDrag="startDrag($event)"></answerBlock>
 			</div>
 		</div>
 		<div v-if="targetBlock" :class="['block', targetBlock.type, 'target_block']" 
@@ -64,7 +45,11 @@
 </template>
 
 <script>
+import answerBlock from './components/answerBlock.vue';
+
 export default {
+	components: {answerBlock},
+
 	props: {
 		problemParams:{
 			type: Object,
@@ -280,32 +265,6 @@ export default {
 			this.startDrag(event)
 		},
 
-		findTarget(blockNum, level=this.answerAreaBlocks) {
-			const newLevelBlocks = []
-			for (const block of level) {
-				const newBlock = JSON.parse(JSON.stringify(block))
-				if (block.id.toString() === blockNum.toString()) {
-					this.targetBlock = block
-				}
-				else {
-					if (block.children) {
-						newBlock.children = this.findTarget(blockNum, block.children)
-					}
-					newLevelBlocks.push(newBlock)
-				}
-			}
-			return newLevelBlocks
-		},
-
-		moveFromAnswerArea(blockNum, event) {
-			if (this.targetBlock) {
-				return
-			}
-			this.answerAreaBlocks = this.findTarget(blockNum)
-			this.$emit('updateAnswer', this.answerAreaBlocks)
-			this.startDrag(event)
-		},
-
 		startDrag(event) {
 			const x = event.clientX
 			const y = event.clientY
@@ -346,7 +305,16 @@ export default {
 			this.dragMode = false
 			this.targetBlock = undefined
 			this.nearestPlaceToInsert = undefined
-		}
+		},
+
+		updateAnswerArea(newValue) {
+			console.log('update Answer area', newValue)
+			this.answerAreaBlocks = newValue
+		},
+
+		updateTargetBlock(newValue) {
+			this.targetBlock = newValue
+		},
 	},
 }
 </script>
