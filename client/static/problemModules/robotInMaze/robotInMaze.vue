@@ -35,13 +35,13 @@
 			<p style="font-size: 30px; font-weight: 700;"> Код: </p>
 			<div v-for="(block, blockNum) in answerAreaBlocks" :key="`block_with_num_${blockNum}`" class="block_with_num">
 				<div class="block_num"> {{ blockNum + 1 }}. </div>
-				<div :class="['block', block.type]" :block_id="block.id"  @mousedown="moveFromAnswerArea(block.id, $event)" 
+				<div :class="['block', block.type, block.select ? 'select' : 'not_select']" :block_id="block.id"  @mousedown="moveFromAnswerArea(block.id, $event)" 
 				@touchstart="moveFromAnswerArea(block.id, $event.touches[0])"> 
 					<p>{{ block.text }} </p>
 						<div v-if="block.type === 'cycle'" class="insert_zone">
 							<div v-for="(childBlock, childBlockNum) in block.children" :key="`child_block_${childBlockNum}_of_${block.id}`"
 								:block_id="childBlock.id"
-								:class="['block', childBlock.type]"  in_cycle="true"  @mousedown="moveFromAnswerArea(childBlock.id, $event)"
+								:class="['block', childBlock.type, childBlock.select ? 'select' : 'not_select']"  in_cycle="true"  @mousedown="moveFromAnswerArea(childBlock.id, $event)"
 								@touchstart="moveFromAnswerArea(childBlock.id, $event.touches[0])">
 								<p>{{ childBlock.text }} </p>
 								<div v-if="childBlock.type === 'cycle'" class="insert_zone">
@@ -176,138 +176,99 @@ export default {
 			return true
 		},
 
-		findNewNearestPlaceToInsert(y) {
+		findNewNearestPlaceToInsert(y, level=document.querySelectorAll('.answer_area .block'), parent=this.currentBlockId) {
 			let index = 0
-			const blocks = document.querySelectorAll('.answer_area .block')
-			let parentId = this.currentBlockId
-			for (const block of blocks) {
+			for (const block of level) {
 				const blockRect = block.getBoundingClientRect()
 				if (block.classList.contains('cycle') && !block.classList.contains('select')) {
 					if (y >= blockRect.top && y <= blockRect.bottom) {
-						index = 0
-						const childrenBlocks = document.querySelectorAll(`.answer_area .cycle.block[block_id='${block.getAttribute('block_id')}'] .block`)
-						for (const childBlock of childrenBlocks) {
-							const childBlockRect = childBlock.getBoundingClientRect()
-							if (childBlock.classList.contains('cycle') && !childBlock.classList.contains('select')) {
-								if (y >= childBlockRect.top && y <= childBlockRect.bottom) {
-									if (this.targetBlock.type === 'cycle') {
-										return undefined
-									}
-									index = 0
-									const childrenChildrenBlocks = document.querySelectorAll(`.answer_area .cycle.block[block_id='${childBlock.getAttribute('block_id')}'] .block`)
-									for (const childChildBlock of childrenChildrenBlocks) {
-										const childChildBlockRect = childChildBlock.getBoundingClientRect()
-										if (y >= (childChildBlockRect.top + childChildBlockRect.bottom) / 2 && !childChildBlock.classList.contains('select')){
-											index++
-										}
-									}
-									parentId = childBlock.getAttribute('block_id')
-									return {index, parent: parentId}
-								}
-							}
-							if (y >= (childBlockRect.top + childBlockRect.bottom) / 2 && !childBlock.classList.contains('select')){
-								index++
-							}
-						}
-						parentId = block.getAttribute('block_id')
-						return {index, parent: parentId}
+						const childLevel = document.querySelectorAll(`.answer_area .cycle.block[block_id='${block.getAttribute('block_id')}'] .block`)
+						const newParent = block.getAttribute('block_id')
+						const newIndex = this.findNewNearestPlaceToInsert(y, level=childLevel, parent=newParent)
+						return newIndex
 					}
 				}
-				if (y >= (blockRect.top + blockRect.bottom) / 2 && !block.classList.contains('select')){
-					index += 1
+				if (y >= (blockRect.top + blockRect.bottom) / 2 && !block.classList.contains('select')) {
+					index++
 				}
 			}
-			return {index, parent: parentId}
+			return {index, parent}
 		},
 
-		removeSelectedBlock() {
-			const answerAreaBlocksProto = JSON.parse(JSON.stringify(this.answerAreaBlocks))
-			const newAnswerAreaBlocks = []
-			for (const block of answerAreaBlocksProto) {
+		removeSelectedBlock(level=this.answerAreaBlocks) {
+			const newLevelBlocks = []
+			for (const block of level) {
 				const newBlock = JSON.parse(JSON.stringify(block))
-				const newChildren = []
 				if (block.children) {
-					for (const childBlock of block.children) {
-						const newChildBlock = JSON.parse(JSON.stringify(childBlock))
-						const newChildrenChildren = []
-						if (childBlock.children) {
-							for (const childChildBlock of childBlock.children) {
-								if (childChildBlock.type.split(' ')[0] !== 'select') {
-									newChildrenChildren.push(childChildBlock)
-								}
-							}
-							newChildBlock.children = newChildrenChildren
-						}
-						if (newChildBlock.type.split(' ')[0] !== 'select') {
-							newChildren.push(newChildBlock)
-						}
-					}
-					newBlock.children = newChildren
+					newBlock.children = this.removeSelectedBlock(block.children)
 				}
-				if (newBlock.type.split(' ')[0] !== 'select') {
-					newAnswerAreaBlocks.push(newBlock)
+				if (!newBlock.select) {
+					newLevelBlocks.push(newBlock)
 				}
 			}
-			console.log('after remove: ', newAnswerAreaBlocks)
-			this.answerAreaBlocks = newAnswerAreaBlocks
-			this.$emit('updateAnswer', this.answerAreaBlocks)
+			return newLevelBlocks
 		},
 
+		tryToInsertInto(index, parent, block) {
+			const newBlock = JSON.parse(JSON.stringify(block))
+			let newChildren = []
+			if (block.id.toString() === parent.toString()) {
+				if (block.children)	
+					newChildren = JSON.parse(JSON.stringify(block.children))
+				if (index < newChildren.length) {
+					newChildren.splice(index, 0, this.targetBlock)
+				}
+				else {
+					newChildren.push(this.targetBlock)
+				}
+			}
+			else if (block.children) {
+				for (const childBlock of block.children) {
+					const newChildBlock = this.tryToInsertInto(index, parent, childBlock)
+					newChildren.push(newChildBlock)
+				}
+			}
+			newBlock.children = newChildren
+			return newBlock
+		},
+		
 		updateNearestPlaceToInsert(x, y) {
-			if (!this.inRect(x, y, this.$refs.answerArea.getBoundingClientRect())) {
-				this.removeSelectedBlock()
+			this.answerAreaBlocks = this.removeSelectedBlock()
+			const newIndex = this.findNewNearestPlaceToInsert(y)
+			if (!this.inRect(x, y, this.$refs.answerArea.getBoundingClientRect()) || !(newIndex)) {
 				this.nearestPlaceToInsert = undefined
 				return;
 			}
-			this.removeSelectedBlock()
-			const newIndex = this.findNewNearestPlaceToInsert(y)
-			if (!newIndex) {
-				this.nearestPlaceToInsert = undefined
-				this.endDrag()
-				return
-			}
+
+			const [index, parent] = [newIndex.index, newIndex.parent]
 			console.log('index to insert: ', newIndex)
 			this.nearestPlaceToInsert = newIndex
-			const newAnswerAreaBlocks = JSON.parse(JSON.stringify(this.answerAreaBlocks))
-			if (newIndex.parent !== this.currentBlockId) {
-				for (const block of newAnswerAreaBlocks) {
-					if (block.id == this.nearestPlaceToInsert.parent) {
-						if (!block.children) {
-							block.children = [{text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, parent: newIndex.parent, id: this.currentBlockId}]
-						}
-						else {
-							block.children.splice(newIndex.index, 0, {text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, parent: newIndex.parent, id: this.currentBlockId})
-						}
-						break
-					}
-					for (const childBlock of block.children) {
-						if (childBlock.id == this.nearestPlaceToInsert.parent) {
-							if (!childBlock.children) {
-								childBlock.children = [{text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, parent: newIndex.parent, id: this.currentBlockId}]
-							}
-							else {
-								childBlock.children.splice(newIndex.index, 0, {text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, parent: newIndex.parent, id: this.currentBlockId})
-							}
-							break
-						}
-					}
-				}
-			}
-			else if (newIndex.index >= newAnswerAreaBlocks.length) {
-					newAnswerAreaBlocks.push({text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, id: this.currentBlockId})
+			this.targetBlock.select = true
+			this.targetBlock.parent = parent
+			const newAnswerAreaBlocks = []
+
+			this.answerAreaBlocks.forEach(function(block, blockIndex) {
+				if (parent.toString() !== this.currentBlockId.toString()) { // block has parent, different from itself
+					const newBlock = this.tryToInsertInto(index, parent, block)
+					newAnswerAreaBlocks.push(newBlock)
 				}
 				else {
-					newAnswerAreaBlocks.splice(newIndex.index, 0, {text: this.targetBlock.text, type: `select ${this.targetBlock.type}`, id: this.currentBlockId})
+					if (index.toString() === blockIndex.toString())
+						newAnswerAreaBlocks.push(this.targetBlock)
+					newAnswerAreaBlocks.push(block)
 				}
+			}.bind(this))
+
+			if (index >= this.answerAreaBlocks.length && parent.toString() === this.currentBlockId.toString()) {
+				newAnswerAreaBlocks.push(this.targetBlock)
+			}
 			this.answerAreaBlocks = newAnswerAreaBlocks
-			this.$emit('updateAnswer', this.answerAreaBlocks)
 		},
 
 		moveAt(x, y) {
 			this.autoscroll()
 			this.$set(this.targetBlock, 'x', x)
 			this.$set(this.targetBlock, 'y', y)
-			// console.log(this.targetBlock.x, this.targetBlock.y)
 			if (!this.inAllowedArea()) {
 				this.endDrag()
 			}
@@ -319,34 +280,28 @@ export default {
 			this.startDrag(event)
 		},
 
+		findTarget(blockNum, level=this.answerAreaBlocks) {
+			const newLevelBlocks = []
+			for (const block of level) {
+				const newBlock = JSON.parse(JSON.stringify(block))
+				if (block.id.toString() === blockNum.toString()) {
+					this.targetBlock = block
+				}
+				else {
+					if (block.children) {
+						newBlock.children = this.findTarget(blockNum, block.children)
+					}
+					newLevelBlocks.push(newBlock)
+				}
+			}
+			return newLevelBlocks
+		},
+
 		moveFromAnswerArea(blockNum, event) {
 			if (this.targetBlock) {
 				return
 			}
-			const answerAreaBlocksProto = JSON.parse(JSON.stringify(this.answerAreaBlocks))
-			const newAnswerAreaBlocks = []
-			for (const block of answerAreaBlocksProto) {
-				const newBlock = JSON.parse(JSON.stringify(block))
-				const newChildren = []
-				if (block.children) {
-					for (const childBlock of block.children) {
-						if (childBlock.id !== blockNum) {
-							newChildren.push(childBlock)
-						}
-						else {
-							this.targetBlock = childBlock
-						}
-					}
-					newBlock.children = newChildren
-				}
-				if (newBlock.id !== blockNum) {
-					newAnswerAreaBlocks.push(newBlock)
-				}
-				else {
-					this.targetBlock = block
-				}
-			}
-			this.answerAreaBlocks = newAnswerAreaBlocks
+			this.answerAreaBlocks = this.findTarget(blockNum)
 			this.$emit('updateAnswer', this.answerAreaBlocks)
 			this.startDrag(event)
 		},
@@ -383,35 +338,8 @@ export default {
 				return
 			}
 			if (this.nearestPlaceToInsert !== undefined) {
-				this.targetBlock.parent = this.nearestPlaceToInsert.parent
-				if (this.nearestPlaceToInsert.parent !== this.currentBlockId) {
-					for (const block of this.answerAreaBlocks) {
-						if (block.id == this.nearestPlaceToInsert.parent) {
-							if (!block.children) {
-								block.children = [this.targetBlock]
-							}
-							else {
-								block.children.splice(this.nearestPlaceToInsert.index, 0, this.targetBlock)
-							}
-						}
-						if (block.children) {
-							for (const childBlock of block.children) {
-								if (childBlock.id == this.nearestPlaceToInsert.parent) {
-									if (!childBlock.children) {
-										childBlock.children = [this.targetBlock]
-									}
-									else {
-										childBlock.children.splice(this.nearestPlaceToInsert.index, 0, this.targetBlock)
-									}
-								}
-							}
-						}
-					}
-				}
-				else {
-					this.$set(this.answerAreaBlocks, this.nearestPlaceToInsert.index, this.targetBlock)
-				}
-				this.removeSelectedBlock()
+				this.targetBlock.select = false
+				this.answerAreaBlocks = this.removeSelectedBlock()
 				this.$emit('updateAnswer', this.answerAreaBlocks)
 				this.currentBlockId += 1
 			}
