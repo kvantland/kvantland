@@ -6,6 +6,7 @@ import json
 from enum import Enum, auto
 from importlib import import_module
 from pathlib import Path
+from copy import deepcopy
 import psycopg
 
 import nav
@@ -353,11 +354,19 @@ def xhr_request(db, user_id, var_id, params):
 	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
 	(type_, ), = db.fetchall()
 	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
-	(cont, ), = db.fetchall()
+	(start_cont, ), = db.fetchall()
 	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
 	(curr, ), = db.fetchall()
 	if curr:
-		cont = curr
+		print('xhr curr: ', curr)
+		cont = deepcopy(curr)
+		print('xhr cont: ', cont)
+		cont['default'] = start_cont
+	else:
+		print('xhr start_cont: ', start_cont)
+		cont = deepcopy(start_cont)
+		print('xhr cont: ', cont)
+		cont['default'] = start_cont
 	typedesc = import_module(f'problem-types.{type_}')
 	resp = typedesc.steps(xhr_amount, params, cont)
 	try: 

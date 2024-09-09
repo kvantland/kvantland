@@ -1,10 +1,26 @@
 import json
+from turtle import position
 
 def steps(step_num, params, data):
     try:
         try:
             if 'program' not in params.keys():
-                return {'answer': {'message': "Неверный формат запроса"}}
+                print('here 0')
+                if 'reload' in params.keys():
+                    data = data['default']
+                    return {'answer': {}, 'data_update': data}
+                else:
+                    print('here 0 0')
+                    if 'checkout' in params.keys():
+                        print('checkout!')
+                        if data['current_position'] == data['end_position']:
+                            print('successful checkout!')
+                            return {'answer_correct': True, 'user_answer': data['current_position'], 'solution': params['solution']}
+                        else:
+                            print('unsuccessful checkout!')
+                            return {'answer': {'message': "Неверно. Робот не дошёл до нужной точки"}}
+                    else:
+                        return {'answer': {'message': "Неверный формат запроса"}}
         except:
             return {'asnwer': {'message': "Неверный формат запроса"}}
         program = json.loads(params['program'])
@@ -88,6 +104,9 @@ def steps(step_num, params, data):
                 index -= 1
             return command_list[0:index + 2]
         
+        if not data['action_allowed']:
+            return {'answer': {'message': "Необходимо сбросить положение робота. Цена - 1 квантик"}}
+        
         if command_amount(program) > data['allowed_blocks_amount']:
             return {'answer': {'message': "Слишком много блоков использовано"}}
         
@@ -132,9 +151,16 @@ def steps(step_num, params, data):
             x, y, direction = execute_program(current_x, current_y, current_diraction, program)
             command_list = stripp(command_list)
             printt(command_list)
-            return {'answer': {'command_list': command_list, 'new data': {'x': x, 'y': y, 'direction': direction}}}
+            data['current_direction'] = direction_array[direction]
+            data['current_position'] = [x, y]
+            data['action_allowed'] = False
+            return {'answer': {'command_list': command_list}, 'data_update': data}
         except:
             return {'answer': {'message': "Unknown error"}}
         
     except:
         return {'answer': {'message': "Unknown error"}}
+    
+
+def validate(data, answer):
+    return data['current_position'] == data['end_position']

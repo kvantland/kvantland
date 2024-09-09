@@ -53,7 +53,7 @@
 				<img class="start_buttom_image" :src="`/problem_assets/start_button_image.svg`" />
 				<p> Выполнить </p>
 			</div>
-			<div class="reload button">
+			<div class="reload button" @click="reload">
 				<img class="reload_button_image" :src="`/problem_assets/reload_button_image.svg`" />
 				<p> Перезапустить </p>
 			</div>
@@ -141,6 +141,9 @@ export default {
 				return this.currentAnimationDirection
 			} 
 			return this.currentDirection
+		},
+		actionAllowed() {
+			return this.problemParams.action_allowed
 		}
 	},
 
@@ -188,6 +191,7 @@ export default {
 					this.currentAnimationPosition = [commands[commandNum][0], commands[commandNum][1]]
 					commandNum += 1
 					if (commandNum >= commands.length) {
+						this.$emit('xhrRequest', {checkout: true, solution: document.querySelector('.game_plot').outerHTML})
 						clearInterval(animation)
 						this.animationMode = false
 					}
@@ -199,7 +203,16 @@ export default {
 		},
 
 		startMovement() {
-			this.$emit('xhrRequest', {program: JSON.stringify(this.answerAreaBlocks)})
+			if (!this.actionAllowed) {
+				this.$emit('showXhrDialog', "Необходимо сбросить положение робота. Цена - 1 квантик")
+			}
+			else {
+				this.$emit('xhrRequest', {program: JSON.stringify(this.answerAreaBlocks)})
+			}
+		},
+
+		reload() {
+			this.$emit('xhrRequest', {reload: true})
 		},
 
 		currentBlocksAmount(level=this.answerAreaBlocks) {

@@ -305,6 +305,7 @@ def Blocks():
 	]:
 		problem_3.add_variant({
 			'content': {
+				'action_allowed': True,
 				'allowed_blocks_amount': 7,
 				'componentType': "robotInMaze",
 				'inputType': "InteractiveTypeInput",
