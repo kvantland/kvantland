@@ -102,6 +102,7 @@ export default {
                 this.$auth.fetchUser()
             })
             if (status) {
+                this.cost = problemData.cost
                 this.variantParams = problemData.variantParams
                 this.answerStatus = problemData.answerStatus
                 this.answerGiven = problemData.answerGiven

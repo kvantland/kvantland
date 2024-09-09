@@ -1,19 +1,14 @@
 #!/usr/bin/python3
 import sys 
 
-from bottle import route, request, redirect, HTTPError, response
+from bottle import route, request
 import json
-from enum import Enum, auto
 from importlib import import_module
 from pathlib import Path
 from copy import deepcopy
-import psycopg
 
-import nav
-import user
-import footer
 from config import config
-from login import do_logout, check_token
+from login import check_token
 
 @route('/api/xhr', method='POST')
 def get_xhr_request(db):
@@ -164,10 +159,12 @@ def get_problem_data(db):
 			description = db_description
 		print('description:', description)
 		default = content
-		db.execute('select xhr_amount, curr from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-		(step, curr, ), = db.fetchall()
+		db.execute('select xhr_amount, curr, curr_points from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+		(step, curr, curr_points, ), = db.fetchall()
 		if curr:
 			content = curr
+		if curr_points:
+			points = curr_points
 	except:
 		return json.dumps(resp)
 	try:
@@ -355,20 +352,33 @@ def xhr_request(db, user_id, var_id, params):
 	(type_, ), = db.fetchall()
 	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
 	(start_cont, ), = db.fetchall()
-	db.execute('select curr from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
-	(curr, ), = db.fetchall()
+	db.execute('select curr, curr_points from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
+	(curr, points, ), = db.fetchall()
 	if curr:
-		print('xhr curr: ', curr)
 		cont = deepcopy(curr)
-		print('xhr cont: ', cont)
 		cont['default'] = start_cont
+		cont['points'] = points
 	else:
-		print('xhr start_cont: ', start_cont)
 		cont = deepcopy(start_cont)
-		print('xhr cont: ', cont)
 		cont['default'] = start_cont
+		cont['points'] = points
 	typedesc = import_module(f'problem-types.{type_}')
 	resp = typedesc.steps(xhr_amount, params, cont)
+	try:
+		if 'points_update' in resp.keys():
+			print('points update request')
+			db.execute('select curr_points from Kvantland.AvailableProblem where variant = %s and student= %s', (var_id, user_id))
+			(current_points, ), = db.fetchall()
+			print('points before update: ', current_points)
+			new_points = current_points + resp['points_update']
+			print('points_update', new_points)
+			if new_points > 0:
+				db.execute('update Kvantland.AvailableProblem set curr_points = %s where variant = %s and student= %s', (new_points, var_id, user_id))
+			else:
+				resp['answer'] = {'message': "Невозможно совершить действие"}
+				return resp['answer']
+	except:
+		pass
 	try: 
 		db.execute('update Kvantland.AvailableProblem set curr = %s where variant = %s and student= %s', (json.dumps(resp['data_update']), var_id, user_id))
 	except KeyError:

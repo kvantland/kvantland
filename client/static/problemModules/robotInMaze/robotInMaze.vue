@@ -16,7 +16,7 @@
 							:x="columnNum * mazeSide + mazeSide / 2" dy="0.35em" :y="mazeSide / 2"> F </text>
 						</g>
 					</g>
-					<g class="robot" :transform="`translate(${realPosition[0] * mazeSide} ${realPosition[1] * mazeSide})`">
+					<g class="robot" :transform="`translate(${realPosition[1] * mazeSide} ${realPosition[0] * mazeSide})`">
 						<image  href="/problem_assets/robot.svg" class="robot" transform="scale(0.8)" :transform-origin="`${mazeSide / 2} ${mazeSide / 2}`"
 						:width="mazeSide" :height="mazeSide" x="0" y="0" />
 						<image href="/problem_assets/direction_arrow.svg" :width="mazeSide" :height="mazeSide" x="0" y="0" 
@@ -158,6 +158,9 @@ export default {
 				}
 				else if (this.xhrData.xhr_answer.message) {
 					this.$emit('showXhrDialog', this.xhrData.xhr_answer.message)
+				}
+				if (this.xhrData.xhr_answer.reload) {
+					this.$emit('updateProblemStatus')
 				}
 			}
 		}

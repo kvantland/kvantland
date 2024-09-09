@@ -258,7 +258,7 @@ def Blocks():
 
 	problem_3 = Problem(
 		name='Робот в лабиринте',
-		points=1,
+		points=3,
 		type_='robot_in_maze',
 	)
 	for maze, start_position, start_diraction, end_position in [

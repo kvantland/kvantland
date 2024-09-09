@@ -112,7 +112,7 @@ export default {
             }
             let solution
             try {
-                solution = this.$refs['problem'].innerHTML.replace(/input-save-value/g, 'value')
+                solution = this.$refs.problem.innerHTML.replace(/input-save-value/g, 'value')
             }
             catch {
                 solution = ''
@@ -140,7 +140,7 @@ export default {
         },
         async updateProblemStatus() {
             console.log('update problem status!')
-            //this.$emit('updateProblemStatus')
+            this.$emit('updateProblemStatus')
         }
     },
 

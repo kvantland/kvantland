@@ -5,12 +5,13 @@ def steps(step_num, params, data):
     try:
         try:
             if 'program' not in params.keys():
-                print('here 0')
                 if 'reload' in params.keys():
-                    data = data['default']
-                    return {'answer': {}, 'data_update': data}
+                    if data['action_allowed']:
+                        return {'answer': {'message': "Перезапуск сейчас не требуется"}}
+                    else:
+                        data = data['default']
+                        return {'answer': {'reload': True}, 'data_update': data, 'points_update': -1}
                 else:
-                    print('here 0 0')
                     if 'checkout' in params.keys():
                         print('checkout!')
                         if data['current_position'] == data['end_position']:
@@ -18,7 +19,10 @@ def steps(step_num, params, data):
                             return {'answer_correct': True, 'user_answer': data['current_position'], 'solution': params['solution']}
                         else:
                             print('unsuccessful checkout!')
-                            return {'answer': {'message': "Неверно. Робот не дошёл до нужной точки"}}
+                            if data['points'] <= 0:
+                                return {'answer': {}, 'answer_correct': False, 'user_answer': data['current_position'], 'solution': params['solution']}
+                            else:
+                                return {'answer': {'message': "Неверно. Робот не дошёл до нужной точки"}}
                     else:
                         return {'answer': {'message': "Неверный формат запроса"}}
         except:
@@ -72,7 +76,7 @@ def steps(step_num, params, data):
                         if check(x, y, position_transform[direction_array[direction]]):
                             x += position_transform[direction_array[direction]][0]
                             y += position_transform[direction_array[direction]][1]
-                            command_list.append([x, y, direction_array[direction]])
+                            command_list.append([y, x, direction_array[direction]])
                         else:
                             print('unsuccess')
                             return [x, y, direction]
@@ -152,7 +156,7 @@ def steps(step_num, params, data):
             command_list = stripp(command_list)
             printt(command_list)
             data['current_direction'] = direction_array[direction]
-            data['current_position'] = [x, y]
+            data['current_position'] = [y, x]
             data['action_allowed'] = False
             return {'answer': {'command_list': command_list}, 'data_update': data}
         except:

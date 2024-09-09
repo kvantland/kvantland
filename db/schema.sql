@@ -62,6 +62,7 @@ create table AvailableProblem (
 	answer text,
 	solution text,
 	curr jsonb,
+	curr_points int not null,
 	primary key (student, variant)
 );
 
