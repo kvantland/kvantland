@@ -150,7 +150,12 @@ export default {
 				console.log('newXhr')
 				this.$emit('xhrGet')
 				this.currentAnimationPosition = JSON.parse(JSON.stringify(this.currentPosition))
-				this.startAnimation(this.xhrData.xhr_answer.command_list)
+				if (this.xhrData.xhr_answer.command_list) {
+					this.startAnimation(this.xhrData.xhr_answer.command_list)
+				}
+				else if (this.xhrData.xhr_answer.message) {
+					this.$emit('showXhrDialog', this.xhrData.xhr_answer.message)
+				}
 			}
 		}
 	},
@@ -169,8 +174,6 @@ export default {
 				return
 			}
 			let step = [(commands[0][0] - this.currentAnimationPosition[0]) / 30, (commands[0][1] - this.currentAnimationPosition[1]) / 30]
-			console.log(step)
-			console.log(commands[commandNum])
 			const rotationDict = {left: 180, right: 0, top: 270, bottom: 90}
 			this.animationMode = true
 			const animation = setInterval(() => {
