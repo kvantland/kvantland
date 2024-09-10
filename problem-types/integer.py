@@ -4,8 +4,10 @@ def entry_form(data, kwargs):
 	yield ''
 
 def validate(data, answer):
-	answer = int(answer)
-	return answer == data['correct']
+	try:
+		return str(answer) == str(data['correct'])
+	except:
+		return False
 
 CUSTOM_BUTTONS = True
 SAVE_PROGRESS = False
