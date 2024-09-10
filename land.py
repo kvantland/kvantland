@@ -26,14 +26,6 @@ def finished(db, user_id):
 	(finish, ), = db.fetchall()
 	return finish
 
-def require_user(db):
-	user_id = user.current_user(db)
-	if user_id:
-		db.execute('select * from Kvantland.Student where student = %s', (user_id, ))
-		(stats), = db.fetchall()
-		if None in stats:
-			return None
-	return user_id
 
 @route('/api/rules_crumbs')
 def get_rules_breadcrumbs():
