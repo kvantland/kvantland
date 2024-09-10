@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 
-from bottle import route, request, response, redirect
+from bottle import route, request, response
 
 from config import config
 import json
 import jwt
 import urllib.request as urllib2
-from login import do_login, current_user
 from passlib.hash import pbkdf2_sha256 as pwhash
 import pkce
 
@@ -159,36 +158,6 @@ def get_user_vk_info(access_token, user_id):
 	
 	return user_info['response'][0]
 
-
-@route('/login/vk')	
-def login_attempt(db):
-	user = get_user()
-	login = 'vk#' + str(user['id'])
-	password, name, surname, city, school = ('some', None, None, None, None)
-	try:
-		name = user['first_name']
-	except KeyError:
-		pass
-	try:
-		surname = user['last_name']
-	except KeyError:
-		pass
-	try:
-		city = user['city']['title']
-	except KeyError:
-		pass
-	if user['schools']:
-		try:
-			school = user['schools'][0]['name']
-		except KeyError:
-			pass
-	if (user := vk_check_login(db, login)) != None:	
-		do_login(user, login)
-	else:
-		user = add_user(login, name, surname, city, school, password, db)
-		do_login(user, login)
-	redirect('/')
-
 def vk_check_login(db, user_name):
 	db.execute('select student from Kvantland.Student where login = %s', (user_name, ))
 	try:
@@ -212,27 +181,3 @@ def get_token():
 			print('Something went wrong', file=sys.stderr)
 		return ''
 
-def get_info(token):
-	if token['access_token']:
-		params = {'user_ids': token['user_id'],
-		'fields': 'uid, first_name, last_name, city, schools',
-		'access_token': token['access_token'],
-		'v': '5.131' 
-		}
-		info_path = info_url + '?' + urllib.parse.urlencode(params)
-		cont = urllib2.urlopen(info_path)
-		user_info = json.loads(cont.read())
-		return user_info
-
-def convert(info):
-	return info['response'][0]
-
-def get_user():
-	return convert(get_info(get_token()))
-
-def add_user(login, name, surname, city, school, password, db):
-	db.execute("insert into Kvantland.Student (login, name, surname, town, school, password) values (%s, %s, %s, %s, %s, %s) returning student", (login, name, surname, city, school, pwhash.hash(password)))
-	(user, ), = db.fetchall()
-	db.execute("insert into Kvantland.AvailableProblem (student, variant) select distinct on (problem) %s, variant from Kvantland.Variant order by problem, random();", (user, ))
-	db.execute("insert into Kvantland.Score (student, tournament) values (%s, %s)", (user, config["tournament"]["version"]))
-	return user
