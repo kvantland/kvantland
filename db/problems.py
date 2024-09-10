@@ -258,7 +258,7 @@ def Blocks():
 
 	problem_3 = Problem(
 		name='Робот в лабиринте',
-		points=3,
+		points=4,
 		type_='robot_in_maze',
 	)
 	for maze, start_position, start_diraction, end_position in [
@@ -334,7 +334,7 @@ def update_positions_town(cur, town, problem_count):
 	y0 = 720 / 2
 	R = 250
 	base = 0.25
-	cur.execute("select problem from Kvantland.Problem where town = %s and tournament = %s", (town, current_tournament))
+	cur.execute("select problem from Kvantland.Problem where town = %s and tournament = %s order by points", (town, current_tournament))
 	if (problem_count == 1):
 		(problem, ), = cur.fetchall()
 		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x0, y0, problem))
@@ -365,15 +365,3 @@ with psycopg.connect(db) as con:
 			Blocks()
 			Proga()
 			update_positions()
-
-
-
-
-
-
-
-
-
-
-def vasua_function(a, b, c):
-	return a - b // 4 + 63  

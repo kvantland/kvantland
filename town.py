@@ -50,7 +50,7 @@ def get_town_data(db):
 		return json.dumps(resp)
 	user_id = token_status['user_id']
 	try:
-		db.execute('''select variant, position, points, name, answer_true from Kvantland.AvailableProblem 
+		db.execute('''select variant, position, curr_points, name, answer_true from Kvantland.AvailableProblem 
 			join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) 
 			where town = %s and student = %s and tournament = %s''', (town, user_id, config["tournament"]["version"]))
 		for variant, position, points, name, ans_true in db.fetchall():

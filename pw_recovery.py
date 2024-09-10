@@ -10,7 +10,6 @@ from send_mail import send_mail
 import time
 import jwt
 
-from login import do_login
 from config import config
 
 alph_lower = 'abcdefghijklmnopqrstuvwxyz'
@@ -217,4 +216,3 @@ def update_user(db, email, password):
 		(user, ) = db.fetchall()[0]
 	db.execute('update Kvantland.Student set password=%s where student = %s returning student, login', (pwhash.hash(password), user, ))
 	(user, login, ) = db.fetchall()[0]
-	do_login(user, login)
