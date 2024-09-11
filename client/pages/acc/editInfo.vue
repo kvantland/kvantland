@@ -2,37 +2,23 @@
     <div>
         <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fieldsValueInfo.email" 
             :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
-        <Form v-else>
-            <p class="header"> Редактирование данных </p>
-            <form method="post" id="acc" @submit.prevent="submitAccForm">
-                <FieldsArea>
-                    <div class="global_error" v-if="globalError">
-                        <img class="error_img" src="/icons/info.svg" />
-                        <p class="error" v-html="globalError"> </p>
-                    </div>
-                    <FormField v-for="fieldInfo in fieldsTypeInfo" :fieldInfo="fieldInfo" @clearError="clearError"
-                        :key="fieldInfo.name" v-model="fieldsValueInfo[fieldInfo.name]" :error="fieldsErrors[fieldInfo.name]" />
-                </FieldsArea>
-                <UserAgreement :error="fieldsErrors.approval" v-model="fieldsValueInfo['approval']" @clearError="clearError" />
-                <SubmitButton :id="'acc'"> Сохранить </SubmitButton>
-                <hr size="1">
-                <BackButton />
-            </form>
-        </Form>
+        <AccEditForm :startFieldsValueInfo="fieldsValueInfo" 
+			:fieldsTypeInfo="fieldsTypeInfo" :fieldsErrors="fieldsErrors" 
+			@submitAccForm="submitAccForm" @clearError="clearError"></AccEditForm>
     </div>
 </template>
 
 <script>
+import AccEditForm from '~/modules/acc-editInfo-page/AccEditForm.vue';
+
 export default {
+	components: {
+		AccEditForm,
+	},
+
     layout: "forms",
 
-    head() {
-        return {
-            title: ' Личный кабинет — Квантландия '
-        };
-    },
-
-    async asyncData({ $axios, route, app }) {
+	async asyncData({ $axios, route, app }) {
         const fieldsTypeInfo = await $axios.$get('/api/acc_fields');
         let fieldsValueInfo = {};
         switch (route.query.request) {
@@ -41,26 +27,24 @@ export default {
                 break;
             }
             default: {
-                fieldsValueInfo = JSON.parse(JSON.stringify(app.$auth.user)) || {};
+                fieldsValueInfo = JSON.parse(JSON.stringify(app.$auth.user));
                 break;
             }
         }
 
         return {
-            fieldsTypeInfo: fieldsTypeInfo,
-            fieldsValueInfo: fieldsValueInfo,
+            fieldsTypeInfo,
+            fieldsValueInfo,
             globalError: route.query.globalError === 'fillFields'
                 ? 'Все поля в личном кабинете обязательны </br> для заполнения'
                 : ''
         };
     },
 
-    data() {
+	data() {
         return {
             pageMod: 'updateInfo',
             fieldsErrors: {},
-            fieldsTypeInfo: [],
-            fieldsValueInfo: [],
             checkEmailMode: false,
             sendEmailDescription: `Письмо для подтверждения адреса
                                     электронной почты,</br> 
@@ -72,18 +56,23 @@ export default {
         };
     },
 
+    head() {
+        return {
+            title: ' Личный кабинет — Квантландия '
+        };
+    },
+
     methods: {
         clearError(name) {
             this.fieldsErrors[name] = ""
             this.globalError = ""
         },
 
-        async submitAccForm() {
-            const userInfo = { ...this.fieldsValueInfo };
+        async submitAccForm(userInfo) {
             this.fieldsTypeInfo.forEach((field) => {
                 if (!userInfo[field.name]) userInfo[field.name] = ""
             })
-            if (!userInfo['approval']) userInfo['approval'] = false
+            if (!userInfo.approval) userInfo.approval = false
             const requestBody = { user_info: userInfo, action_type: this.pageMod }
             let emailChanged = false
             let errors = {}
