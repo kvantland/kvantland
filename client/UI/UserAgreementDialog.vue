@@ -6,14 +6,13 @@
                 <div><img class="cross" loading="lazy" @click="closeDialog" src="/icons/cross.svg" /></div>
             </div>
             <div class="content">
-                <p v-for="par in pars" v-html="par"></p>
+                <p v-for="(par, parNum) in pars" :key="`par_${parNum}`" v-html="par"></p>
             </div>
         </div>
     </DialogShadowScreen>
 </template>
 
 <script>
-import DialogShadowScreen from './DialogShadowScreen.vue';
 
 export default {
     data() {
@@ -23,15 +22,15 @@ export default {
         }
     },
 
+    async fetch() {
+        const pars = await this.$axios.$get('/api/agreement_pars')
+        this.pars = pars
+    },
+
     methods: {
         closeDialog() {
             this.$emit('closeDialog')
         },
-    },
-
-    async fetch() {
-        const pars = await this.$axios.$get('/api/agreement_pars')
-        this.pars = pars
     },
 }
 </script>
@@ -40,6 +39,20 @@ export default {
 .dialog {
     opacity: 1;
     animation: show 0.4s;
+    min-width: 500px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px 60px;
+    background: rgb(30, 139, 147);
+    border-radius: 20px;
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 24px;
 }
 
 @keyframes show {
@@ -67,7 +80,7 @@ export default {
     font-size: 20px;
     font-weight: 400;
 }
-a.policy {
+::v-deep a.policy {
     font-weight: 600;
     text-decoration: underline;
 }
