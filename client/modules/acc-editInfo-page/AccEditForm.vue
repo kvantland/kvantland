@@ -8,10 +8,10 @@
 					<p class="error" v-html="globalError"> </p>
 				</div>
 				<FormField v-for="fieldInfo in fieldsTypeInfo" v-model="fieldsValueInfo[fieldInfo.name]" :fieldInfo="fieldInfo" 
-					@clearError="clearError(fieldInfo.name)"
+					@clearError="$emit('clearError')"
 					:key="fieldInfo.name"  :error="fieldsErrors[fieldInfo.name]" />
 			</FieldsArea>
-			<UserAgreement v-model="fieldsValueInfo.approval" :error="fieldsErrors.approval"  @clearError="clearError('approval')" />
+			<UserAgreement v-model="fieldsValueInfo.approval" :error="fieldsErrors.approval"  @clearError="$emit('clearError')" />
 			<SubmitButton :id="'acc'"> Сохранить </SubmitButton>
 			<hr size="1">
 			<BackButton />
@@ -47,9 +47,6 @@ export default {
 	},
 
 	methods: {
-		clearError(name) {
-			this.$emit('clearError', name)
-		},
 		submitAccForm(){
 			this.$emit('submitAccForm', this.fieldsValueInfo)
 		}

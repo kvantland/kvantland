@@ -20,14 +20,16 @@ export default {
 
 	async asyncData({ $axios, route, app }) {
         const fieldsTypeInfo = await $axios.$get('/api/acc_fields');
-        let fieldsValueInfo = {};
+		let fieldsValueInfo;
         switch (route.query.request) {
             case 'oauthReg': {
                 fieldsValueInfo = JSON.parse(route.query.user_info);
                 break;
             }
             default: {
-                fieldsValueInfo = JSON.parse(JSON.stringify(app.$auth.user));
+				if (app.$auth.user) {
+                	fieldsValueInfo = JSON.parse(JSON.stringify(app.$auth.user));
+				}
                 break;
             }
         }
@@ -63,7 +65,11 @@ export default {
     },
 
     methods: {
-        clearError(name) {
+        clearError(name='') {
+			if (!name) {
+				return
+			}
+			console.log(name)
             this.fieldsErrors[name] = ""
             this.globalError = ""
         },
