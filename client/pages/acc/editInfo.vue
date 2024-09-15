@@ -18,7 +18,7 @@ export default {
 
     layout: "forms",
 
-	async asyncData({ $axios, route, app }) {
+	async asyncData({ $axios, route, $auth }) {
         const fieldsTypeInfo = await $axios.$get('/api/acc_fields');
 		let fieldsValueInfo;
         switch (route.query.request) {
@@ -27,8 +27,8 @@ export default {
                 break;
             }
             default: {
-				if (app.$auth.user) {
-                	fieldsValueInfo = JSON.parse(JSON.stringify(app.$auth.user));
+				if ($auth.user) {
+                	fieldsValueInfo = JSON.parse(JSON.stringify($auth.user));
 				}
                 break;
             }
