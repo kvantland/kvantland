@@ -119,7 +119,7 @@ export default {
 			return this.problemParams.commands
 		},
 		allowedBlocksAmount() {
-			return this.problemParams.allowed_blocks_amount * 10
+			return this.problemParams.allowed_blocks_amount
 		},
 		currentPosition() {
 			return this.problemParams.current_position
@@ -299,13 +299,14 @@ export default {
 			return true
 		},
 
-		findNewNearestPlaceToInsert(y, level=document.querySelectorAll('.answer_area .block'), parent=this.currentBlockId) {
+		findNewNearestPlaceToInsert(y, level=document.querySelectorAll('.answer_area .block_with_num > .block'), parent=this.currentBlockId) {
 			let index = 0
 			for (const block of level) {
 				const blockRect = block.getBoundingClientRect()
 				if (block.classList.contains('cycle') && !block.classList.contains('select')) {
-					if (y >= blockRect.top && y <= blockRect.bottom) {
-						const childLevel = document.querySelectorAll(`.answer_area .cycle.block[block_id='${block.getAttribute('block_id')}'] .block`)
+					const blockInsertRect = block.querySelector('.insert_zone').getBoundingClientRect()
+					if (y >= blockInsertRect.top && y <= blockInsertRect.bottom) {
+						const childLevel = document.querySelectorAll(`.cycle.block[block_id='${block.getAttribute('block_id')}'] .insert_zone > .block`)
 						const newParent = block.getAttribute('block_id')
 						const newIndex = this.findNewNearestPlaceToInsert(y, level=childLevel, parent=newParent)
 						return newIndex
