@@ -1,24 +1,29 @@
 <template>
-    <div class="content_wrapper">
-        <Breadcrumbs :crumbs="crumbs"/>
-        <ProblemContainer :title="title" 
-                            :answerStatus="answerStatus"
-                            :answerGiven="answerGiven"
-                            :answer="answer"
-                            :solution="solution"
-                            :variant="problemNum"
-                            :description="description" 
-                            :cost="cost"
-                            :image="image"
-                            :variantParams="variantParams"
-                            :hint="hint"
-                            :problemInputType="inputType"
-                            :problemComponent="componentType"
-                            :problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
-                            @updateHint="updateHint" 
-                            @updateProblemStatus="updateProblemStatus"/>
-        <SupportInfoContainer />
-    </div>
+	<html>
+		<head>
+			<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+		</head>
+		<div class="content_wrapper">
+			<Breadcrumbs :crumbs="crumbs"/>
+			<ProblemContainer :title="title" 
+								:answerStatus="answerStatus"
+								:answerGiven="answerGiven"
+								:answer="answer"
+								:solution="solution"
+								:variant="problemNum"
+								:description="description" 
+								:cost="cost"
+								:image="image"
+								:variantParams="variantParams"
+								:hint="hint"
+								:problemInputType="inputType"
+								:problemComponent="componentType"
+								:problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
+								@updateHint="updateHint" 
+								@updateProblemStatus="updateProblemStatus"/>
+			<SupportInfoContainer />
+		</div>
+	</html>
 </template>
 
 <script>
@@ -26,11 +31,40 @@ import ProblemContainer from "../../modules/problem-page/ProblemContainer/Proble
 import SupportInfoContainer from "../../modules/problem-page/SupportInfoContaner/SupportInfoContainer.vue"
 
 export default {
-    middleware: 'full-auth',
-    
-    components: {
+	components: {
         ProblemContainer,
         SupportInfoContainer,
+    },
+
+    middleware: 'full-auth',
+
+	async asyncData({ params, $axios, redirect }){
+        const problemNum = params.problemNum
+        let status, problemData
+        const resp = {}
+        await $axios.$post("/api/problem_data", {variant: problemNum})
+        .then((resp) => {
+            status = resp.status
+            problemData = resp.problem
+        })
+        if (status) {
+            for (const prop in problemData) {
+                resp[prop] = problemData[prop]
+            }
+        }
+        else {
+            return redirect('/')
+        }
+        await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
+        .then((res) => {
+            if (res.status)
+                resp.crumbs = res.breadcrumbs
+            else
+                resp.crumbs = []
+        })
+        resp.problemNum = params.problemNum
+        console.log(resp)
+        return resp
     },
 
     head() {
@@ -50,39 +84,9 @@ export default {
                 {
                     body: true,
                     src: '/old-problem-types/confirm_action.js'
-                }
+                },
             ]
         }
-    },
-
-    async asyncData({ params, $axios, redirect }){
-        let problemNum = params.problemNum
-        let status, problem_data
-        let resp = {}
-        await $axios.$post("/api/problem_data", {variant: problemNum})
-        .then((resp) => {
-            status = resp.status
-            problem_data = resp.problem
-        })
-        if (status) {
-            for (const prop in problem_data) {
-                resp[prop] = problem_data[prop]
-            }
-        }
-        else {
-            return redirect('/')
-        }
-        await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
-        .then((res) => {
-            if (res.status)
-                resp.crumbs = res.breadcrumbs
-            else
-                resp.crumbs = []
-        })
-        resp.variantParams = resp.variantParams
-        resp.problemNum = params.problemNum
-        console.log(resp)
-        return resp
     },
 
     methods: {
