@@ -24,6 +24,21 @@
 					</g>
 				</svg>
 			</div>
+			<div class="description">
+				<p><b>Соберите код, который поможет роботу дойти в клетку F.</b></p>
+				<p>Суммарно разрешено использовать не более 7 блоков (блоком считается и цикловая конструкция, и команда). 
+				Также роботу следует выполнить не более 100 поворотов или шагов вперед.</p>
+			</div>
+		</div>
+		<div class="second_row">
+			<div ref="answerArea" class="answer_area">
+				<p style="font-size: 30px; font-weight: 700;"> Код: </p>
+				<div v-for="(block, blockNum) in answerAreaBlocks" :key="`block_with_num_${blockNum}`" class="block_with_num">
+					<div class="block_num"> {{ blockNum + 1 }}. </div>
+					<answerBlock :blockData="block" :answerAreaBlocks="answerAreaBlocks" :targetBlock="targetBlock"
+						@updateAnswerArea="updateAnswerArea" @updateTargetBlock="updateTargetBlock" @startDrag="startDrag($event)"></answerBlock>
+				</div>
+			</div>
 			<div class="start_area">
 				<p>C помощью команд и цикловой конструкции:</p>
 				<div v-for="(block, blockNum) in commands" :key="`start_area_block_${blockNum}`" :class="['block', block.type]" 
@@ -32,19 +47,6 @@
 					<p>{{ block.text }}</p>
 					<div v-if="block.type === 'cycle'" class="insert_zone"></div>
 				</div>
-			</div>
-		</div>
-		<div class="description">
-			<p><b>Соберите код, который поможет роботу дойти в клетку F.</b></p>
-			<p>Суммарно разрешено использовать не более 7 блоков (блоком считается и цикловая конструкция, и команда). 
-			Также роботу следует выполнить не более 100 поворотов или шагов вперед.</p>
-		</div>
-		<div ref="answerArea" class="second_row answer_area">
-			<p style="font-size: 30px; font-weight: 700;"> Код: </p>
-			<div v-for="(block, blockNum) in answerAreaBlocks" :key="`block_with_num_${blockNum}`" class="block_with_num">
-				<div class="block_num"> {{ blockNum + 1 }}. </div>
-				<answerBlock :blockData="block" :answerAreaBlocks="answerAreaBlocks" :targetBlock="targetBlock"
-					@updateAnswerArea="updateAnswerArea" @updateTargetBlock="updateTargetBlock" @startDrag="startDrag($event)"></answerBlock>
 			</div>
 		</div>
 
