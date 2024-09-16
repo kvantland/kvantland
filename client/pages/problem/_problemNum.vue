@@ -18,6 +18,7 @@
 								:hint="hint"
 								:problemInputType="inputType"
 								:problemComponent="componentType"
+								:problemDescription="descriptionType"
 								:problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
 								@updateHint="updateHint" 
 								@updateProblemStatus="updateProblemStatus"/>

@@ -176,8 +176,21 @@ def Games():
 				'inputType': "InteractiveTypeInput",
 			}
 		})
+
+	problem_3 = Problem(
+		name = "Игра в переливания",
+		points = 4,
+		type_ = "program",
+	)
+	problem_3.add_variant({
+		'content': {
+			'componentType': "program",
+			'descriptionType': "transfusionGame",
+			'inputType': "HintOnlyInput",
+		}
+	})
 	
-	current_town.add_problems([problem_1, problem_2, ])
+	current_town.add_problems([problem_1, problem_2, problem_3, ])
 	
 
 def Algorithms():
@@ -185,9 +198,9 @@ def Algorithms():
 	current_town = Town('Алгоритмы')
 	
 	problem_1 = Problem(
-		name="Иннокентий и логика",
-		points=1,
-		type_="Innocent_and_logic",
+		name = "Иннокентий и логика",
+		points = 2,
+		type_ = "Innocent_and_logic",
 	)
 
 	for blocks in [
@@ -217,7 +230,35 @@ def Algorithms():
 			}
 		})
 
-	current_town.add_problems([problem_1, ])
+	problem_2 = Problem(
+		name = "Спиральный шкаф",
+		points = 3,
+		type_ = "program",
+	)
+
+	problem_2.add_variant({
+		'content': {
+			'componentType': "program",
+			'inputType': "HintOnlyInput",
+			'descriptionType': "spiralCabinet",
+		}
+	})
+
+	problem_3 = Problem(
+		name = "Угадываем числа",
+		points = 4,
+		type_ = "program",
+	)
+
+	problem_3.add_variant({
+		'content': {
+			'componentType': "program",
+			'inputType': "HintOnlyInput",
+			'descriptionType': "guessNumbers",
+		}
+	})
+
+	current_town.add_problems([problem_1, problem_2, problem_3, ])
 
 
 def Blocks():
@@ -257,9 +298,9 @@ def Blocks():
 	})
 
 	problem_3 = Problem(
-		name='Робот в лабиринте',
-		points=4,
-		type_='robot_in_maze',
+		name = 'Робот в лабиринте',
+		points = 4,
+		type_ = 'robot_in_maze',
 	)
 	for maze, start_position, start_diraction, end_position in [
 		([
@@ -327,6 +368,50 @@ def Blocks():
 def Proga():
 	global cur
 	current_town = Town('Прога')
+
+	problem_1 = Problem(
+		name="ЦКАД",
+		type_="program",
+		points=2,
+	)
+
+	problem_1.add_variant({
+		'content': {
+			'componentType': "program",
+			'descriptionType': "CHAD",
+			'inputType': "HintOnlyInput",
+		}
+	})
+
+	problem_2 = Problem(
+		name="Неразборчивая принцесса",
+		points=3,
+		type_="program"
+	)
+
+	problem_2.add_variant({
+		'content': {
+			'componentType': "program",
+			'descriptionType': "promiscuousPrincess",
+			'inputType': "HintOnlyInput",
+		}
+	})
+
+	problem_3 = Problem(
+		name="Маша и Медведь",
+		points=5,
+		type_="program",
+	)
+
+	problem_3.add_variant({
+		'content': {
+			'compomemtType': "program",
+			'descriptionType': "MashaAndBear",
+			'inputType': "HintOnlyInput",
+		}
+	})
+
+	current_town.add_problems([problem_1, problem_2, problem_3, ])
 
 
 def update_positions_town(cur, town, problem_count):

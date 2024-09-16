@@ -122,6 +122,7 @@ def get_problem_data(db):
 			'hint': {'status':"", 'cost':1, 'description': ''},
 			'inputType': "",
 			'componentType': "",
+			'descriptionType': "",
 			'problemHTML': "",
 			'problemCSS': "",
 			'problemJS': "",
@@ -210,6 +211,8 @@ def get_problem_data(db):
 			resp['problem']['inputType'] = content['inputType']
 		if 'componentType' in content.keys():
 			resp['problem']['componentType'] = content['componentType']
+		if 'descriptionType' in content.keys():
+			resp['problem']['descriptionType'] = content['descriptionType']
 		# print('newProblemData: ', resp, file=sys.stderr)
 		resp['status'] = True
 		return json.dumps(resp)

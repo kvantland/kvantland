@@ -32,37 +32,12 @@ import ProblemResult from './components/ProblemResult.vue'
 import HintContainer from './components/HintContainer.vue'
 
 export default {
-    head() {
-        return {
-            link: [{
-                rel: 'stylesheet',
-                href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
-                }
-            ]
-        }
-    },
-    data() {
-        return {
-            newXhr: false,
-            xhrDialogMode: false,
-            xhrDialogContent: '',
-            confirmDialogMode: false,
-            confirmDialogParams: {},
-            dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
-            dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
-			dynamicDescription: () => import(`../../../static/problemModules/${this.problemComponent}/description.vue`),
-            currentAnswer: '',
-            xhrData: undefined,
-            confirmActionResult: undefined,
-        }
-    },
-
     components: {
         ProblemResult,
         HintContainer,
     },
 
-    props: {
+	props: {
         answerStatus: {default: false},
         answerGiven: {default: false},
         answer: {default: ''},
@@ -74,11 +49,52 @@ export default {
         description: {default: ''},
         image: {default: null},
         problemComponent: {default: null},
+		problemDescription: {default: null},
         problemContent: {default: null},
         variantParams: {default: '' },
         problemInputType: {default: 'InteractiveTypeInput'},
     },
 
+	data() {
+        return {
+            newXhr: false,
+            xhrDialogMode: false,
+            xhrDialogContent: '',
+            confirmDialogMode: false,
+            confirmDialogParams: {},
+            dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
+            dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
+			dynamicDescription: () => import(`../../../static/problemModules/${this.problemDescription ? this.problemDescription : this.problemComponent}/description.vue`),
+            currentAnswer: '',
+            xhrData: undefined,
+            confirmActionResult: undefined,
+        }
+    },
+
+    head() {
+        return {
+            link: [{
+                rel: 'stylesheet',
+                href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
+                }
+            ]
+        }
+    },
+
+	watch: {
+        variantParams(newValue) {
+            console.log('variant params changed!', newValue)
+        },
+        title(newValue) {
+            console.log('title changed', newValue)
+        }
+    },
+
+	mounted() {
+		console.log(this.problemDescription)
+        console.log(this.variantParams)
+    },
+    
     methods: {
         xhrGet() {
             this.newXhr = false
@@ -117,7 +133,7 @@ export default {
             catch {
                 solution = ''
             }
-            await this.$axios.$post('/api/check_answer', {variant: this.variant, answer: answer, solution: solution})
+            await this.$axios.$post('/api/check_answer', {variant: this.variant, answer, solution})
             this.$emit('updateProblemStatus')
         },
         async getHint(){
@@ -138,23 +154,11 @@ export default {
                     this.newXhr = true
                 })
         },
-        async updateProblemStatus() {
+        updateProblemStatus() {
             console.log('update problem status!')
             this.$emit('updateProblemStatus')
         }
     },
-
-    mounted() {
-        console.log(this.variantParams)
-    },
-    wath: {
-        variantParams(newValue) {
-            console.log('variant params changed!', newValue)
-        },
-        title(newValue) {
-            console.log('title changed', newValue)
-        }
-    }
 }
 </script>
 
