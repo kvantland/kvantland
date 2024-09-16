@@ -18,17 +18,26 @@ export default {
 
     layout: "forms",
 
-	async asyncData({ $axios, route, app }) {
+	async asyncData({ $axios, route, redirect }) {
         const fieldsTypeInfo = await $axios.$get('/api/acc_fields');
-		let fieldsValueInfo;
+		let fieldsValueInfo
+		try {
+			fieldsValueInfo = await $axios.$get('/api/user')
+		}
+		catch {
+			return redirect('/login')
+		}
         switch (route.query.request) {
             case 'oauthReg': {
                 fieldsValueInfo = JSON.parse(route.query.user_info);
                 break;
             }
             default: {
-				if (app.$auth.user) {
-                	fieldsValueInfo = JSON.parse(JSON.stringify(app.$auth.user));
+				if (!fieldsValueInfo.user) {
+                	return redirect('/login');
+				}
+				else {
+					fieldsValueInfo = fieldsValueInfo.user
 				}
                 break;
             }
