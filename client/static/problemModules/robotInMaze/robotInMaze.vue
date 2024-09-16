@@ -304,8 +304,7 @@ export default {
 			for (const block of level) {
 				const blockRect = block.getBoundingClientRect()
 				if (block.classList.contains('cycle') && !block.classList.contains('select')) {
-					const blockInsertRect = block.querySelector('.insert_zone').getBoundingClientRect()
-					if (y >= blockInsertRect.top && y <= blockInsertRect.bottom) {
+					if (y >= blockRect.top && y <= blockRect.bottom) {
 						const childLevel = document.querySelectorAll(`.cycle.block[block_id='${block.getAttribute('block_id')}'] .insert_zone > .block`)
 						const newParent = block.getAttribute('block_id')
 						const newIndex = this.findNewNearestPlaceToInsert(y, level=childLevel, parent=newParent)
