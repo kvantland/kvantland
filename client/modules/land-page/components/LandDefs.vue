@@ -15,11 +15,11 @@
 	</clipPath>
 	<clipPath id="icon_border">
 		<path d="
-			M -30 0
-			a 30 30 0 0 0 30 30 
-			a 30 30 0 0 0 30 -30
-			a 30 30 0 0 0 -30 -30
-			a 30 30 0 0 0 -30 30
+			M -40 0
+			a 40 40 0 0 0 40 40 
+			a 40 40 0 0 0 40 -40
+			a 40 40 0 0 0 -40 -40
+			a 40 40 0 0 0 -40 40
 			z" />
 	</clipPath>
 	<filter id="dropshadow" height="130%">
