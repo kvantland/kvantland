@@ -1,8 +1,4 @@
 <template>
-	<html>
-		<head>
-			<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-		</head>
 		<div class="content_wrapper">
 			<Breadcrumbs :crumbs="crumbs"/>
 			<ProblemContainer :title="title" 
@@ -24,7 +20,6 @@
 								@updateProblemStatus="updateProblemStatus"/>
 			<SupportInfoContainer />
 		</div>
-	</html>
 </template>
 
 <script>
@@ -33,89 +28,100 @@ import SupportInfoContainer from "../../modules/problem-page/SupportInfoContaner
 
 export default {
 	components: {
-        ProblemContainer,
-        SupportInfoContainer,
-    },
+		ProblemContainer,
+		SupportInfoContainer,
+	},
 
-    middleware: 'full-auth',
+	middleware: 'full-auth',
 
 	async asyncData({ params, $axios, redirect }){
-        const problemNum = params.problemNum
-        let status, problemData
-        const resp = {}
-        await $axios.$post("/api/problem_data", {variant: problemNum})
-        .then((resp) => {
-            status = resp.status
-            problemData = resp.problem
-        })
-        if (status) {
-            for (const prop in problemData) {
-                resp[prop] = problemData[prop]
-            }
-        }
-        else {
-            return redirect('/')
-        }
-        await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
-        .then((res) => {
-            if (res.status)
-                resp.crumbs = res.breadcrumbs
-            else
-                resp.crumbs = []
-        })
-        resp.problemNum = params.problemNum
-        console.log(resp)
-        return resp
-    },
+		const problemNum = params.problemNum
+		let status, problemData
+		const resp = {}
+		await $axios.$post("/api/problem_data", {variant: problemNum})
+		.then((resp) => {
+			status = resp.status
+			problemData = resp.problem
+		})
+		if (status) {
+			for (const prop in problemData) {
+				resp[prop] = problemData[prop]
+			}
+		}
+		else {
+			return redirect('/')
+		}
+		await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
+		.then((res) => {
+			if (res.status)
+				resp.crumbs = res.breadcrumbs
+			else
+				resp.crumbs = []
+		})
+		resp.problemNum = params.problemNum
+		console.log(resp)
+		return resp
+	},
 
-    head() {
-        return {
-            link: [
-                { 
-                    rel: 'stylesheet', 
-                    href: `${this.problemCSS}`
-                }
-            ],
-            script: [
-                {
-                    body: true,
-                    src: `${this.problemJS}`,
-                    type: 'text/ecmascript',
-                },
-                {
-                    body: true,
-                    src: '/old-problem-types/confirm_action.js'
-                },
-            ]
-        }
-    },
+	head() {
+		return {
+			link: [
+				{ 
+					rel: 'stylesheet', 
+					href: `${this.problemCSS}`
+				}
+			],
+			script: [
+				{
+					body: true,
+					src: `${this.problemJS}`,
+					type: 'text/ecmascript',
+				},
+				{
+					body: true,
+					src: '/old-problem-types/confirm_action.js'
+				},
+				{
+					innerHTML: "MathJax = {tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},	svg: {fontCache: 'global'}};"
+				},
+				{
+					id: "MathJax-script",
+					src: `https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS_CHTML`,
+					async: true,
+					type: "text/javascript",
+					body: true,
+				},
 
-    methods: {
-        updateHint(hint) {
-            console.log(hint)
-            this.$set(this.hint, 'description', hint)
-            this.$set(this.hint, 'status', false)
-            this.$auth.fetchUser()
-        },
-        async updateProblemStatus() {
-            console.log('update_req')
-            let status, problemData
-            await this.$axios.$post("/api/problem_data", {variant: this.problemNum})
-            .then((resp) => {
-                status = resp.status
-                problemData = resp.problem
-                this.$auth.fetchUser()
-            })
-            if (status) {
-                this.cost = problemData.cost
-                this.variantParams = problemData.variantParams
-                this.answerStatus = problemData.answerStatus
-                this.answerGiven = problemData.answerGiven
-                this.answer = problemData.answer
-                this.solution = problemData.solution
-            }
-        }
-    },
+			]
+		}
+	},
+
+	methods: {
+		updateHint(hint) {
+			console.log(hint)
+			this.$set(this.hint, 'description', hint)
+			this.$set(this.hint, 'status', false)
+			this.$auth.fetchUser()
+		},
+		async updateProblemStatus() {
+			console.log('update_req')
+			let status, problemData
+			await this.$axios.$post("/api/problem_data", {variant: this.problemNum})
+			.then((resp) => {
+				status = resp.status
+				problemData = resp.problem
+				this.$auth.fetchUser()
+			})
+			if (status) {
+				this.cost = problemData.cost
+				this.variantParams = problemData.variantParams
+				this.answerStatus = problemData.answerStatus
+				this.answerGiven = problemData.answerGiven
+				this.answer = problemData.answer
+				this.solution = problemData.solution
+			}
+		}
+	},
 }
 </script>
 
@@ -131,7 +137,7 @@ export default {
 	display: inline-flex;
 	padding-bottom: 80px;
 	width: 100%;
-    padding-left: max(40px, min(5vw, 80px));
-    padding-right: max(40px, min(5vw, 80px));
+	padding-left: max(40px, min(5vw, 80px));
+	padding-right: max(40px, min(5vw, 80px));
 }
 </style>
