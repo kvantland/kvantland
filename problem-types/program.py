@@ -1,6 +1,8 @@
+from urllib import response
 from config import config
 import urllib.request as urllib2
 import urllib.parse
+import datetime
 import certifi
 from urllib.error import HTTPError, URLError
 import json
@@ -12,8 +14,8 @@ print(token)
 def steps(step_num, params, data):
 	global token, apiUrl
 	try:
-		params['data'] = json.loads(params['data'])
 		if params['type'] == 'send':
+			params['data'] = json.loads(params['data'])
 			print(params['data'])
 			try:
 				request_params = {
@@ -30,28 +32,36 @@ def steps(step_num, params, data):
 			print(sendUrl)
 			request = urllib2.Request(url=sendUrl, data=urllib.parse.urlencode(request_params).encode('utf-8'), 
 						   headers={'Authorization': f'Bearer AQAA{token}'}, method='POST')
-			print('succccces')
 			try:
 				cont = urllib2.urlopen(request)
-				print('here')
 			except HTTPError as e:
-				print(f"HTTP Error: {e.code}")
-				print(e)
+				return{'answer': {'message': f"HTTP Error: {e.code}"}}
 			except URLError as e:
-				print(f"URL Error: {e.reason}")
-				print(e)
+				return{'answer': {'message': f"URL Error: {e.reason}"}}
 			except Exception as ex:
-				print(ex)
-				print(ex.args)
-			print(cont.read())
-			'''
+				return{'answer': {'message': f"Unknown Error: {ex}"}}
+			response = json.loads(cont.read().decode('utf8').replace("'", '"'))
+			print('response:', response)
+			
 			run_id = response['result']['run_id']
-			if 'run_list' in data.keys():
+			if 'run_list' not in data.keys():
 				data['run_list'] = []
-			data['run_list'].append({'id': run_id, 'status': get_status(run_id)})
-			pass'''
+			data['run_list'].append({'id': run_id, 'data': get_status(run_id)})
+			return {'answer': {'status': "successful request"}, 'data_update': data}
 		elif params['type'] == 'update':
-			pass
+			try:
+				for elem_index in range(len(data['run_list'])):
+					print(elem_index)
+					run = data['run_list'][elem_index]
+					print(run)
+					if run['data']['status'] in ['RJ', 'AV', 'CG', 'CD', 'RU', '']:
+						updated_run = get_status(run['id'])
+						print('after update: ', updated_run)
+						data['run_list'][elem_index]['data'] = updated_run
+				return {'answer': {'message': "successful request"}, 'data_update': data}
+			except Exception as ex:
+				return {'answer': {'message': ex}}
+
 	except:
 		return {'answer': {'message': "Неизвестная ошибка"}}
 	
@@ -63,12 +73,45 @@ def get_status(run_id):
 		'run_id': run_id,
 	}
 	updateUrl = apiUrl + '/run-status-json'
+	print('url: ', updateUrl)
 	try:
 		request = urllib2.Request(url=updateUrl, data=urllib.parse.urlencode(request_params).encode('utf-8'), 
-						   headers={f'Authorization: Bearer AQAA{token}'}, method='POST')
-		cont = urllib2.urlopen(request, cafile=certifi.where())
-		response = json.loads(cont.read())
-		print('updat status', 'id=', run_id, response)
-		return response
+						   headers={'Authorization': f'Bearer AQAA{token}'}, method='POST')
+		cont = urllib2.urlopen(request)
+		full_response = json.loads(cont.read().decode('utf8').replace("'", '"'))
+		print()
+		print(full_response['result']['run'])
+		print()
+		response = full_response['result']['run']
+		print('update status', 'id=', run_id, response)
+		try:
+			status = response['status_str']
+		except:
+			status = ''
+		try:
+			duraction = response['duration']
+		except:
+			duraction = ''
+		try:
+			size = response['size']
+		except:
+			size = ''
+		try:
+			tests_passed = response['saved_test']
+		except:
+			tests_passed = '???'
+		try:
+			submit_time =  str(datetime.datetime.fromtimestamp(int(response['run_time'])))
+		except:
+			submit_time = 0
+		try:
+			score = response['score']
+		except:
+			score = 0
+		try:
+			lang = response['lang_name']
+		except:
+			lang = 'Unknown'
+		return {'status': status, 'duraction': duraction, 'size': size, 'tests_passed': tests_passed, 'submit_time': submit_time, 'lang': lang}
 	except:
 		return {}

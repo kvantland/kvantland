@@ -2,7 +2,7 @@
 	width: 100%;
 	display: inline-flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 40px;
 }
 
 .editor_area {
@@ -159,3 +159,43 @@ select > option {
 	font-family: Montserrat Alternates;
 }
 
+.submit_form_plot {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.update_button {
+	align-self: self-start;
+	display: flex;
+	padding: 10px 20px;
+	border-radius: 10px;
+	border: 2px solid #1E8B93;
+	color: #1E8B93;
+	background-color: white;
+	font-size: 20px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.submit_table {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+	font-size: 20px;
+	text-align: center;
+	row-gap: 1px;
+}
+
+.table_header_item {
+	font-weight: 700;
+	font-family: Montserrat Alternates;
+	background-color: white;
+	padding-bottom: 20px;
+}
+
+.table_item {
+	background-color: white;
+	border-top: 1px solid #1E8B93;
+	align-content: center;
+	font-family: Montserrat Alternates;
+}

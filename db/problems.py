@@ -180,7 +180,7 @@ def Games():
 	problem_3 = Problem(
 		name = "Игра в переливания",
 		points = 4,
-		type_ = "programType",
+		type_ = "program",
 	)
 	problem_3.add_variant({
 		'content': {
@@ -234,7 +234,7 @@ def Algorithms():
 	problem_2 = Problem(
 		name = "Спиральный шкаф",
 		points = 3,
-		type_ = "programType",
+		type_ = "program",
 	)
 
 	problem_2.add_variant({
@@ -249,7 +249,7 @@ def Algorithms():
 	problem_3 = Problem(
 		name = "Угадываем числа",
 		points = 4,
-		type_ = "programType",
+		type_ = "program",
 	)
 
 	problem_3.add_variant({
@@ -390,7 +390,7 @@ def Proga():
 	problem_2 = Problem(
 		name="Неразборчивая принцесса",
 		points=3,
-		type_="programType"
+		type_="program"
 	)
 
 	problem_2.add_variant({
@@ -405,7 +405,7 @@ def Proga():
 	problem_3 = Problem(
 		name="Маша и Медведь",
 		points=5,
-		type_="programType",
+		type_="program",
 	)
 
 	problem_3.add_variant({

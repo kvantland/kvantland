@@ -33,13 +33,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="send_area">
-		</div>
+		<SendArea :run-list="runList" @update="updateRuns"></SendArea>
 	</div>
 </template>
 
 <script>
+import SendArea from './components/SendArea.vue';
+
 export default {
+	components: {
+		SendArea,
+	},
+
 	props: {
 		problemParams: {
 			type: Object,
@@ -51,11 +56,7 @@ export default {
 		return {
 			inputMode: 'file',
 			fileName: 'Файл не выбран',
-			availableLanguage: [
-				{shortName: 'fpc', longName: 'Free Pascal'},
-				{shortName: 'python3', longName: 'Python3'},
-				{shortName: 'g++', longName: 'GNU C++'},
-			],
+			availableLanguage: [],
 			formData: {
 				file_input: '',
 				text_input: '',
@@ -63,6 +64,20 @@ export default {
 			},
 			remainingTries: '100 попыток',
 		}
+	},
+
+	async fetch() {
+		this.availableLanguage = await this.$axios.$get('/api/program_available_languages')
+	},
+
+	computed: {
+		runList() {
+			return this.problemParams.run_list
+		}
+	},
+
+	mounted() {
+		document.addEventListener('DOMContentLoaded', this.updateRuns())
 	},
 
 	methods: {
@@ -84,6 +99,9 @@ export default {
 		submitForm(){
 			this.$emit('xhrRequest', {'data': JSON.stringify(this.formData), 'type': "send"})
 		},
+		updateRuns() {
+			this.$emit('xhrRequest', {'type': "update"})
+		}
 	},
 }
 </script>

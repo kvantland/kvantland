@@ -10,6 +10,10 @@ from copy import deepcopy
 from config import config
 from login import check_token
 
+import urllib.request as urllib2
+import urllib.parse
+from urllib.error import HTTPError, URLError
+
 @route('/api/xhr', method='POST')
 def get_xhr_request(db):
 	print('xhr_request', file=sys.stderr)
@@ -306,7 +310,48 @@ def check_user_answer(db):
 	resp['status'] = True
 	return json.dumps(resp)
 
-	
+
+@route('/api/program_available_languages', method="GET")
+def get_languages():
+	print('start getting languages')
+	token = config['ejudge']['token']
+	apiUrl = config['ejudge']['apiUrl']
+	try:
+		try:
+			request_params = {
+				'contest_id': config['ejudge']['contest_id'],
+			}
+		except:
+			return {'answer': {'message': "Неверный формат данных"}}
+		langUrl = apiUrl + '/list-languages'
+		request = urllib2.Request(url=langUrl + '?' + urllib.parse.urlencode(request_params), 
+						headers={'Authorization': f'Bearer AQAA{token}'}, method='GET')
+		try:
+			cont = urllib2.urlopen(request)
+		except HTTPError as e:
+			return{'answer': {'message': f"HTTP Error: {e.code}"}}
+		except URLError as e:
+			return{'answer': {'message': f"URL Error: {e.reason}"}}
+		except Exception as ex:
+			return{'answer': {'message': f"Unknown Error: {ex}"}}
+		full_response = json.loads(cont.read().decode('utf8').replace("'", '"'))
+		response_languages = full_response['languages']
+		available_languages = []
+		for language in response_languages.values():
+			try:
+				long_name = language['long_name']
+			except:
+				long_name = None
+			try:
+				short_name = language['short_name']
+			except:
+				short_name = None
+			available_languages.append({'shortName': short_name, 'longName': long_name})
+		print('available languages:', available_languages)
+		return json.dumps(available_languages)
+	except:
+		return False
+
 
 MODE = config['tournament']['mode']
 
