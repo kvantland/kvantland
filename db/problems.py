@@ -180,12 +180,12 @@ def Games():
 	problem_3 = Problem(
 		name = "Игра в переливания",
 		points = 4,
-		type_ = "program",
+		type_ = "programType",
 	)
 	problem_3.add_variant({
 		'content': {
 			'prob_id': 1,
-			'componentType': "program",
+			'componentType': "programType",
 			'descriptionType': "transfusionGame",
 			'inputType': "HintOnlyInput",
 		}
@@ -234,13 +234,13 @@ def Algorithms():
 	problem_2 = Problem(
 		name = "Спиральный шкаф",
 		points = 3,
-		type_ = "program",
+		type_ = "programType",
 	)
 
 	problem_2.add_variant({
 		'content': {
 			'prob_id': 2,
-			'componentType': "program",
+			'componentType': "programType",
 			'inputType': "HintOnlyInput",
 			'descriptionType': "spiralCabinet",
 		}
@@ -249,13 +249,13 @@ def Algorithms():
 	problem_3 = Problem(
 		name = "Угадываем числа",
 		points = 4,
-		type_ = "program",
+		type_ = "programType",
 	)
 
 	problem_3.add_variant({
 		'content': {
 			'prob_id': 3,
-			'componentType': "program",
+			'componentType': "programType",
 			'inputType': "HintOnlyInput",
 			'descriptionType': "guessNumbers",
 		}
@@ -374,14 +374,14 @@ def Proga():
 
 	problem_1 = Problem(
 		name="ЦКАД",
-		type_="program",
+		type_="programType",
 		points=2,
 	)
 
 	problem_1.add_variant({
 		'content': {
 			'prob_id': 4,
-			'componentType': "program",
+			'componentType': "programType",
 			'descriptionType': "CHAD",
 			'inputType': "HintOnlyInput",
 		}
@@ -390,13 +390,13 @@ def Proga():
 	problem_2 = Problem(
 		name="Неразборчивая принцесса",
 		points=3,
-		type_="program"
+		type_="programType"
 	)
 
 	problem_2.add_variant({
 		'content': {
 			'prob_id': 5,
-			'componentType': "program",
+			'componentType': "programType",
 			'descriptionType': "promiscuousPrincess",
 			'inputType': "HintOnlyInput",
 		}
@@ -405,13 +405,13 @@ def Proga():
 	problem_3 = Problem(
 		name="Маша и Медведь",
 		points=5,
-		type_="program",
+		type_="programType",
 	)
 
 	problem_3.add_variant({
 		'content': {
 			'prob_id': 6,
-			'componentType': "program",
+			'componentType': "programType",
 			'descriptionType': "MashaAndBear",
 			'inputType': "HintOnlyInput",
 		}

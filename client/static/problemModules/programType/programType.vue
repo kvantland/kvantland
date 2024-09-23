@@ -16,9 +16,14 @@
 				</div>
 			</div>
 			<div v-else-if="inputMode === 'file'" class="file_input">
-				<input id="program_upload" type="file"  @change="updateFile($event)">
-				<label for="program_upload" class="input-file-btn"> Обзор.. </label>
-				<div class="status">{{ fileName }}</div>
+				<div class="filearea_wrapper">
+					<div class="status">
+						<span><b>Выберите файл: </b></span>
+						<span>{{ fileName }}</span>
+					</div>
+					<input id="program_upload" type="file"  @change="updateFile($event)">
+					<label for="program_upload" class="input-file-btn"> Обзор... </label>
+				</div>
 			</div>
 			<div class="send_button_area">
 				<div class="send_button" @click="submitForm">Отправить</div>
@@ -44,7 +49,7 @@ export default {
 
 	data() {
 		return {
-			inputMode: 'text',
+			inputMode: 'file',
 			fileName: 'Файл не выбран',
 			availableLanguage: [
 				{shortName: 'fpc', longName: 'Free Pascal'},

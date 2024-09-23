@@ -1,23 +1,24 @@
 <template>
 		<div class="content_wrapper">
 			<Breadcrumbs :crumbs="crumbs"/>
-			<ProblemContainer :title="title" 
-								:answerStatus="answerStatus"
-								:answerGiven="answerGiven"
-								:answer="answer"
-								:solution="solution"
-								:variant="problemNum"
-								:description="description" 
-								:cost="cost"
-								:image="image"
-								:variantParams="variantParams"
-								:hint="hint"
-								:problemInputType="inputType"
-								:problemComponent="componentType"
-								:problemDescription="descriptionType"
-								:problemContent="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
-								@updateHint="updateHint" 
-								@updateProblemStatus="updateProblemStatus"/>
+			<ProblemContainer 
+				:title="title" 
+				:answer-status="answerStatus"
+				:answer-given="answerGiven"
+				:answer="answer"
+				:solution="solution"
+				:variant="problemNum"
+				:description="description" 
+				:cost="cost"
+				:image="image"
+				:variant-params="variantParams"
+				:hint="hint"
+				:problem-input-type="inputType"
+				:problem-component="componentType"
+				:problem-description="descriptionType"
+				:problem-content="{problemHTML: problemHTML, problemCSS: problemCSS, problemJS: problemJS}" 
+				@updateHint="updateHint" 
+				@updateProblemStatus="updateProblemStatus"/>
 			<SupportInfoContainer />
 		</div>
 </template>
@@ -91,7 +92,6 @@ export default {
 					type: "text/javascript",
 					body: true,
 				},
-
 			]
 		}
 	},

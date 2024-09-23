@@ -13,7 +13,8 @@
 }
 
 .editor_area_buttons {
-	display: inline-flex;
+	width: 100%;
+	display: flex;
 	flex-direction: row;
 	gap: 20px;
 	align-self: stretch;
@@ -58,51 +59,75 @@
 	border: none;
 }
 
-.file_input {
+.filearea_wrapper {
+	width: 100%;
+	padding: 20px;
+	border-radius: 10px;
+	background-color: #EEEEEE;
 	display: inline-flex;
 	flex-direction: row;
+	justify-content: space-between;
 	align-items: center;
 	gap: 20px;
 }
 
-.file_input > .status {
-	font-size: 20px;
+.file_input {
+	display: flex;
+	width: 100%;
 }
 
-.file_input > input[type=file] {
+.file_input .status {
+	font-size: 20px;
+	display: inline-flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+.file_input input[type=file] {
 	display: none;
 }
 
-.file_input > label {
+.file_input label {
 	display: inline-block;
 	cursor: pointer;
 	font-size: 20px;
-	color: rgb(255 255 255);
-	border-radius: 4px;
-	background-color: #1E8B93;
+	border-radius: 10px;
+	border: 2px black solid;
 	padding: 10px 20px;
 }
 
-dev.select_language {
-	height: 100%;
+.select_language {
+	display: flex;
+	margin-left: auto;
+}
+
+.select_language::before {
+	content: "Язык:";
+	font-weight: 700;
+	font-size: 20px;
+	align-self: center;
+	margin-right: 20px;
+
 }
 
 .select_language > select {
-	display: flex;
-	text-align: center;
-	height: 100%;
-	width: 150%;
-	background-color: white;
-	border: 2px solid #1E8B93;
-	border-radius: 5px;
-	font-size: 17px;
-	color: #1E8B93;
-	font-weight: 700;
+	-webkit-appearance: none; 
+	-moz-appearance: none; 
+	-ms-appearance: none; 
+	appearance: none;
+	gap: 10px;
+	display: inline-flex;
+	background: url('../../icons/custom_select_arrow.svg') no-repeat right center; 
+	background-color: #E1E1E1;
+	border-radius: 10px;
+	font-size: 20px;
 	cursor: pointer;
+	padding: 0 40px 0 20px;
+	border: none;
 }
 
-option {
-	cursor: pointer;
+select > option {
+	background: rgba(255, 255, 255, 0.7);
 }
 
 .send_button_area {
@@ -133,3 +158,4 @@ option {
 	font-size: 20px;
 	font-family: Montserrat Alternates;
 }
+
