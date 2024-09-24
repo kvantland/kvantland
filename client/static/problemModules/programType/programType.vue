@@ -77,6 +77,7 @@ export default {
 	},
 
 	mounted() {
+		console.log('languages: ', this.availableLanguage)
 		document.removeEventListener('DOMContentLoaded', this.updateRuns())
 		document.addEventListener('DOMContentLoaded', this.updateRuns())
 	},

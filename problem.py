@@ -315,7 +315,7 @@ def check_user_answer(db):
 def get_languages():
 	print('start getting languages')
 	token = config['ejudge']['token']
-	apiUrl = config['ejudge']['apiUrl']
+	apiUrl = config['ejudge']['masterUrl']
 	try:
 		try:
 			request_params = {
@@ -346,7 +346,11 @@ def get_languages():
 				short_name = language['short_name']
 			except:
 				short_name = None
-			available_languages.append({'shortName': short_name, 'longName': long_name})
+			try:
+				id = language['id']
+			except:
+				id = None
+			available_languages.append({'shortName': short_name, 'longName': long_name, 'id': id})
 		print('available languages:', available_languages)
 		return json.dumps(available_languages)
 	except:

@@ -14,7 +14,7 @@
 					class="table_item">
 					<span
 						v-if="tableHeaders[columnIndex].id === 'status'" 
-						:class="trasformData(submitElem.data)[tableHeaders[columnIndex].id] in unsuccessStatus ? 'unsuccess_status' : 
+						:class="unsuccessStatus.includes(trasformData(submitElem.data)[tableHeaders[columnIndex].id]) ? 'unsuccess_status' : 
 						trasformData(submitElem.data)[tableHeaders[columnIndex].id] === 'OK' ? 'success_status' : 'status_color'">
 					{{ trasformData(submitElem.data)[tableHeaders[columnIndex].id] }}
 					</span>
@@ -53,7 +53,7 @@ export default {
 				{ title: 'Вердикт', id: 'status' },
 				{ title: 'Тест', id: 'tests_passed' },  
 			],
-			unsuccessStatus: ['CE', 'RT', 'TL', 'PE', 'WA', 'PT', 'DQ', 'SE', 'ML', 'RJ', 'SV', 'WT']
+			unsuccessStatus: ['CE', 'RT', 'TL', 'PE', 'WA', 'PT', 'DQ', 'SE', 'ML', 'RJ', 'SV', 'WT', 'CF']
 		}
 	},
 
@@ -66,7 +66,7 @@ export default {
 	methods: {
 		getLongLangName(shortName) {
 			for (const item of this.availableLanguage) {
-				if (item.shortName.toString() === shortName.toString()) {
+				if (item.id.toString() === shortName.toString()) {
 					return item.longName
 				}
 			}
