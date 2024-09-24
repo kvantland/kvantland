@@ -20,6 +20,9 @@
 				@updateHint="updateHint" 
 				@updateProblemStatus="updateProblemStatus"/>
 			<SupportInfoContainer />
+			<script>
+				MathJax = {tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},	svg: {fontCache: 'global'}};
+			</script>
 		</div>
 </template>
 
@@ -81,9 +84,6 @@ export default {
 				{
 					body: true,
 					src: '/old-problem-types/confirm_action.js'
-				},
-				{
-					innerHTML: "MathJax = {tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},	svg: {fontCache: 'global'}};"
 				},
 				{
 					id: "MathJax-script",
