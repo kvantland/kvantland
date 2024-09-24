@@ -3,8 +3,9 @@
         <Breadcrumbs :crumbs="crumbs" />
         <svg version="1.1" class="map" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <TownDefs/>
-            <image :href="`/map_img/town-${townNum}.png`" width="1280" height="720"preserveAspectRatio="xMidYMid" clip-path="url(#map_border)" meet />'
-            <path stroke="#1E8B93" stroke-width="3px" fill="none" d="
+            <image :href="`/map_img/town-${townNum}.png`" width="1280" height="720" preserveAspectRatio="xMidYMid" clip-path="url(#map_border)" meet />'
+            <path 
+				stroke="#1E8B93" stroke-width="3px" fill="none" d="
                     M 1.5 21.5
                     v 676
                     a 20 20 0 0 0 20 20

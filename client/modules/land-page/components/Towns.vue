@@ -5,7 +5,8 @@
         <image :href="`/town-icon/icon-${twn.townID}.svg`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
         <circle class="town-icon" r="40px" />
         <g class="town-name">
-			<path class="town-name" :num="twn.townID-1" :d="townNamesPaths[twn.townID-1]" 
+			<path 
+			class="town-name" :num="twn.townID-1" :d="townNamesPaths[twn.townID-1]" 
 			:transform="`translate(${-transformOrigins[twn.townID-1][1]} ${-70-transformOrigins[twn.townID-1][0]})`" 
 			style="filter:url(#dropshadow)"/>
             <text class="town-name" style="font-family:Montserrat Alternates" :num="twn.townID-1" y="-70" dy="0.35em">{{twn.name}}</text>
@@ -44,7 +45,7 @@ export default {
 			this.printPath(rect.width, rect.height)
 		}
 		return true
-    }, */
+    }, 
 
 	methods: {
 		printPath(width=0, height=0) {
@@ -56,7 +57,7 @@ export default {
 			console.log('origin: ', h / 2 + r, w / 2 + r)
 			console.log(`m 0 ${r} v ${h} a ${r} ${r} 0 0 0 ${r} ${r} h ${w} a ${r} ${r} 0 0 0 ${r} ${-r} v ${-h} a ${r} ${r} 0 0 0 ${-r} ${-r} h ${-w} a ${r} ${r} 0 0 0 ${-r} ${r} v ${h} z`)
 		}
-	},
+	}, */
 
 	
 }
