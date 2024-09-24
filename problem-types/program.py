@@ -50,6 +50,8 @@ def steps(step_num, params, data):
 			return {'answer': {'status': "successful request"}, 'data_update': data}
 		elif params['type'] == 'update':
 			try:
+				if 'run_list' not in data.keys():
+					return {'answer': {'message': "nothing to update"}}
 				for elem_index in range(len(data['run_list'])):
 					print(elem_index)
 					run = data['run_list'][elem_index]
@@ -73,13 +75,19 @@ def get_status(run_id):
 		'run_id': run_id,
 	}
 	updateUrl = apiUrl + '/run-status-json'
+	testUrl = apiUrl + '/raw-report'
 	print('url: ', updateUrl)
 	try:
+		request_1 = urllib2.Request(url=updateUrl, data=urllib.parse.urlencode(request_params).encode('utf-8'), 
+						   headers={'Authorization': f'Bearer AQAA{token}'}, method='POST')
+		print('test test test!!!')
+		print(json.loads(urllib2.urlopen(request_1).read().decode('utf8').replace("'", '"')))
 		request = urllib2.Request(url=updateUrl, data=urllib.parse.urlencode(request_params).encode('utf-8'), 
 						   headers={'Authorization': f'Bearer AQAA{token}'}, method='POST')
 		cont = urllib2.urlopen(request)
 		full_response = json.loads(cont.read().decode('utf8').replace("'", '"'))
 		print()
+		print(full_response['result'])
 		print(full_response['result']['run'])
 		print()
 		response = full_response['result']['run']
@@ -89,9 +97,9 @@ def get_status(run_id):
 		except:
 			status = ''
 		try:
-			duraction = response['duration']
+			duration = response['nsec'] // 10**6
 		except:
-			duraction = ''
+			duration = ''
 		try:
 			size = response['size']
 		except:
@@ -101,17 +109,13 @@ def get_status(run_id):
 		except:
 			tests_passed = '???'
 		try:
-			submit_time =  str(datetime.datetime.fromtimestamp(int(response['run_time'])))
+			submit_time =  response['run_time']
 		except:
 			submit_time = 0
-		try:
-			score = response['score']
-		except:
-			score = 0
 		try:
 			lang = response['lang_name']
 		except:
 			lang = 'Unknown'
-		return {'status': status, 'duraction': duraction, 'size': size, 'tests_passed': tests_passed, 'submit_time': submit_time, 'lang': lang}
+		return {'status': status, 'duration': duration, 'size': size, 'tests_passed': tests_passed, 'submit_time': submit_time, 'lang': lang}
 	except:
-		return {}
+		return {'status': '', 'duration': '', 'size': '', 'tests_passed': '???', 'submit_time': 0, 'lang': 'Unknown'}

@@ -33,7 +33,7 @@
 				</div>
 			</div>
 		</div>
-		<SendArea :run-list="runList" @update="updateRuns"></SendArea>
+		<SendArea :run-list="runList" :available-language="availableLanguage" @update="updateRuns"></SendArea>
 	</div>
 </template>
 
@@ -77,7 +77,12 @@ export default {
 	},
 
 	mounted() {
+		document.removeEventListener('DOMContentLoaded', this.updateRuns())
 		document.addEventListener('DOMContentLoaded', this.updateRuns())
+	},
+
+	beforeDestroy() {
+		document.removeEventListener('DOMContentLoaded', this.updateRuns())
 	},
 
 	methods: {

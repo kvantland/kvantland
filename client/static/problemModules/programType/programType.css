@@ -194,8 +194,18 @@ select > option {
 }
 
 .table_item {
+	padding: 10px 0;
+	font-size: 17px;
 	background-color: white;
 	border-top: 1px solid #1E8B93;
 	align-content: center;
-	font-family: Montserrat Alternates;
+	font-family: Montserrat;
+}
+
+.success_status {
+	color: #3DC20E;
+}
+
+.unsuccess_status {
+	color: red;
 }

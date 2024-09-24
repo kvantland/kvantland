@@ -322,18 +322,18 @@ def get_languages():
 				'contest_id': config['ejudge']['contest_id'],
 			}
 		except:
-			return {'answer': {'message': "Неверный формат данных"}}
+			return json.dumps([])
 		langUrl = apiUrl + '/list-languages'
 		request = urllib2.Request(url=langUrl + '?' + urllib.parse.urlencode(request_params), 
 						headers={'Authorization': f'Bearer AQAA{token}'}, method='GET')
 		try:
 			cont = urllib2.urlopen(request)
 		except HTTPError as e:
-			return{'answer': {'message': f"HTTP Error: {e.code}"}}
+			print(f"HTTP Error: {e.code}")
 		except URLError as e:
-			return{'answer': {'message': f"URL Error: {e.reason}"}}
+			print(f"URL Error: {e.reason}")
 		except Exception as ex:
-			return{'answer': {'message': f"Unknown Error: {ex}"}}
+			print(f"Unknown Error: {ex}")
 		full_response = json.loads(cont.read().decode('utf8').replace("'", '"'))
 		response_languages = full_response['languages']
 		available_languages = []
@@ -350,7 +350,7 @@ def get_languages():
 		print('available languages:', available_languages)
 		return json.dumps(available_languages)
 	except:
-		return False
+		return json.dumps([])
 
 
 MODE = config['tournament']['mode']

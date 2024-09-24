@@ -374,7 +374,7 @@ def Proga():
 
 	problem_1 = Problem(
 		name="ЦКАД",
-		type_="programType",
+		type_="program",
 		points=2,
 	)
 
