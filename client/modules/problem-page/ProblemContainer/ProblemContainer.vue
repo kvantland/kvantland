@@ -7,23 +7,24 @@
 
         <div class="problem_body">
             <div v-if="description" v-html="description"></div>
-			<component v-if="!description" :is="dynamicDescription" :problemParams="variantParams" />
+			<component :is="dynamicDescription" v-if="!description" :problem-params="variantParams" />
             <img v-if="image" class="problem_img" :src="image" />
-            <div class="problem newTypeProblem" v-if="problemComponent" ref="problem">
-                <component v-if="!answerGiven && dynamicProblemComponent" :is="dynamicProblemComponent" :xhrData="xhrData" :newXhr="newXhr" 
-                    :confirmActionResult="confirmActionResult"
-                    @xhrGet="xhrGet" @showXhrDialog="showXhrDialog" @showConfirmDialog="showConfirmDialog"
-                    :problemParams="variantParams" v-model="currentAnswer" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
-                <div v-if="answerGiven" v-html="solution" class="problem_solution"></div>
+            <div v-if="problemComponent" class="problem newTypeProblem" ref="problem">
+                <component 
+					:is="dynamicProblemComponent" v-if="!answerGiven && dynamicProblemComponent" v-model="currentAnswer" :xhr-data="xhrData" 
+                    :new-xhr="newXhr"
+                    :confirm-action-result="confirmActionResult" :problem-params="variantParams" @xhrGet="xhrGet"
+                    @showXhrDialog="showXhrDialog" @showConfirmDialog="showConfirmDialog" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
+                <div v-if="answerGiven" class="problem_solution" v-html="solution"></div>
             </div>
             <div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
             <HintContainer v-if="hint.description" :description="hint.description" />
         </div>
 
-        <component v-if="!answerGiven" :is="dynamicInput" :hasHint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
-        <ProblemResult v-if="answerGiven" :answer="answer" :answerStatus="answerStatus" :isInteger="problemInputType=='IntegerTypeInput'" />
+        <component :is="dynamicInput" v-if="!answerGiven" :has-hint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
+        <ProblemResult v-if="answerGiven" :answer="answer" :answer-status="answerStatus" :is-integer="problemInputType=='IntegerTypeInput'" />
         <XhrDialog v-if="xhrDialogMode" @close="hideXhrDialog"> {{ xhrDialogContent }} </XhrDialog>
-        <ConfirmDialog v-if="confirmDialogMode" @confirmAction="confirmAction" :params="confirmDialogParams"></ConfirmDialog>
+        <ConfirmDialog v-if="confirmDialogMode" :params="confirmDialogParams" @confirmAction="confirmAction"></ConfirmDialog>
     </div>
 </template>
 
@@ -142,8 +143,18 @@ export default {
             if (response.status)
                 this.$emit('updateHint', response.hint)
         },
-        async xhrRequest(xhrParams) {
-            await this.$axios.$post('/api/xhr', {variant: this.variant, xhr_params: xhrParams})
+        async xhrRequest(xhrParams = {}) {
+			const sendUrl = xhrParams.sendUrl ? xhrParams.sendUrl : '/api/xhr'
+			const config = xhrParams.config ? xhrParams.config : {'Content-Type': "multipart/form-data"}
+			const fileList = xhrParams.xhrFiles ? xhrParams.xhrFiles : []
+			const dataToSend = new FormData()
+			dataToSend.append('variant', this.variant)
+			dataToSend.append('xhr_params', JSON.stringify(xhrParams))
+			for (const xhrFile of fileList) {
+				dataToSend.append(xhrFile.title, xhrFile.content)
+			}
+			console.log(dataToSend)
+            await this.$axios.$post(sendUrl, dataToSend, config)
                 .then((resp) => {
                     console.log('xhrData: ', resp)
                     this.$emit('updateProblemStatus')

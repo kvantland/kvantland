@@ -29,7 +29,7 @@
 				<div class="send_button" @click="submitForm">Отправить</div>
 				<div class="tries_area">
 					<img class="attention" src="/problem_assets/attention.svg" />
-					<p>Осталось {{ remainingTries }} </p>
+					<p>Осталось попыток: {{ remainingTries }} </p>
 				</div>
 			</div>
 		</div>
@@ -49,20 +49,27 @@ export default {
 		problemParams: {
 			type: Object,
 			default: () => {return {}}
+		},
+		newXhr: {
+			type: Boolean,
+			default: false,
+		},
+		xhrData: {
+			type: Object,
+			default: () => { return {} }
 		}
 	},
-
+	
 	data() {
 		return {
 			inputMode: 'file',
 			fileName: 'Файл не выбран',
 			availableLanguage: [],
 			formData: {
-				file_input: '',
 				text_input: '',
 				lang: "python3",
 			},
-			remainingTries: '100 попыток',
+			fileInput: '',
 		}
 	},
 
@@ -73,6 +80,20 @@ export default {
 	computed: {
 		runList() {
 			return this.problemParams.run_list
+		},
+		remainingTries() {
+			return this.problemParams.available_tries
+		}
+	},
+
+	watch: {
+		newXhr(isNew) {
+			if (isNew) {
+				this.$emit('xhrGet')
+				if (this.xhrData.xhr_answer.display) {
+					this.$emit('showXhrDialog', this.xhrData.xhr_answer.message)
+				}
+			}
 		}
 	},
 
@@ -89,11 +110,15 @@ export default {
 	methods: {
 		changeMode(mode) {
 			this.inputMode = mode
+			if (mode === 'text') {
+				this.fileInput = ''
+				this.fileName = 'Файл не выбран'
+			}
 		},
 		updateFile(event) {
 			const fileList = event.target.files
 			this.fileName = fileList[0].name
-			this.$set(this.formData, 'file_input', fileList[0])
+			this.fileInput = fileList[0]
 		},
 		updateText() {
 			const textInput = this.$refs.text_input.value
@@ -103,7 +128,14 @@ export default {
 			this.$set(this.formData, 'lang', event.target.value)
 		},
 		submitForm(){
-			this.$emit('xhrRequest', {'data': JSON.stringify(this.formData), 'type': "send"})
+			console.log('data to send: ', this.formData)
+			const dataToSend = new FormData();
+			dataToSend.append('text_input', this.formData.text_input)
+			dataToSend.append('file_input', this.formData.file_input)
+			dataToSend.append('lang', this.formData.lang)
+			console.log(dataToSend)
+			this.$emit('xhrRequest', {'data': this.formData, 'type': "send", 'xhrFiles': [{'title': 'file_input', 'content': this.fileInput}]})
+			//this.$emit('xhrRequest', {'data': dataToSend, 'type': "send"})
 		},
 		updateRuns() {
 			this.$emit('xhrRequest', {'type': "update"})

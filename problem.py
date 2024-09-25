@@ -16,14 +16,18 @@ from urllib.error import HTTPError, URLError
 
 @route('/api/xhr', method='POST')
 def get_xhr_request(db):
+	print()
+	print('===============================')
 	print('xhr_request', file=sys.stderr)
 	resp = {
 		'status': False,
 		'xhr_answer': None,
 	}
 	try:
-		var_id = json.loads(request.body.read())['variant']
-		params = json.loads(request.body.read())['xhr_params']
+		var_id = request.forms.get('variant')
+		params = json.loads(request.forms.get('xhr_params'))
+		files = request.files
+		params['files'] = files
 	except:
 		return json.dumps(resp)
 	
@@ -33,6 +37,7 @@ def get_xhr_request(db):
 	user_id = token_status['user_id']
 	
 	print('var_id: ', var_id, file=sys.stderr)
+	print('params: ', params)
 	#print(xhr_request(db, user_id, var_id, params), file=sys.stderr)
 	resp['xhr_answer'] = xhr_request(db, user_id, var_id, params)
 	print(resp['xhr_answer'], file=sys.stderr)

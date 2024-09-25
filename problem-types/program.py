@@ -7,6 +7,7 @@ import datetime
 import certifi
 from urllib.error import HTTPError, URLError
 import json
+from bottle import request
 
 token = config['ejudge']['token']
 pending_status_list = ['RJ', 'AV', 'CG', 'CD', 'RU', '']
@@ -26,26 +27,33 @@ print(token)
 
 def steps(step_num, params, data):
 	global token, pending_status_list
-	apiUrl = config['ejudge']['masterUrl']
+	apiUrl = config['ejudge']['clientUrl']
+	print()
+	print('=========================')
+	print("problem of type 'program'")
 	try:
 		if params['type'] == 'send':
-			params['data'] = json.loads(params['data'])
-			print(params['data'])
+			if data['available_tries'] <= 0:
+				return {'answer': {'message': "Попытки вышли", 'display': True}}
+			if params['data']['text_input']:
+				content = params['data']['text_input']
+			elif params['files']['file_input']:
+				content = params['files']['file_input'].file.read()
+			else:
+				return {'answer': {'message': "Пустая посылка!", 'display': True}}
 			try:
 				request_params = {
 					'sender_user_login': config['ejudge']['user'],
 					'lang_id': params['data']['lang'],
 					'contest_id': config['ejudge']['contest_id'],
-					'problem': data['prob_id'],
-					'file': params['data']['text_input'],
+					'prob_id': data['prob_id'],
+					'file': content,
 				}
 			except:
 				return {'answer': {'message': "Неверный формат данных"}}
-			print(request_params)
 			sendUrl = apiUrl + '/submit-run'
-			print(sendUrl)
 			request = urllib2.Request(url=sendUrl, data=urllib.parse.urlencode(request_params).encode('utf-8'), 
-						   headers={'Authorization': f'Bearer AQAA{token}'}, method='POST')
+						   headers={'Authorization': f'Bearer AQAA{token}', 'Content-Type': 'multipart/form-data'}, method='POST')
 			try:
 				cont = urllib2.urlopen(request)
 			except HTTPError as e:
@@ -55,21 +63,20 @@ def steps(step_num, params, data):
 			except Exception as ex:
 				return{'answer': {'message': f"Unknown Error: {ex}"}}
 			response = json.loads(cont.read().decode('utf8').replace("'", '"'))
-			print('response:', response)
+			print('send url: ', sendUrl, 'response:', response)
 			
 			run_id = response['result']['run_id']
 			if 'run_list' not in data.keys():
 				data['run_list'] = []
 			data['run_list'].append({'id': run_id, 'data': get_status(run_id)})
+			data['available_tries'] -= 1
 			return {'answer': {'status': "successful request"}, 'data_update': data}
 		elif params['type'] == 'update':
 			try:
 				if 'run_list' not in data.keys():
 					return {'answer': {'message': "nothing to update"}}
 				for elem_index in range(len(data['run_list'])):
-					print(elem_index)
 					run = data['run_list'][elem_index]
-					print(run)
 					if run['data']['status'] in pending_status_list:
 						updated_run = get_status(run['id'])
 						print('after update: ', updated_run)
@@ -107,30 +114,20 @@ def get_status(run_id):
 		'run_id': run_id,
 	}
 	updateUrl = apiUrl + '/run-status-json'
-	print('url: ', updateUrl)
 	try:
 		request = urllib2.Request(url=updateUrl + '?' + urllib.parse.urlencode(request_params), 
 						   headers={'Authorization': f'Bearer AQAA{token}'}, method='GET')
 		cont = urllib2.urlopen(request)
 		full_response = json.loads(cont.read().decode('utf8').replace("'", '"'))
-		print()
-		print(full_response['result'])
-		print(full_response['result']['run'])
-		print()
 		run_response = full_response['result']['run']
-		print('update status', 'id=', run_id)
 		try:
-			print('here1')
 			if 'testing_report' in full_response['result'].keys():
-				print('here2')
 				if 'tests' in full_response['result']['testing_report'].keys():
 					test_status = get_test_status(full_response['result']['testing_report']['tests'])
 				else:
 					test_status = {'status': run_response['status'], 'time': 0}
 			else:
-				print('here3')
 				test_status = {'status': run_response['status'], 'time': 0}
-			print('test status: ', test_status)
 			status = status_translate_list[str(test_status['status'])]
 			duration = test_status['time']
 		except:

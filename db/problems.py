@@ -185,6 +185,7 @@ def Games():
 	problem_3.add_variant({
 		'content': {
 			'prob_id': 1,
+			'available_tries': 100,
 			'componentType': "programType",
 			'descriptionType': "transfusionGame",
 			'inputType': "HintOnlyInput",
@@ -240,6 +241,7 @@ def Algorithms():
 	problem_2.add_variant({
 		'content': {
 			'prob_id': 2,
+			'available_tries': 100,
 			'componentType': "programType",
 			'inputType': "HintOnlyInput",
 			'descriptionType': "spiralCabinet",
@@ -255,6 +257,7 @@ def Algorithms():
 	problem_3.add_variant({
 		'content': {
 			'prob_id': 3,
+			'available_tries': 100,
 			'componentType': "programType",
 			'inputType': "HintOnlyInput",
 			'descriptionType': "guessNumbers",
@@ -381,6 +384,7 @@ def Proga():
 	problem_1.add_variant({
 		'content': {
 			'prob_id': 4,
+			'available_tries': 100,
 			'componentType': "programType",
 			'descriptionType': "CHAD",
 			'inputType': "HintOnlyInput",
@@ -396,6 +400,7 @@ def Proga():
 	problem_2.add_variant({
 		'content': {
 			'prob_id': 5,
+			'available_tries': 100,
 			'componentType': "programType",
 			'descriptionType': "promiscuousPrincess",
 			'inputType': "HintOnlyInput",
@@ -411,6 +416,7 @@ def Proga():
 	problem_3.add_variant({
 		'content': {
 			'prob_id': 6,
+			'available_tries': 100,
 			'componentType': "programType",
 			'descriptionType': "MashaAndBear",
 			'inputType': "HintOnlyInput",
