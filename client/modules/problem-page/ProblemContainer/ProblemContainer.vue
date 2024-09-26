@@ -9,7 +9,7 @@
             <div v-if="description" v-html="description"></div>
 			<component :is="dynamicDescription" v-if="!description" :problem-params="variantParams" />
             <img v-if="image" class="problem_img" :src="image" />
-            <div v-if="problemComponent" class="problem newTypeProblem" ref="problem">
+            <div v-if="problemComponent" ref="problem" class="problem newTypeProblem">
                 <component 
 					:is="dynamicProblemComponent" v-if="!answerGiven && dynamicProblemComponent" v-model="currentAnswer" :xhr-data="xhrData" 
                     :new-xhr="newXhr"
@@ -147,12 +147,20 @@ export default {
 			const sendUrl = xhrParams.sendUrl ? xhrParams.sendUrl : '/api/xhr'
 			const config = xhrParams.config ? xhrParams.config : {'Content-Type': "multipart/form-data"}
 			const fileList = xhrParams.xhrFiles ? xhrParams.xhrFiles : []
+			let solution
+			try {
+				solution =  this.$refs.problem.innerHTML.replace(/input-save-value/g, 'value')
+			}
+			catch {
+				solution = ''
+			}
 			const dataToSend = new FormData()
 			dataToSend.append('variant', this.variant)
 			dataToSend.append('xhr_params', JSON.stringify(xhrParams))
 			for (const xhrFile of fileList) {
 				dataToSend.append(xhrFile.title, xhrFile.content)
 			}
+			dataToSend.append('solution', solution)
 			console.log(dataToSend)
             await this.$axios.$post(sendUrl, dataToSend, config)
                 .then((resp) => {

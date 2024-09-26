@@ -33,7 +33,7 @@
 				</div>
 			</div>
 		</div>
-		<SendArea :run-list="runList" :available-language="availableLanguage" @update="updateRuns"></SendArea>
+		<SendArea :run-list="reversedRunList" :available-language="availableLanguage" @update="updateRuns"></SendArea>
 	</div>
 </template>
 
@@ -83,6 +83,12 @@ export default {
 		},
 		remainingTries() {
 			return this.problemParams.available_tries
+		},
+		reversedRunList() {
+			if (this.runList) {
+				return JSON.parse(JSON.stringify(this.runList)).reverse()
+			}
+			return []
 		}
 	},
 
@@ -93,6 +99,15 @@ export default {
 				if (this.xhrData.xhr_answer.display) {
 					this.$emit('showXhrDialog', this.xhrData.xhr_answer.message)
 				}
+			}
+		},
+		runList(newRunList) {
+			console.log(newRunList)
+			const okIndex = this.getOkIndex(newRunList)
+			console.log('ok index: ', okIndex)
+			console.log('run list: ', newRunList)
+			if (okIndex !== undefined) {
+				setTimeout(function(){this.$emit('xhrRequest', {'type': 'update_status', 'index': okIndex})}.bind(this), 100)
 			}
 		}
 	},
@@ -139,6 +154,16 @@ export default {
 		},
 		updateRuns() {
 			this.$emit('xhrRequest', {'type': "update"})
+		},
+		getOkIndex(runList) {
+			let index = 0
+			for (const run of runList) {
+				if (run.data.status === 'OK') {
+					return index
+				}
+				index++
+			}
+			return undefined
 		}
 	},
 }

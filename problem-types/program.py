@@ -1,13 +1,8 @@
-from re import T
-from urllib import response
 from config import config
 import urllib.request as urllib2
 import urllib.parse
-import datetime
-import certifi
 from urllib.error import HTTPError, URLError
 import json
-from bottle import request
 
 token = config['ejudge']['token']
 pending_status_list = ['RJ', 'AV', 'CG', 'CD', 'RU', '']
@@ -34,11 +29,12 @@ def steps(step_num, params, data):
 	try:
 		if params['type'] == 'send':
 			if data['available_tries'] <= 0:
-				return {'answer': {'message': "Попытки вышли", 'display': True}}
-			if params['data']['text_input']:
-				content = params['data']['text_input']
-			elif params['files']['file_input']:
+				return {'answer': {'message': "Попытки вышли", 'display': True}, 'user_answer': "not OK", 'solution': params['solution'], 'answer_correct': False}
+			
+			if params['files'].get('file_input'):
 				content = params['files']['file_input'].file.read()
+			elif params['data']['text_input']:
+				content = params['data']['text_input']
 			else:
 				return {'answer': {'message': "Пустая посылка!", 'display': True}}
 			try:
@@ -70,6 +66,8 @@ def steps(step_num, params, data):
 				data['run_list'] = []
 			data['run_list'].append({'id': run_id, 'data': get_status(run_id)})
 			data['available_tries'] -= 1
+			if data['available_tries'] <= 0:
+				return {'answer': {'message': "Попытки вышли", 'display': True}, 'user_answer': "not OK", 'solution': params['solution'], 'answer_correct': False}
 			return {'answer': {'status': "successful request"}, 'data_update': data}
 		elif params['type'] == 'update':
 			try:
@@ -84,9 +82,12 @@ def steps(step_num, params, data):
 				return {'answer': {'message': "successful request"}, 'data_update': data}
 			except Exception as ex:
 				return {'answer': {'message': ex}}
+		elif params['type'] == 'update_status':
+			if data['run_list'][int(params['index'])]['data']['status'] == 'OK':
+				return {'answer': {'message': "Решение верное"},  'user_answer': "OK", 'solution': params['solution'], 'answer_correct': True}
 
 	except:
-		return {'answer': {'message': "Неизвестная ошибка"}}
+		return {'answer': {'message': "Unknown error"}}
 	
 
 def get_test_status(test_list):
@@ -149,7 +150,11 @@ def get_status(run_id):
 			lang = run_response['lang_id']
 		except:
 			lang = 'Unknown'
-		return {'status': status, 'duration': duration, 'size': size, 'tests_passed': tests_passed, 'submit_time': submit_time, 'lang': lang}
+		try:
+			score = run_response['score']
+		except:
+			score = 0
+		return {'status': status, 'duration': duration, 'size': size, 'tests_passed': tests_passed, 'submit_time': submit_time, 'lang': lang, 'score': score}
 	except Exception as e:
 		print(e)
-		return {'status': '', 'duration': '', 'size': '', 'tests_passed': '???', 'submit_time': 0, 'lang': 'Unknown'}
+		return {'status': '', 'duration': '', 'size': '', 'tests_passed': '???', 'submit_time': 0, 'lang': 'Unknown', 'score': 0}

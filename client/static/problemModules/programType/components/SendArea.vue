@@ -52,6 +52,7 @@ export default {
 				{ title: 'Время', id: 'duration' },
 				{ title: 'Вердикт', id: 'status' },
 				{ title: 'Тест', id: 'tests_passed' },  
+				{ title: 'Балл', id: 'score' },
 			],
 			unsuccessStatus: ['CE', 'RT', 'TL', 'PE', 'WA', 'PT', 'DQ', 'SE', 'ML', 'RJ', 'SV', 'WT', 'CF']
 		}

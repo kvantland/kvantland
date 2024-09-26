@@ -25,9 +25,11 @@ def get_xhr_request(db):
 	}
 	try:
 		var_id = request.forms.get('variant')
+		solution = request.forms.get('solution')
 		params = json.loads(request.forms.get('xhr_params'))
 		files = request.files
 		params['files'] = files
+		params['solution'] = solution
 	except:
 		return json.dumps(resp)
 	
