@@ -87,6 +87,7 @@ def Games():
 		name = 'Ход ферзём',
 		points = 2,
 		type_ = 'queen_move',
+		hint = 'Рассмотрите выигрышные и проигрышные позиции.',
 	)
 	for horse_config in [
 		[
@@ -156,6 +157,7 @@ def Games():
 		name = 'Звёздные войны',
 		points = 3,
 		type_ = 'star_wars',
+		hint = 'Попробуйте на каждом шаге уменьшать зону, в которой может быть искомая клетка, примерно в 2 раза.',
 	)
 
 	for dron_amount, board_side, correct in [
@@ -181,6 +183,7 @@ def Games():
 		name = "Игра в переливания",
 		points = 4,
 		type_ = "program",
+		hint = 'Попробуйте выиграть, если сейчас в бочках налито: \((7, 0, 0)\), \((0, 5, 0)\), \((1, 1, 0)\).'
 	)
 	problem_3.add_variant({
 		'content': {
@@ -236,6 +239,10 @@ def Algorithms():
 		name = "Спиральный шкаф",
 		points = 3,
 		type_ = "program",
+		hint = """Напишите один цикл таким образом, чтобы пройтись по таблице по спирали. 
+				Для этого поддерживайте переменные \(\mathtt{dx}\) и \(\mathtt{dy}\), которые будут 
+				показывать Вам в каком направлении двигаться, а также границы (верхнюю, нижнюю, 
+				правую и левую), которые Вы уже прошли.""",
 	)
 
 	problem_2.add_variant({
@@ -252,6 +259,10 @@ def Algorithms():
 		name = "Угадываем числа",
 		points = 4,
 		type_ = "program",
+		hint = """Рассмотрите разложение числа x на простые множители. 
+				Обратите внимание, что для эффективной реализации разложения на
+				простые множители рекомендуется делать \(\mathtt{while} \mathtt{divisor}^2 < \mathtt{x}\)
+				(а не \(\mathtt{for} \mathtt{divisor} \mathtt{in} range(\mathtt{2}, \sqrt{x})\))."""
 	)
 
 	problem_3.add_variant({
@@ -291,8 +302,9 @@ def Blocks():
 		
 	problem_2 = Problem(
 		name='Ассемблирует компайлер',
-		points=3,
+		points=4,
 		type_='assembling_the_compailer',
+		hint='Обратите внимание, что \(4 = 2^2\) и \(63 = 2^6 - 1\)'
 	)
 	problem_2.add_variant({
 		'content': {
@@ -305,8 +317,11 @@ def Blocks():
 
 	problem_3 = Problem(
 		name = 'Робот в лабиринте',
-		points = 4,
+		points = 3,
 		type_ = 'robot_in_maze',
+		hint = """Найдите траекторию от старта до финиша, которую 
+				можно было бы разбить на 3 участка одной формы. 
+				Это поможет Вам уложиться в один внешний цикл. """,
 	)
 	for maze, start_position, start_diraction, end_position in [
 		([
@@ -379,6 +394,8 @@ def Proga():
 		name="ЦКАД",
 		type_="program",
 		points=2,
+		hint = """Попробуйте стандартный в таких задачах подход: необходимо 
+		рассмотреть скорость второго автомобилиста относительно первого.""",
 	)
 
 	problem_1.add_variant({
@@ -403,7 +420,6 @@ def Proga():
 			'available_tries': 100,
 			'componentType': "programType",
 			'descriptionType': "promiscuousPrincess",
-			'inputType': "HintOnlyInput",
 		}
 	})
 
@@ -419,7 +435,6 @@ def Proga():
 			'available_tries': 100,
 			'componentType': "programType",
 			'descriptionType': "MashaAndBear",
-			'inputType': "HintOnlyInput",
 		}
 	})
 

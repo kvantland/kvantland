@@ -49,6 +49,9 @@ def get_xhr_request(db):
 
 @route('/api/get_hint', method="POST")
 def get_hint(db):
+	print()
+	print('==========================')
+	print('get hint request')
 	resp = {
 		'status': False,
 		'hint': '',

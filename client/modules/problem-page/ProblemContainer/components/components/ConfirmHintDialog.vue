@@ -17,6 +17,7 @@ export default {
     methods: {
         getHint() {
             this.$emit('getHint')
+			this.$emit('hideHintConfirmDialog')
         },
         hideHintConfirmDialog() {
             this.$emit('hideHintConfirmDialog')
