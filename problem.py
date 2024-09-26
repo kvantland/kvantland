@@ -423,6 +423,9 @@ def xhr_request(db, user_id, var_id, params):
 		cont['points'] = points
 	typedesc = import_module(f'problem-types.{type_}')
 	resp = typedesc.steps(xhr_amount, params, cont)
+	print()
+	print('===========================')
+	print('after xhr request')
 	try:
 		if 'points_update' in resp.keys():
 			print('points update request')
@@ -434,8 +437,16 @@ def xhr_request(db, user_id, var_id, params):
 			if new_points > 0:
 				db.execute('update Kvantland.AvailableProblem set curr_points = %s where variant = %s and student= %s', (new_points, var_id, user_id))
 			else:
-				resp['answer'] = {'message': "Невозможно совершить действие"}
+				resp['answer'] = {'message': "Невозможно совершить действие", 'display': True}
 				return resp['answer']
+	except:
+		pass
+	try:
+		if 'extra_points' in resp.keys():
+			extra_points = resp['extra_points']
+			print('extra points in resp: ', extra_points)
+			db.execute('update Kvantland.Student set score=score + %s where student = %s', (extra_points, user_id))
+			db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s', (extra_points, user_id, config["tournament"]["version"]))
 	except:
 		pass
 	try: 
@@ -444,8 +455,11 @@ def xhr_request(db, user_id, var_id, params):
 		pass
 	try: 
 		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (resp['answer_correct'], resp['user_answer'], var_id, user_id))
-		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) * %s where student = %s', (var_id, int(resp['answer_correct']), user_id))
-		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
+		partial_solution = 'partial_score' in cont.keys()
+		print('partial solution given: ', partial_solution)
+		if not partial_solution:
+			db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) * %s where student = %s', (var_id, int(resp['answer_correct']), user_id))
+			db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
 	except KeyError:
 		pass
 	try:

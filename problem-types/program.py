@@ -62,8 +62,13 @@ def steps(step_num, params, data):
 			print('send url: ', sendUrl, 'response:', response)
 			
 			run_id = response['result']['run_id']
+			run_status = get_status(run_id)
 			if 'run_list' not in data.keys():
 				data['run_list'] = []
+			if 'partial_score' not in data.keys():
+				data['partial_score'] = run_status['score']
+			else:
+				data['partial_score'] = max(data['partial_score'], run_status['score'])
 			data['run_list'].append({'id': run_id, 'data': get_status(run_id)})
 			data['available_tries'] -= 1
 			if data['available_tries'] <= 0:
@@ -73,13 +78,16 @@ def steps(step_num, params, data):
 			try:
 				if 'run_list' not in data.keys():
 					return {'answer': {'message': "nothing to update"}}
+				extra_points = 0
 				for elem_index in range(len(data['run_list'])):
 					run = data['run_list'][elem_index]
 					if run['data']['status'] in pending_status_list:
 						updated_run = get_status(run['id'])
 						print('after update: ', updated_run)
 						data['run_list'][elem_index]['data'] = updated_run
-				return {'answer': {'message': "successful request"}, 'data_update': data}
+						extra_points += (updated_run['score'] - data['partial_score']) * (updated_run['score'] > data['partial_score'])
+						data['partial_score'] = max(data['partial_score'], updated_run['score'])
+				return {'answer': {'message': "successful request"}, 'data_update': data, 'extra_points': extra_points}
 			except Exception as ex:
 				return {'answer': {'message': ex}}
 		elif params['type'] == 'update_status':
@@ -96,10 +104,16 @@ def get_test_status(test_list):
 		status = '0'
 
 		for test in test_list:
-			time = max(time, test['time_ms'])
+			print(test)
+			try:
+				time = max(time, test['time_ms'])
+			except:
+				time = 1000
+			print('test status: ', test['status'])
 			if str(test['status']) == str(0):
 				continue
 			status = test['status']
+			print('final status: ', status)
 			break
 		return {'status': status, 'time': time}
 
