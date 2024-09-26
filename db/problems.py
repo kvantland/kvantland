@@ -236,7 +236,7 @@ def Algorithms():
 		})
 
 	problem_2 = Problem(
-		name = "Спиральный шкаф",
+		name = "Спиральный шифр",
 		points = 3,
 		type_ = "program",
 		hint = """Напишите один цикл таким образом, чтобы пройтись по таблице по спирали. 
@@ -251,7 +251,7 @@ def Algorithms():
 			'available_tries': 100,
 			'componentType': "programType",
 			'inputType': "HintOnlyInput",
-			'descriptionType': "spiralCabinet",
+			'descriptionType': "spiralCipher",
 		}
 	})
 

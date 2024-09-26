@@ -21,7 +21,7 @@
             <HintContainer v-if="hint.description" :description="hint.description" />
         </div>
 
-        <component :is="dynamicInput" v-if="!answerGiven" :has-hint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
+        <component :is="dynamicInput" v-if="!answerGiven && dynamicInput" :has-hint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
         <ProblemResult v-if="answerGiven" :answer="answer" :answer-status="answerStatus" :is-integer="problemInputType=='IntegerTypeInput'" />
         <XhrDialog v-if="xhrDialogMode" @close="hideXhrDialog"> {{ xhrDialogContent }} </XhrDialog>
         <ConfirmDialog v-if="confirmDialogMode" :params="confirmDialogParams" @confirmAction="confirmAction"></ConfirmDialog>
@@ -63,7 +63,7 @@ export default {
             xhrDialogContent: '',
             confirmDialogMode: false,
             confirmDialogParams: {},
-            dynamicInput: () => import(`./components/${this.problemInputType}.vue`),
+            dynamicInput: this.problemInputType ? () => import(`./components/${this.problemInputType}.vue`) : undefined,
             dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
 			dynamicDescription: () => import(`../../../static/problemModules/${this.problemDescription ? this.problemDescription : this.problemComponent}/description.vue`),
             currentAnswer: '',
