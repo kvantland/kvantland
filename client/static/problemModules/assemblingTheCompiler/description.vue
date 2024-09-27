@@ -13,7 +13,7 @@
 		<img class="function" src="/problem_assets/vasya_function.png" />
 		<div>
 			Значения чисел \(\mathtt{a}, \mathtt{b}, \mathtt{c}\) изначально сохранены в регистры \(\mathtt{A}, \mathtt{B}, \mathtt{C}\) соответственно.
-			Количество строк в программе не должно превосходить \(\mathtt{10}\).
+			Количество строк в программе не должно превосходить \(10\).
 		</div>
 		<div>
 			<b><u>Описание команд:</u></b> <br/>
@@ -23,9 +23,9 @@
 					регистра \(\mathtt{X}\), результат сохраняется в регистре \(\mathtt{X}\)</li>
 				<li><b>Sub \(\mathtt{T}\), \(\mathtt{X}\)</b> – вычитает значение \(\mathtt{T}\)
 					из значения регистра \(\mathtt{X}\), результат сохраняется в регистре \(\mathtt{X}\)</li>
-				<li><b>ShiftLeft \(\mathtt{T}\), \(\mathtt{X}\)</b> – умножает \(\mathtt{X}\) на \(\mathtt{2}^\mathtt{T}\)</li>
+				<li><b>ShiftLeft \(\mathtt{T}\), \(\mathtt{X}\)</b> – умножает \(\mathtt{X}\) на \(2^\mathtt{T}\)</li>
 				<li><b>ShiftRight \(\mathtt{T}\), \(\mathtt{X}\)</b>  – в \(\mathtt{X}\) записывается целая часть 
-					при делении \(\mathtt{X}\) на \(\mathtt{2}^\mathtt{T}\)</li>
+					при делении \(\mathtt{X}\) на \(2^\mathtt{T}\)</li>
 				<li><b>Move \(\mathtt{T}\), \(\mathtt{X}\)</b> – значение в регистре \(\mathtt{X}\) становится равно значению \(\mathtt{T}\)</li>
 			</ol>
 		</div>
