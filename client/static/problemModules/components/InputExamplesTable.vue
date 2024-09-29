@@ -11,16 +11,20 @@
 			<template
 				v-for="(lines, num) in inputExamples">
 				<div :key="`input_${num}`" class="block input" >
-					<p 
-						v-for="(line, lineNum) in lines.input" :key="`input_example_${num}_line_${lineNum}`">
-						{{ line }}
-					</p>
+					<template v-for="(line, lineNum) in lines.input">
+						<p v-if="line !== ' ' && line" :key="`input_example_${num}_line_${lineNum}`">
+							{{ line }}
+						</p>
+						<p v-else :key="`input_example_${num}_line_${lineNum}`"> <br> </p>
+					</template>
 				</div>
 				<div :key="`output_${num}`" class="block output" >
-					<p 
-						v-for="(line, lineNum) in lines.output" :key="`output_example_${num}_line_${lineNum}`">
-						{{ line }}
-					</p>
+					<template v-for="(line, lineNum) in lines.output">
+						<p v-if="line !== ' ' && line" :key="`output_example_${num}_line_${lineNum}`">
+							{{ line }}
+						</p>
+						<p v-else :key="`output_example_${num}_line_${lineNum}`"> <br> </p>
+					</template>
 				</div>
 			</template>
 		</div>
@@ -34,7 +38,7 @@ export default {
 			type: Array,
 			default: () => {return []},
 		}
-	}
+	},
 }
 </script>
 
@@ -64,10 +68,10 @@ export default {
 	display: flex;
 	flex-direction: column;
 	background-color: white;
-	justify-content: center;
 	padding: 10px 0;
 	padding-left: 10%;
 	margin-bottom: -2px;
+	justify-content: flex-start;
 }
 
 .block.title {

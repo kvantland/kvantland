@@ -1,5 +1,5 @@
 <template>
-	<div class="description">
+	<ProgramTypeDescription :input-examples="inputExamples">
 		<p>В этой задаче Вам необходимо написать программу, которая будет играть с компьютером в игру.<br>
 		Перед Вами три одинаковые бочки, в каждой из которых есть некоторое количество воды. <br>
 		Вы играете против компьютера и ходите первым. За одно действие разрешается перелить 1 литр из бочки с 
@@ -16,28 +16,23 @@
 		<p>За любым Вашим ходом, кроме последнего, последует ответ компьютера – на вход подаются два числа \(1 \leq i < j \leq 3\), записанные через пробел. 
 			Это означает, что компьютер перелил \(1\) литр из \(i\)-ой бочки в \(j\)-ую. </p>
 		<p>После Вашего победного хода необходимо на отдельной строке вывести строку <b><i>“The End”</i></b>. </p>
-
-	</div>
+	</ProgramTypeDescription>
 </template>
 
 <script>
 export default {
-	props: {
-		problemParams: {
-			type: Object,
-			default: () => {return {}}
+	data() {
+		return {
+			inputExamples: [
+				{'input': ['3', '0', '0', ' ', ' ', '1 3'], 'output': [' ', ' ', 'Possible', '1 3', ' ', '1 3']},
+				{'input': ['0', '5', '5', ' ', ' ', '2 3', ' ', '2 3'], 'output': [' ', ' ', ' ', 'Possible', '2 3', ' ', '2 3', ' ', '2 3']}
+			]
 		}
 	}
 }
 </script>
 
 <style scoped>
-.description {
-	display: inline-flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
 .notion {
 	font-weight: 400;
 	font-style: italic;

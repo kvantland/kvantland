@@ -1,5 +1,5 @@
 <template>
-	<div class="description">
+	<ProgramTypeDescription :input-examples="inputExamples">
 		<p>Алиса и Боб используют библиотечный компьютер. Алисе нужно передать 
 			Бобу важную информацию в зашифрованном виде (некоторое число \(x\)), но Боб 
 			придет только через два часа! Алиса может сохранить на компьютере лишь 
@@ -19,13 +19,19 @@
 				\(t\) \((t=2)\) - номер запуска и \(y\) - число, которое прочитает Боб, когда сядет за компьютер. 
 				В ответ программа должна вывести то число, которое хотела передать Бобу Алиса (число 
 				\(x\), которое вводилось в первый раз)</p>
-	</div>
+	</ProgramTypeDescription>
 </template>
 
-<style scoped>
-.description {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+<script>
+export default {
+
+	data() {
+		return {
+			inputExamples: [
+				{input: ['1 1', '2 1'], output: ['1', '1']},
+				{input: ['1 3', '2 15'], output: ['3', '3']}
+			]
+		}
+	}
 }
-</style>
+</script>

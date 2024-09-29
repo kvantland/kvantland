@@ -1,9 +1,10 @@
 <template>
-	<div class="description">
+	<ProgramTypeDescription :input-examples="inputExamples">
 		<p>	Празднуя свой \(\mathtt{27}\) день рождения, Неразборчивая Принцесса по имени Изольда поняла, 
 			что пора ей выходить замуж, причем делать это надо в течение года, ведь часики-то тикают! 
-			<a href="https://ru.wikipedia.org/wiki/Задача_о_разборчивой_невесте" 
-			target="_blank" style="color: blue; text-decoration: underline;">Как известно</a>, 
+			<a
+				href="https://ru.wikipedia.org/wiki/Задача_о_разборчивой_невесте" 
+				target="_blank" style="color: blue; text-decoration: underline;">Как известно</a>, 
 			выходить замуж надо по правилу \(\mathtt{37}\%\): сначала надо понять со сколькими принцами 
 			Изольда успеет познакомиться, познакомиться с \(\mathtt{37}\%\) из них, а потом продолжить знакомиться с 
 			принцами и выходить замуж за того, который будет лучше всех предыдущих. </p>
@@ -21,14 +22,17 @@
 			которая показывает, в каком порядке Купидону надо переставить претенденток, чтобы Изольда 
 			была как можно счастливее. Если существует несколько вариантов при которых Изольда получает 
 			лучшего мужа, то выведите любой. </p>
-
-	</div>
+	</ProgramTypeDescription>
 </template>
 
-<style scoped>
-.description{
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+<script>
+export default {
+	data() {
+		return {
+			inputExamples: [
+				{'input': ['4', '1 0 0 0', '0 2 0 2', '0 1 0 1', '1 0 1 1'], 'output': ['1 2 4 3']}
+			]
+		}
+	}
 }
-</style>
+</script>
