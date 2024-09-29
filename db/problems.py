@@ -28,8 +28,8 @@ class Town:
 		return town
 	
 	def add_problem(self, problem):
-		cur.execute("insert into Kvantland.Problem (town, points, curr_points, name, type_, image, tournament) values (%s, %s, %s, %s, %s, %s, %s) returning problem", 
-			(self.id, problem.points, problem.current_points, problem.name, problem.type_id, problem.image, current_tournament))
+		cur.execute("insert into Kvantland.Problem (town, points, name, type_, image, tournament) values (%s, %s, %s, %s, %s, %s) returning problem", 
+			(self.id, problem.points, problem.name, problem.type_id, problem.image, current_tournament))
 		(problem.id, ), = cur.fetchall()
 		if problem.hint:
 			cur.execute("insert into Kvantland.Hint (problem, content, cost) values (%s, %s, %s)", (problem.id, problem.hint, problem.hint_cost))
@@ -50,7 +50,6 @@ class Problem:
 	def __init__(self, name='', points=0, type_='', hint=None, hint_cost=None, image=None):
 		self.name = name
 		self.points = points
-		self.current_points = points
 		self.type_ = type_
 		self.hint = hint
 		if hint_cost:
