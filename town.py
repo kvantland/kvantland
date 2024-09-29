@@ -50,10 +50,10 @@ def get_town_data(db):
 		return json.dumps(resp)
 	user_id = token_status['user_id']
 	try:
-		db.execute('''select variant, position, curr_points, name, answer_true from Kvantland.AvailableProblem 
+		db.execute('''select variant, curr_points, points, name, answer_true from Kvantland.AvailableProblem 
 			join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) 
 			where town = %s and student = %s and tournament = %s''', (town, user_id, config["tournament"]["version"]))
-		for variant, position, points, name, ans_true in db.fetchall():
+		for variant, position, curr_points, points, name, ans_true in db.fetchall():
 			try:
 				x, y = position
 			except TypeError:
@@ -65,7 +65,11 @@ def get_town_data(db):
 				True: 'solved',
 				False: 'failed',
 			}[ans_true]
-			resp['towns'].append({"variantID": variant, "x": x, "y": y, "points": points, "name": name, "status": status})
+			if curr_points:
+				send_points = curr_points
+			else:
+				send_points = points
+			resp['towns'].append({"variantID": variant, "x": x, "y": y, "points": send_points, "name": name, "status": status})
 	except:
 		return json.dumps(resp)
 
