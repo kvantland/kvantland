@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import sys 
+import sys
 
 from bottle import route, request
 import json
@@ -160,54 +160,45 @@ def get_problem_data(db):
 		(answer, solution, ), = db.fetchall()
 		resp['problem']['answer'] = answer
 		resp['problem']['solution'] = solution
-	
+
 	try:
-		db.execute('''select town, Kvantland.Town.name, Kvantland.Type_.code, Kvantland.Problem.name, 
+		db.execute('''select Kvantland.Type_.code, Kvantland.Problem.name, 
 				description, image, points, Kvantland.Variant.content, Kvantland.Hint.content, Kvantland.Hint.cost 
 				from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) join 
 				Kvantland.Town using (town) left join Kvantland.Hint using (problem) where variant = %s''', (variant,))
-		(town, town_name, type_, name, db_description, image, points, content, hint, hint_cost), = db.fetchall()
-		try:
-			typedesc = import_module(f'problem-types.{type_}')
-			description = typedesc.description(content)
-		except:
-			description = db_description
-		print('description:', description)
-		default = content
-		db.execute('select xhr_amount, curr, curr_points from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-		(step, curr, curr_points, ), = db.fetchall()
-		if curr:
-			content = curr
-		if curr_points:
-			points = curr_points
+		(type_, name, db_description, image, points, content, hint, hint_cost), = db.fetchall()
+		db.execute('select xhr_amount, curr, curr_points, hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
+		(step, curr, curr_points, hint_taken), = db.fetchall()
 	except:
 		return json.dumps(resp)
+
+	typedesc = get_problem_typedesc(type_)
 	try:
-		typedesc = import_module(f'problem-types.{type_}')
+		description = typedesc.description(content)
 	except:
-		typedesc = ''
-	kwargs = {'step': step, 'default': default}
-	script = try_read_file(f'problem-types/{type_}.js')
-	style = try_read_file(f'problem-types/{type_}.css')
-	
+		description = db_description
+	default = content
+	if 'correct' in content.keys(): # пользователь не должен знать ответ)
+		del content['correct']
 	resp['problem']['description'] = description
+	resp['problem']['variantParams'] = content
+
+	if curr:
+		content = curr
+	if curr_points:
+		points = curr_points
+
+	print('hint_taken: ', hint_taken, file=sys.stderr)
+	resp['problem']['hint']['status'] = not(hint_taken) and hint
+	resp['problem']['hint']['cost'] = hint_cost
+	if hint_taken:
+		resp['problem']['hint']['description'] = hint
+	
 	resp['problem']['title'] = name
 	if image:
 		resp['problem']['image'] = f'/old-problem_assets/integer_img/{image}'
 	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 	resp['problem']['type'] = type_
-	if 'correct' in content.keys(): # пользователь не должен знать ответ)
-		del content['correct']
-	print(content, file=sys.stderr)
-	resp['problem']['variantParams'] = content
-
-	db.execute('select hint_taken from Kvantland.AvailableProblem where variant = %s and student = %s', (variant, user_id))
-	(hint_taken, ), = db.fetchall()
-	print('hint_taken', hint_taken, file=sys.stderr)
-	resp['problem']['hint']['status'] = not(hint_taken) and hint
-	resp['problem']['hint']['cost'] = hint_cost
-	if hint_taken:
-		resp['problem']['hint']['description'] = hint
 	
 	try:
 		typedesc.entry_form()
@@ -231,41 +222,19 @@ def get_problem_data(db):
 		resp['status'] = True
 		return json.dumps(resp)
 	
+	kwargs = {'step': step, 'default': default}
+	script = try_read_file(f'problem-types/{type_}.js') # надо в будущем написать функцию для получения валидного пути
+	style = try_read_file(f'problem-types/{type_}.css') # надо в будущем написать функцию для получения валидного пути
+	
 	resp['problem']['problemHTML'] = ''.join(line for line in typedesc.entry_form(content, kwargs)).replace('/static', '').replace('problem_assets', 'old-problem_assets')
 	if style:
 		resp['problem']['problemCSS'] = f'/old-problem-types/{type_}.css'
 	if script:
 		resp['problem']['problemJS'] = f'/old-problem-types/{type_}.js'
 
-	try:
-		show_default_buttons = not typedesc.CUSTOM_BUTTONS
-	except AttributeError:
-		show_default_buttons = True
+	resp['problem']['inputType'] = get_old_problem_input_type(typedesc)
 
-	try:
-		hybrid = typedesc.HYBRID
-	except AttributeError:
-		hybrid = False
-
-	try:
-		without_buttons = typedesc.WITHOUT_BUTTONS
-	except AttributeError:
-		without_buttons = False
-
-	try:
-		hint_only = typedesc.HINT_ONLY
-	except AttributeError:
-		hint_only = False
-
-	if not(without_buttons):
-		if hint_only and not(hybrid):
-			resp['problem']['inputType'] = 'HintOnlyInput'
-		elif show_default_buttons and not(hybrid):
-			resp['problem']['inputType'] = 'InteractiveTypeInput'
-		else:
-			resp['problem']['inputType'] = 'IntegerTypeInput'
-
-	print('resp: ', resp, file=sys.stderr)
+	# print('resp: ', resp, file=sys.stderr)
 	resp['status'] = True
 	return json.dumps(resp)
 
@@ -298,10 +267,9 @@ def check_user_answer(db):
 		
 	if answer_given:
 		return json.dumps(resp)
-	print(type_, file=sys.stderr)
-	print(content, file=sys.stderr)
+	print('ype: ', type_, file=sys.stderr)
 	typedesc = import_module(f'problem-types.{type_}')
-	print(answer, file=sys.stderr)
+	print('answer: ', answer, file=sys.stderr)
 	is_answer_correct = typedesc.validate(content, answer)
 	
 	try:
@@ -369,6 +337,69 @@ def get_languages():
 
 MODE = config['tournament']['mode']
 
+def get_problem_typedesc(problem_type: str):
+	usual_problem_path = [
+		"problem-types",
+		f"{config['tournament']['type']}_problems",
+		f"season_{config['tournament']['season']}",
+		f"tournament_{config['tournament']['version']}",
+		problem_type,
+	]
+	try:
+		usual_problem_typedesc = import_module('.'.join(usual_problem_path))
+	except:
+		usual_problem_typedesc = None
+	common_for_tournament_problem_path = [
+		"problem-types",
+		f"{config['tournament']['type']}_problems",
+		"common_types",
+		problem_type,
+	]
+	try:
+		common_for_tournament_problem_typedesc = import_module('.'.join(common_for_tournament_problem_path))
+	except:
+		common_for_tournament_problem_typedesc = None
+	common_problem_path = [
+		"problem-types",
+		"common_types",
+		problem_type,
+	]
+	try:
+		common_problem_typedesc = import_module('.'.join(common_problem_path))
+	except:
+		common_problem_typedesc = None
+	typedesc = usual_problem_typedesc or common_for_tournament_problem_typedesc or common_problem_typedesc or None
+	return typedesc
+
+
+def get_old_problem_input_type(typedesc):
+	try:
+		show_default_buttons = not typedesc.CUSTOM_BUTTONS
+	except AttributeError:
+		show_default_buttons = True
+
+	try:
+		hybrid = typedesc.HYBRID
+	except AttributeError:
+		hybrid = False
+
+	try:
+		without_buttons = typedesc.WITHOUT_BUTTONS
+	except AttributeError:
+		without_buttons = False
+
+	try:
+		hint_only = typedesc.HINT_ONLY
+	except AttributeError:
+		hint_only = False
+
+	if not(without_buttons):
+		if hint_only and not(hybrid):
+			resp['problem']['inputType'] = 'HintOnlyInput'
+		elif show_default_buttons and not(hybrid):
+			resp['problem']['inputType'] = 'InteractiveTypeInput'
+		else:
+			resp['problem']['inputType'] = 'IntegerTypeInput'
 
 def try_read_file(path):
 	path = Path(__file__).parent / path
@@ -424,7 +455,7 @@ def xhr_request(db, user_id, var_id, params):
 		cont = deepcopy(start_cont)
 		cont['default'] = start_cont
 		cont['points'] = points
-	typedesc = import_module(f'problem-types.{type_}')
+	typedesc = get_problem_typedesc(type_)
 	resp = typedesc.steps(xhr_amount, params, cont)
 	print()
 	print('===========================')
