@@ -24,23 +24,24 @@
 import TownDefs from "../../modules/town-page/TownDefs.vue"
 import Problems from "../../modules/town-page/Problems.vue"
 export default {
-    middleware: 'full-auth',
     
     components: {
        TownDefs,
        Problems
     },
 
+    middleware: 'full-auth',
+
     async asyncData({ params, $axios, redirect }){
-        let status, town_data
-        let resp = {}
+        let status, townData
+        const resp = {}
         await $axios.$post("/api/town_data", {town: params.townNum})
         .then((resp) => {
             status = resp.status
-            town_data = resp.towns
+            townData = resp.towns
         })
         if (status) {
-            resp.town_data = town_data
+            resp.town_data = townData
         }
         else {
             return redirect('/')
