@@ -119,6 +119,9 @@ def get_problem_breadcrumbs(db):
 
 @route('/api/problem_data', method="POST")
 def get_problem_data(db):
+	print('========================')
+	print('get problem data')
+	print()
 	resp = {
 		'status': False,
 		'problem':
@@ -177,16 +180,17 @@ def get_problem_data(db):
 		description = typedesc.description(content)
 	except:
 		description = db_description
+	resp['problem']['description'] = description
+	
 	default = content
 	if 'correct' in content.keys(): # пользователь не должен знать ответ)
 		del content['correct']
-	resp['problem']['description'] = description
-	resp['problem']['variantParams'] = content
-
 	if curr:
 		content = curr
 	if curr_points:
 		points = curr_points
+	resp['problem']['variantParams'] = content
+	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 
 	print('hint_taken: ', hint_taken, file=sys.stderr)
 	resp['problem']['hint']['status'] = not(hint_taken) and hint
@@ -197,7 +201,6 @@ def get_problem_data(db):
 	resp['problem']['title'] = name
 	if image:
 		resp['problem']['image'] = f'/old-problem_assets/integer_img/{image}'
-	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 	resp['problem']['type'] = type_
 	
 	try:
@@ -268,7 +271,7 @@ def check_user_answer(db):
 	if answer_given:
 		return json.dumps(resp)
 	print('ype: ', type_, file=sys.stderr)
-	typedesc = import_module(f'problem-types.{type_}')
+	typedesc = get_problem_typedesc(type_)
 	print('answer: ', answer, file=sys.stderr)
 	is_answer_correct = typedesc.validate(content, answer)
 	
@@ -291,7 +294,9 @@ def check_user_answer(db):
 
 @route('/api/program_available_languages', method="GET")
 def get_languages():
+	print('=======================')
 	print('start getting languages')
+	print()
 	token = config['ejudge']['token']
 	apiUrl = config['ejudge']['masterUrl']
 	try:
@@ -347,6 +352,7 @@ def get_problem_typedesc(problem_type: str):
 	]
 	try:
 		usual_problem_typedesc = import_module('.'.join(usual_problem_path))
+		print('usual_problem_path: ', '.'.join(usual_problem_path))
 	except:
 		usual_problem_typedesc = None
 	common_for_tournament_problem_path = [
@@ -357,6 +363,7 @@ def get_problem_typedesc(problem_type: str):
 	]
 	try:
 		common_for_tournament_problem_typedesc = import_module('.'.join(common_for_tournament_problem_path))
+		print('common_for_tournament_problem_path: ', '.'.join(common_for_tournament_problem_path))
 	except:
 		common_for_tournament_problem_typedesc = None
 	common_problem_path = [
@@ -366,6 +373,7 @@ def get_problem_typedesc(problem_type: str):
 	]
 	try:
 		common_problem_typedesc = import_module('.'.join(common_problem_path))
+		print('common_problem_path: ', common_problem_path)
 	except:
 		common_problem_typedesc = None
 	typedesc = usual_problem_typedesc or common_for_tournament_problem_typedesc or common_problem_typedesc or None
@@ -437,6 +445,9 @@ def is_current_tournament(db, var_id):
 
 
 def xhr_request(db, user_id, var_id, params):
+	print()
+	print('===========================')
+	print('after xhr request')
 	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
 	(xhr_amount, ), = db.fetchall()
 	if (xhr_amount >= config['xhr']['dead_step']):
@@ -456,10 +467,9 @@ def xhr_request(db, user_id, var_id, params):
 		cont['default'] = start_cont
 		cont['points'] = points
 	typedesc = get_problem_typedesc(type_)
+	print('xhr_amount: ', xhr_amount)
+	print('cont: ', cont)
 	resp = typedesc.steps(xhr_amount, params, cont)
-	print()
-	print('===========================')
-	print('after xhr request')
 	try:
 		if 'points_update' in resp.keys():
 			print('points update request')

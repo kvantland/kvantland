@@ -4,7 +4,6 @@ from random import choice
 
 def steps(step_num, params, data):
 	try:
-		
 		if 'type' in params.keys():
 			if params['type'] == 'turn_choose':
 				if params['turn'] == 'first':
