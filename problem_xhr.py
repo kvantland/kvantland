@@ -8,7 +8,15 @@ import sys
 
 
 class ProblemResponse():
-	def __init__(self, params: dict = {'user_answer': None, 'answer': '', 'solution': None, 'data_update': None, 'extra_points': 0, 'points_update': None, 'answer_correct': None}):
+	def __init__(self, params: dict = {
+				'user_answer': None, 
+				'answer': '', 
+				'solution': None, 
+				'data_update': None, 
+				'extra_points': 0, 
+				'points_update': None, 
+				'answer_correct': None
+				}):
 		self.answer = params.get('answer')
 		self.user_answer = params.get('user_answer')
 		self.answer_correct = params.get('answer_correct')
