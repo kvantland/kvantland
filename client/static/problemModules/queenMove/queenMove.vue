@@ -112,7 +112,7 @@ export default {
 					}
 					else if (this.xhrData.xhr_answer.turn === 'player') {
 						console.log('computer turn!')
-						setTimeout(function(){this.$emit('xhrRequest', {turn: 'computer', 'solution': document.querySelector('.game_plot').outerHTML})}.bind(this), 10)
+						setTimeout(function(){this.$emit('xhrRequest', {turn: 'computer'})}.bind(this), 10)
 					}
 				}
                 else if (this.xhrData.xhr_answer.status === 'new try') {
@@ -139,7 +139,7 @@ export default {
 				if (turn === 'second') {
 					this.turn = 'computer'
 					this.queenComputerPosition = [this.boardSide - 1, 0]
-					setTimeout(function(){this.$emit('xhrRequest', {turn: 'computer', 'solution': document.querySelector('.game_plot').outerHTML})}.bind(this), 10)
+					setTimeout(function(){this.$emit('xhrRequest', {turn: 'computer'})}.bind(this), 10)
 				}
 			}
 		},
@@ -155,8 +155,8 @@ export default {
 				this.mode = 'await';
 				return;
 			}
-			let currentPossiblePositions = []
-			let [queenY, queenX] = this.queenPosition
+			const currentPossiblePositions = []
+			const [queenY, queenX] = this.queenPosition
 
 			for (let y = queenY - 1; y >= 0; y--) {
 				if (this.stopPositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([y, queenX])}))
@@ -172,10 +172,10 @@ export default {
 					continue;
 				currentPossiblePositions.push([queenY, x])
 			}
-			let diagonalStepsAmount = Math.min(queenY, this.boardSide - queenX)
+			const diagonalStepsAmount = Math.min(queenY, this.boardSide - queenX)
 			for (let diagonalStep = 1; diagonalStep <= diagonalStepsAmount; diagonalStep++) {
-				let newX = queenX + diagonalStep
-				let newY = queenY - diagonalStep
+				const newX = queenX + diagonalStep
+				const newY = queenY - diagonalStep
 				if (this.stopPositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([newY, newX])}))
 					break;
 				if (this.canceledPositions.some(elem => {return JSON.stringify(elem) === JSON.stringify([newY, newX])}))
@@ -193,27 +193,27 @@ export default {
 				this.queenComputerPosition = [row, column]
 				this.turn = 'computer'
 				this.mode = 'await'
-				this.$emit('xhrRequest', {row: row, column: column, turn: 'player'})
+				this.$emit('xhrRequest', {row, column, turn: 'player'})
 			}
 		},
 
 		startComputerMove(row, column) {
 			this.mode = 'move'
 			const step = [(row - this.queenComputerPosition[0]) / 30, (column - this.queenComputerPosition[1]) / 30]
-			console.log(step)	
-			console.log(this.queenComputerPosition, row, column)
+			// console.log(step)	
+			// console.log(this.queenComputerPosition, row, column)
 			const movement = setInterval(function(){
-				console.log(this.queenComputerPosition, row, column)
+				// console.log(this.queenComputerPosition, row, column)
 				if (Math.abs(this.queenComputerPosition[0] - row) >= 0.1 || Math.abs(this.queenComputerPosition[1] - column) >= 0.1) {
-					console.log('iteration', [this.queenComputerPosition[0] + step[0], this.queenComputerPosition[1] + step[1]]);
+					// console.log('iteration', [this.queenComputerPosition[0] + step[0], this.queenComputerPosition[1] + step[1]]);
 					this.queenComputerPosition = [this.queenComputerPosition[0] + step[0], this.queenComputerPosition[1] + step[1]];
 				}
 				else {
-					console.log('stop computer movement')
+					// console.log('stop computer movement')
 					clearInterval(movement);
 					this.turn = 'player'
 					this.mode = 'await'
-					setTimeout(function(){this.$emit('xhrRequest', {'check': true, 'solution': document.querySelector('.game_plot').outerHTML})}.bind(this), 20)
+					setTimeout(function(){this.$emit('xhrRequest', {'check': true})}.bind(this), 20)
 				}
 			}.bind(this), 15)
 		}

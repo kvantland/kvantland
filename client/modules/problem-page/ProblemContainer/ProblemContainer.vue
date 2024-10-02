@@ -1,31 +1,31 @@
 <template>
-    <div class="problem_container">
-        <div class="problem_header">
-            <p class="problem_title"> {{ title }} </p>
-            <div class="problem_cost"> {{ cost }} </div>
-        </div>
+	<div class="problem_container">
+		<div class="problem_header">
+			<p class="problem_title"> {{ title }} </p>
+			<div class="problem_cost"> {{ cost }} </div>
+		</div>
 
-        <div class="problem_body">
-            <div v-if="description" v-html="description"></div>
+		<div class="problem_body">
+			<div v-if="description" v-html="description"></div>
 			<component :is="dynamicDescription" v-if="!description" :problem-params="variantParams" />
-            <img v-if="image" class="problem_img" :src="image" />
-            <div v-if="problemComponent" ref="problem" class="problem newTypeProblem">
-                <component 
+			<img v-if="image" class="problem_img" :src="image" />
+			<div v-if="problemComponent" ref="problem" class="problem newTypeProblem">
+				<component 
 					:is="dynamicProblemComponent" v-if="!answerGiven && dynamicProblemComponent" v-model="currentAnswer" :xhr-data="xhrData" 
-                    :new-xhr="newXhr"
-                    :confirm-action-result="confirmActionResult" :problem-params="variantParams" @xhrGet="xhrGet"
-                    @showXhrDialog="showXhrDialog" @showConfirmDialog="showConfirmDialog" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
-                <div v-if="answerGiven" class="problem_solution" v-html="solution"></div>
-            </div>
-            <div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
-            <HintContainer v-if="hint.description" :description="hint.description" />
-        </div>
+					:new-xhr="newXhr"
+					:confirm-action-result="confirmActionResult" :problem-params="variantParams" @xhrGet="xhrGet"
+					@showXhrDialog="showXhrDialog" @showConfirmDialog="showConfirmDialog" @xhrRequest="xhrRequest" @updateProblemStatus="updateProblemStatus"/>
+				<div v-if="answerGiven" class="problem_solution" v-html="solution"></div>
+			</div>
+			<div v-else-if="problemContent" class="problem oldTypeProblem" v-html="problemContent.problemHTML" />
+			<HintContainer v-if="hint.description" :description="hint.description" />
+		</div>
 
-        <component :is="dynamicInput" v-if="!answerGiven && dynamicInput" :has-hint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
-        <ProblemResult v-if="answerGiven" :answer="answer" :answer-status="answerStatus" :is-integer="problemInputType=='IntegerTypeInput'" />
-        <XhrDialog v-if="xhrDialogMode" @close="hideXhrDialog"> {{ xhrDialogContent }} </XhrDialog>
-        <ConfirmDialog v-if="confirmDialogMode" :params="confirmDialogParams" @confirmAction="confirmAction"></ConfirmDialog>
-    </div>
+		<component :is="dynamicInput" v-if="!answerGiven && dynamicInput" :has-hint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
+		<ProblemResult v-if="answerGiven" :answer="answer" :answer-status="answerStatus" :is-integer="problemInputType=='IntegerTypeInput'" />
+		<XhrDialog v-if="xhrDialogMode" @close="hideXhrDialog"> {{ xhrDialogContent }} </XhrDialog>
+		<ConfirmDialog v-if="confirmDialogMode" :params="confirmDialogParams" @confirmAction="confirmAction"></ConfirmDialog>
+	</div>
 </template>
 
 <script>
@@ -33,117 +33,117 @@ import ProblemResult from './components/ProblemResult.vue'
 import HintContainer from './components/HintContainer.vue'
 
 export default {
-    components: {
-        ProblemResult,
-        HintContainer,
-    },
+	components: {
+		ProblemResult,
+		HintContainer,
+	},
 
 	props: {
-        answerStatus: {default: false},
-        answerGiven: {default: false},
-        answer: {default: ''},
-        solution: {default: ''},
-        variant: {default: null},
-        title: {default: ''},
-        cost: {default: 0},
-        hint: {default: null },
-        description: {default: ''},
-        image: {default: null},
-        problemComponent: {default: null},
+		answerStatus: {default: false},
+		answerGiven: {default: false},
+		answer: {default: ''},
+		solution: {default: ''},
+		variant: {default: null},
+		title: {default: ''},
+		cost: {default: 0},
+		hint: {default: null },
+		description: {default: ''},
+		image: {default: null},
+		problemComponent: {default: null},
 		problemDescription: {default: null},
-        problemContent: {default: null},
-        variantParams: {default: '' },
-        problemInputType: {default: 'InteractiveTypeInput'},
-    },
+		problemContent: {default: null},
+		variantParams: {default: '' },
+		problemInputType: {default: 'InteractiveTypeInput'},
+	},
 
 	data() {
-        return {
-            newXhr: false,
-            xhrDialogMode: false,
-            xhrDialogContent: '',
-            confirmDialogMode: false,
-            confirmDialogParams: {},
-            dynamicInput: this.problemInputType ? () => import(`./components/${this.problemInputType}.vue`) : undefined,
-            dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
+		return {
+			newXhr: false,
+			xhrDialogMode: false,
+			xhrDialogContent: '',
+			confirmDialogMode: false,
+			confirmDialogParams: {},
+			dynamicInput: this.problemInputType ? () => import(`./components/${this.problemInputType}.vue`) : undefined,
+			dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
 			dynamicDescription: () => import(`../../../static/problemModules/${this.problemDescription ? this.problemDescription : this.problemComponent}/description.vue`),
-            currentAnswer: '',
-            xhrData: undefined,
-            confirmActionResult: undefined,
-        }
-    },
+			currentAnswer: '',
+			xhrData: undefined,
+			confirmActionResult: undefined,
+		}
+	},
 
-    head() {
-        return {
-            link: [{
-                rel: 'stylesheet',
-                href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
-                }
-            ]
-        }
-    },
+	head() {
+		return {
+			link: [{
+				rel: 'stylesheet',
+				href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
+				}
+			]
+		}
+	},
 
 	watch: {
-        variantParams(newValue) {
-            console.log('variant params changed!', newValue)
-        },
-        title(newValue) {
-            console.log('title changed', newValue)
-        }
-    },
+		variantParams(newValue) {
+			console.log('variant params changed!', newValue)
+		},
+		title(newValue) {
+			console.log('title changed', newValue)
+		}
+	},
 
 	mounted() {
 		console.log(this.problemDescription)
-        console.log(this.variantParams)
-    },
-    
-    methods: {
-        xhrGet() {
-            this.newXhr = false
-        },
-        showConfirmDialog(params) {
-            console.log('show confirm dialog!', params)
-            this.confirmDialogMode = true
-            this.confirmDialogParams = params
-        },
-        confirmAction(status) {
-            console.log('confirmAction !')
-            this.confirmDialogMode = false
-            this.confirmActionResult = status
-            setTimeout(function(){this.confirmActionResult = undefined}.bind(this), 10)
-        },
-        showXhrDialog(content) {
-            console.log('show xhr dialog')
-            this.xhrDialogMode = true
-            this.xhrDialogContent = content
-        },
-        hideXhrDialog() {
-            this.xhrDialogMode = false
-        },
-        async sendAnswer(integerAnswer=false) {
-            console.log('send answer!')
-            let answer
-            if (integerAnswer)
-                answer = integerAnswer
-            else {
-                answer = this.currentAnswer
-            }
-            let solution
-            try {
-                solution = this.$refs.problem.innerHTML.replace(/input-save-value/g, 'value')
-            }
-            catch {
-                solution = ''
-            }
-            await this.$axios.$post('/api/check_answer', {variant: this.variant, answer, solution})
-            this.$emit('updateProblemStatus')
-        },
-        async getHint(){
-            const response = await this.$axios.$post('/api/get_hint', {variant: this.variant})
-            console.log(response)
-            if (response.status)
-                this.$emit('updateHint', response.hint)
-        },
-        async xhrRequest(xhrParams = {}) {
+		console.log(this.variantParams)
+	},
+	
+	methods: {
+		xhrGet() {
+			this.newXhr = false
+		},
+		showConfirmDialog(params) {
+			console.log('show confirm dialog!', params)
+			this.confirmDialogMode = true
+			this.confirmDialogParams = params
+		},
+		confirmAction(status) {
+			console.log('confirmAction !')
+			this.confirmDialogMode = false
+			this.confirmActionResult = status
+			setTimeout(function(){this.confirmActionResult = undefined}.bind(this), 10)
+		},
+		showXhrDialog(content) {
+			console.log('show xhr dialog')
+			this.xhrDialogMode = true
+			this.xhrDialogContent = content
+		},
+		hideXhrDialog() {
+			this.xhrDialogMode = false
+		},
+		async sendAnswer(integerAnswer=false) {
+			console.log('send answer!')
+			let answer
+			if (integerAnswer)
+				answer = integerAnswer
+			else {
+				answer = this.currentAnswer
+			}
+			let solution
+			try {
+				solution = this.$refs.problem.innerHTML.replace(/input-save-value/g, 'value')
+			}
+			catch {
+				solution = ''
+			}
+			await this.$axios.$post('/api/check_answer', {variant: this.variant, answer, solution})
+			this.$emit('updateProblemStatus')
+		},
+		async getHint(){
+			const response = await this.$axios.$post('/api/get_hint', {variant: this.variant})
+			console.log(response)
+			if (response.status)
+				this.$emit('updateHint', response.hint)
+		},
+		async xhrRequest(xhrParams = {}) {
 			const sendUrl = xhrParams.sendUrl ? xhrParams.sendUrl : '/api/xhr'
 			const config = xhrParams.config ? xhrParams.config : {'Content-Type': "multipart/form-data"}
 			const fileList = xhrParams.xhrFiles ? xhrParams.xhrFiles : []
@@ -160,49 +160,49 @@ export default {
 			for (const xhrFile of fileList) {
 				dataToSend.append(xhrFile.title, xhrFile.content)
 			}
-			dataToSend.append('solution', solution)
 			console.log(dataToSend)
-            await this.$axios.$post(sendUrl, dataToSend, config)
-                .then((resp) => {
-                    console.log('xhrData: ', resp)
-                    this.$emit('updateProblemStatus')
-                    setTimeout(function(){}, 10)
-                    console.log('params: ', this.variantParams)
-                    console.log('title: ', this.title)
-                    this.xhrData = resp
-                    this.newXhr = true
-                })
-        },
-        updateProblemStatus() {
-            console.log('update problem status!')
-            this.$emit('updateProblemStatus')
-        }
-    },
+			dataToSend.append('solution', solution)
+			await this.$axios.$post(sendUrl, dataToSend, config)
+				.then((resp) => {
+					console.log('xhrData: ', resp)
+					this.$emit('updateProblemStatus')
+					setTimeout(function(){}, 10)
+					console.log('params: ', this.variantParams)
+					console.log('title: ', this.title)
+					this.xhrData = resp
+					this.newXhr = true
+				})
+		},
+		updateProblemStatus() {
+			console.log('update problem status!')
+			this.$emit('updateProblemStatus')
+		}
+	},
 }
 </script>
 
 <style scoped>
 
 .problem {
-    user-select: none;
-    -webkit-user-select: none;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .problem_solution {
-    display: flex;
-    pointer-events: none;
-    display: inline-flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	pointer-events: none;
+	display: inline-flex;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
 }
 
 .newTypeProblem {
-    margin-top: 50px;
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+	margin-top: 50px;
+	width: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .problem_container{
@@ -226,7 +226,7 @@ export default {
 	justify-content: space-between; 
 	display: inline-flex;
 	align-self: stretch;
-    
+	
 }
 
 .problem_title {
@@ -251,23 +251,23 @@ export default {
 }
 
 .problem_body {
-    align-self: stretch;
-    padding: 40px;
-    background: white;
-    box-shadow: 12px 12px 14px rgba(0, 0, 0, 0.25);
-    border-radius: 16px;
-    flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    display: flex;
+	align-self: stretch;
+	padding: 40px;
+	background: white;
+	box-shadow: 12px 12px 14px rgba(0, 0, 0, 0.25);
+	border-radius: 16px;
+	flex-direction: column;
+	justify-content: center;
+	gap: 20px;
+	display: flex;
 }
 
 .problem_img{
-    max-height: 512px;
-    width: 60%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    object-fit: contain;
+	max-height: 512px;
+	width: 60%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	object-fit: contain;
 }
 </style>
