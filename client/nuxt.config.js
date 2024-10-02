@@ -157,8 +157,16 @@ export default {
 
   generate: {
     routes() {
-        return axios.get(`${process.env.API}/api/dynamic_routes`).then(res => {
-          return res.data })
+		const problemRoutes = []
+		for (let variantNum = 1; variantNum <= 100; variantNum++) {
+			problemRoutes.push(`/problem/${process.env.TOURNAMENT * 1000 + variantNum}`)
+		}
+		return [...problemRoutes,
+			'/town/1',
+			'/town/2',
+			'/town/3',
+			'/town/4',
+		]
         }
   },
 

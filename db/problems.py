@@ -13,6 +13,7 @@ sys.path.append(project_root)
 from config import config
 
 current_tournament = config['tournament']['version']
+current_problem_num = 1
 
 
 class Town:
@@ -28,6 +29,7 @@ class Town:
 		return town
 	
 	def add_problem(self, problem):
+		global current_problem_num, current_tournament
 		cur.execute("insert into Kvantland.Problem (town, points, name, type_, image, tournament) values (%s, %s, %s, %s, %s, %s) returning problem", 
 			(self.id, problem.points, problem.name, problem.type_id, problem.image, current_tournament))
 		(problem.id, ), = cur.fetchall()
@@ -38,7 +40,9 @@ class Town:
 				description = variant['description']
 			except:
 				description = ''
-			cur.execute("insert into Kvantland.Variant (problem, description, content) values (%s, %s, %s)", (problem.id, description, json.dumps(variant['content'])))	
+			variant_num = current_tournament * 1000 + current_problem_num
+			cur.execute("insert into Kvantland.Variant (variant, problem, description, content) overriding system value values (%s, %s, %s, %s)", (variant_num, problem.id, description, json.dumps(variant['content'])))	
+			current_problem_num += 1
 
 	def add_problems(self, problem_list):
 		for problem in problem_list:
