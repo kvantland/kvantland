@@ -14,38 +14,6 @@ import urllib.request as urllib2
 import urllib.parse
 from urllib.error import HTTPError, URLError
 
-@route('/api/xhr', method='POST')
-def get_xhr_request(db):
-	print()
-	print('===============================')
-	print('xhr_request', file=sys.stderr)
-	resp = {
-		'status': False,
-		'xhr_answer': None,
-	}
-	try:
-		var_id = request.forms.get('variant')
-		solution = request.forms.get('solution')
-		params = json.loads(request.forms.get('xhr_params'))
-		files = request.files
-		params['files'] = files
-		params['solution'] = solution
-	except:
-		return json.dumps(resp)
-	
-	token_status = check_token(request)
-	if token_status['error']:
-		return json.dumps(resp)
-	user_id = token_status['user_id']
-	
-	print('var_id: ', var_id, file=sys.stderr)
-	print('params: ', params)
-	#print(xhr_request(db, user_id, var_id, params), file=sys.stderr)
-	resp['xhr_answer'] = xhr_request(db, user_id, var_id, params)
-	print(resp['xhr_answer'], file=sys.stderr)
-	resp['status'] = True
-	return json.dumps(resp)
-
 
 @route('/api/get_hint', method="POST")
 def get_hint(db):
@@ -403,11 +371,11 @@ def get_old_problem_input_type(typedesc):
 
 	if not(without_buttons):
 		if hint_only and not(hybrid):
-			resp['problem']['inputType'] = 'HintOnlyInput'
+			return 'HintOnlyInput'
 		elif show_default_buttons and not(hybrid):
-			resp['problem']['inputType'] = 'InteractiveTypeInput'
+			return 'InteractiveTypeInput'
 		else:
-			resp['problem']['inputType'] = 'IntegerTypeInput'
+			return 'IntegerTypeInput'
 
 def try_read_file(path):
 	path = Path(__file__).parent / path
@@ -442,74 +410,3 @@ def is_current_tournament(db, var_id):
 	db.execute('select tournament from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s', (var_id,))
 	tourn, = db.fetchall()
 	return tourn[0] == config["tournament"]["version"]
-
-
-def xhr_request(db, user_id, var_id, params):
-	print()
-	print('===========================')
-	print('after xhr request')
-	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
-	(xhr_amount, ), = db.fetchall()
-	if (xhr_amount >= config['xhr']['dead_step']):
-		raise Exception("Слишком много запросов!")
-	db.execute('select Kvantland.Type_.code from Kvantland.Problem join Kvantland.Variant using (problem) join Kvantland.Type_ using (type_) where variant = %s', (var_id,))
-	(type_, ), = db.fetchall()
-	db.execute('select content from Kvantland.Variant where variant = %s', (var_id,))
-	(start_cont, ), = db.fetchall()
-	db.execute('select curr, curr_points from Kvantland.AvailableProblem where variant = %s and student = %s', (var_id, user_id))
-	(curr, points, ), = db.fetchall()
-	if curr:
-		cont = deepcopy(curr)
-		cont['default'] = start_cont
-		cont['points'] = points
-	else:
-		cont = deepcopy(start_cont)
-		cont['default'] = start_cont
-		cont['points'] = points
-	typedesc = get_problem_typedesc(type_)
-	print('xhr_amount: ', xhr_amount)
-	print('cont: ', cont)
-	resp = typedesc.steps(xhr_amount, params, cont)
-	try:
-		if 'points_update' in resp.keys():
-			print('points update request')
-			db.execute('select curr_points from Kvantland.AvailableProblem where variant = %s and student= %s', (var_id, user_id))
-			(current_points, ), = db.fetchall()
-			print('points before update: ', current_points)
-			new_points = current_points + resp['points_update']
-			print('points_update', new_points)
-			if new_points > 0:
-				db.execute('update Kvantland.AvailableProblem set curr_points = %s where variant = %s and student= %s', (new_points, var_id, user_id))
-			else:
-				resp['answer'] = {'message': "Невозможно совершить действие", 'display': True}
-				return resp['answer']
-	except:
-		pass
-	try:
-		if 'extra_points' in resp.keys():
-			extra_points = resp['extra_points']
-			print('extra points in resp: ', extra_points)
-			db.execute('update Kvantland.Student set score=score + %s where student = %s', (extra_points, user_id))
-			db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s', (extra_points, user_id, config["tournament"]["version"]))
-	except:
-		pass
-	try: 
-		db.execute('update Kvantland.AvailableProblem set curr = %s where variant = %s and student= %s', (json.dumps(resp['data_update']), var_id, user_id))
-	except KeyError:
-		pass
-	try: 
-		db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s where variant = %s and student = %s', (resp['answer_correct'], resp['user_answer'], var_id, user_id))
-		partial_solution = 'partial_score' in cont.keys()
-		print('partial solution given: ', partial_solution)
-		if not partial_solution:
-			db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) * %s where student = %s', (var_id, int(resp['answer_correct']), user_id))
-			db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
-	except KeyError:
-		pass
-	try:
-		db.execute('update Kvantland.AvailableProblem set solution=%s where variant = %s and student = %s', (resp['solution'], var_id, user_id))
-	except KeyError:
-		pass
-	if 'answer' in resp.keys():
-		return resp['answer']
-	return ''
