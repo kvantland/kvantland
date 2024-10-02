@@ -301,7 +301,7 @@ def Blocks():
 		})
 		
 	problem_2 = Problem(
-		name='Ассемблирует компайлер',
+		name='Ассемблируем компайлер',
 		points=4,
 		type_='assembling_the_compailer',
 		hint='Обратите внимание, что \(4 = 2^2\) и \(63 = 2^6 - 1\)'
