@@ -20,11 +20,10 @@
 				@updateHint="updateHint" 
 				@updateProblemStatus="updateProblemStatus"/>
 			<SupportInfoContainer />
-			<script>
-				MathJax = {tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},	svg: {fontCache: 'global'}};
-			</script>
 		</div>
 </template>
+
+
 
 <script>
 import ProblemContainer from "../../modules/problem-page/ProblemContainer/ProblemContainer.vue"
@@ -83,16 +82,15 @@ export default {
 				},
 				{
 					body: true,
-					src: '/old-problem-types/confirm_action.js'
+					src: '/old-problem-types/confirm_action.js',
 				},
 				{
-					id: "MathJax-script",
-					src: `https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS_CHTML`,
-					async: true,
-					type: "text/javascript",
 					body: true,
-				},
-			]
+					defer: true,
+					innerHTML: "Promise.resolve().then(()=>{  setTimeout(() => {    MathJax.typesetPromise();  }, 100);})",
+				}
+			],
+			__dangerouslyDisableSanitizers: ['script']
 		}
 	},
 
