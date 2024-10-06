@@ -1,3 +1,12 @@
+class condition(int):
+	def __init__(self, value):
+		self.value = value
+	def __invert__(self):
+		if self.value == 1:
+			return 0
+		return 1
+
+
 def validate(data, answer):
 	try:
 		translation = data['translation']
@@ -19,10 +28,10 @@ def validate(data, answer):
 		
 		vars_amount = len(data['blocks'])
 		for i in range(0, 1 << vars_amount):
-			A = get_nth_bit(i, 0)
-			B = get_nth_bit(i, 1)
-			C = get_nth_bit(i, 2)
-			D = get_nth_bit(i, 3)
+			A = condition(get_nth_bit(i, 0)) # жарко
+			B = condition(get_nth_bit(i, 1)) # светит солнце
+			C = condition(get_nth_bit(i, 2)) # дует ветер 
+			D = condition(get_nth_bit(i, 3)) # идёт дождь
 			can_go_out = False
 			for variant in data['correct']:
 				result = eval(variant)
@@ -35,6 +44,7 @@ def validate(data, answer):
 			except:
 				return False
 			print(expression, ': ', A, B, C, D, ': ', user_result)
+			print()
 			if user_result != can_go_out:
 				return False
 		return True
