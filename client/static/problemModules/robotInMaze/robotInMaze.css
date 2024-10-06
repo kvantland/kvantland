@@ -133,14 +133,14 @@ svg {
 	text-anchor: middle;
 }
 
-.button_area {
+.problem_body .button_area {
 	display: inline-flex;
 	flex-direction: row;
 	gap: 40px;
 	align-self: center;
 }
 
-.button_area .button {
+.problem_body .button_area .button {
 	display: inline-flex;
 	flex-direction: row;
 	gap: 10px;
