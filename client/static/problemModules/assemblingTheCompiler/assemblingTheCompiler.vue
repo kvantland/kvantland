@@ -15,11 +15,13 @@
 				<div class="expression">
 					<p>(</p>
 					<div class="first_input input">
-						<input maxlength="1" @keydown="isCorrectValue(blockNum, 'firstInputValue', $event)" :value="block.firstInputValue">
+						<input maxlength="1" @keydown="isCorrectValue(blockNum, 'firstInputValue', $event)" :value="block.firstInputValue" 
+						:input-save-value="block.firstInputValue">
 					</div>
 					<p>,</p>
 					<div class="second_input input">
-						<input maxlength="1" @keydown="isCorrectValue(blockNum, 'secondInputValue', $event)"/>
+						<input maxlength="1" @keydown="isCorrectValue(blockNum, 'secondInputValue', $event)" :value="block.secondInputValue"
+						:input-save-value="block.secondInputValue"/>
 					</div>
 					<p>)</p>
 				</div>
