@@ -75,7 +75,7 @@ def validate(data, answer):
 				if block_type == 'Move':
 					operands[second_field] = operands[first_field]
 
-				print(block_type, first_field, second_field, 'result: ', f'A={operands['A']}', f'B={operands['B']}', f'C={operands['C']}', f'D={operands['D']}')
+				# print(block_type, first_field, second_field, 'result: ', f'A={operands['A']}', f'B={operands['B']}', f'C={operands['C']}', f'D={operands['D']}')
 
 			print('final: ', operands['A'], default_function_result)
 			if operands['A'] != default_function_result:
