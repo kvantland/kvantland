@@ -34,7 +34,8 @@ export default {
 	recaptcha: {
 		siteKey: process.env.RECAPTCHA_SITE_KEY,
 		version: 2,
-	}
+	},
+	tournamentMode: process.env.MODE || 'private',
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

@@ -23,6 +23,7 @@
 
 		<component :is="dynamicInput" v-if="!answerGiven && dynamicInput" :has-hint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
 		<ProblemResult v-if="answerGiven" :answer="answer" :answer-status="answerStatus" :is-integer="problemInputType=='IntegerTypeInput'" />
+		<ResetButton v-if="answerGiven && $config.tournamentMode === 'test'" @resetProblem="resetProblem"></ResetButton>
 		<XhrDialog v-if="xhrDialogMode" @close="hideXhrDialog"> {{ xhrDialogContent }} </XhrDialog>
 		<ConfirmDialog v-if="confirmDialogMode" :params="confirmDialogParams" @confirmAction="confirmAction"></ConfirmDialog>
 	</div>
@@ -31,11 +32,13 @@
 <script>
 import ProblemResult from './components/ProblemResult.vue'
 import HintContainer from './components/HintContainer.vue'
+import ResetButton from './components/ResetButton.vue';
 
 export default {
 	components: {
 		ProblemResult,
 		HintContainer,
+		ResetButton,
 	},
 
 	props: {
@@ -175,6 +178,10 @@ export default {
 		},
 		updateProblemStatus() {
 			console.log('update problem status!')
+			this.$emit('updateProblemStatus')
+		},
+		async resetProblem() {
+			await this.$axios.post('/api/reset_problem', {variant: this.variant})
 			this.$emit('updateProblemStatus')
 		}
 	},

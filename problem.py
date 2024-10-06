@@ -14,6 +14,22 @@ import urllib.request as urllib2
 import urllib.parse
 from urllib.error import HTTPError, URLError
 
+@route('/api/reset_problem', method="POST")
+def reset_problem(db):
+	print()
+	print('========================')
+	print('reset problem request')
+	if not config['tournament']['test']:
+		return 'not test mode'
+
+	try:
+		variant = json.loads(request.body.read())['variant']
+	except:
+		return 'no variant'
+	
+	db.execute("update Kvantland.AvailableProblem set answer='', solution='', answer_given=DEFAULT, answer_true=null, curr=null, curr_points=null where variant=%s", (variant, ))
+	return 'success'
+
 
 @route('/api/get_hint', method="POST")
 def get_hint(db):
