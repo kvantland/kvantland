@@ -224,7 +224,7 @@ def Algorithms():
 					'Дует ветер': "C",
 					'Идёт дождь': "D",
 					'XOR': " ^ ",
-					'НЕ': "-~",
+					'НЕ': "~",
 					'ИЛИ': " | ",
 					'И': " & ",
 					'(': "(",
@@ -233,8 +233,8 @@ def Algorithms():
 				'componentType': "InnocentAndLogic",
 				'inputType': "InteractiveTypeInput",
 				'correct': [
-					"A & (B & -~(C & D))",
-					"-~A & (B |  -~C) & -~(B & -~C)"
+					"A & (B & ~(C & D))",
+					"~A & (B |  ~C) & ~(B & ~C)"
 				],
 			}
 		})

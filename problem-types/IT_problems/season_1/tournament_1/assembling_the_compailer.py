@@ -7,6 +7,11 @@ def validate(data, answer):
 		def vasya_function(a, b, c):
 			return a - b // 4 + 63 * c
 		
+		M = 2 ** 32
+
+		def safe_result(default_result):
+			return  abs(default_result) % M * (-1 if default_result < 0 else 1)
+		
 		tests = [
 			[1, 0, 0],
 			[0, 4, 0],
@@ -22,7 +27,6 @@ def validate(data, answer):
 			[0, 0, 5],
 			[64, 76, 86],
 			]
-		M = 2 ** 32
 
 		for test in tests:
 			print('test: ', test)
@@ -54,20 +58,24 @@ def validate(data, answer):
 				
 				if block_type == 'Add':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] = (operands[second_field] + operands[first_field]) % M
+						default_result = operands[second_field] + operands[first_field]
+						operands[second_field] = safe_result(default_result)
 				if block_type == 'Sub':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] = (operands[second_field] - operands[first_field]) % M
+						default_result = operands[second_field] - operands[first_field]
+						operands[second_field] = safe_result(default_result)
 				if block_type == 'ShiftLeft':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] = (operands[second_field] * 2 ** operands[first_field]) % M
+						default_result = operands[second_field] * 2 ** operands[first_field]
+						operands[second_field] = safe_result(default_result)
 				if block_type == 'ShiftRight':
 					if operands[second_field] != None and operands[first_field] != None:
-						operands[second_field] = operands[second_field] // ((2 ** operands[second_field]) % M)
+						default_result = operands[second_field] // ((2 ** operands[first_field]) % M)
+						operands[second_field] = safe_result(default_result)
 				if block_type == 'Move':
 					operands[second_field] = operands[first_field]
 
-				print(block_type, first_field, second_field, 'result: ', operands[first_field], operands[second_field])
+				print(block_type, first_field, second_field, 'result: ', f'A={operands['A']}', f'B={operands['B']}', f'C={operands['C']}', f'D={operands['D']}')
 
 			print('final: ', operands['A'], default_function_result)
 			if operands['A'] != default_function_result:
