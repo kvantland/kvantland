@@ -12,9 +12,9 @@
             <img class="image" loading="lazy" :src="`/problem_example_img/${problemInfo.image}`" />
         </div>
 
-        <div class="button_area">
-            <div class="button answer" @click="showAnswer"> Посмотреть ответ </div>
-            <div class="button solution" @click="showSolution"> Посмотреть решение </div>
+        <div v-if="problemInfo.answer || problemInfo.solution" class="button_area">
+            <div v-if="problemInfo.answer" class="button answer" @click="showAnswer"> Посмотреть ответ </div>
+            <div v-if="problemInfo.solution" class="button solution" @click="showSolution"> Посмотреть решение </div>
 	    </div>
 	 </div>
 </template>

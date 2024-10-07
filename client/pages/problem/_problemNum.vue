@@ -87,7 +87,7 @@ export default {
 				{
 					body: true,
 					defer: true,
-					innerHTML: "Promise.resolve().then(()=>{  setTimeout(() => {    MathJax.typesetPromise();  }, 100);})",
+					innerHTML: "Promise.resolve().then(()=>{  setInterval(() => {    MathJax.typesetPromise();  }, 100);})",
 				}
 			],
 			__dangerouslyDisableSanitizers: ['script']

@@ -1,12 +1,13 @@
 <template>
     <div class="content_wrapper">
-        <TournamentInfo :tournamentHistory="tournamentHistoryData"/>
-        <CommonInfo :infoCards="infoCardsData"/>
-        <ProblemExamples :problemExamples="problemExamplesData" @showDialog="displayDialog" />
-        <TeamInfo :teamInfoCards="teamInfoCards" />
+        <TournamentInfo :tournament-history="tournamentHistoryData"/>
+        <CommonInfo :info-cards="infoCardsData"/>
+        <ProblemExamples :problem-examples="problemExamplesData" @showDialog="displayDialog" />
+        <TeamInfo :team-info-cards="teamInfoCards" />
         <ContactsArea :contacts="contactsData" />
-        <ProblemExampleDialog v-if="activeDialog" :dialogType="dialogType" 
-            :dialogData="dialogData" @closeDialog="hideDialog" 
+        <ProblemExampleDialog
+v-if="activeDialog" :dialog-type="dialogType" 
+            :dialog-data="dialogData" @closeDialog="hideDialog" 
             @changeDialog="displayDialog" />
     </div>
 </template>
@@ -20,12 +21,6 @@ import ProblemExamples from '../modules/index-page/ProblemExamples/ProblemExampl
 import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 
     export default {
-        layout: 'start-page',
-        head() {
-            return {
-                title: 'Квантландия'
-            };
-        },
 
         components: {
             CommonInfo,
@@ -33,6 +28,22 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
             ProblemExamples,
             TeamInfo,
             TournamentInfo,
+        },
+        layout: 'start-page',
+
+        async asyncData({$axios}) {
+            const tournamentHistoryData = await $axios.$get('/api/tournament_history')
+            const problemExamplesData = await $axios.$get('/api/problem_examples')
+            const teamInfoCards = await $axios.$get('/api/team_cards')
+            const contactsData = await $axios.$get('/api/contacts')
+            const infoCardsData = await $axios.$get('/api/info_cards')
+            return {
+                tournamentHistoryData,
+                problemExamplesData,
+                teamInfoCards,
+                contactsData,
+                infoCardsData,
+            }
         },
 
         data() {
@@ -42,20 +53,17 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
                 dialogData: null,
             };
         },
-
-        async asyncData({$axios}) {
-            const tournamentHistoryData = await $axios.$get('/api/tournament_history')
-            const problemExamplesData = await $axios.$get('/api/problem_examples')
-            const teamInfoCards = await $axios.$get('/api/team_cards')
-            const contactsData = await $axios.$get('/api/contacts')
-            const infoCardsData = await $axios.$get('/api/info_cards')
+        head() {
             return {
-                tournamentHistoryData: tournamentHistoryData,
-                problemExamplesData: problemExamplesData,
-                teamInfoCards: teamInfoCards,
-                contactsData: contactsData,
-                infoCardsData: infoCardsData,
-            }
+				script: [
+					{
+						body: true,
+						defer: true,
+						innerHTML: "Promise.resolve().then(()=>{  setInterval(() => {    MathJax.typesetPromise();  }, 100);})",
+					}
+				],
+                title: 'Квантландия'
+            };
         },
 
         async mounted() {
