@@ -49,7 +49,10 @@ export default {
 		variant: {default: null},
 		title: {default: ''},
 		cost: {default: 0},
-		hint: {default: null },
+		hint: {
+			type: Object,
+			default() { return {status: true, cost: 1, description: ''} }
+		},
 		description: {default: ''},
 		image: {default: null},
 		problemComponent: {default: null},

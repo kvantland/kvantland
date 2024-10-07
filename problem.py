@@ -51,6 +51,10 @@ def get_hint(db):
 	user_id = token_status['user_id']
 	
 	try:
+		db.execute('select hint_taken from Kvantland.AvailableProblem where student=%s and variant=%s', (user_id, variant, ))
+		(hint_taken, ), = db.fetchall()
+		if hint_taken:
+			return json.dumps(resp)
 		db.execute('''select Kvantland.Hint.content, Kvantland.Hint.cost 
 				from Kvantland.Problem join Kvantland.Variant using (problem)
 			 	join Kvantland.Hint using (problem) where variant = %s''', (variant,))
@@ -177,7 +181,7 @@ def get_problem_data(db):
 	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 
 	print('hint_taken: ', hint_taken, file=sys.stderr)
-	resp['problem']['hint']['status'] = not(hint_taken) and hint
+	resp['problem']['hint']['status'] = not(hint_taken) and bool(hint)
 	resp['problem']['hint']['cost'] = hint_cost
 	if hint_taken:
 		resp['problem']['hint']['description'] = hint
@@ -205,7 +209,7 @@ def get_problem_data(db):
 			resp['problem']['componentType'] = content['componentType']
 		if 'descriptionType' in content.keys():
 			resp['problem']['descriptionType'] = content['descriptionType']
-		# print('newProblemData: ', resp, file=sys.stderr)
+		print('newProblemData: ', resp, file=sys.stderr)
 		resp['status'] = True
 		return json.dumps(resp)
 	
@@ -254,7 +258,7 @@ def check_user_answer(db):
 		
 	if answer_given:
 		return json.dumps(resp)
-	print('ype: ', type_, file=sys.stderr)
+	print('type: ', type_, file=sys.stderr)
 	typedesc = get_problem_typedesc(type_)
 	print('answer: ', answer, file=sys.stderr)
 	is_answer_correct = typedesc.validate(content, answer)
