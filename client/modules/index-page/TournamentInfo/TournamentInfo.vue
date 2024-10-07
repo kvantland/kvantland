@@ -36,8 +36,8 @@ export default {
 	background: #1E8B93;
 	border-radius: 20px;
 	justify-content: space-between;
-	align-items: center;
 	gap: 60px;
+	box-sizing: border-box;
 	display: inline-flex;
 	flex-direction: column;
 }
@@ -51,6 +51,7 @@ export default {
 
 .tournament img {
 	overflow: hidden;
+	width: 70%;
 	max-width: 733px;
 	box-shadow: 12px 12px 14px rgba(0, 0, 0, 0.25);
 	border-radius: 20px;

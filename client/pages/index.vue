@@ -59,9 +59,9 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
         },
 
         async mounted() {
+			let userInfo
             switch(this.$route.query.request) {
                 case 'registration':
-                    let userInfo
                     try {
                         await this.$axios.$post('/api/registration', {email_confirm_token: this.$route.query.email_confirm_token})
                         .then((resp) => { userInfo = resp })
@@ -75,6 +75,7 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
                             })
                     }
                     catch(e) {console.log('Login error:', e)}
+					break;
                 case 'update_acc':
                     console.log('update acc attempt!')
                     try {
@@ -85,6 +86,7 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
                         })
                     }
                     catch(e) {console.log('Acc update error:', e)}
+					break;
             }
         },
 
