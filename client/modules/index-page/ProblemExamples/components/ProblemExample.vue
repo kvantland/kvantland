@@ -7,7 +7,7 @@
 
         <div class="body">
             <div class="text_container">
-                <p v-html="problemInfo.desc"></p>
+                <div v-html="problemInfo.desc"></div>
             </div>
             <img class="image" loading="lazy" :src="`/problem_example_img/${problemInfo.image}`" />
         </div>
