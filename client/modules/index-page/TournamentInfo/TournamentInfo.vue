@@ -14,7 +14,7 @@
                 </NuxtLink>
             </div>
         </div>
-        <TournamentHistory :tournamentHistory="tournamentHistory" />
+        <TournamentHistory :tournament-history="tournamentHistory" />
     </div>
 </template>
 
@@ -22,11 +22,11 @@
 import TournamentHistory from "./components/TournamentHistory.vue"
 
 export default {
-    props: ['tournamentHistory'],
 
     components: {
         TournamentHistory,
-    }
+    },
+    props: ['tournamentHistory']
 }
 </script>
 
@@ -49,6 +49,7 @@ export default {
 	justify-content: space-between;
 }
 
+
 .tournament img {
 	overflow: hidden;
 	width: 70%;
@@ -59,13 +60,13 @@ export default {
 }
 
 .tournament .text_container {
-	flex: 1 1 0; 
+	max-width: 40%;
+	display: inline-flex;
 	gap: 10px;
 	flex-direction: column; 
 	justify-content: space-between; 
 	align-items: stretch; 
 	display: inline-flex;
-	min-width: 300px;
     align-self: stretch;
 }
 
@@ -93,5 +94,27 @@ export default {
 	border-radius: 10px;
 	align-self: stretch;
 	white-space: nowrap;
+}
+
+@media(max-width: 850px) {
+	.curr_tournament {
+	flex-direction: column;
+	}	
+	.tournament img {
+		width: 100%;
+	}
+	.tournament .text_container {
+		max-width: 100%;
+	}
+}
+
+@media(max-width: 650px) {
+	.tournament.section {
+		padding: 4vw 4vw;
+	}
+	
+	.start_button {
+		font-size: min(24px, 6vw);
+	}
 }
 </style>

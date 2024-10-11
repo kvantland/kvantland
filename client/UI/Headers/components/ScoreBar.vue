@@ -7,7 +7,8 @@
 
 <style scoped>
 .score_bar {
-    padding: 10px min(40px, 2.6vw);
+	height: 44px;
+    padding: 0 min(40px, 2.6vw);
 	box-shadow: 0px 2px 14.800000190734863px rgba(0, 0, 0, 0.20); 
 	border-radius: 10px; 
 	border: 3px #1E8B93 solid; 
@@ -22,5 +23,12 @@
 
 .score {
 	white-space: nowrap;
+}
+
+@media(max-width: 800px) {
+	.score_bar {
+		height: 5vw;
+		font-size: 3vw;
+	}
 }
 </style>

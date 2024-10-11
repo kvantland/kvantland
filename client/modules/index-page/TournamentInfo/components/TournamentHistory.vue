@@ -1,7 +1,7 @@
 <template>
     <div class="history">
         <div class="content">
-            <div class="item" v-for="historyItem in tournamentHistory">
+            <div v-for="(historyItem, num) in tournamentHistory" :key="`history_item_${num}`" class="item">
                 <div class="text_cont">
                     <div class="header"> {{historyItem['event_date']}} </div>
                     <div class="text"> {{historyItem['event_name']}} </div>
@@ -59,7 +59,7 @@ export default {
 
 .history .content .item .text_cont .header {
 	color: white;
-	font-size: max(20px, min(32px, 2.5vw));
+	font-size: max(2vw, min(32px, 2.5vw));
 	font-family: Montserrat Alternates;
 	font-weight: 600;
 }
@@ -69,5 +69,14 @@ export default {
 	font-size: max(15px, min(24px, 1.8vw));
 	font-family: Montserrat;
 	font-weight: 400;
+}
+
+@media(max-width: 800px) {
+	.history .content .item .text_cont .header {
+		font-size: 1.5vw;
+	}
+	.history .content .item .text_cont .text {
+		font-size: 1.4vw;
+	}
 }
 </style>

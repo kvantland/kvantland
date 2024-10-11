@@ -2,7 +2,8 @@
     <div class="nav">
         <img class="left_arrow" src="/icons/left_arrow.svg" @click="showPrevProblem"/>
         <div class="pages">
-            <div v-for="(page, num) in pageAmount" 
+            <div
+				v-for="(_, num) in pageAmount"  :key="`problem_example_${num}`"
                 :class="num == selectedNum ? 'selected page' : 'page'" :num="num"></div>
         </div>
         <img class="right_arrow" src="/icons/right_arrow.svg" @click="showNextProblem"/>
@@ -15,12 +16,12 @@ export default {
 
     methods: {
         showPrevProblem() {
-            let curNum =  ((this.selectedNum - 1) + this.pageAmount) % this.pageAmount
+            const curNum =  ((this.selectedNum - 1) + this.pageAmount) % this.pageAmount
             this.$emit('changeProblem', curNum)
         },
 
         showNextProblem() {
-            let curNum =  ((this.selectedNum + 1) + this.pageAmount) % this.pageAmount
+            const curNum =  ((this.selectedNum + 1) + this.pageAmount) % this.pageAmount
             this.$emit('changeProblem', curNum)
         }
     }
@@ -60,5 +61,11 @@ export default {
 	height: 20px; 
 	border-radius: 4px; 
 	border: 2px #1E8B93 solid;
+}
+
+@media(max-width: 600px) {
+	.nav .pages {
+		gap: 2vw;
+	}
 }
 </style>

@@ -43,4 +43,14 @@ export default {
     column-gap: 40px;
     row-gap: 30px;
 }
+
+@media(max-width: 900px) {
+	.info_container {
+		height: auto;
+	}
+	.info_container .content {
+		column-gap: 2vw;
+		row-gap: 2vw;
+	}
+}
 </style>

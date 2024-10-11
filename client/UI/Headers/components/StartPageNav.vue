@@ -55,4 +55,9 @@ export default {
 		background: rgba(26.35, 88.38, 102, 0.10);
 	}
 }
+@media(max-width: 800px) {
+	.menu {
+		display: none;
+	}
+}
 </style>

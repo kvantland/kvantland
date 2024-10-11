@@ -65,6 +65,7 @@ export default {
 	align-items: flex-start; 
 	gap: 20px; 
 	display: flex;
+	font-size: 30px;
 }
 
 .page_header {

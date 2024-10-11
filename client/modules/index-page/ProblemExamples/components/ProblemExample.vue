@@ -6,9 +6,7 @@
         </div>
 
         <div class="body">
-            <div class="text_container">
-                <div v-html="problemInfo.desc"></div>
-            </div>
+            <div class="text_container" v-html="problemInfo.desc"></div>
             <img class="image" loading="lazy" :src="`/problem_example_img/${problemInfo.image}`" />
         </div>
 
@@ -57,6 +55,7 @@ export default {
 	font-size: max(30px, min(40px, 2.6vw)); 
 	font-family: Montserrat Alternates; 
 	font-weight: 500;
+	white-space: nowrap;
 }
 
 .problem .cost {
@@ -89,6 +88,7 @@ export default {
 	 gap: 40px; 
 	 display: inline-flex;
      min-height: 298px;
+	 font-size: min(2vw, 20px);
 }
 
 .problem .body .text_container {
@@ -131,5 +131,31 @@ export default {
 	font-size:  max(15px, min(24px, 1.8vw));
 	white-space: nowrap; 
 	font-weight: 600;
+}
+
+@media(max-width: 800px) {
+	.problem .body {
+		padding: 4vw 4vw;
+		min-height: 0px;
+	}
+	.problem .body .text_container {
+		font-size: 1.2vw;
+	}
+	.problem .name {
+		font-size: 3vw;
+	}
+	.problem .cost {
+		font-size: 3vw;
+		padding: 10px 2vw;
+	}
+	.problem { 
+    display: flex;
+	padding: 4vw 4vw; 
+	background: #1E8B93; 
+	border-radius: 20px; 
+	flex-direction: column; 
+	align-items: flex-start; 
+	gap: 40px; 
+	}
 }
 </style>

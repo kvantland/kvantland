@@ -56,7 +56,7 @@ export default {
 
 .contacts_area .text {
 	color: black; 
-	font-size: 20px; 
+	font-size: min(2vw, 20px); 
 	font-weight: 400;
 }
 
@@ -67,4 +67,9 @@ export default {
 	display: inline-flex;
     width: 100%;
 } 
+@media(max-width: 600px) {
+	.contacts_area .button_area {
+		gap: 2vw;
+	}
+}
 </style>

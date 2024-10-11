@@ -73,4 +73,21 @@ export default {
 	color: #1E8B93;
 	font-weight: 600;
 }
+
+@media(max-width: 900px) {
+	.team_container {
+		gap: 3vw;
+	}
+	.team_container .content_box{
+		height: auto;
+		font-size: 1.5vw;
+		padding: 2vw 2vw;
+	}
+	.team_container .content_box .list {
+		font-size: 1.5vw;
+	}
+	.team_container .content_box .list .par .header {
+		font-size: 1.6vw;
+	}
+}
 </style>
