@@ -10,5 +10,6 @@
 	align-items: center; 
 	gap: 20px; 
 	display: inline-flex;
+	height: min(5vw, 44px);
 }
 </style>

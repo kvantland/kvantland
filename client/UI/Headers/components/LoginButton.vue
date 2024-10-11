@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .login_button {
 	text-align: center;
 	padding: 10px 20px;

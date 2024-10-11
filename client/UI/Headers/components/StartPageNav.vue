@@ -1,7 +1,8 @@
 <template>
     <nav class="menu">
-        <div v-for="item in menuItems" :class="`menu_item ${item.id}`" 
-        :key="item.id" @click="scrollToSection(item.id)"> {{ item.title }} </div>
+        <div
+		v-for="item in menuItems" :key="item.id" 
+        :class="`menu_item ${item.id}`" @click="scrollToSection(item.id)"> {{ item.title }} </div>
     </nav>
 </template>
 
@@ -19,17 +20,17 @@ export default {
     },
 
     methods: {
-        async scrollToSection(id) {
+        scrollToSection(id) {
             this.$emit('scrollToSection')
-            let add = document.querySelector('header').getBoundingClientRect().height
-            let sectionTop = document.getElementById(id).getBoundingClientRect().top
+            const add = document.querySelector('header').getBoundingClientRect().height
+            const sectionTop = document.getElementById(id).getBoundingClientRect().top
             window.scrollTo(0,  sectionTop - add + window.pageYOffset)
         }
     },
 }
 </script>
 
-<style>
+<style scoped>
 .menu {
 	justify-content: flex-start; 
 	align-items: center; 

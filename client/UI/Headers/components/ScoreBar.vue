@@ -1,7 +1,7 @@
 <template>
     <div class="score_bar">
-        <p> {{ $auth.user.name }} </p>
-        <p> Счёт: {{ $auth.user.score }} </p>
+        <p class="name"> {{ $auth.user.name }} </p>
+        <p class="score"> Счёт: {{ $auth.user.score }} </p>
     </div>
 </template>
 
@@ -14,9 +14,13 @@
 	justify-content: flex-start; 
 	align-items: center; 
 	gap: min(40px, 2.6vw); 
-	display: flex;
+	display: inline-flex;
     font-family: Montserrat Alternates;
     font-size: 20px;
     font-weight: 500;
+}
+
+.score {
+	white-space: nowrap;
 }
 </style>

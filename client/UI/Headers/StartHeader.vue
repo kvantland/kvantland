@@ -1,6 +1,6 @@
 <template>
     <HeaderContainer ref="Header">
-        <Logo />
+        <Logo/>
         <StartPageNav @scrollToSection="blockHeader" />
         <ButtonArea>
             <AccButton v-show="$auth.loggedIn" />
@@ -19,11 +19,6 @@ import LogoutButton  from './components/LogoutButton.vue'
 import AccButton from './components/AccButton.vue'
 
 export default {
-    data(){
-        return {
-            blockedHeader: false,
-        }
-    },
 
     components: {
         HeaderContainer,
@@ -33,15 +28,16 @@ export default {
         LogoutButton,
         AccButton,
     },
+    data(){
+        return {
+            blockedHeader: false,
+        }
+    },
 
     methods: {
         blockHeader() {
-            this.$refs['Header'].blocked = true
+            this.$refs.Header.blocked = true
         },
     },
 }
 </script>
-
-<style>
-@import "../../assets/css/header.css"
-</style>

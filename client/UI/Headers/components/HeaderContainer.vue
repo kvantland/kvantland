@@ -14,6 +14,13 @@ export default {
         }
     },
 
+    mounted() {
+        window.addEventListener('scroll', this.scrollHeader)
+    },
+    destroyed() {
+        window.removeEventListener('scroll', this.scrollHeader)
+    },
+
     methods: {
         scrollHeader(){
             if (!this.blocked) {
@@ -26,23 +33,16 @@ export default {
                 this.blocked = false
             this.topScrolled = document.documentElement.scrollTop
         },
-    },
-
-    mounted() {
-        window.addEventListener('scroll', this.scrollHeader)
-    },
-    destroyed() {
-        window.removeEventListener('scroll', this.scrollHeader)
     }
 }
 </script>
 
-<style>
+<style scoped>
 header {
+	width: 100%;
 	-webkit-user-select: none;
 	user-select: none;
 	background-color: white;
-	width: 100%;
 	box-sizing: border-box;
 	position: fixed;
 	padding: 30px max(40px, min(5vw, 80px));
@@ -60,4 +60,4 @@ header.up {
 header.down {
 	transform: translate(0, -100%);
 }
-</style>
+</style> 

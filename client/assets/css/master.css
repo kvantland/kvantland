@@ -1,9 +1,5 @@
 @charset "UTF-8";
 
-html {
-	min-width: 916px;
-}
-
 @font-face {
 	font-family: "Montserrat";
 	font-weight: 300;
@@ -66,7 +62,6 @@ html {
 
 html {
     font-family: Montserrat;
-	height: 100%;
 }
 
 main, nav {
@@ -76,8 +71,6 @@ main, nav {
 body {
 	margin: 0;
 	padding: 0;
-	width: 100%;
-	height: 100%;
 }
 
 body * {

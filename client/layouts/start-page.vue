@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="start_page_layout">
         <StartHeader />
         <Nuxt />
         <InfoFooter/>

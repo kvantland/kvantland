@@ -1,23 +1,16 @@
 <template>
-    <NuxtLink to="/acc/previewInfo">
-        <div class="acc_button_container">
-        <img class="acc_button_image" src="/icons/acc.svg" />
-        </div>
+    <NuxtLink to="/acc/previewInfo" style="height: 100%;">
+        <div class="acc_button_container"> </div>
     </NuxtLink>
 </template>
 
 <style>
-.acc_button_image {
-	width: 70px; 
-	height: 44px;
-}
-
 .acc_button_container {
-	display: flex;
-	width: 60px;
-	height: 44px;
+	height: 100%;
+	width: min(7vw, 60px);
+	background-size: min(60px, 7vw) auto;
 	border-radius: 10px; 
-	background-color: rgba(0, 0, 0, 0);
+	background-image: url("/icons/acc.svg");
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25)
 }
 </style>
