@@ -236,6 +236,7 @@ export default {
 	justify-content: space-between; 
 	display: inline-flex;
 	align-self: stretch;
+	align-items: center;
 	
 }
 
@@ -279,5 +280,19 @@ export default {
 	margin-left: auto;
 	margin-right: auto;
 	object-fit: contain;
+}
+
+@media(max-width: 800px) {
+	.problem_body {
+		font-size: 12px;
+	}
+	.problem_cost {
+		height: 23px;
+		font-size: 12px;
+		padding: 4px 10px;
+	}
+	.problem_name {
+		font-size: 14px;
+	}
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
 <nav class="breadcrumbs">
-    <template v-for="item in crumbs">
-        <NuxtLink :to="item.link"> {{ item.name }} </NuxtLink>
-        <div class="between">
+    <template v-for="(item, num) in crumbs">
+        <NuxtLink :key="`crumb_${num}`" :to="item.link"> {{ item.name }} </NuxtLink>
+        <div :key="`between_arrows_${num}`" class="between">
             <img src="/icons/breadcrumbs.svg" />
             <img src="/icons/breadcrumbs.svg" />
         </div>
@@ -35,5 +35,14 @@ nav.breadcrumbs {
 .between img {
     max-width: 16.8px;
     height: max(15px, min(1.8vw, 24px)); 
+}
+
+@media(max-width: 800px) {
+	nav.breadcrumbs {
+		font-size: 14px;
+	}
+	.between img {
+		height: 8px;
+	}
 }
 </style>
