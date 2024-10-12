@@ -84,3 +84,9 @@
         opacity: 0.4;
     }
 }
+
+@media (max-width: 800px) {
+	.game_plot {
+		width: 90%;
+	}
+}

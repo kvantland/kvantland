@@ -1,14 +1,14 @@
 <template>
-    <div class="contacts_area" id="contacts">
+    <div id="contacts" class="contacts_area">
         <p class="page_header"> Будем на связи </p>
         <p class="text"> В наших социальных сетях мы регулярно публикуем 
                         интересные новости о проекте, анонсы ближайших событий и 
                         нестандартные задачки для всех!  </br></br>  
                         Присоединяйтесь и будете всегда в курсе событий! </p>
         <div class="button_area">
-            <ContactButton v-for="contact in contacts" :contactInfo="contact" :key="contact.id"/>
+            <ContactButton v-for="contact in contacts" :key="contact.id" :contact-info="contact"/>
         </div>
-            <p> Адрес техподдержки: 
+            <p class="text"> Адрес техподдержки: 
                 <NuxtLink  to="supportEmail.link" target="_blank"> {{ supportEmail.title }} </NuxtLink>
             </p>
     </div>
@@ -18,16 +18,16 @@
 import ContactButton from "./components/ContactButton.vue"
 
 export default {
-    props: ['contacts'],
     
     components: {
         ContactButton,
     },
+    props: ['contacts'],
 
     computed: {
         supportEmail() {
             try {
-                let email = this.contacts.filter((contact) => contact.id == 'email')[0].source_link
+                const email = this.contacts.filter((contact) => contact.id == 'email')[0].source_link
                 return { link: email, title: email.split(':')[1]}
             }
             catch {
@@ -67,9 +67,18 @@ export default {
 	display: inline-flex;
     width: 100%;
 } 
-@media(max-width: 600px) {
+@media(max-width: 800px) {
 	.contacts_area .button_area {
 		gap: 2vw;
+	}
+	.page_header {
+		font-size: 24px;
+	}
+	.contacts_area {
+		gap: 16px;
+	}
+	.contacts_area .text {
+		font-size: 14px;
 	}
 }
 </style>

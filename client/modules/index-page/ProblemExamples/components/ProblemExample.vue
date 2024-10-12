@@ -135,27 +135,31 @@ export default {
 
 @media(max-width: 800px) {
 	.problem .body {
-		padding: 4vw 4vw;
+		padding: 16px;
 		min-height: 0px;
+		flex-direction: column;
+		gap: 8px;
 	}
 	.problem .body .text_container {
-		font-size: 1.2vw;
+		font-size: 12px;
 	}
 	.problem .name {
-		font-size: 3vw;
+		font-size: 14px;
 	}
 	.problem .cost {
-		font-size: 3vw;
-		padding: 10px 2vw;
+		font-size: 12px;
+		padding: 4px 10px;
+		border-width: 1px;
+		border-radius: 4px;
 	}
 	.problem { 
-    display: flex;
-	padding: 4vw 4vw; 
-	background: #1E8B93; 
-	border-radius: 20px; 
-	flex-direction: column; 
-	align-items: flex-start; 
-	gap: 40px; 
+		display: flex;
+		padding: 16px; 
+		background: #1E8B93; 
+		border-radius: 20px; 
+		flex-direction: column; 
+		align-items: flex-start; 
+		gap: 10px; 
 	}
 }
 </style>

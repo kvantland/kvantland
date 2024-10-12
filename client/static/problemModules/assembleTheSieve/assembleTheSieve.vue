@@ -7,7 +7,7 @@
 				:class="[codeBlock.type, 'block']"
 				 :src="`/problem_assets/assemble_the_sieve/block_${codeBlock.num}.svg`"
 				@mousedown="moveFromAnswerArea(codeBlock.num, $event)" 
-				@touchstart="moveFromAnswerArea(codeBlock.num, $event.touches[0])"/>
+				@touchstart="moveFromAnswerArea(codeBlock.num, $event)"/>
 		</div>
 		<div class="start_area">
 			<img 
@@ -16,7 +16,7 @@
 				:class="[codeBlock.type, 'block']"
 				:src="`/problem_assets/assemble_the_sieve/block_${codeBlock.num}.svg`"
 				@mousedown="moveFromStartArea(codeBlock.num, $event)" 
-				@touchstart="moveFromStartArea(codeBlock.num, $event.touches[0])" />
+				@touchstart="moveFromStartArea(codeBlock.num, $event)" />
 		</div>
 		<img 
 			v-if="targetBlock" :class="['block', 'target_block', targetBlock.type]" 
@@ -64,6 +64,13 @@ export default {
 		document.addEventListener('touchmove', this.drag, {passive: false})
 		document.addEventListener('touchend', this.endDrag)
 		document.addEventListener('mouseup', this.endDrag)
+	},
+
+	destroyed() {
+		document.removeEventListener('mousemove', this.drag, {passive: false})
+		document.removeEventListener('touchmove', this.drag, {passive: false})
+		document.removeEventListener('touchend', this.endDrag)
+		document.removeEventListener('mouseup', this.endDrag)
 	},
 
 	methods: {
@@ -162,6 +169,9 @@ export default {
 		},
 
 		moveFromStartArea(blockNum, event) {
+			if (event.touches) {
+				event.preventDefault()
+			}
 			event.preventDefault()
 			this.targetBlock = {num: blockNum, type: 'usual'}
 			const newStartAreaBlocks = []
@@ -171,6 +181,9 @@ export default {
 				}
 			}
 			this.startAreaBlocks = newStartAreaBlocks
+			if (event.touches) {
+				event = event.touches[0]
+			}
 			this.startDrag(event)
 		},
 
@@ -189,6 +202,10 @@ export default {
 		},
 
 		startDrag(event) {
+			if (event.touches) {
+				event.preventDefault()
+			}
+			console.log('start drag', event)
 			const x = event.clientX
 			const y = event.clientY
 			this.dragMode = true
@@ -196,6 +213,7 @@ export default {
 		},
 
 		drag(event) {
+			console.log('drag', event)
 			if (!this.dragMode) {
 				return
 			}

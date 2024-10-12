@@ -12,4 +12,10 @@
 	display: inline-flex;
 	height: min(5vw, 44px);
 }
+@media(max-width: 800px) {
+	.button_area {
+		height: 30px;
+		gap: 10px;
+	}
+}
 </style>

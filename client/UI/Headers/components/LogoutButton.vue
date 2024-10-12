@@ -49,4 +49,10 @@ export default {
 	font-weight: 600;
 	cursor: pointer;
 }
+@media(max-width: 800px) {
+	.logout_button {
+		border-radius: 4px;
+		font-size: 14px;
+	}
+}
 </style>

@@ -1,24 +1,24 @@
 <template>
-    <div class="content_box" v-if="cardInfo.type == 'personal'">
-        <img class="photo" loading="lazy" :src="`/team_photos/${cardInfo.image}`" />
-        <p class="name"> {{ cardInfo.name }} </p>
-        <p v-html="cardInfo.desc"> </p>
-    </div>
-    <div class="content_box" v-else-if="cardInfo.type == 'list'">
-        <div class="list">
-            <template v-for="team_desc in cardInfo.desc">
-                <div class="par">
-                    <p class="header"> {{ team_desc.title }} </p>
-                    <p v-for="member_name in team_desc.team_members"> {{ member_name }} </p>
-                </div>
-            </template>
-        </div>
-    </div>
+	<div v-if="cardInfo.type == 'personal'" class="content_box">
+		<img class="photo" loading="lazy" :src="`/team_photos/${cardInfo.image}`" />
+		<p class="name"> {{ cardInfo.name }} </p>
+		<p v-html="cardInfo.desc"> </p>
+	</div>
+	<div v-else-if="cardInfo.type == 'list'" class="content_box">
+		<div class="list">
+			<template v-for="team_desc in cardInfo.desc">
+				<div class="par">
+					<p class="header"> {{ team_desc.title }} </p>
+					<p v-for="member_name in team_desc.team_members"> {{ member_name }} </p>
+				</div>
+			</template>
+		</div>
+	</div>
 </template>
 
 <script>
 export default {
-    props: ["cardInfo"]
+	props: ["cardInfo"]
 }
 </script>
 
@@ -26,7 +26,7 @@ export default {
 .team_container .content_box {
 	display: inline-flex;
 	flex-direction: column;
-    align-self: stretch;
+	align-self: stretch;
 	gap: 20px;
 	padding: 30px;
 	height: 516px;
@@ -59,7 +59,6 @@ export default {
 	gap: 20px;
 	height: 100%;
 	justify-content: center;
-	font-size:  max(15px, min(20px, 1.5vw));
 	font-weight: 400;
 }
 
@@ -79,15 +78,24 @@ export default {
 		gap: 3vw;
 	}
 	.team_container .content_box{
+		justify-self: stretch;
+		min-width: 200px;
+		width: 200px;
 		height: auto;
-		font-size: 1.5vw;
-		padding: 2vw 2vw;
+		overflow: visible;
+		align-self: none;
+		font-size: 12px;
+		padding: 16px;
+		margin-bottom: 30px;
+	}
+	.team_container .content_box img {
+		width: 130px;
 	}
 	.team_container .content_box .list {
-		font-size: 1.5vw;
+		font-size: 12px;
 	}
 	.team_container .content_box .list .par .header {
-		font-size: 1.6vw;
+		font-size: 13px;
 	}
 }
 </style>

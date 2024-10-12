@@ -97,8 +97,9 @@ export default {
 }
 
 @media(max-width: 850px) {
-	.curr_tournament {
-	flex-direction: column;
+	.tournament .curr_tournament {
+		flex-direction: column;
+		gap: 16px;
 	}	
 	.tournament img {
 		width: 100%;
@@ -111,10 +112,16 @@ export default {
 @media(max-width: 650px) {
 	.tournament.section {
 		padding: 4vw 4vw;
+		gap: 20px;
 	}
-	
 	.start_button {
-		font-size: min(24px, 6vw);
+		font-size: min(16px, 6vw);
+	}
+	.tournament .text {
+		font-size: 14px;
+	}
+	.tournament .header {
+		font-size: 20px;
 	}
 }
 </style>

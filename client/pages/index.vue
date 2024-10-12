@@ -123,5 +123,14 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 	align-items: flex-start;
 	gap: 60px;
 	display: inline-flex;
+	width: 100%;
+}
+@media(max-width: 801px) {
+	.content_wrapper {
+		gap: 24px;
+		padding: 16px;
+		padding-top: 0;
+		margin-top: 100px;
+	}
 }
 </style>

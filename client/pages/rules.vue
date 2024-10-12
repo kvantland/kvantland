@@ -45,4 +45,11 @@ import RulesInfo from '../modules/rules-page/RulesInfo.vue'
 	display: inline-flex;
 	padding-bottom: 80px;
 }
+@media(max-width: 800px) {
+	.content_wrapper_rules {
+		gap: 24px;
+		padding: 16px;
+		margin-top: 80px;
+	}
+}
 </style>

@@ -209,3 +209,57 @@ select > option {
 .unsuccess_status {
 	color: red;
 }
+
+@media (max-width: 800px) {
+	.program_plot * {
+		font-size: 12px;
+	}
+	.editor_area_buttons  {
+		display: inline-flex;
+		flex-direction: column;
+		gap: 10px;
+		width: 100%;
+	}
+	.file_input label {
+		font-size: 12px;
+		padding: 4px 6px;
+	}
+	.filearea_wrapper {
+		padding: 8px 10px;
+		border-radius: 4px;
+	}
+	.textarea_wrapper textarea {
+		font-size: 14px;
+	}
+	.tries_area {
+		gap: 4px;
+		overflow-x: scroll;
+	}
+	.tries_area p {
+		font-size: 12px;
+	}
+	.tries_area img {
+		height: 14px;
+	}
+	.status span {
+		display: inline-flex;
+		align-items: center;
+	}
+	.select_language select{
+		font-size: 11px;
+		border-radius: 4px;
+		height: 40px;
+	}
+	.select_language::before {
+		font-size: 14px;
+	}
+	.submit_table {
+		overflow-x: scroll;
+	}
+	.submit_table span {
+		padding: 10px 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

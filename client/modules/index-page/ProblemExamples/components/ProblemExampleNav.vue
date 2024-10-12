@@ -30,7 +30,6 @@ export default {
 
 <style scoped>
 .examples_container .nav {
-	height: 53px; 
     width: 100%;
 	justify-content: space-between; 
 	align-items: center; 
@@ -50,8 +49,6 @@ export default {
 }
 
 .nav .page.selected {
-	width: 20px; 
-	height: 20px; 
 	background: #1E8B93;
 	border-radius: 4px;
 }
@@ -64,8 +61,20 @@ export default {
 }
 
 @media(max-width: 600px) {
+	.examples_container .nav {
+		height: auto;
+		margin-top: -4px;
+	}
 	.nav .pages {
 		gap: 2vw;
+	}
+	.nav img {
+		height: 14px;
+		width: 60px;
+	}
+	.nav .page {
+		width: 12px;
+		height: 12px;
 	}
 }
 </style>

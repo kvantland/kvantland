@@ -87,7 +87,7 @@ export default {
 				{
 					body: true,
 					defer: true,
-					innerHTML: "Promise.resolve().then(()=>{  setTimeout(() => {    MathJax.typesetPromise();  }, 100);})",
+					innerHTML: "Promise.resolve().then(()=>{  setTimeout(() => {    MathJax.typesetPromise();  }, 1000);})",
 				}
 			],
 			__dangerouslyDisableSanitizers: ['script']
@@ -137,5 +137,12 @@ export default {
 	width: 100%;
 	padding-left: max(40px, min(5vw, 80px));
 	padding-right: max(40px, min(5vw, 80px));
+}
+@media(max-width: 800px) {
+	.content_wrapper {
+		margin-top: 80px;
+		gap: 10px;
+		padding: 16px;
+	}
 }
 </style>

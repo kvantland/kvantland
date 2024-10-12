@@ -72,11 +72,25 @@ export default {
 }
 
 @media(max-width: 800px) {
+	.history .content .item .text_cont {
+		gap: 8px;
+	}
 	.history .content .item .text_cont .header {
-		font-size: 1.5vw;
+		font-size: 2.2vw;
 	}
 	.history .content .item .text_cont .text {
-		font-size: 1.4vw;
+		font-size: 2.3vw;
+	}
+	.history .content .item .rect {
+		width: 20px;
+		height: 20px;
+		border-radius: 5px;
+	}
+	.history hr {
+		top: -11px;
+	}
+	.history .content .item {
+		gap: 8px;
 	}
 }
 </style>

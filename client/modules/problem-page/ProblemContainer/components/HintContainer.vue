@@ -50,4 +50,23 @@ export default {
 	font-family: Montserrat;
 	font-weight: 500;
 }
+@media(max-width: 800px) {
+	.hint_wrapper {
+		border-radius: 8px;
+		padding: 16px;
+		gap: 10px;
+	}
+	.description {
+		font-size: 12px;
+	}
+	.header .title {
+		font-size: 12px;
+	}
+	.header {
+		gap: 5px;
+	}
+	.hint_icon {
+		height: 18px;
+	}
+}
 </style>

@@ -175,6 +175,13 @@ export default {
 		document.addEventListener('mouseup', this.endDrag)
 	},
 
+	destroyed() {
+		document.removeEventListener('mousemove', this.drag, {passive: false})
+		document.removeEventListener('touchmove', this.drag, {passive: false})
+		document.removeEventListener('touchend', this.endDrag)
+		document.removeEventListener('mouseup', this.endDrag)
+	},
+
 	methods: {
 		startAnimation(commands) {
 			let commandNum = 0

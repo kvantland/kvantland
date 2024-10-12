@@ -27,3 +27,9 @@ text.final_text {
 .item.choiced {
     stroke-width: 3px;
 }
+
+@media (max-width: 800px) {
+	svg {
+		width: 90%;
+	}
+}

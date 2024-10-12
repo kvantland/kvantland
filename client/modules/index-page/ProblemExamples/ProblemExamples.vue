@@ -1,14 +1,16 @@
 <template>
-    <div class="examples_container" id="problemExamples">
-        <p class="page_header"> Примеры задач </p>
-        <div class="content">
-            <ProblemExample v-for="(problem, num) in problemExamples" 
-            v-if="num == currentExampleProblemNum" :problemInfo="problem" 
-            :key="problem.title" :num="num" @showDialog="showDialog" />
-        </div>
-        <ProblemExampleNav :pageAmount="problemAmount" 
-        :selectedNum="currentExampleProblemNum" @changeProblem="updateCurrentProblemNum"/>
-    </div>
+	<div id="problemExamples" class="examples_container">
+		<p class="page_header"> Примеры задач </p>
+		<div class="content">
+			<ProblemExample
+			v-for="(problem, num) in problemExamples"
+			v-if="num == currentExampleProblemNum" :key="problem.title" 
+			:problem-info="problem" :num="num" @showDialog="showDialog" />
+		</div>
+		<ProblemExampleNav
+:page-amount="problemAmount" 
+		:selected-num="currentExampleProblemNum" @changeProblem="updateCurrentProblemNum"/>
+	</div>
 </template>
 
 <script>
@@ -16,37 +18,37 @@ import ProblemExample from "./components/ProblemExample.vue"
 import ProblemExampleNav from "./components/ProblemExampleNav.vue"
 
 export default {
-    props: ['problemExamples'],
 
-    components: {
-        ProblemExample,
-        ProblemExampleNav,
-    },
+	components: {
+		ProblemExample,
+		ProblemExampleNav,
+	},
+	props: ['problemExamples'],
 
-    data() {
-        return {
-            currentExampleProblemNum: 0,
-            dialogType: null,
-            dialogData: null,
-        }
-    },
+	data() {
+		return {
+			currentExampleProblemNum: 0,
+			dialogType: null,
+			dialogData: null,
+		}
+	},
 
-    computed: {
-        problemAmount() {
-            return this.problemExamples.length
-        }
-    },
+	computed: {
+		problemAmount() {
+			return this.problemExamples.length
+		}
+	},
 
-    methods: {
-        updateCurrentProblemNum(curNum) {
-            this.currentExampleProblemNum = curNum
-        },
-        showDialog(dialogType, dialogData) {
-            this.dialogType = dialogType
-            this.dialogData = dialogData
-            this.$emit('showDialog', this.dialogType, this.dialogData)
-        }
-    },
+	methods: {
+		updateCurrentProblemNum(curNum) {
+			this.currentExampleProblemNum = curNum
+		},
+		showDialog(dialogType, dialogData) {
+			this.dialogType = dialogType
+			this.dialogData = dialogData
+			this.$emit('showDialog', this.dialogType, this.dialogData)
+		}
+	},
 }
 </script>
 
@@ -73,5 +75,13 @@ export default {
 	font-size: 40px;
 	font-family: Montserrat Alternates;
 	font-weight: 600;
+}
+@media(max-width: 800px) {
+	.page_header {
+		font-size: 24px;
+	}
+	.examples_container {
+		gap: 16px;
+	}
 }
 </style>

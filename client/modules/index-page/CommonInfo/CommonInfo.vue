@@ -44,13 +44,22 @@ export default {
     row-gap: 30px;
 }
 
-@media(max-width: 900px) {
+@media(max-width: 800px) {
 	.info_container {
+		gap: 16px;
+		width: 100%;
 		height: auto;
 	}
 	.info_container .content {
-		column-gap: 2vw;
-		row-gap: 2vw;
+		width: 100%;
+		overflow-x: scroll;
+		display: inline-flex;
+		gap: 16px;
+		padding-right: 30px;
+		box-sizing: border-box;
+	}
+	.page_header {
+		font-size: 24px;
 	}
 }
 </style>

@@ -41,12 +41,18 @@ export default {
 >>> .bold_text {
 	font-weight: 600;
 }
-@media(max-width: 900px) {
+@media(max-width: 800px) {
 	.content_box {
-		font-size: 2vw;
-		padding: 2vw 2vw;
+		justify-self: stretch;
+		min-width: 195px;
+		width: 195px;
 		height: auto;
-		gap: 3vw;
+		overflow: visible;
+		align-self: none;
+		font-size: 12px;
+		padding: 16px;
+		gap: 16px;
+		margin-bottom: 30px;
 	}
 	.content_box .icon {
 		width: 40%;

@@ -41,4 +41,23 @@ export default {
     grid-column-gap: 25px;
     grid-row-gap: 30px;
 }
+
+@media(max-width: 800px) {
+	.team_container {
+		width: 100%;
+		gap: 16px;
+	}
+	.team_container .page_header {
+		font-size: 24px;
+	}
+	.team_container .content {
+		gap: 16px;
+		align-self: stretch;
+		display: inline-flex;
+		overflow-x: scroll;
+		width: 100%;
+		padding-right: 30px;
+		box-sizing: border-box;
+	}
+}
 </style>

@@ -60,4 +60,9 @@ header.up {
 header.down {
 	transform: translate(0, -100%);
 }
+@media(max-width: 800px) {
+	header {
+		padding: 20px 16px;
+	}
+}
 </style> 

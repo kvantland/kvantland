@@ -69,4 +69,17 @@ export default {
 	font-weight: 600;
 	word-wrap: break-word;
 }
+@media(max-width: 800px) {
+	.support_area {
+		border-radius: 8px;
+		padding: 16px;
+		gap: 10px;
+		font-size: 12px;
+		flex-direction: column;
+	}
+	.support_area .border {
+		width: 100%;
+		box-sizing: border-box;
+	}
+}
 </style>

@@ -18,12 +18,13 @@
 .basement {
 	width: 100%;
 	box-sizing: border-box;
-	padding: 10px min(5vw, 80px) 80px min(5vw, 80px);
+	padding: 10px min(5vw, 80px) 0 min(5vw, 80px);
 	justify-content: space-between; 
 	align-items: center; 
 	display: inline-flex;
 	flex-direction: column;
 	gap: 60px;
+	margin-bottom: 60px;
 }
 
 .basement hr {
@@ -79,6 +80,10 @@
 	}
 	.basement .confidentiality {
 		font-size: 2vw;
+	}
+	.basement {
+		gap: 22px;
+		margin-bottom: 22px;
 	}
 }
 </style>

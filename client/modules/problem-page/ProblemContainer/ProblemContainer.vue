@@ -283,8 +283,13 @@ export default {
 }
 
 @media(max-width: 800px) {
-	.problem_body {
+	.problem {
+		margin-top: 10px;
+	}
+	.problem_container {
+		padding: 16px;
 		font-size: 12px;
+		gap: 10px;
 	}
 	.problem_cost {
 		height: 23px;
@@ -293,6 +298,9 @@ export default {
 	}
 	.problem_name {
 		font-size: 14px;
+	}
+	.problem_body {
+		padding: 16px;
 	}
 }
 </style>

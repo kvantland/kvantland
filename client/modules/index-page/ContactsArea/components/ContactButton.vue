@@ -28,4 +28,9 @@ export default {
 	width: 31.25px; 
 	height: 25px; 
 }
+@media(max-width: 800px) {
+	.contact_button {
+		border-radius: 4px;
+	}
+}
 </style>

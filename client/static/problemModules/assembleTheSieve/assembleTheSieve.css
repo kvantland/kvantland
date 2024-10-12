@@ -57,3 +57,17 @@ img.target_block {
     height: auto;
     align-self: center;
 }
+
+@media (max-width: 800px) {
+	.game_plot {
+		width: 100%;
+		box-sizing: border-box;
+		flex-direction: column;
+	}
+	.start_area {
+		width: 100%;
+	}
+	.answer_area {
+		box-sizing: border-box;
+	}
+}

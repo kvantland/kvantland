@@ -56,6 +56,7 @@
     display: inline-flex;
     flex-direction: row;
     gap: 15px;
+	align-items: center;
 }
 
 .answer_sign {
@@ -84,4 +85,20 @@
 .target_block {
     transform: translate(-50%, -50%);
     position: fixed;
+}
+
+@media (max-width: 800px) {
+	.start_area {
+		width: 100%;
+	}
+	.block_line {
+		width: 100%;
+		overflow-x: scroll;
+	}
+	.answer_sign {
+		font-size: 14px;
+	}
+	.answer_area {
+		min-height: 20px;
+	}
 }

@@ -25,4 +25,13 @@
 	font-family: Montserrat Alternates; 
 	font-weight: 600;
 }
+@media(max-width: 600px) {
+	.logo {
+		width: 34px;
+		height: 34px;
+	}
+	.logo_name {
+		font-size: 16px;
+	}
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="answer_button_wrapper">
         <ConfirmAnswerDialog v-if="confirmMode" @sendAnswer="sendAnswer" @hideConfirmDialog="hideConfirmDialog" />
         <button class="answer_button" type="submit" form="problem_form" @click="showConfirmDialog"> Отправить </button>
     </div>
@@ -51,5 +51,14 @@ export default {
     font-family: Montserrat;
     font-weight: 600;
     word-wrap: break-word;
+}
+@media (max-width: 800px) {
+	.answer_button {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.answer_button_wrapper {
+		width: 100%;
+	}
 }
 </style>
