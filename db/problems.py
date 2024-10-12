@@ -266,7 +266,7 @@ def Algorithms():
 		hint = """Рассмотрите разложение числа \(x\) на простые множители. 
 				Обратите внимание, что для эффективной реализации разложения на
 				простые множители рекомендуется делать \(\mathtt{while}\) \(\mathtt{divisor}^2\) \(<\) \(\mathtt{x}\)
-				(а не \(\mathtt{for}\) \(\mathtt{divisor}\) \(\mathtt{in}\) \(\mathtt{range}(\mathtt{2}, \sqrt{x})\))."""
+				(а не \(\mathtt{for}\) \(\mathtt{divisor}\) \(\mathtt{in}\) \(\mathtt{range}(\mathtt{2}, x)\))."""
 	)
 
 	problem_3.add_variant({
