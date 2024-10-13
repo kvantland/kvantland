@@ -2,8 +2,8 @@
     <div 
         :class="['block', blockData.type, blockData.select ? 'select' : 'not_select']" 
         :block_id="blockData.id"  @mousedown="moveFromAnswerArea(blockData.id, $event)" 
-		@touchstart="moveFromAnswerArea(blockData.id, $event.touches[0])"> 
-		<p>{{ blockData.text }} </p>
+		@touchstart="moveFromAnswerArea(blockData.id, $event)"> 
+		{{ blockData.text }} 
 		<div v-if="blockData.type === 'cycle'" class="insert_zone">
             <answerBlock v-for="block in blockData.children" :key="`answer_block_${block.id}`" 
                 @updateAnswerArea="updateAnswerArea" @updateTargetBlock="updateTargetBlock"

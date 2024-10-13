@@ -45,8 +45,8 @@
 				<p>C помощью команд и цикловой конструкции:</p>
 				<div v-for="(block, blockNum) in commands" :key="`start_area_block_${blockNum}`" :class="['block', block.type]" 
 					@mousedown="moveFromStartArea(block, $event)" 
-					@touchstart="moveFromStartArea(block, $event.touches[0])">
-					<p>{{ block.text }}</p>
+					@touchstart="moveFromStartArea(block, $event)">
+					{{ block.text }}
 					<div v-if="block.type === 'cycle'" class="insert_zone"></div>
 				</div>
 			</div>
@@ -171,17 +171,13 @@ export default {
 	},
 
 	mounted() {
-		document.addEventListener('mousemove', this.drag, {passive: false})
-		document.addEventListener('touchmove', this.drag, {passive: false})
-		document.addEventListener('touchend', this.endDrag)
-		document.addEventListener('mouseup', this.endDrag)
+		document.addEventListener('pointermove', this.drag, {passive: false})
+		document.addEventListener('pointerup', this.endDrag)
 	},
 
 	destroyed() {
-		document.removeEventListener('mousemove', this.drag, {passive: false})
-		document.removeEventListener('touchmove', this.drag, {passive: false})
-		document.removeEventListener('touchend', this.endDrag)
-		document.removeEventListener('mouseup', this.endDrag)
+		document.removeEventListener('pointermove', this.drag, {passive: false})
+		document.removeEventListener('pointerup', this.endDrag)
 	},
 
 	methods: {
@@ -418,8 +414,14 @@ export default {
 		},
 
 		startDrag(event) {
-			const x = event.clientX
-			const y = event.clientY
+			let coordinates = event
+			event.preventDefault()
+			if (event.touches) {
+				coordinates = event.touches[0]
+			}
+			console.log('start drag', event)
+			const x = coordinates.clientX
+			const y = coordinates.clientY
 			this.dragMode = true
 			this.moveAt(x, y)
 		},
@@ -430,16 +432,10 @@ export default {
 			}
 			if (this.targetBlock === undefined)
 				return
-			let x, y
-			if (event.touches) {
-				event.preventDefault()
-				x = event.touches[0].clientX
-				y = event.touches[0].clientY
-			}
-			else {
-				x = event.clientX
-				y = event.clientY
-			}
+			console.log('drag', event)
+			const x = event.clientX
+			const y = event.clientY
+		
 			this.moveAt(x, y)
 			this.updateNearestPlaceToInsert(x, y)
 		},

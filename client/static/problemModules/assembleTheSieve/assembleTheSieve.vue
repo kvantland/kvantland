@@ -20,7 +20,7 @@
 		</div>
 		<img
 			v-if="targetBlock"
-			ref="target" :class="['block', 'target_block', targetBlock.type]" 
+			:class="['block', 'target_block', targetBlock.type]" 
 			:style="`left: ${targetBlock.x}px; top: ${targetBlock.y}px`" 
 			:src="`/problem_assets/assemble_the_sieve/block_${targetBlock.num}.svg`"/>
 	</div>
@@ -72,7 +72,7 @@ export default {
 
 	methods: {
 		autoscroll() {
-			const event = window.event.touches ? window.event.touches[0] : window.event
+			const event = window.event
 			const targetX = event.clientX
 			const targetY = event.clientY
 			const xDiff = 100
@@ -216,7 +216,6 @@ export default {
 			if (this.targetBlock === undefined)
 				return
 			console.log('drag', event)
-			
 			const x = event.clientX
 			const y = event.clientY
 		
