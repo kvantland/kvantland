@@ -4,7 +4,9 @@
             <img class="hint_icon" src="/icons/hint_icon.svg" />
             <p class="title">Подсказка</p>
         </div>
-        <p class="description">{{ description }}</p>
+		<ClientOnly>
+        <div class="description">{{ description }}</div>
+		</ClientOnly>
     </div>
 </template>
 
