@@ -38,4 +38,12 @@ export default {
     justify-content: space-between;
     align-items: center;
 }
+@media(max-width: 800px) {
+	.problem_input {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+		font-size: 12px;
+	}
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="hint_wrapper">
         <ConfirmHintDialog v-if="dialogMode" @hideHintConfirmDialog="hideHintConfirmDialog" @getHint="getHint" :hintCost="hintCost" />
         <button class="hint_button" :title="hintTitle" @click="showConfirmHintDialog"> 
             <img class="hint_icon" src="/icons/hint_icon.svg" />
@@ -66,4 +66,16 @@ export default {
     color: black;
 }
 
+@media(max-width: 800px) {
+	.hint_button {
+		font-size: 20px;
+		width: 100%;
+		box-sizing: border-box;
+		justify-content: center;
+		padding: 6px 8px;
+	}
+	.hint_wrapper {
+		width: 100%;
+	}
+}
 </style>

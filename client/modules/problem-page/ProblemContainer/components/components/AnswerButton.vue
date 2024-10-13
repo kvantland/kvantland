@@ -56,6 +56,8 @@ export default {
 	.answer_button {
 		width: 100%;
 		box-sizing: border-box;
+		padding: 6px 8px;
+		height: auto;
 	}
 	.answer_button_wrapper {
 		width: 100%;

@@ -38,4 +38,12 @@ export default {
     justify-content: flex-end;
     align-items: center;
 }
+@media (max-width: 800px) {
+	.problem_input {
+		width: 100%;
+		box-sizing: border-box;
+		justify-content: stretch;
+		align-self: auto;
+	}
+}
 </style>
