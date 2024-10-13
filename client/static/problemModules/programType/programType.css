@@ -233,7 +233,6 @@ select > option {
 	}
 	.tries_area {
 		gap: 4px;
-		overflow-x: scroll;
 	}
 	.tries_area p {
 		font-size: 12px;
