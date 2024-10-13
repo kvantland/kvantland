@@ -107,6 +107,7 @@ svg {
 	border-radius: 10px;
 	gap: 20px;
 	padding: 20px;
+	box-sizing: border-box;
 }
 
 
@@ -114,7 +115,7 @@ svg {
 .block_num {
 	align-self: center;
 	font-size: 40px;
-	width: 1em;
+	min-width: 1em;
 }
 
 .block_with_num {	
@@ -151,4 +152,18 @@ svg {
 	box-shadow: 4px 4px 10px 0px #00000040;
 	font-family: Montserrat Alternates;
 	cursor: pointer;
+}
+
+@media(max-width: 800px) {
+	.game_plot {
+		margin-top: -30px;
+	}
+	.first_row {
+		flex-direction: column;
+		width: 100%;
+		gap: 10px;
+	}
+	.second_row {
+		flex-direction: column;
+	}
 }

@@ -15,11 +15,12 @@
 				ref="startArea"
 				:class="[codeBlock.type, 'block']"
 				:src="`/problem_assets/assemble_the_sieve/block_${codeBlock.num}.svg`"
-				@mousedown="moveFromStartArea(codeBlock.num, $event)" 
+				@mousedown="moveFromStartArea(codeBlock.num, $event)"
 				@touchstart="moveFromStartArea(codeBlock.num, $event)" />
 		</div>
-		<img 
-			v-if="targetBlock" :class="['block', 'target_block', targetBlock.type]" 
+		<img
+			v-if="targetBlock"
+			ref="target" :class="['block', 'target_block', targetBlock.type]" 
 			:style="`left: ${targetBlock.x}px; top: ${targetBlock.y}px`" 
 			:src="`/problem_assets/assemble_the_sieve/block_${targetBlock.num}.svg`"/>
 	</div>
@@ -60,17 +61,13 @@ export default {
 	},
 
 	mounted() {
-		document.addEventListener('touchmove', this.drag, {passive: false})
-		document.addEventListener('mousemove', this.drag, {passive: false})
-		document.addEventListener('touchend', this.endDrag)
-		document.addEventListener('mouseup', this.endDrag)
+		document.addEventListener('pointermove', this.drag, {passive: false})
+		document.addEventListener('pointerup', this.endDrag)
 	},
 
 	destroyed() {
-		document.removeEventListener('mousemove', this.drag, {passive: false})
-		document.removeEventListener('touchmove', this.drag, {passive: false})
-		document.removeEventListener('touchend', this.endDrag)
-		document.removeEventListener('mouseup', this.endDrag)
+		document.removeEventListener('pointermove', this.drag, {passive: false})
+		document.removeEventListener('pointerup', this.endDrag)
 	},
 
 	methods: {
@@ -172,6 +169,9 @@ export default {
 		},
 
 		moveFromStartArea(blockNum, event) {
+			if (this.dragMode === true) {
+				return
+			}
 			this.targetBlock = {num: blockNum, type: 'usual'}
 			const newStartAreaBlocks = []
 			for (const block of this.startAreaBlocks) {
@@ -180,9 +180,6 @@ export default {
 				}
 			}
 			this.startAreaBlocks = newStartAreaBlocks
-			if (event.touches) {
-				event = event.touches[0]
-			}
 			this.startDrag(event)
 		},
 
@@ -200,13 +197,14 @@ export default {
 		},
 
 		startDrag(event) {
+			let coordinates = event
+			event.preventDefault()
 			if (event.touches) {
-				event.preventDefault()
-				event = event.touches[0]
+				coordinates = event.touches[0]
 			}
 			console.log('start drag', event)
-			const x = event.clientX
-			const y = event.clientY
+			const x = coordinates.clientX
+			const y = coordinates.clientY
 			this.dragMode = true
 			this.moveAt(x, y)
 		},
@@ -217,22 +215,17 @@ export default {
 			}
 			if (this.targetBlock === undefined)
 				return
-			let x, y
-			if (event.touches) {
-				event.preventDefault()
-				x = event.touches[0].clientX
-				y = event.touches[0].clientY
-			}
-			else {
-				x = event.clientX
-				y = event.clientY
-			}
+			console.log('drag', event)
+			
+			const x = event.clientX
+			const y = event.clientY
+		
 			this.moveAt(x, y)
 			this.updateNearestPlaceToInsert(x, y)
 		},
 
-		endDrag() {
-			console.log('end drag')
+		endDrag(event=null) {
+			console.log('end drag', event)
 			if (!this.dragMode) {
 				return
 			}
