@@ -71,6 +71,7 @@
     overflow-x: scroll;
     background-color: #787DED;
     padding: 10px 15px;
+	min-height: 20px;
     padding-right: 50%;
     border-radius: 5px;
     width: 100%;
@@ -94,6 +95,7 @@
 	.block_line {
 		width: 100%;
 		overflow-x: scroll;
+		scrollbar-width: thin;
 	}
 	.answer_sign {
 		font-size: 14px;

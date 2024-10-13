@@ -1,4 +1,5 @@
 <template>
+	<ClientOnly>
 	<div class="description">
 		<div>
 			У Васи сегодня экзамен по программированию, но (вот незадача!) компилятор его любимого языка сломался и не работает! 
@@ -30,6 +31,7 @@
 			</ol>
 		</div>
 	</div>
+	</ClientOnly>
 </template>
 
 <script>

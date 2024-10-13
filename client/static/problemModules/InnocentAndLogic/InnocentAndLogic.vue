@@ -3,17 +3,17 @@
 		<div class="start_area">
 			<div class="main_blocks block_line">
 				<div
-v-for="(blockText, blockNum) in mainBlocks" :key="`main_block_${blockNum}`" class="block main_block"
+				v-for="(blockText, blockNum) in mainBlocks" :key="`main_block_${blockNum}`" class="block main_block"
 				@touchstart="moveFromStartArea(text=blockText, type='main_block', $event)" 
 				@mousedown="moveFromStartArea(text=blockText, type='main_block', $event)"> {{ blockText }} </div>
 			</div>
 			<div class="other_blocks block_line">
 				<div
-v-for="(blockText, blockNum) in logicalBlocks" :key="`logical_block_${blockNum}`" class="block logical_block"
+				v-for="(blockText, blockNum) in logicalBlocks" :key="`logical_block_${blockNum}`" class="block logical_block"
 				@touchstart="moveFromStartArea(text=blockText, type='logical_block', $event)" 
 				@mousedown="moveFromStartArea(text=blockText, type='logical_block', $event)"> {{ blockText }} </div>
 				<div
-v-for="(blockText, blockNum) in syntaxBlocks" :key="`syntax_block_${blockNum}`" class="block syntax_block"
+				v-for="(blockText, blockNum) in syntaxBlocks" :key="`syntax_block_${blockNum}`" class="block syntax_block"
 				@touchstart="moveFromStartArea(text=blockText, type='syntax_block', $event)" 
 				@mousedown="moveFromStartArea(text=blockText, type='syntax_block', $event)"> {{ blockText }} </div>
 			</div>
@@ -22,13 +22,13 @@ v-for="(blockText, blockNum) in syntaxBlocks" :key="`syntax_block_${blockNum}`" 
 			<p class="answer_sign"> Ответ </p>
 			<div ref="answerArea" class="answer_area">
 				<div
-v-for="(block, blockNum) in expression" :key="`expression_block_${blockNum}`" :class="['block', block.type]"
+				v-for="(block, blockNum) in expression" :key="`expression_block_${blockNum}`" :class="['block', block.type]"
 				@touchstart="moveFromAnswerArea(blockNum, $event)"
 				@mousedown="moveFromAnswerArea(blockNum, $event)"> {{ block.text }} </div>
 			</div>
 		</div>
 		<div
-v-if="targetBlock" class="target_block" :class="['block', targetBlock.type]" 
+		v-if="targetBlock" class="target_block" :class="['block', targetBlock.type]" 
 		:style="`left: ${targetBlock.x}px; top: ${targetBlock.y}px`"> {{ targetBlock.text }} </div>
 	</div>
 </template>
@@ -195,12 +195,11 @@ export default {
 		},
 
 		drag(event) {
-			console.log(event)
-			if (event.touches) {
-				event.preventDefault()
-			}
 			if (!this.dragMode) {
 				return
+			}
+			if (event.touches) {
+				event.preventDefault()
 			}
 			if (this.targetBlock === undefined)
 				return

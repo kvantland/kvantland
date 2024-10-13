@@ -60,8 +60,8 @@ export default {
 	},
 
 	mounted() {
-		document.addEventListener('mousemove', this.drag, {passive: false})
 		document.addEventListener('touchmove', this.drag, {passive: false})
+		document.addEventListener('mousemove', this.drag, {passive: false})
 		document.addEventListener('touchend', this.endDrag)
 		document.addEventListener('mouseup', this.endDrag)
 	},
@@ -75,8 +75,9 @@ export default {
 
 	methods: {
 		autoscroll() {
-			const targetX = window.event.clientX
-			const targetY = window.event.clientY
+			const event = window.event.touches ? window.event.touches[0] : window.event
+			const targetX = event.clientX
+			const targetY = event.clientY
 			const xDiff = 100
 			const yDiff = 100
 			let [scrollX, scrollY] = [0, 0]
@@ -96,8 +97,9 @@ export default {
 		},
 
 		inAllowedArea() { // if target object in allowed aarea
-			const targetX = window.event.clientX
-			const targetY = window.event.clientY
+			const event = window.event.touches ? window.event.touches[0] : window.event
+			const targetX = event.clientX
+			const targetY = event.clientY
 			if (targetX < 0 || targetX > window.innerWidth)
 				return false
 			if (targetY < 0 || targetY > window.innerHeight)
@@ -160,6 +162,7 @@ export default {
 		},
 
 		moveAt(x, y) {
+			console.log(x, y)
 			this.autoscroll()
 			this.$set(this.targetBlock, 'x', x)
 			this.$set(this.targetBlock, 'y', y)
@@ -169,10 +172,6 @@ export default {
 		},
 
 		moveFromStartArea(blockNum, event) {
-			if (event.touches) {
-				event.preventDefault()
-			}
-			event.preventDefault()
 			this.targetBlock = {num: blockNum, type: 'usual'}
 			const newStartAreaBlocks = []
 			for (const block of this.startAreaBlocks) {
@@ -188,7 +187,6 @@ export default {
 		},
 
 		moveFromAnswerArea(blockNum, event) {
-			event.preventDefault()
 			this.targetBlock = {num: blockNum, type: 'usual'}
 			const newAnswerAreaBlocks = []
 			for (const block of this.answerAreaBlocks) {
@@ -204,6 +202,7 @@ export default {
 		startDrag(event) {
 			if (event.touches) {
 				event.preventDefault()
+				event = event.touches[0]
 			}
 			console.log('start drag', event)
 			const x = event.clientX
@@ -213,7 +212,6 @@ export default {
 		},
 
 		drag(event) {
-			console.log('drag', event)
 			if (!this.dragMode) {
 				return
 			}
@@ -234,6 +232,7 @@ export default {
 		},
 
 		endDrag() {
+			console.log('end drag')
 			if (!this.dragMode) {
 				return
 			}

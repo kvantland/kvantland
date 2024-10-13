@@ -22,6 +22,7 @@ export default {
 
         showNextProblem() {
             const curNum =  ((this.selectedNum + 1) + this.pageAmount) % this.pageAmount
+			Promise.resolve().then(()=>{ setTimeout(() => {    MathJax.typesetPromise();  }, 100);})
             this.$emit('changeProblem', curNum)
         }
     }

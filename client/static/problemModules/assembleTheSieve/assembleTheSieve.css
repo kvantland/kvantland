@@ -70,4 +70,10 @@ img.target_block {
 	.answer_area {
 		box-sizing: border-box;
 	}
+	.answer_area .block {
+		width: 100%;
+	}
+	img.target_block {
+		width: 70%;
+	}
 }

@@ -146,8 +146,10 @@ export default {
 		async getHint(){
 			const response = await this.$axios.$post('/api/get_hint', {variant: this.variant})
 			console.log(response)
-			if (response.status)
+			if (response.status) {
 				this.$emit('updateHint', response.hint)
+				Promise.resolve().then(()=>{  setTimeout(() => { MathJax.typesetPromise();  }, 100);})
+			}
 		},
 		async xhrRequest(xhrParams = {}) {
 			const sendUrl = xhrParams.sendUrl ? xhrParams.sendUrl : '/api/xhr'

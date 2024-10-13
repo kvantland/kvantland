@@ -85,12 +85,9 @@ export default {
 					src: '/old-problem-types/confirm_action.js',
 				},
 				{
-					body: true,
-					defer: true,
-					innerHTML: "Promise.resolve().then(()=>{  setTimeout(() => {    MathJax.typesetPromise();  }, 1000);})",
+					innerHTML: "Promise.resolve().then(()=>{  setTimeout(() => { MathJax.typesetPromise();  }, 100);})",
 				}
 			],
-			__dangerouslyDisableSanitizers: ['script']
 		}
 	},
 
@@ -124,7 +121,6 @@ export default {
 </script>
 
 <style scoped>
-
 .content_wrapper{
 	margin-top: 130px;
 	box-sizing: border-box;

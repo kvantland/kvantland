@@ -59,7 +59,7 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 					{
 						body: true,
 						defer: true,
-						innerHTML: "Promise.resolve().then(()=>{  setInterval(() => {    MathJax.typesetPromise();  }, 1000);})",
+						innerHTML: "Promise.resolve().then(()=>{ setTimeout(() => {    MathJax.typesetPromise();  }, 1000);})",
 					}
 				],
                 title: 'Квантландия'
