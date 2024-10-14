@@ -1,9 +1,11 @@
 <template>
     <div>
-        <SendToEmailForm v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fieldsValueInfo.email" 
-            :description="sendEmailDescription" :formData="sendEmailData" :apiRequestUrl="sendEMailRequestUrl"/>
-        <AccEditForm :startFieldsValueInfo="fieldsValueInfo" 
-			:fieldsTypeInfo="fieldsTypeInfo" :fieldsErrors="fieldsErrors" 
+        <SendToEmailForm
+			v-if="checkEmailMode" :title="'Подтверждение адреса электронной почты'" :email="fieldsValueInfo.email" 
+            :description="sendEmailDescription" :form-data="sendEmailData" :api-request-url="sendEMailRequestUrl"/>
+        <AccEditForm
+			v-else :start-fields-value-info="fieldsValueInfo" 
+			:fields-type-info="fieldsTypeInfo" :fields-errors="fieldsErrors" 
 			@submitAccForm="submitAccForm" @clearError="clearError"></AccEditForm>
     </div>
 </template>

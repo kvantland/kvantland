@@ -159,4 +159,12 @@ export default {
     border: none;
     font-family: Montserrat;
 }
+
+@media (max-width: 800px) {
+	.content_wrapper {
+		margin-top: 0px;
+		min-height: 100vh;
+		justify-content: start;
+	}
+}
 </style>
