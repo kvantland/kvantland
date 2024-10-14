@@ -10,7 +10,7 @@
                         @clearError="clearRegError" v-model="fields[field.name]" :error="errors[field.name]"/>
                 </FieldsArea>
                 <UserAgreement :error="errors.approval" v-model="fields.approval" @clearError="clearRegError"/>
-                <Captcha :error="errors['captcha']"/>
+                <Captcha :error="errors['captcha']" style="align-self: center;"/>
                 <hr size="1" style="border-width: 1px"/>
                 <SubmitButton :form="id"> Зарегистрироваться </SubmitButton>
             </form>

@@ -1,8 +1,10 @@
 <template>
-    <AuthForm v-if="mode=='auth'" @changeHeaderMode="changeHeaderMode" 
-        @updateErrors="updateLoginInfo" :loginFields="loginFields" :errors="loginErrors" />
-    <RegForm v-else-if="mode=='reg'" @changeHeaderMode="changeHeaderMode" 
-        @updateErrors="updateRegInfo" :regFields="regFields" :errors="regErrors"/>
+    <AuthForm
+		v-if="mode=='auth'" :login-fields="loginFields" 
+        :errors="loginErrors" @changeHeaderMode="changeHeaderMode" @updateErrors="updateLoginInfo" />
+    <RegForm
+		v-else-if="mode=='reg'" :reg-fields="regFields" 
+        :errors="regErrors" @changeHeaderMode="changeHeaderMode" @updateErrors="updateRegInfo"/>
 </template>
 
 <script>
@@ -10,17 +12,17 @@ import AuthForm from "../../modules/login-page/AuthForm.vue"
 import RegForm from "../../modules/login-page/RegForm.vue"
 
 export default {
-    layout: 'forms',
     
     components: {
         AuthForm,
         RegForm,
     },
+    layout: 'forms',
 
-    head() {
-        return {
-            title: 'Квантандия - авторизация',
-        }
+    async asyncData({$axios}) {
+        const loginFieldsData = await $axios.$get('/api/login_fields')
+        const regFieldsData = await $axios.$get('/api/registration_fields')
+        return { loginFields: loginFieldsData, regFields: regFieldsData }
     },
 
     data() {
@@ -31,10 +33,10 @@ export default {
         }
     },
 
-    async asyncData({$axios}) {
-        const loginFieldsData = await $axios.$get('/api/login_fields')
-        const regFieldsData = await $axios.$get('/api/registration_fields')
-        return { loginFields: loginFieldsData, regFields: regFieldsData }
+    head() {
+        return {
+            title: 'Квантандия - авторизация',
+        }
     },
 
     methods: {

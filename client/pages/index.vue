@@ -116,7 +116,6 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 <style scoped>
 .content_wrapper {
 	padding: 0 max(40px, min(5vw, 80px)) 70px max(40px, min(5vw, 80px));
-	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
 	justify-content: center;
@@ -128,9 +127,7 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 @media(max-width: 801px) {
 	.content_wrapper {
 		gap: 24px;
-		padding: 16px;
-		padding-top: 0;
-		margin-top: 100px;
+		padding: 0;
 	}
 }
 </style>

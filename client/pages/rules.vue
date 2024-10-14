@@ -36,7 +36,6 @@ import RulesInfo from '../modules/rules-page/RulesInfo.vue'
 .content_wrapper_rules {
 	width: 100%;
 	padding: 0 min(80px, 5vw);
-	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
 	justify-content: center;
@@ -44,12 +43,13 @@ import RulesInfo from '../modules/rules-page/RulesInfo.vue'
 	gap: 40px;
 	display: inline-flex;
 	padding-bottom: 80px;
+	margin-top: 130px;
 }
 @media(max-width: 800px) {
 	.content_wrapper_rules {
 		gap: 24px;
-		padding: 16px;
-		margin-top: 80px;
+		padding: 0px;
+		margin-top: 0px;
 	}
 }
 </style>

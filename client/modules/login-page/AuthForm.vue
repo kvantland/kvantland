@@ -1,17 +1,19 @@
 <template>
     <div>
-        <SendToEmailForm v-if="pwRecoveryMode"
+        <SendToEmailForm
+		v-if="pwRecoveryMode"
             :title="pwRecovery.title" :description="pwRecovery.description" :readonly="false" :email="pwRecovery.email"
-            :formData="{'email': pwRecovery.email}" :apiRequestUrl="pwRecovery.api" @changeEmail="changeEmail"
-            :remainedTimeToSendProp="pwRecovery.timeToSendAgain">
-            <p @click="backToAuth" class="backToAuthLink"> Авторизоваться </p> 
+            :form-data="{'email': pwRecovery.email}" :api-request-url="pwRecovery.api" :remained-time-to-send-prop="pwRecovery.timeToSendAgain"
+            @changeEmail="changeEmail">
+            <p class="backToAuthLink" @click="backToAuth"> Авторизоваться </p> 
         </SendToEmailForm>
         <Form v-else>
             <FormHeader mode="auth" @changeHeaderMode="changeHeaderMode" />
-            <form method="post" :id="id" @submit.prevent="onSubmitAuthForm">
+            <form :id="id" method="post" @submit.prevent="onSubmitAuthForm">
                 <FieldsArea>
-                    <FormField v-for="field in loginFields" :fieldInfo="field" @clearError="clearError"
-                    :key="field.name" v-model="fields[field.name]" :error="errors[field.name]"/>
+                    <FormField
+					v-for="field in loginFields" :key="field.name" v-model="fields[field.name]"
+                    :field-info="field" :error="errors[field.name]" @clearError="clearError"/>
                 </FieldsArea>
                 <SubmitButton :form="id"> Войти </SubmitButton>
             </form>
@@ -28,6 +30,10 @@
 import FormHeader from './components/FormHeader'
 
 export default {
+
+    components: {
+        FormHeader,
+    },
     props: ['loginFields'],
 
     data() {
@@ -45,10 +51,6 @@ export default {
                 timeToSendAgain: 0,
             },
         }
-    },
-
-    components: {
-        FormHeader,
     },
 
     methods: {
@@ -84,7 +86,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .pwRecoveryLink {
     display: inline-flex;
     text-decoration: underline;

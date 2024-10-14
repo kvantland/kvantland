@@ -21,6 +21,7 @@
     align-items: stretch;
     margin: 0 auto;
     margin-bottom: 100px;
+	box-sizing: border-box;
 }
 .formBody form {
     display: inline-flex;
@@ -34,5 +35,15 @@
     justify-content: center;
     align-items: flex-start;
     display: inline-flex;
+	height: 100%;
+}
+@media (max-width: 800px) {
+	.formBody {
+		width: 100%;
+		gap: 16px;
+	}
+	.formBackground {
+		margin-top: 0px;
+	}
 }
 </style>

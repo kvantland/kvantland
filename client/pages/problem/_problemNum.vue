@@ -133,12 +133,13 @@ export default {
 	width: 100%;
 	padding-left: max(40px, min(5vw, 80px));
 	padding-right: max(40px, min(5vw, 80px));
+	margin-top: 130px;
 }
 @media(max-width: 800px) {
 	.content_wrapper {
-		margin-top: 80px;
+		margin-top: 0px;
 		gap: 10px;
-		padding: 16px;
+		padding: 0px;
 	}
 }
 </style>

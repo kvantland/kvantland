@@ -84,6 +84,7 @@
 	.basement {
 		gap: 22px;
 		margin-bottom: 22px;
+		padding: 0px;
 	}
 }
 </style>

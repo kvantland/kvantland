@@ -72,4 +72,10 @@ export default {
     gap: 20px;
     display: inline-flex;
 }
+@media (max-width: 800px) {
+	.content_wrapper_town {
+		padding: 0px;
+		margin-top: 0px;
+	}
+}
 </style>

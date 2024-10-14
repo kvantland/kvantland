@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .data_preview {
 	display: inline-flex;
 	flex-direction: row;
@@ -61,5 +61,11 @@ export default {
 
 .data_preview .edit {
     cursor: pointer;
+}
+@media (max-width: 800px) {
+	.data_preview {
+		width: 100%;
+		box-sizing: border-box;
+	}
 }
 </style>

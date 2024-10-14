@@ -110,4 +110,9 @@ input:-webkit-autofill {
 	width: 16px;
 	height: 16px;
 }
+@media (max-width: 800px) {
+	.field {
+		min-width: 0px;
+	}
+}
 </style>

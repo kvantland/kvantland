@@ -55,7 +55,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .check_cont {
 	display: inline-flex;
 	justify-content: space-between;
@@ -116,5 +116,10 @@ p.error{
 	color: #B62C5A;
 	font-size: 12px;
 	font-weight: 600;
+}
+@media (max-width: 800px) {
+	.check_cont .label {
+		font-size: 10px;
+	}
 }
 </style>

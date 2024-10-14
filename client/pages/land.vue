@@ -49,5 +49,10 @@ export default {
 	gap: 40px;
 	display: inline-flex;
 }
-
+@media (max-width: 800px) {
+	.content_wrapper_land {
+		padding: 0px;
+		margin-top: 0px;
+	}
+}
 </style>

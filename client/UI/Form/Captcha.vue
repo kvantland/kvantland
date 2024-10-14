@@ -2,7 +2,7 @@
     <div class="captcha_with_error">
         <div class="g-recaptcha-outer">
             <div class="g-recaptcha-inner">
-                <recaptcha />
+                <recaptcha class="recaptcha"/>
             </div>
         </div>
         <div class="error_container" v-if="error">
@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .g-recaptcha {
 	position: relative;
 	left: 3px;

@@ -1,7 +1,7 @@
 <template>
     <HeaderContainer>
         <Logo />
-        <ScoreBar v-if="$auth.loggedIn" />
+        <ScoreBar v-if="$auth.loggedIn" class="score_bar"/>
         <ButtonArea v-show="$auth.loggedIn" style="display: none;">
             <AccButton />
             <LogoutButton />
@@ -26,3 +26,11 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+@media(max-width: 8000px) {
+	.score_bar {
+		display: none;
+	}
+}
+</style>

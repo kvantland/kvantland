@@ -245,12 +245,13 @@ select > option {
 		align-items: center;
 	}
 	.select_language select{
-		font-size: 11px;
+		font-size: 10px;
 		border-radius: 4px;
 		height: 40px;
 	}
 	.select_language::before {
-		font-size: 14px;
+		font-size: 12px;
+		margin-right: 3px;
 	}
 	.submit_table {
 		overflow-x: scroll;
@@ -260,5 +261,8 @@ select > option {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+	.send_button_area {
+		gap: 5px;
 	}
 }
