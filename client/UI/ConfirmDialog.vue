@@ -132,7 +132,8 @@ export default {
 		font-size: 14px;
 		border-radius: 8px;
 		padding: 6px 8px;
-		width: 120px;
+		min-width: 120px;
+		box-sizing: border-box;
 	}
 
 	.info {

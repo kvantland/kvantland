@@ -304,5 +304,8 @@ export default {
 	.problem_body {
 		padding: 16px;
 	}
+	.problem_title {
+		font-size: 14px;
+	}
 }
 </style>

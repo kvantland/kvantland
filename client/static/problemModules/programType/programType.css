@@ -246,7 +246,9 @@ select > option {
 		font-size: 10px;
 	}
 	.select_language {
-		display: flex;
+		margin-left: 0;
+		display: inline-flex;
+		max-width: 300px;
 		flex-direction: column;
 	}
 	.select_language select{
