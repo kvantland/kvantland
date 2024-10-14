@@ -76,6 +76,9 @@ export default {
 	.xhr_dialog {
 		padding: 16px;
 		font-size: 12px;
+		min-width: 290px;
+		box-sizing: border-box;
+		gap: 8px;
 	}
 	.info {
 		width: 18px;

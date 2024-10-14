@@ -92,7 +92,7 @@ img.cross {
 @media (max-width: 800px) {
 	.dialog {
 		padding: 16px;
-		min-width: 343px;
+		min-width: 290px;
 		gap: 10px;
 	}
 	.dialog .content {
