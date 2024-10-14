@@ -74,6 +74,7 @@ export default {
 	background: #FBFBFD;
 	width: 28px;
 	height: 28px;
+	min-width: 28px;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -120,6 +121,13 @@ p.error{
 @media (max-width: 800px) {
 	.check_cont .label {
 		font-size: 10px;
+	}
+	.check_cont {
+		width: 100%;
+		gap: 8px;
+	}
+	.field_with_error {
+		width: 100%;
 	}
 }
 </style>
