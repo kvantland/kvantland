@@ -27,7 +27,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .conf_content {
     align-self: stretch;
     display: flex;
@@ -53,5 +53,14 @@ export default {
 
 .conf_content a.visited {
     color: #551A8B !important;
+}
+@media (max-width: 800px) {
+	.conf_content{
+		padding: 16px;
+		gap: 16px;
+	}	
+	.conf_content .page_header {
+		font-size: 20px;
+	}
 }
 </style>

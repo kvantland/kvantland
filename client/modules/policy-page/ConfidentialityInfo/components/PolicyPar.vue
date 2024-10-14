@@ -14,7 +14,7 @@ export default {
     props: ['parHeader', 'parDescription', 'num']
 }
 </script>
-<style>
+<style scoped>
 .par {
     display: flex;
     flex-direction: column;
@@ -35,5 +35,17 @@ export default {
     gap: 10px;
     font-size: 20px;
     font-weight: 400;
+}
+
+@media (max-width: 800px) {
+	.par .content {
+		font-size: 12px;
+	}
+	.par .header {
+		font-size: 14px;
+	}
+	.par {
+		gap: 8px;
+	}
 }
 </style>

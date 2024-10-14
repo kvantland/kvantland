@@ -8,14 +8,14 @@
 <script>
 import ConfidentialityInfo from '../../modules/policy-page/ConfidentialityInfo/ConfidentialityInfo.vue'
     export default {
+
+        components: {
+            ConfidentialityInfo,
+        },
         head() {
             return {
                 title: 'Квантландия'
             };
-        },
-
-        components: {
-            ConfidentialityInfo,
         },
     };
 </script>
@@ -35,5 +35,12 @@ import ConfidentialityInfo from '../../modules/policy-page/ConfidentialityInfo/C
     font-family: Montserrat;
     word-wrap: break-word;
     text-align: justify;
+}
+@media(max-width: 800px) {
+	.content_wrapper {
+		margin-top: 0px;
+		padding: 0px;
+		font-size: 12px;
+	}
 }
 </style>
