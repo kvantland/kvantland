@@ -60,17 +60,13 @@ export default {
 	},
 
 	mounted() {
-		document.addEventListener('mousemove', this.drag, {passive: false})
-		document.addEventListener('touchmove', this.drag, {passive: false})
-		document.addEventListener('touchend', this.endDrag)
-		document.addEventListener('mouseup', this.endDrag)
+		document.addEventListener('pointermove', this.drag, {passive: false})
+		document.addEventListener('pointerup', this.endDrag)
 	},
 
 	destroyed() {
-		document.removeEventListener('mousemove', this.drag, {passive: false})
-		document.removeEventListener('touchmove', this.drag, {passive: false})
-		document.removeEventListener('touchend', this.endDrag)
-		document.removeEventListener('mouseup', this.endDrag)
+		document.removeEventListener('pointermove', this.drag, {passive: false})
+		document.removeEventListener('pointerup', this.endDrag)
 	},
 
 	methods: {
@@ -182,14 +178,14 @@ export default {
 		},
 
 		startDrag(event) {
+			let coordinates = event
+			event.preventDefault()
 			if (event.touches) {
-				event.preventDefault()
-				event = event.touches[0]
+				coordinates = event.touches[0]
 			}
-			let x, y
-			x = event.clientX
-			y = event.clientY
-			console.log(x, y)
+			console.log('start drag', event)
+			const x = coordinates.clientX
+			const y = coordinates.clientY
 			this.dragMode = true
 			this.moveAt(x, y)
 		},
@@ -198,23 +194,12 @@ export default {
 			if (!this.dragMode) {
 				return
 			}
-			if (event.touches) {
-				event.preventDefault()
-			}
 			if (this.targetBlock === undefined)
 				return
-			let x, y
-			if (event.touches) {
-				console.log('touch!')
-				event.preventDefault()
-				x = event.touches[0].clientX
-				y = event.touches[0].clientY
-			}
-			else {
-				x = event.clientX
-				y = event.clientY
-			}
-			console.log(x, y)
+			console.log('drag', event)
+			const x = event.clientX
+			const y = event.clientY
+		
 			this.moveAt(x, y)
 			this.updateNearestPlaceToInsert(x, y)
 		},
@@ -231,7 +216,7 @@ export default {
 			this.dragMode = false
 			this.targetBlock = undefined
 			this.nearestPlaceToInsert = undefined
-		}
+		} 	
 	}
 }
 </script>
