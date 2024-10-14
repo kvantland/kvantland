@@ -40,6 +40,7 @@
 @media (max-width: 800px) {
 	.formBody {
 		width: 100%;
+		max-width: 400px;
 		gap: 16px;
 	}
 	.formBackground {

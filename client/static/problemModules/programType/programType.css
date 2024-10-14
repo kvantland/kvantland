@@ -101,11 +101,10 @@
 	margin-left: auto;
 }
 
-.select_language::before {
-	content: "Язык:";
+.select_language_layout {
+	align-self: center;
 	font-weight: 700;
 	font-size: 20px;
-	align-self: center;
 	margin-right: 20px;
 
 }
@@ -232,10 +231,11 @@ select > option {
 		font-size: 14px;
 	}
 	.tries_area {
-		gap: 4px;
+		gap: 6px;
 	}
 	.tries_area p {
 		font-size: 12px;
+		white-space:initial;
 	}
 	.tries_area img {
 		height: 14px;
@@ -243,15 +243,21 @@ select > option {
 	.status span {
 		display: inline-flex;
 		align-items: center;
+		font-size: 10px;
+	}
+	.select_language {
+		display: flex;
+		flex-direction: column;
 	}
 	.select_language select{
 		font-size: 10px;
 		border-radius: 4px;
 		height: 40px;
 	}
-	.select_language::before {
+	.select_language_layout {
 		font-size: 12px;
 		margin-right: 3px;
+		align-self: flex-start;
 	}
 	.submit_table {
 		overflow-x: scroll;
@@ -263,6 +269,6 @@ select > option {
 		justify-content: center;
 	}
 	.send_button_area {
-		gap: 5px;
+		gap: 10px;
 	}
 }

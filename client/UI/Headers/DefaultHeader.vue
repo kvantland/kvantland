@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style scoped>
-@media(max-width: 8000px) {
+@media(max-width: 800px) {
 	.score_bar {
 		display: none;
 	}

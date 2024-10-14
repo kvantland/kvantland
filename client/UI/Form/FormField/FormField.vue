@@ -113,6 +113,7 @@ input:-webkit-autofill {
 @media (max-width: 800px) {
 	.field {
 		min-width: 0px;
+		max-width: 280px;
 	}
 }
 </style>

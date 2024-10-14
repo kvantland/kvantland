@@ -5,6 +5,7 @@
 				<div :class="['button', inputMode === 'text' ? 'active': 'passive']" @click="changeMode('text')"> Написать здесь </div>
 				<div :class="['button', inputMode === 'file' ? 'active': 'passive']" @click="changeMode('file')"> Прикрепить файл </div>
 				<div class="select_language"> 
+					<p class="select_language_layout"> Язык: </p>
 					<select :value="formData.lang" @change="changeLanguage($event)" >
 						<option v-for="lang in availableLanguage" :key='`option_${lang.shortName}`' :value="lang.shortName">{{ lang.longName }}</option>
 					</select>

@@ -6,7 +6,8 @@ import problem
 
 @route('/api/tournament_history')
 def get_tournament_history():
-	tournament_history = [
+	tournament_history = {}
+	tournament_history['math'] = [
 		{'event_name': 'Старт Турнира 1', 'event_date': '05.12.2023'},
 		{'event_name': 'Финиш Турнира 1', 'event_date': '31.03.2024'},
 		{'event_name': 'Старт Турнира 2', 'event_date': '24.02.2024'},
@@ -16,9 +17,13 @@ def get_tournament_history():
 		{'event_name': 'Старт Турнира 4', 'event_date': '08.08.2024'},
 		{'event_name': 'Финиш Турнира 4', 'event_date': '09.09.2024'},
 		]
+	tournament_history['IT'] = [
+		{'event_name': 'Старт Турнира 1', 'event_date': '14.10.2024'}
+	]
+	tournament_type = config['tournament']['type']
 	events_amount = 4
 	first_event = max(0, len(tournament_history) - events_amount)
-	return json.dumps(tournament_history[first_event:])
+	return json.dumps(tournament_history[tournament_type][first_event:])
 
 
 @route('/api/info_cards')
