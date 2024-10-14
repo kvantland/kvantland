@@ -112,4 +112,33 @@ export default {
     box-shadow: 7px 7px 6.7px 0px rgb(26, 88, 102);
     background: linear-gradient(180.00deg, rgb(178, 178, 178) -46.115%,rgb(255, 255, 255) 20.86%,rgb(255, 255, 255) 63.61%,rgb(178, 178, 178) 136.285%);
 }
+
+@media (max-width: 800px) {
+	.confirm_dialog {
+		padding: 16px;
+		gap: 16px;
+		border-radius: 16px;
+		font-size: 12px;
+		min-width: 0px;
+		width: auto;
+	}
+
+	.button_area {
+		gap: 16px;
+	}
+
+	.button {
+		width: auto;
+		font-size: 14px;
+		border-radius: 8px;
+		padding: 6px 8px;
+		width: 147px;
+	}
+
+	.info {
+		width: 18px;
+		height: 18px;
+	}
+}
+
 </style>

@@ -88,4 +88,22 @@ img.cross {
     cursor: pointer;
     align-self: center;
 }
+
+@media (max-width: 800px) {
+	.dialog {
+		padding: 16px;
+		min-width: 343px;
+		gap: 10px;
+	}
+	.dialog .content {
+		font-size: 12px;
+		width: auto;
+		gap: 20px;
+		padding: 16px;
+	}
+	.dialog_header {
+		font-size: 16px;
+		align-items: center;
+	}
+}
 </style>

@@ -75,4 +75,28 @@ button{
 	font-family: Montserrat;
 	font-weight: 600;
 }
+
+@media (max-width: 800px) {
+	.dialog {
+		padding: 16px;
+		gap: 16px;
+		border-radius: 16px;
+	}
+
+	.content {
+		font-size: 14px;
+	}
+
+	.button_area {
+		gap: 16px;
+	}
+
+	button {
+		width: auto;
+		font-size: 14px;
+		border-radius: 8px;
+		padding: 6px 8px;
+		width: 147px;
+	}
+}
 </style>

@@ -72,4 +72,14 @@ export default {
     width: 24px;
     height: 24px;
 }
+@media (max-width: 800px) {
+	.xhr_dialog {
+		padding: 16px;
+		font-size: 12px;
+	}
+	.info {
+		width: 18px;
+		height: 18px;
+	}
+}
 </style>

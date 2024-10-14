@@ -51,4 +51,12 @@ export default {
     font-family: Montserrat;
     font-weight: 500;
 }
+
+@media (max-width: 800px) {
+	.result_area {
+		padding: 10px;
+		font-size: 12px;
+		border-radius: 6px;
+	}
+}
 </style>
