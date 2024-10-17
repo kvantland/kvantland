@@ -11,6 +11,7 @@ export default {
         return {
             topScrolled: 0,
             blocked: false,
+			sensivity: 5, 
         }
     },
 
@@ -23,15 +24,18 @@ export default {
 
     methods: {
         scrollHeader(){
+			const currentScroll =  document.documentElement.scrollTop
             if (!this.blocked) {
-                if (this.topScrolled < document.documentElement.scrollTop && !this.blocked)
+                if (this.topScrolled < currentScroll - this.sensivity) 
                     document.querySelector('header').classList = ['down']
-                else if (this.topScrolled > document.documentElement.scrollTop && !this.blocked)
+                else if (this.topScrolled > currentScroll + this.sensivity && !this.blocked)
                     document.querySelector('header').classList = ['up']
             }
             if (this.blocked)
                 this.blocked = false
-            this.topScrolled = document.documentElement.scrollTop
+			if (this.sensivity < Math.abs(this.topScrolled - currentScroll)) {
+				this.topScrolled = currentScroll
+			}
         },
     }
 }

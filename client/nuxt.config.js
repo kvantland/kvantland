@@ -108,7 +108,7 @@ export default {
 		  property: 'access_token',
 		  global: true,
 		  type: 'Bearer',
-		  maxAge: 1800,
+		  maxAge: 1801,
 		},
 		refreshToken: {
 			property: 'refresh_token',

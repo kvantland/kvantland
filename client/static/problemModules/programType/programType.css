@@ -233,7 +233,7 @@ select > option {
 	.tries_area {
 		gap: 6px;
 	}
-	.tries_area p {
+	.tries_area > p {
 		font-size: 12px;
 		white-space:initial;
 	}
@@ -247,7 +247,6 @@ select > option {
 	}
 	.select_language {
 		margin-left: 0;
-		display: inline-flex;
 		max-width: 300px;
 		flex-direction: column;
 	}
