@@ -43,7 +43,7 @@ export default {
 
 <style scoped>
 header {
-	width: 100vw;
+	width: 100%;
 	-webkit-user-select: none;
 	user-select: none;
 	background-color: white;
