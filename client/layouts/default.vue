@@ -16,6 +16,8 @@
 	box-sizing: border-box;
 	width: 100%;
 	height: 100%;
+	margin-top: 130px;
+	padding: 0 max(40px, min(5vw, 80px));
 }
 @media (max-width: 800px) {
 	.content_wrapper_default {
@@ -23,6 +25,7 @@
 		padding: 16px;
 	}
 	.down {
+		width: 100%;
 		margin-top: auto;
 	}
 }

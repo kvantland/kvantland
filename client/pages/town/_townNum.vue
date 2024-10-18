@@ -63,8 +63,7 @@ export default {
 <style scoped>
 .content_wrapper_town {
     width: 100%;
-    padding: 0 min(5vw, 80px) 80px min(5vw, 80px);
-    margin-top: 130px;
+    padding-bottom: 80px;
     box-sizing: border-box;
     flex-direction: column;
     justify-content: center;

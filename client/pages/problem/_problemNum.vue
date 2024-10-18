@@ -122,7 +122,6 @@ export default {
 
 <style scoped>
 .content_wrapper{
-	margin-top: 130px;
 	box-sizing: border-box;
 	flex-direction: column;
 	justify-content: center;
@@ -131,9 +130,6 @@ export default {
 	display: inline-flex;
 	padding-bottom: 80px;
 	width: 100%;
-	padding-left: max(40px, min(5vw, 80px));
-	padding-right: max(40px, min(5vw, 80px));
-	margin-top: 130px;
 }
 @media(max-width: 800px) {
 	.content_wrapper {

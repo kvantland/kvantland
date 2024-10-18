@@ -21,6 +21,7 @@
 	box-sizing: border-box;
 	width: 100%;
 	height: 100%;
+	padding: 0 max(40px, min(5vw, 80px));
 }
 @media (max-width: 800px) {
 	.content_wrapper {

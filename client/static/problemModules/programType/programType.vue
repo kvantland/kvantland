@@ -1,5 +1,9 @@
 <template>
 	<div class="program_plot">
+		<div class="code_instruction">
+			Значения вердиктов тестирования:
+			<NuxtLink to="/programCodesDescription" style="text-decoration: underline; color: blue"> ссылка </NuxtLink>
+		</div>
 		<div class="editor_area">
 			<div class="editor_area_buttons">
 				<div :class="['button', inputMode === 'text' ? 'active': 'passive']" @click="changeMode('text')"> Написать здесь </div>

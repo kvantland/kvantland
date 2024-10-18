@@ -18,7 +18,7 @@
 .basement {
 	width: 100%;
 	box-sizing: border-box;
-	padding: 10px min(5vw, 80px) 0 min(5vw, 80px);
+	padding: 10px 0 0 0;
 	justify-content: space-between; 
 	align-items: center; 
 	display: inline-flex;

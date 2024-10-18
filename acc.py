@@ -66,8 +66,8 @@ def get_user_info(db):
 @route('/api/tournament_results')
 def get_tournament_results(db):
 	tournament_results = []
-	tournament_amount = get_tournament_amount(db, config['tournament']['version'], config['tournament']['season'])
-	for tournament in range(0, tournament_amount):
+	tournament_amount = get_tournament_amount(db, config['tournament']['season'])
+	for tournament in range(tournament_amount):
 		tournament_results.append(
 			{
 				'title': f'{to_roman_number(tournament_amount - tournament)} Турнир',
@@ -423,7 +423,7 @@ def to_roman_number(num):
 		div /= 10 
 	return res
 
-def get_tournament_amount(db, tournament, season):
+def get_tournament_amount(db, season):
 	db.execute('select tournament from Kvantland.Season where season=%s', (season, ))
 	tournaments = db.fetchall()
 	return len(tournaments)

@@ -115,7 +115,7 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
 
 <style scoped>
 .content_wrapper {
-	padding: 0 max(40px, min(5vw, 80px)) 70px max(40px, min(5vw, 80px));
+	padding-bottom: 70px;
 	box-sizing: border-box;
 	flex-direction: column;
 	justify-content: center;

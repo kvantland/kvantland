@@ -14,6 +14,7 @@
 	display: inline-flex;
 	flex-direction: column;
 	box-sizing: border-box;
+	padding: 0 max(40px, min(5vw, 80px));
 	width: 100%;
 }
 @media (max-width: 800px) {
