@@ -42,7 +42,7 @@
 				</div>
 			</div>
 			<div class="start_area">
-				<p>C помощью команд и цикловой конструкции:</p>
+				<p>Вы можете использовать следующие блоки:</p>
 				<div v-for="(block, blockNum) in commands" :key="`start_area_block_${blockNum}`" :class="['block', block.type]" 
 					@mousedown="moveFromStartArea(block, $event)" 
 					@touchstart="moveFromStartArea(block, $event)">
