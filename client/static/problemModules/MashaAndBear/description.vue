@@ -44,7 +44,7 @@
     </thead>
         <tbody>
         <tr>
-            <td>\(a < m\)<\td>
+            <td>\(a < m\)</td>
             <td>\(1\)</td>
         </tr>
         <tr>
