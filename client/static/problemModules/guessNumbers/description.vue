@@ -25,8 +25,12 @@
 </template>
 
 <script>
-export default {
+import ProgramTypeDescription from '../programType/components/ProgramTypeDescription.vue';
 
+export default {
+	components: {
+		ProgramTypeDescription,
+	},
 	data() {
 		return {
 			inputExamples: [

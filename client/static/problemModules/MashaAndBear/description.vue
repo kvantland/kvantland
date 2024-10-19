@@ -1,5 +1,5 @@
 <template>
-	<ProgramTypeDescription :input-examples="inputExamples">
+	<ProgramTypeDescription :input-examples="inputExamples" :test-groups="testGroups">
 		<ClientOnly>
 		<p>
 			Недалеко от дома Медведя растет \(K\) кустов с ягодами, пронумерованных натуральными 
@@ -33,47 +33,29 @@
 			день \(k\), а дальше в той же строке \(S_k\) чисел - номера кустов, ягоды с которых Маша будет 
 			есть в \(k\)-ый день.
 		</p>
-      
-    <p> <b> Замечание: </b> <br> В этой задаче можно набрать частичные баллы. Для этого решение должно пройти все тесты одной подгруппы с дополнительными условиями (баллы за разные подгруппы суммируются):
-      <table>
-    <thead>
-        <tr>
-            <th>Ограничение на подгруппу</th>
-            <th>Квантики за подгруппу</th>
-        </tr>
-    </thead>
-        <tbody>
-        <tr>
-            <td>\(a < m\)</td>
-            <td>\(1\)</td>
-        </tr>
-        <tr>
-            <td>Кусты расположены в порядке не убывания числа ягод на них</td>
-            <td>\(1\)</td>
-        </tr>
-        <tr>
-            <td>Кусты расположены в порядке не возрастания числа ягод на них</td>
-            <td>\(1\)</td>
-        </tr>
-        <tr>
-            <td>\(k \leq 1000\)</td>
-            <td>\(1\)</td>
-        </tr>
-        </tbody>
-    </table>
-		</p>
 		</ClientOnly>
 	</ProgramTypeDescription>
 </template>
 
 <script>
+import ProgramTypeDescription from '../programType/components/ProgramTypeDescription.vue';
+
 export default {
+	components: {
+		ProgramTypeDescription,
+	},
 	data() {
 		return {
 			inputExamples: [
 				{'input': ['6 1 3 3', '2 3 4 5 7 9'], 'output': ['3 4 5 6']},
 				{'input': ['6 2 3 3', '10 8 6 6 2 7'], 'output': ['3 1 2 3', '3 4 5 6']}
-			]
+			],
+			testGroups: [
+				{'description': "\\(a < m\\)", 'cost': 1},
+				{'description': "Кусты расположены в порядке не убывания числа ягод на них", 'cost': 1},
+				{'description': "Кусты расположены в порядке не возрастания числа ягод на них", 'cost': 1},
+				{'description': "\\(k \\leq 1000\\)", 'cost': 1},
+			],
 		}
 	}
 }
