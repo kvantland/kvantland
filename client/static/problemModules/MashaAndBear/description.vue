@@ -54,7 +54,7 @@ export default {
 				{'description': "\\(a < m\\)", 'cost': 1},
 				{'description': "Кусты расположены в порядке не убывания числа ягод на них", 'cost': 1},
 				{'description': "Кусты расположены в порядке не возрастания числа ягод на них", 'cost': 1},
-				{'description': "\\(k \\leq 1000\\)", 'cost': 1},
+				{'description': "\\(K \\leq 1000\\)", 'cost': 1},
 			],
 		}
 	}
