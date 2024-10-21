@@ -51,10 +51,10 @@ export default {
 				{'input': ['6 2 3 3', '10 8 6 6 2 7'], 'output': ['3 1 2 3', '3 4 5 6']}
 			],
 			testGroups: [
-				{'description': "\\(a < m\\)", 'cost': 1},
+				{'description': "\\(A < M\\)", 'cost': 1},
 				{'description': "Кусты расположены в порядке не убывания числа ягод на них", 'cost': 1},
 				{'description': "Кусты расположены в порядке не возрастания числа ягод на них", 'cost': 1},
-				{'description': "\\(k \\leq 1000\\)", 'cost': 1},
+				{'description': "\\(K \\leq 1000\\)", 'cost': 1},
 			],
 		}
 	}
