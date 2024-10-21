@@ -17,3 +17,11 @@
 	</div>
 	</ClientOnly>
 </template>
+
+<style scoped>
+.description {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 1em;
+}
+</style>
