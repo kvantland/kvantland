@@ -92,8 +92,6 @@ export default {
 }
 
 .problem .body .text_container {
-	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	text-align: justify;
     font-size: max(15px, min(22px, 1.7vw)); 
