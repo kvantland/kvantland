@@ -1,6 +1,9 @@
 import axios from 'axios'
 
 export default {
+	server: {
+		port: 80 // default: 3000
+		},
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
 	title: 'Квантладия',
@@ -108,7 +111,7 @@ export default {
 		  property: 'access_token',
 		  global: true,
 		  type: 'Bearer',
-		  maxAge: 1801,
+		  maxAge: 1800,
 		},
 		refreshToken: {
 			property: 'refresh_token',

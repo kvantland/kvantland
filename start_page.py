@@ -19,6 +19,7 @@ def get_tournament_history():
 		]
 	tournament_history['IT'] = [
 		{'event_name': 'Старт Турнира 1', 'event_date': '24.10.2024'}
+		{'event_name': 'Финиш Турнира 1', 'event_date': '30.11.2024'}
 	]
 	tournament_type = config['tournament']['type']
 	events_amount = 4

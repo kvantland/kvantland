@@ -112,6 +112,7 @@ def vk_auth(db):
 		resp['tokens']['access_token'] = jwt.encode(payload={'login': login, 'user_id': user}, key=access_key, algorithm='HS256')
 		resp['tokens']['refresh_token'] = jwt.encode(payload={'login': login, 'user_id': user}, key=refresh_key, algorithm='HS256')
 
+	print(resp, file=sys.stderr)
 	return json.dumps(resp)
 
 
