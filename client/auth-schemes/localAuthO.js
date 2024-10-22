@@ -1,10 +1,10 @@
 import { Oauth2Scheme } from "~auth/runtime";
 
 function parseQuery(query) {
-	let query_arr = query.split('&')
-	let resp = {}
-	for (let item of query_arr) {
-		let [param, value] = item.split('=')
+	const query_arr = query.split('&')
+	const resp = {}
+	for (const item of query_arr) {
+		const [param, value] = item.split('=')
 		resp[param] = value
 	}
 	return resp
@@ -12,7 +12,7 @@ function parseQuery(query) {
 
 function encodeQuery(opts) {
 	let query = ""
-	for (let opt in opts) {
+	for (const opt in opts) {
 		query += '&' + encodeURIComponent(opt) + '=' + encodeURIComponent(opts[opt])
 	}
 	return query.substring(1)
@@ -72,12 +72,12 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 		}
 		console.log('first!')
 		// Handle callback only for specified route
-	   /*if (
+	   /* if (
 			this.$auth.options.redirect &&
 			this.$auth.ctx.route.path != this.$auth.options.redirect.callback
 		) {
 			return
-		}*/
+		} */
 
 		// Callback flow is not supported in server side
 		if (process.server) {
@@ -107,29 +107,29 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
             method: 'post',
             url: this.options.endpoints.apiLogin,
             data: {
-                device_id: device_id,
+                device_id,
                 code: vk_code,
-                code_verifier: code_verifier,
+                code_verifier,
                 state: this.options.state,
             }
         })
 
 		if (!resp.data.user_exists) {
+			console.log('user not exists!')
 			const redirect_to_acc = `/acc/editInfo?${encodeQuery({'user_info': JSON.stringify(resp.data.user_info), 
 				'request': "oauthReg", 'globalError':"fillFields"})}`
 			console.log(redirect_to_acc)
 			window.location.replace(redirect_to_acc)
+			return true
 		}
-		else {
-			if (resp.data.tokens) {
+		else if (resp.data.tokens) {
                 console.log(resp.data.tokens)
                 this.token.set(resp.data.tokens[this.options.accessToken.property])
 		        this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])
-				//this.$auth.setUserToken(resp.data.tokens.access_token, resp.data.tokens.refresh_token)
+				// this.$auth.setUserToken(resp.data.tokens.access_token, resp.data.tokens.refresh_token)
 			}
-		}
-		/*this.token.set(resp.data.tokens[this.options.accessToken.property])
-		this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property])*/
+		/* this.token.set(resp.data.tokens[this.options.accessToken.property])
+		this.refreshToken.set(resp.data.tokens[this.options.refreshToken.property]) */
 		if (this.$auth.options.watchLoggedIn) {
 			await this.fetchUser()
 			this.$auth.redirect('home', true)
