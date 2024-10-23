@@ -89,7 +89,10 @@ import TeamInfo from '../modules/index-page/TeamInfo/TeamInfo.vue';
                     try {
                         await this.$axios.$post('/api/email_update', {email_confirm_token: this.$route.query.email_confirm_token, request_type: 'updateInfo'})
                         .then((resp) => {
-                            console.log(resp)
+							console.log(resp)
+							if (resp.tokens) {
+								this.$auth.setUserToken(resp.tokens.access_token, resp.tokens.refresh_token)
+							}
                             this.$auth.fetchUser()
                         })
                     }

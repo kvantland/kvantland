@@ -56,7 +56,7 @@ export default {
 
 	data() {
         return {
-            pageMod: 'updateInfo',
+            pageMod: this.$route.query.request ?  this.$route.query.request : 'updateInfo',
             fieldsErrors: {},
             checkEmailMode: false,
             sendEmailDescription: `Письмо для подтверждения адреса
