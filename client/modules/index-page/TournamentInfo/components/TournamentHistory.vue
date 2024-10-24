@@ -28,7 +28,6 @@ export default {
 
 .history .content {
 	display: inline-flex;
-	justify-content: space-between;
 }
 
 .history hr {
@@ -41,6 +40,13 @@ export default {
 	display: inline-flex;
 	flex-direction: column;
 	gap: 30px;
+}
+
+.history .content .item:last-of-type {
+	position: absolute;
+	box-sizing: border-box;
+	left: 50%;
+	transform: translate(-50%, 0);
 }
 
 .history .content .item .rect {
