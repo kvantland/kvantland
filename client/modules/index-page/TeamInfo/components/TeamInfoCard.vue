@@ -29,7 +29,6 @@ export default {
 	align-self: stretch;
 	gap: 20px;
 	padding: 30px;
-	height: 516px;
 	align-items: center;
 	box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.25); 
 	border-radius: 20px;
