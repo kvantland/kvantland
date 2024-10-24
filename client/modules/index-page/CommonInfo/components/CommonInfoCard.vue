@@ -13,7 +13,6 @@ export default {
 
 <style scoped>
 .content_box {
-    height: 432px;
     align-self: stretch;
 	padding: 40px; 
 	background: white; 

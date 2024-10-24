@@ -145,7 +145,7 @@ export default {
 		},
 		accessToken: {
 			property: 'access_token',
-			maxAge: 60,
+			maxAge: 61,
 		},
 		refreshToken: {
 			property: 'refresh_token',

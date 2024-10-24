@@ -22,7 +22,6 @@ export default {
 
 <style scoped>
 .info_container {
-	height: 983px; 
 	flex-direction: column; 
 	justify-content: flex-start; 
 	align-items: flex-start; 
