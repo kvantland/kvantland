@@ -85,7 +85,9 @@ export default {
 					src: '/old-problem-types/confirm_action.js',
 				},
 				{
-					innerHTML: "Promise.resolve().then(()=>{  setTimeout(() => { MathJax.typesetPromise();  }, 100);})",
+					body: true,
+					defer: true,
+					innerHTML:  "Promise.resolve().then(()=>{ setTimeout(() => {    MathJax.typesetPromise();  }, 100);})",
 				}
 			],
 		}
