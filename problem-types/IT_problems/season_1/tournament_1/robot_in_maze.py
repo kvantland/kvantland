@@ -10,7 +10,7 @@ def steps(step_num, params, data):
                         return {'answer': {'message': "Перезапуск сейчас не требуется"}}
                     else:
                         data = data['default']
-                        return {'answer': {'reload': True}, 'data_update': data, 'points_update': -1}
+                        return {'answer': {'reload': True}, 'data_update': data}
                 else:
                     if 'checkout' in params.keys():
                         print('checkout!')
