@@ -1,6 +1,6 @@
 <template>
 	<div class="game_plot">
-        <p> Осталось попыткок: {{ remainingTries }} </p>
+        <p> Осталось попыток: {{ remainingTries }} </p>
 		<div class="turn_choose" v-if="mode === 'turnChoose'">
 			<div class="first_turn turn_button" @click="turnChoose('first')"> Ходить первым </div>
 			<div class="second_turn turn_button" @click="turnChoose('second')"> Ходить вторым </div>
