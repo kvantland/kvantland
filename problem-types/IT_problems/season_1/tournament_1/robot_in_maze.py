@@ -16,7 +16,7 @@ def steps(step_num, params, data):
                         print('checkout!')
                         if data['current_position'] == data['end_position']:
                             print('successful checkout!')
-                            return {'answer_correct': True, 'user_answer': data['current_position'], 'solution': params['solution']}
+                            return {'answer': {}, 'answer_correct': True, 'user_answer': data['current_position'], 'solution': params['solution']}
                         else:
                             print('unsuccessful checkout!')
                             if data['points'] <= 0:

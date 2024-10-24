@@ -128,8 +128,14 @@ def xhr_request(db, user_id, var_id, params):
 		partial_solution = 'partial_score' in cont.keys()
 		print('partial solution given: ', partial_solution)
 		if not partial_solution:
-			db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) * %s where student = %s', (var_id, int(resp.answer_correct), user_id))
-			db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s', (var_id, user_id, config["tournament"]["version"]))
+			db.execute('select curr_points from Kvantland.AvailableProblem where variant = %s and student=%s', (var_id, user_id))
+			(curr_points, ), = db.fetchall()
+			db.execute('select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s', (var_id, ))
+			(points, ), = db.fetchall()
+			if curr_points:
+				points = curr_points
+			db.execute('update Kvantland.Student set score=score + %s * %s where student = %s', (points, int(resp.answer_correct), user_id))
+			db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s', (points, user_id, config["tournament"]["version"]))
 	
 	return resp.answer
 
