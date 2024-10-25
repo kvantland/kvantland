@@ -23,8 +23,8 @@ export default {
 	data() {
 		return {
 			inputExamples:  [
-				{'input': ['100 2 3 2 5'], 'output': ['5']},
-				{'input': ['108 70 80 2 4'], 'output': ['40']}
+				{'input': ['100 2 3 2 5'], 'output': ['45']},
+				{'input': ['108 70 80 2 4'], 'output': ['32']}
 			]
 		}
 	}
