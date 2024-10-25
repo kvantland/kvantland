@@ -215,7 +215,7 @@ export default {
 
 		startMovement() {
 			if (!this.actionAllowed) {
-				this.$emit('showXhrDialog', "Необходимо сбросить положение робота. Цена - 1 квантик")
+				this.$emit('showXhrDialog', "Необходимо сбросить положение робота.")
 			}
 			else {
 				this.$emit('xhrRequest', {program: JSON.stringify(this.answerAreaBlocks)})
