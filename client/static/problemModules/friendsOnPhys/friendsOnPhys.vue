@@ -308,7 +308,7 @@ export default {
                 if (!this.answerAreaBoys[boyNum]) {
                     continue;
                 }
-                if (this.answerAreaBoys[boyNum].index == boy.index) {
+                if (this.answerAreaBoys[boyNum].index === boy.index) {
                     this.$set(this.answerAreaBoys, boyNum, undefined)
                 }   
             }
