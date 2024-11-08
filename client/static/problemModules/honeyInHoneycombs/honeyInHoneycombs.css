@@ -1,0 +1,33 @@
+svg {
+	width: 60%;
+}
+
+.honeycomb-row__item {
+	fill: white;
+	stroke-width: 1px;
+	stroke: black;
+	transition: 0.3s all;
+}
+
+text {
+	text-anchor: middle;
+	font-size: 1em;
+}
+
+.honeycomb-row__item_active-false {
+	pointer-events: none;
+}
+
+.honeycomb-row__item_active-true {
+	cursor: pointer;
+}
+
+.honeycomb-row__item_choosed-true {
+	fill: yellow;
+}
+
+@media screen and (hover: hover) {
+	.honeycomb-row__item_active-true:hover:not(.honeycomb-row__item_choosed-true) {
+		fill: lightyellow;
+	}
+}

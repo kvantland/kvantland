@@ -86,6 +86,41 @@ def read_file(name):
 def Liars_Island():
 	global cur
 	current_town = Town('Остров Лжецов')
+
+	problem_1 = Problem(
+		name="Мёд в сотах",
+		points=3,
+		type_='honey_in_honeycombs'
+	)
+
+	for honeycombsConfig in [
+		[
+			['', 2, '', ''],
+			[2, '', '', 4, ''],
+			['', '', '', '', ''],
+			[2, '', '', 3, '', ''],
+			['', 4, '', '', 2],
+			['', 1, 1, '']
+		],
+		[
+			['', '', 2, ''],
+			['', 2, '', '', ''],
+			['', '', 2, '', 3],
+			['', 4, '', '', '', ''],
+			['', '', 1, 4, ''],
+			['', '', '', '']
+		]
+	]:
+		problem_1.add_variant({
+			'content': {
+				'amount': 12,
+				'honeycombsConfig': honeycombsConfig,
+				'componentType': "honeyInHoneycombs",
+				'inputType': "InteractiveTypeInput",
+			}
+		})
+
+	current_town.add_problems([problem_1, ])
 	
 
 def Chiselburg():

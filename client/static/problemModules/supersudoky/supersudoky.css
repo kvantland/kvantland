@@ -1,0 +1,46 @@
+.table {
+	display: inline-flex;
+	flex-direction: column;
+	border: 2px black solid;
+}
+
+.table__row {
+	display: inline-flex;
+	height: 50px;
+	box-sizing: border-box;
+}
+
+.table__item {
+	width: 50px;
+	height: 50px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px lightgrey solid;
+	box-sizing: border-box;
+}
+
+.left-border {
+	border-left: 2px black solid;
+}
+
+.right-border {
+	border-right: 2px black solid;
+}
+
+.top-border {
+	border-top: 2px black solid;
+}
+
+.bottom-border {
+	border-bottom: 2px black solid;
+}
+
+input {
+	font-size: 1em;
+	width: 1.3em;
+	height: 1.3em;
+	text-align: center;
+	font-family: Montserrat;
+	font-weight: 500;
+}
