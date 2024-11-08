@@ -146,6 +146,55 @@ def Geoma():
 	global cur
 	current_town = Town('Геома')
 
+	problem_1 = Problem(
+		name="Созвездие 'Квадрат'",
+		points=2,
+		type_='constellation_Square'
+	)
+	for map in [
+		[
+			'..S..S',
+			'.S.S..',
+			'.....S',
+			'.S...S',
+			'..S...',
+			'S..SS.'
+		],
+		[
+			'..S..S',
+			'.S....',
+			'S...S.',
+			'..S..S',
+			'..S...',
+			'S..SS.'
+		],
+		[
+			'..S...',
+			'..S...',
+			'S.S.S.',
+			'S...SS',
+			'......',
+			'S.S.S.'
+		],
+		[
+			'..SS..',
+			'......',
+			'.SS..S',
+			'S....S',
+			'.S.S..',
+			'S...S.'
+		]
+	]:
+		problem_1.add_variant({
+			'content': {
+				'componentType': "constellationSquare",
+				'inputType': "InteractiveTypeInput",
+				'skyMap': map
+			}
+		})
+	
+	current_town.add_problems([problem_1, ])
+
 
 def Golovolomsk():
 	global cur
