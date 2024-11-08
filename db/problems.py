@@ -83,366 +83,119 @@ def read_file(name):
 		return f.read()
 	
 
-def Games():
+def Liars_Island():
 	global cur
-	current_town = Town('Игры')
-
-	problem_1 = Problem(
-		name = 'Ход ферзём',
-		points = 2,
-		type_ = 'queen_move',
-		hint = 'Рассмотрите выигрышные и проигрышные позиции.',
-	)
-	for horse_config in [
-		[
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', 'H', ' ', ' ', ' ', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', 'H', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		],
-
-		[
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', 'H', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', 'H', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		],
-
-		[
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', 'H', ' ', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', 'H', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		],
-
-		[
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', 'H', ' ', ' ', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', 'H', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-		[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'H', ' '],
-		[' ', ' ', ' ', ' ', 'H', ' ', ' ', ' ', ' ', ' '],
-		],
-	]:
-		problem_1.add_variant({
-			'content': {
-				'remaining_tries': 3,
-				'turn': None,
-				'horse_config': horse_config,
-				'queen_position': [9, 0], 
-				'componentType': 'queenMove',
-				'inputType': 'HintOnlyInput',
-			}
-		})
-
-	problem_2 = Problem(
-		name = 'Звёздные войны',
-		points = 3,
-		type_ = 'star_wars',
-		hint = 'Попробуйте на каждом шаге уменьшать зону, в которой может быть искомая клетка, примерно в 2 раза.',
-	)
-
-	for dron_amount, board_side, correct in [
-		(7, 10, [2, 2]),
-		(7, 10, [3, 7]),
-		(7, 10, [1, 9]),
-		(7, 10, [5, 6]),
-	]:
-		problem_2.add_variant({
-			'content': {
-				'result': [],
-				'board': [['#E8E8E8' for i in range(board_side)] for j in range(board_side)],
-				'correct': correct,
-				'search_num': 0,
-				'dron_amount': dron_amount,
-				'board_side': board_side,
-				'componentType': "starWars",
-				'inputType': "InteractiveTypeInput",
-			}
-		})
-
-	problem_3 = Problem(
-		name = "Игра в переливания",
-		points = 4,
-		type_ = "program",
-		hint = 'Попробуйте выиграть, если сейчас в бочках налито: \((7, 0, 0)\), \((0, 5, 0)\), \((1, 1, 0)\).'
-	)
-	problem_3.add_variant({
-		'content': {
-			'prob_id': 1,
-			'available_tries': 100,
-			'componentType': "programType",
-			'descriptionType': "transfusionGame",
-			'inputType': "HintOnlyInput",
-		}
-	})
-	
-	current_town.add_problems([problem_1, problem_2, problem_3, ])
+	current_town = Town('Остров Лжецов')
 	
 
-def Algorithms():
+def Chiselburg():
 	global cur
-	current_town = Town('Алгоритмы')
-	
-	problem_1 = Problem(
-		name = "Иннокентий и логика",
-		points = 2,
-		type_ = "Innocent_and_logic",
-	)
-
-	for blocks in [
-		['Жарко', 'Светит солнце', 'Дует ветер', 'Идёт дождь']
-	]:
-		problem_1.add_variant({
-			'content': {
-				'blocks': blocks,
-				'translation': {
-					'Жарко': "A",
-					'Светит солнце': "B",
-					'Дует ветер': "C",
-					'Идёт дождь': "D",
-					'XOR': " ^ ",
-					'НЕ': "~",
-					'ИЛИ': " | ",
-					'И': " & ",
-					'(': "(",
-					')': ")",
-				},
-				'componentType': "InnocentAndLogic",
-				'inputType': "InteractiveTypeInput",
-				'correct': [
-					"A & (B & ~(C & D))",
-					"~A & (B |  ~C) & ~(B & ~C)"
-				],
-			}
-		})
-
-	problem_2 = Problem(
-		name = "Спиральный шифр",
-		points = 3,
-		type_ = "program",
-		hint = """Напишите один цикл таким образом, чтобы пройтись по таблице по спирали. 
-				Для этого поддерживайте переменные \(\mathtt{dx}\) и \(\mathtt{dy}\), которые будут 
-				показывать Вам, в каком направлении двигаться, а также границы (верхнюю, нижнюю, 
-				правую и левую), которые Вы уже прошли.""",
-	)
-
-	problem_2.add_variant({
-		'content': {
-			'prob_id': 2,
-			'available_tries': 100,
-			'componentType': "programType",
-			'inputType': "HintOnlyInput",
-			'descriptionType': "spiralCipher",
-		}
-	})
-
-	problem_3 = Problem(
-		name = "Угадываем числа",
-		points = 4,
-		type_ = "program",
-		hint = """Рассмотрите разложение числа \(x\) на простые множители. 
-				Обратите внимание, что для эффективной реализации разложения на
-				простые множители рекомендуется делать \(\mathtt{while}\) \(\mathtt{divisor}^2\) \(<\) \(\mathtt{x}\)
-				(а не \(\mathtt{for}\) \(\mathtt{divisor}\) \(\mathtt{in}\) \(\mathtt{range}(\mathtt{2}, x)\))."""
-	)
-
-	problem_3.add_variant({
-		'content': {
-			'prob_id': 3,
-			'available_tries': 100,
-			'componentType': "programType",
-			'inputType': "HintOnlyInput",
-			'descriptionType': "guessNumbers",
-		}
-	})
-
-	current_town.add_problems([problem_1, problem_2, problem_3, ])
+	current_town = Town('Чиселбург')
 
 
-def Blocks():
+def Geoma():
 	global cur
-	current_town = Town('Блоки')
-	
-	problem_1 = Problem(
-		name='Соберите Решето',
-		points=2,
-		type_='assemble_the_sieve',
-	)
-	for correct_permutations in [
-		[[2, 1, 4, 0, 6, 3, 5],
-		[2, 1, 4, 6, 0, 3, 5],],
-	]:
-		problem_1.add_variant({
-			'content': {
-				'correct': correct_permutations,
-				'componentType': "assembleTheSieve",
-				'inputType': "InteractiveTypeInput",
-			},
+	current_town = Town('Геома')
 
-		})
-		
-	problem_2 = Problem(
-		name='Ассемблируем компайлер',
-		points=4,
-		type_='assembling_the_compailer',
-		hint='Обратите внимание, что \(4 = 2^2\) и \(63 = 2^6 - 1\).'
-	)
-	problem_2.add_variant({
-		'content': {
-			'max_lines_amount': 10,
-			'blockTypes': ["Add", "Sub", "ShiftLeft", "ShiftRight", "Move"],
-			'componentType': "assemblingTheCompiler",
-			'inputType': "InteractiveTypeInput",
-		}
-	})
 
-	problem_3 = Problem(
-		name = 'Робот в лабиринте',
-		points = 3,
-		type_ = 'robot_in_maze',
-		hint = """Найдите траекторию от старта до финиша, которую 
-				можно было бы разбить на 3 участка одной формы. 
-				Это поможет Вам уложиться в один внешний цикл. """,
-	)
-	for maze, start_position, start_diraction, end_position in [
-		([
-			'._._._._._._._.',
-			'| | . | . . . |',
-			'| ._._. ._._. |',
-			'| | . | | . . |',
-			'| . ._._| | . |',
-			'| . | ._._| . |',
-			'| . . | . . ._|',
-			'|_._._|_._._._|'
-		], [6, 0], 'right', [0, 6]),
-		([
-			'._._._._._._._.',
-			'| | . | . . . |',
-			'| ._._. ._._. |',
-			'| | . | | . . |',
-			'| . ._._| | . |',
-			'| . | ._._| . |',
-			'| . . | . . ._|',
-			'|_._._|_._._._|'
-		], [0, 6], 'left', [6, 0]),
-		([
-			'._._._._._._._.',
-			'| . . . | . | |',
-			'| ._._. ._._. |',
-			'| . . | | . | |',
-			'| . | |_._. . |',
-			'| . |_._. | . |',
-			'|_. . . | . . |',
-			'|_._._._|_._._|'
-		], [6, 6], 'left', [0, 0]),
-		([
-			'._._._._._._._.',
-			'| . . . | . | |',
-			'| ._._. ._._. |',
-			'| . . | | . | |',
-			'| . | |_._. . |',
-			'| . |_._. | . |',
-			'|_. . . | . . |',
-			'|_._._._|_._._|'	
-		], [0, 0], 'right', [6, 6]),
-	]:
-		problem_3.add_variant({
-			'content': {
-				'action_allowed': True,
-				'allowed_blocks_amount': 7,
-				'componentType': "robotInMaze",
-				'inputType': "InteractiveTypeInput",
-				'maze': maze,
-				'current_position': start_position,
-				'end_position': end_position,
-				'current_direction': start_diraction,
-				'commands': [
-					{'text': "Повернуть влево", 'type': 'usual'},
-					{'text': "Повернуть вправо", 'type': "usual"},
-					{'text': "Пройти вперед на 1 клетку", 'type': "usual"},
-					{'text': "Пока нет препятствия", 'type': "cycle"},
-				],
-			}
-		})
-
-	current_town.add_problems([problem_1, problem_2, problem_3, ])
-
-def Proga():
+def Golovolomsk():
 	global cur
-	current_town = Town('Прога')
+	current_town = Town('Головоломск')
 
 	problem_1 = Problem(
-		name="ЦКАД",
-		type_="program",
-		points=2,
-		hint = """Попробуйте стандартный в таких задачах подход: необходимо 
-		рассмотреть скорость второго автомобилиста относительно первого.""",
-	)
-
-	problem_1.add_variant({
-		'content': {
-			'prob_id': 4,
-			'available_tries': 100,
-			'componentType': "programType",
-			'descriptionType': "CHAD",
-			'inputType': "HintOnlyInput",
-		}
-	})
-
-	problem_2 = Problem(
-		name="Неразборчивая принцесса",
+		name="Суперсудоку",
 		points=3,
-		type_="program"
+		type_="supersudoky",
 	)
+	for plot, start_numbers in [
+		[
+			[
+			[0, 0, 0, 1, 1, 1],
+			[0, 2, 0, 1, 1, 1],
+			[2, 2, 0, 3, 3, 3],
+			[2, 2, 2, 4, 3, 3],
+			[5, 5, 5, 4, 3, 4],
+			[5, 5, 5, 4, 4, 4]
+			],
+			[
+			[4, 3, 0, 0, 0, 1],
+			[0, 5, 0, 2, 3, 4],
+			[0, 2, 0, 0, 0, 0],
+			[0, 0, 0, 0, 5, 0],
+			[2, 4, 3, 0, 1, 0],
+			[5, 0, 0, 0, 2, 3]
+			],
+		],
+		[
+			[
+			[0, 1, 1, 1, 1, 1],
+			[0, 2, 2, 2, 2, 1],
+			[0, 0, 0, 2, 2, 3],
+			[0, 4, 4, 3, 3, 3],
+			[5, 4, 4, 4, 4, 3],
+			[5, 5, 5, 5, 5, 3]
+			],
+			[
+			[6, 0, 0, 2, 0, 5],
+			[0, 0, 0, 3, 0, 0],
+			[3, 5, 0, 0, 0, 0],
+			[0, 0, 0, 0, 6, 4],
+			[0, 0, 1, 0, 0, 0],
+			[5, 0, 6, 0, 0, 2]
+			],
+		],
+		[
+			[
+			[0, 0, 0, 1, 1, 2],
+			[0, 0, 1, 1, 2, 2],
+			[0, 1, 1, 2, 2, 2],
+			[6, 6, 6, 5, 5, 4],
+			[6, 6, 5, 5, 4, 4],
+			[6, 5, 5, 4, 4, 4]
+			],
+			[
+			[1, 2, 6, 0, 0, 4],
+			[0, 0, 1, 0, 0, 3],
+			[0, 0, 0, 0, 6, 1],
+			[5, 3, 0, 0, 0, 0],
+			[6, 0, 0, 4, 0, 0],
+			[2, 0, 0, 1, 4, 5]
+			],
+		],
+		[
+			[
+			[0, 0, 0, 1, 1, 1],
+			[0, 0, 0, 1, 2, 1],
+			[3, 3, 2, 2, 2, 1],
+			[5, 3, 3, 3, 2, 2],
+			[5, 3, 5, 4, 4, 4],
+			[5, 5, 5, 4, 4, 4]
+			],
+			[
+			[5, 2, 1, 0, 0, 0],
+			[4, 0, 0, 5, 0, 1],
+			[0, 0, 4, 0, 0, 0],
+			[0, 0, 0, 4, 0, 0],
+			[6, 0, 5, 0, 0, 4],
+			[0, 0, 0, 1, 6, 5]
+			],
+		],
+	]:
+		problem_1.add_variant({
+			'content': {
+				'plot': plot,
+				'start_numbers': start_numbers,
+				'componentType': "supersudoky",
+				'inputType': "InteractiveTypeInput"
+			},
+		})
+	
+	current_town.add_problems([problem_1, ])
 
-	problem_2.add_variant({
-		'content': {
-			'prob_id': 5,
-			'available_tries': 100,
-			'componentType': "programType",
-			'descriptionType': "promiscuousPrincess",
-		}
-	})
 
-	problem_3 = Problem(
-		name="Маша и Медведь",
-		points=5,
-		type_="program",
-	)
-
-	problem_3.add_variant({
-		'content': {
-			'prob_id': 6,
-			'available_tries': 100,
-			'componentType': "programType",
-			'descriptionType': "MashaAndBear",
-		}
-	})
-
-	current_town.add_problems([problem_1, problem_2, problem_3, ])
+def Kombi():
+	global cur
+	current_town = Town('Республика Комби')
 
 
 def update_positions_town(cur, town, problem_count):
@@ -476,8 +229,9 @@ if len(sys.argv) > 1:
 with psycopg.connect(db) as con:
 	with con.transaction():
 		with con.cursor() as cur:
-			Games()
-			Algorithms()
-			Blocks()
-			Proga()
+			Liars_Island()
+			Golovolomsk()
+			Geoma()
+			Chiselburg()
+			Kombi()
 			update_positions()

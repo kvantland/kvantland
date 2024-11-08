@@ -94,6 +94,9 @@ export default {
 		},
 		title(newValue) {
 			console.log('title changed', newValue)
+		},
+		currentAnswer(newValue) {
+			console.log('update answer!', newValue)
 		}
 	},
 
