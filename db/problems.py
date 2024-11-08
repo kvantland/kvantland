@@ -126,6 +126,20 @@ def Liars_Island():
 def Chiselburg():
 	global cur
 	current_town = Town('Чиселбург')
+	problem_1 = Problem(
+		name='Хитрая таблица',
+		points=3,
+		type_='tricky_table',
+	)
+	for number_value in [36, 98, 50, 28]:
+		problem_1.add_variant({
+			'content': {
+				'inputType': "InteractiveTypeInput",
+				'componentType': "trickyTable",
+				'numberValue': number_value,
+			}
+		})
+	current_town.add_problems([problem_1])
 
 
 def Geoma():
