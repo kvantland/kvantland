@@ -193,7 +193,23 @@ def Geoma():
 			}
 		})
 	
-	current_town.add_problems([problem_1, ])
+	problem_2 = Problem(
+		name="Периметр пятиугольника",
+		points=2,
+		type_='integer',
+		image='perimeter_of_pentagon.png'
+	)
+	problem_2.add_variant({
+		'content': {
+			'correct': 25,
+		},
+		'description': """Пятиугольник, стороны которого равны, разрезали по 
+				диагоналям на несколько фигур (см. рисунок). Сумма периметров белых 
+				фигур на 5 см больше суммы периметров чёрных фигур. Чему равен 
+				периметр пятиугольника?"""
+
+	})
+	current_town.add_problems([problem_1, problem_2, ])
 
 
 def Golovolomsk():
@@ -294,6 +310,29 @@ def Golovolomsk():
 def Kombi():
 	global cur
 	current_town = Town('Республика Комби')
+
+	problem_1 = Problem(
+		name='Расстояние между фальшивыми',
+		points=4,
+		type_="distanse_betweeen_fake"
+	)
+
+	for position_1,  position_2 in [
+		(0, 1),
+		(1, 3),
+		(2, 4),
+		(0, 4)
+	]:
+		problem_1.add_variant({
+			'content': {
+				'weightings_amount': 2,
+				'correct': {'position_1': position_1, 'position_2': position_2},
+				'componentType': "distanseBetweenFake",
+				'inputType': "IntegerTypeInput"
+			}
+		})
+	
+	current_town.add_problems([problem_1, ])
 
 
 def update_positions_town(cur, town, problem_count):
