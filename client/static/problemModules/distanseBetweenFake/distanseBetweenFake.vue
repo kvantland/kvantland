@@ -1,16 +1,32 @@
 <template>
 	 <div class="svg_with_buttons">
     <svg
-			ref="svg" version="1.1" class="display_svg" :viewBox="`0 0 0 0`"
+			ref="svg" version="1.1" class="display_svg" :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
 				preserveAspectRatio="xMidYMid meet" 
 				overflow="visible" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 			<Scales
-				:scale="0.8" :left-cup-objects="cupWeights.left" :right-cup-objects="cupWeights.right" :move-to="newSide" 
-				@svgHeight="getSvgHeight"
-				@svgWidth="getSvgWidth" @moveFromCup="moveFromCup" @stopMove="stopWeight" />
+				:scale="1" :left-cup-objects="cupWeights.left" :right-cup-objects="cupWeights.right" :move-to="newSide" 
+				:target="target.dom"
+				:item-side="itemSide"
+				:object-scale="{x: 0.9, y: 0.4}"
+				@updateNearestCup="updateNearestCup"
+				@svgHeight="getScalesHeight"	@svgWidth="getScalesWidth" 
+				@moveFromCup="moveFromCup" @stopMove="stopWeight" />
 			<DragContainer 
-					:transform="`translate(0 ${weightHeight + gap})`" 
-					item-image="weight.svg" :items-amount="5" :width="dragZoneWidth" />
+				:transform="`translate(${(svgWidth - dragZoneWidth) / 2} ${scalesHeight + gap})`"
+				item-image="coin.svg" 
+				:target-item-used="targetItemUsed"
+				:drag-mode="dragMode"
+				:items-amount="5" :width="dragZoneWidth" 
+				@svgHeight="getDragContainerHeight"
+				@startDrag="startDrag"
+				@setItemSide="setItemSide" />
+			<g 
+				v-if="dragMode" 
+				ref="target" class="target" 
+				:transform="`translate(${target.svg.x} ${target.svg.y})`"
+				style="cursor: grabbing;"
+				v-html="targetItemHTML" />
 		</svg>
 		<History 
 			:weighting-history="weightingHistory" 
@@ -39,11 +55,22 @@ export default {
 	data() {
 		return {
 			dragZoneWidth: 0,
-			weightHeight: 0,
+			scalesHeight: 0,
 			gap: 50,
 			cupWeights: {left: [], right: []},
 			newSide: undefined,
 			weightingHistory: [],
+			svgWidth: 0,
+			svgHeight: 0,
+			itemSide: 0,
+
+			dragMode: false,
+			target: {
+				svg: {x: 0, y: 0},
+				dom: {x: 0, y: 0}
+			},
+			nearestCup: undefined,
+			targetItemUsed: false,
 		}
 	},
 	computed: {
@@ -51,20 +78,132 @@ export default {
 			return this.weightings_amount
 		}
 	},
+	mounted() {
+		document.addEventListener('pointermove', this.drag, {passive: false})
+		document.addEventListener('pointerup', this.endDrag)
+	},
+	destroyed() {
+		document.removeEventListener('pointermove', this.drag, {passive: false})
+		document.removeEventListener('pointerup', this.endDrag)
+	},
 	methods: {
-		getSvgWidth(width) {
+		getScalesWidth(width) {
 			this.dragZoneWidth = width * 0.8
+			this.svgWidth = width
 		},
-		getSvgHeight(height) {
-			this.weightHeight = height
+		getScalesHeight(height) {
+			this.scalesHeight = height
+			this.svgHeight += height
 		},
-		moveFromCup() {
+		getDragContainerHeight(height) {
+			this.svgHeight += height + this.gap
+		},
+		updateNearestCup(cupName) {
+			console.log('nearest cup: ', cupName)
+			this.nearestCup = cupName
+		},
+		startDrag(itemHTML, event) {
+			this.dragMode = true
+			this.targetItemHTML = itemHTML
+			let coordinates = event
+			event.preventDefault()
+			if (event.touches) {
+				coordinates = event.touches[0]
+			}
+			const x = coordinates.clientX
+			const y = coordinates.clientY
+			this.moveAt(x, y)
+		},
+		drag(event) {
+			if (!this.dragMode) {
+				return
+			}
+			if (this.targetItemHTML === undefined)
+				return
+			const x = event.clientX
+			const y = event.clientY
+		
+			this.moveAt(x, y)
+		},
+		endDrag() {
+			if (!this.nearestCup) {
+				this.backToDrag()
+			}
+			else {
+				this.cupWeights[this.nearestCup].push(this.targetItemHTML)
+				this.targetItemUsed = true
+			}
+			this.dragMode = false
+			this.nearestCup = undefined
+		},
+		backToDrag() {
+			this.targetItemUsed = false
+		},
+		setItemSide(side) {
+			this.itemSide = side
+		},
+		moveFromCup(data) {
+			this.cupWeights[data.cup].splice(data.itemIndex, 1)
+			this.nearestCup = undefined
+			this.startDrag(data.itemHTML, window.event)
 		},
 		stopWeight(){
 		},
 		clearWeights(){
 		},
 		startWeight(){
+		},
+		convertDOMtoSVG(x, y) {
+			try {
+				const pt = new DOMPoint(x, y)
+				const svgP = pt.matrixTransform(this.$refs.svg.getScreenCTM().inverse())
+				return {x: svgP.x, y: svgP.y}
+			}
+			catch(e) {
+				return false
+			}
+		},
+		autoscroll() {
+			const targetX = window.event.clientX
+			const targetY = window.event.clientY
+			const xDiff = 100
+			const yDiff = 100
+			let [scrollX, scrollY] = [0, 0]
+			if (targetX + xDiff > window.innerWidth) {
+					scrollX = targetX + xDiff - window.innerWidth
+			}
+			else if (targetX - xDiff < 0) {
+					scrollX = targetX - xDiff
+			}
+			if (targetY + yDiff > window.innerHeight) {
+					scrollY = targetY + yDiff - window.innerHeight
+			}
+			else if (targetY - yDiff < 0) {
+					scrollY = targetY - yDiff
+			}
+			scrollBy(scrollX, scrollY)
+		},
+		moveAt(x, y) {
+			const newCursorCoordinates = this.convertDOMtoSVG(x - this.itemSide / 2, y - this.itemSide / 2)
+			if (!newCursorCoordinates)
+					return
+			this.autoscroll()
+			this.$set(this.target.svg, 'x', newCursorCoordinates.x)
+			this.$set(this.target.svg, 'y', newCursorCoordinates.y)
+			this.$set(this.target.dom, 'x', x)
+			this.$set(this.target.dom, 'y', y)
+			if (!this.inAllowedArea()) {
+					this.endDrag()
+			}
+		},
+		inAllowedArea() { // if target object in allowed aarea
+			const targetX = window.event.clientX
+			const targetY = window.event.clientY
+			if (targetX < 0 || targetX > window.innerWidth)
+					return false
+			if (targetY < 0 || targetY > window.innerHeight)
+					return false
+			return true
 		},
 	}
 }

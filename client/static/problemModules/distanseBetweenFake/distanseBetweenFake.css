@@ -1,0 +1,9 @@
+.svg_with_buttons {
+	display: inline-flex;
+	width: 100%;
+	gap: 80px;
+}
+
+svg {
+	width: 50%;
+}

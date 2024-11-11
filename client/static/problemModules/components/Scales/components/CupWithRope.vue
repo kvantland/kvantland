@@ -7,8 +7,15 @@
                         :rx="`${cupInnerRadiusX}`"
                         :ry="`${cupInnerRadiusY}`" />
             <g class="objects" :transform="`scale(${objectsToCenterScale}) translate(0 ${objectMarginTop})`">
-                <g v-for="(object, objectNum) in objects" v-html="object.html" class="object" @mousedown="moveFromCup(object.payload)"
-                    :transform="`translate(${objectsCoordinates[objectNum].x} ${objectsCoordinates[objectNum].y})`"></g>
+                <g 
+									v-for="(object, objectNum) in objects" :key="`cup-item_num-${objectNum}`" 
+									:transform="`scale(${objectScale.x} ${objectScale.y}) 
+									translate(${objectsCoordinates[objectNum].x} ${objectsCoordinates[objectNum].y})`"
+									class="object" 
+									@touchstart="moveFromCup(object, objectNum)"
+									@mousedown="moveFromCup(object, objectNum)"
+									v-html="object"
+                    ></g>
             </g>
             <path class="outside" style="fill: url(#cupShadowOutside); stroke: #949494;	stroke-width: 2;"
                     :d="`
@@ -35,7 +42,7 @@
                 :y2="ropeHight" />
         </g>
             
-        <circle class="hinge" style="fill: #A7763D;	stroke: #815A30; stroke-width: 4;"
+        <circle class="hinge" style="fill: #A7763D; stroke: #815A30; stroke-width: 4;"
                     cx="0"
                     cy="0"
                     :r="`${hingeR}`"/>
@@ -56,7 +63,18 @@ export default {
         name: {default: ''},
         objects: {default: () => {return []}},
         objectMarginTop: {default: 4},
-        objectsToCenterScale: {default: 0.7},
+        objectsToCenterScale: {
+					type: Number,
+					default: 0.7
+				},
+				objectSide: {
+					type: Number,
+					default: 0
+				},
+				objectScale: {
+					type: Object,
+					default: () => {return {x: 1, y: 1}},
+				}
     },
     computed: {
         objectsCoordinates() {
@@ -66,16 +84,16 @@ export default {
             const angleStep = Math.PI * 2 / objectsAmount
             for (let objectNum = 0; objectNum < objectsAmount; objectNum++) {
                 angle += angleStep
-                const x = this.cupInnerRadiusX * Math.cos(angle)
-                const y = this.cupInnerRadiusY * Math.sin(angle)
+                const x = this.cupInnerRadiusX * Math.cos(angle) - this.objectSide / 2
+                const y = this.cupInnerRadiusY * Math.sin(angle) - this.objectSide / 2
                 coordinates.push({x: x, y: y})
             }
             return coordinates
         }
     },
     methods: {
-        moveFromCup(payload) {
-            this.$emit('moveFromCup', {payload: payload, cup: this.name.split('_')[0]})
+        moveFromCup(itemHTML, itemIndex) {
+            this.$emit('moveFromCup', {itemHTML, itemIndex, cup: this.name.split('_')[0]})
         }
     },
     created() {
