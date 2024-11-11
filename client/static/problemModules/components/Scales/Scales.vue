@@ -202,7 +202,7 @@ export default {
                 this.stopAngle = 20
             }
         },
-        async angle(newValue) {
+        angle(newValue) {
             if (this.angleSign == 1 && newValue >= this.stopAngle) {
                 this.$emit('stopMove', this.moveTo)
                 return
@@ -233,7 +233,7 @@ export default {
 				return true;
 			},
 			moveFromCup(data) {
-					this.$emit('moveFromCup', {itemHTML: data.itemHTML, itemIndex: data.itemIndex, cup: data.cup})
+					this.$emit('moveFromCup', {item: data.item, itemIndex: data.itemIndex, cup: data.cup})
 			}
     }
 }

@@ -14,9 +14,9 @@
 				@moveFromCup="moveFromCup" @stopMove="stopWeight" />
 			<DragContainer 
 				:transform="`translate(${(svgWidth - dragZoneWidth) / 2} ${scalesHeight + gap})`"
-				item-image="coin.svg" 
-				:target-item-used="targetItemUsed"
+				item-image="coin.svg"
 				:drag-mode="dragMode"
+				:return-object="returnObject"
 				:items-amount="5" :width="dragZoneWidth" 
 				@svgHeight="getDragContainerHeight"
 				@startDrag="startDrag"
@@ -26,7 +26,7 @@
 				ref="target" class="target" 
 				:transform="`translate(${target.svg.x} ${target.svg.y})`"
 				style="cursor: grabbing;"
-				v-html="targetItemHTML" />
+				v-html="target.html" />
 		</svg>
 		<History 
 			:weighting-history="weightingHistory" 
@@ -66,11 +66,14 @@ export default {
 
 			dragMode: false,
 			target: {
+				html: undefined,
+				rowNum: undefined,
+				itemNum: undefined,
 				svg: {x: 0, y: 0},
 				dom: {x: 0, y: 0}
 			},
 			nearestCup: undefined,
-			targetItemUsed: false,
+			returnObject: undefined,
 		}
 	},
 	computed: {
@@ -102,9 +105,12 @@ export default {
 			console.log('nearest cup: ', cupName)
 			this.nearestCup = cupName
 		},
-		startDrag(itemHTML, event) {
+		startDrag(targetItem, event) {
 			this.dragMode = true
-			this.targetItemHTML = itemHTML
+			this.target.html = targetItem.html
+			this.target.rowNum = targetItem.rowNum
+			this.target.itemNum = targetItem.itemNum
+
 			let coordinates = event
 			event.preventDefault()
 			if (event.touches) {
@@ -118,7 +124,7 @@ export default {
 			if (!this.dragMode) {
 				return
 			}
-			if (this.targetItemHTML === undefined)
+			if (this.target.html === undefined)
 				return
 			const x = event.clientX
 			const y = event.clientY
@@ -130,22 +136,22 @@ export default {
 				this.backToDrag()
 			}
 			else {
-				this.cupWeights[this.nearestCup].push(this.targetItemHTML)
-				this.targetItemUsed = true
+				this.cupWeights[this.nearestCup].push(JSON.parse(JSON.stringify(this.target)))
 			}
 			this.dragMode = false
-			this.nearestCup = undefined
 		},
 		backToDrag() {
-			this.targetItemUsed = false
+			this.returnObject = JSON.parse(JSON.stringify(this.target))
 		},
 		setItemSide(side) {
 			this.itemSide = side
 		},
 		moveFromCup(data) {
+			console.log(data)
 			this.cupWeights[data.cup].splice(data.itemIndex, 1)
 			this.nearestCup = undefined
-			this.startDrag(data.itemHTML, window.event)
+			console.log(data.item)
+			this.startDrag(data.item, window.event)
 		},
 		stopWeight(){
 		},

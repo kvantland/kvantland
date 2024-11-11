@@ -50,9 +50,9 @@ export default {
 			type: Boolean,
 			default: false
 		},
-		targetItemUsed: {
-			type: Boolean,
-			default: false
+		returnObject: {
+			type: Object,
+			default: () => {}
 		}
 	},
 	data()  {
@@ -89,11 +89,10 @@ export default {
 		},
 	},
 	watch: {
-		dragMode(isDrag) {
-			console.log('drag mode changed!')
-			console.log(this.targetItemUsed)
-			if (!isDrag && this.target.length && !this.targetItemUsed) {
-				this.$set(this.items[this.target[0]], this.target[1], true)
+		returnObject(object) {
+			console.log('new!')
+			if (object) {
+				this.$set(this.items[object.rowNum], object.itemNum, true)
 			}
 		}
 	},
@@ -117,7 +116,11 @@ export default {
 			this.$set(this.items[rowNum], itemNum, false)
 			this.target = [rowNum, itemNum]
 			this.$emit('setItemSide', document.querySelector('.drag-items__item').getBoundingClientRect().width)
-			this.$emit('startDrag', document.querySelector(`.drag-items__item_row-${rowNum}_item-${itemNum}`).innerHTML, event)
+			this.$emit('startDrag', {
+				html: document.querySelector(`.drag-items__item_row-${rowNum}_item-${itemNum}`).innerHTML, 
+				rowNum,
+				itemNum
+			}, event)
 		}
 	}
 }
