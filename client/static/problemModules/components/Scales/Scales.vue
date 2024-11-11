@@ -104,7 +104,7 @@ export default {
 				},
 				target: {
 					type: Object, // in format {x: Number, y: Number}
-					default: () => {}
+					default: () => { return {x: 0, y: 0} }
 				},
 				itemSide: {
 					type: Number,

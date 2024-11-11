@@ -16,7 +16,7 @@
 				:transform="`translate(${(svgWidth - dragZoneWidth) / 2} ${scalesHeight + gap})`"
 				item-image="coin.svg"
 				:drag-mode="dragMode"
-				:return-object="returnObject"
+				:return-objects="returnObjects"
 				:items-amount="5" :width="dragZoneWidth" 
 				@svgHeight="getDragContainerHeight"
 				@startDrag="startDrag"
@@ -50,6 +50,14 @@ export default {
 		problemParams: {
 			type: Object,
 			default: () => {}
+		},
+		xhrData: {
+			type: Object,
+			default: () => {}
+		},
+		newXhr: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
@@ -59,7 +67,6 @@ export default {
 			gap: 50,
 			cupWeights: {left: [], right: []},
 			newSide: undefined,
-			weightingHistory: [],
 			svgWidth: 0,
 			svgHeight: 0,
 			itemSide: 0,
@@ -73,12 +80,27 @@ export default {
 				dom: {x: 0, y: 0}
 			},
 			nearestCup: undefined,
-			returnObject: undefined,
+			returnObjects: undefined,
 		}
 	},
 	computed: {
 		weightingsAmount() {
-			return this.weightings_amount
+			return this.problemParams.weightings_amount
+		},
+		weightingHistory() {
+			return this.problemParams?.history
+		}
+	},
+	watch: {
+		newXhr(isNew) {
+			if (isNew) {
+				this.$emit('xhrGet')
+				console.log(this.xhrData)
+				if (this.xhrData.xhr_answer.message) {
+					this.$emit('showXhrDialog', this.xhrData.xhr_answer.message)
+				}
+				this.newSide = this.xhrData.xhr_answer.move_side
+			}
 		}
 	},
 	mounted() {
@@ -132,6 +154,9 @@ export default {
 			this.moveAt(x, y)
 		},
 		endDrag() {
+			if (!this.dragMode) {
+				return;
+			}
 			if (!this.nearestCup) {
 				this.backToDrag()
 			}
@@ -141,23 +166,38 @@ export default {
 			this.dragMode = false
 		},
 		backToDrag() {
-			this.returnObject = JSON.parse(JSON.stringify(this.target))
+			if (this.target.html) {
+				this.returnObjects = JSON.parse(JSON.stringify([this.target]))
+			}
 		},
 		setItemSide(side) {
 			this.itemSide = side
 		},
 		moveFromCup(data) {
-			console.log(data)
 			this.cupWeights[data.cup].splice(data.itemIndex, 1)
 			this.nearestCup = undefined
-			console.log(data.item)
 			this.startDrag(data.item, window.event)
 		},
 		stopWeight(){
 		},
 		clearWeights(){
+			const returnObjects = []
+			for (const object of this.cupWeights.left) {
+				returnObjects.push(object)
+			}
+			for (const object of this.cupWeights.right) {
+				returnObjects.push(object)
+			}
+			this.cupWeights = {
+				left: [],
+				right: []
+			}
+			this.dragMode = false
+			this.returnObjects = returnObjects
+			this.newSide = "equal"
 		},
 		startWeight(){
+			this.$emit('xhrRequest', {weights: this.cupWeights})
 		},
 		convertDOMtoSVG(x, y) {
 			try {

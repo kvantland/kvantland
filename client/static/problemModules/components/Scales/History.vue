@@ -66,8 +66,8 @@
 export default {
 	props: {
 		weightingsAmount: {
-			type: String,
-			default: '0'
+			type: Number,
+			default: 0
 		},
 		weightingHistory: {
 			type: Array,

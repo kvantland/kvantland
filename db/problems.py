@@ -314,7 +314,7 @@ def Kombi():
 	problem_1 = Problem(
 		name='Расстояние между фальшивыми',
 		points=4,
-		type_="distanse_betweeen_fake"
+		type_="distanse_between_fake"
 	)
 
 	for position_1,  position_2 in [

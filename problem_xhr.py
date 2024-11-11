@@ -61,7 +61,7 @@ def get_xhr_request(db):
 	user_id = token_status['user_id']
 	
 	print('var_id: ', var_id, file=sys.stderr)
-	print('params: ', params)
+	#print('params: ', params)
 	#print(xhr_request(db, user_id, var_id, params), file=sys.stderr)
 	resp['xhr_answer'] = xhr_request(db, user_id, var_id, params)
 	print(resp['xhr_answer'], file=sys.stderr)

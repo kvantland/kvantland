@@ -50,9 +50,9 @@ export default {
 			type: Boolean,
 			default: false
 		},
-		returnObject: {
-			type: Object,
-			default: () => {}
+		returnObjects: {
+			type: Array,
+			default: () => []
 		}
 	},
 	data()  {
@@ -89,10 +89,13 @@ export default {
 		},
 	},
 	watch: {
-		returnObject(object) {
+		returnObjects(objects) {
 			console.log('new!')
-			if (object) {
-				this.$set(this.items[object.rowNum], object.itemNum, true)
+			console.log(objects)
+			for (const object of objects) {
+				if (object) {
+					this.$set(this.items[object.rowNum], object.itemNum, true)
+				}
 			}
 		}
 	},
@@ -113,6 +116,7 @@ export default {
 			if (this.dragMode) {
 				return
 			}
+			console.log('check_1')
 			this.$set(this.items[rowNum], itemNum, false)
 			this.target = [rowNum, itemNum]
 			this.$emit('setItemSide', document.querySelector('.drag-items__item').getBoundingClientRect().width)
