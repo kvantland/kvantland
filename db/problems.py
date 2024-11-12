@@ -209,7 +209,28 @@ def Geoma():
 				периметр пятиугольника?"""
 
 	})
-	current_town.add_problems([problem_1, problem_2, ])
+
+	problem_3 = Problem(
+		name="Кубики с рисунками",
+		points=1,
+		type_="cubes_with_images"
+	)
+	for cube_list in [
+		[1, 2, 3, 4, 5],
+		[2, 3, 4, 5, 1],
+		[3, 4, 5, 1, 2],
+		[4, 5, 1, 2, 3]
+	]:
+		problem_3.add_variant({
+			'content': {
+				'cubeList': cube_list,
+				'componentType': "cubesWithImages",
+				'inputType': "InteractiveTypeInput",
+				'correct': 1,
+			}
+	})
+
+	current_town.add_problems([problem_1, problem_2, problem_3])
 
 
 def Golovolomsk():

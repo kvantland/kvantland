@@ -1,0 +1,48 @@
+.cubes-container {
+	width: 70%;
+	display: inline-flex;
+	justify-content: space-between;
+}
+
+.cube-with-num {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 22px;
+	align-items: center;
+}
+
+.cube-with-num__cube {
+	width: 100px;
+	height: 100px;
+	cursor: pointer;
+	transition: 0.3s all;
+}
+
+.cube-with-num__cube_active {
+	filter: brightness(0.5);
+	-webkit-filter: brightness(0.5);
+}
+
+.cube-with-num__num {
+	font-size: 2em;
+}
+
+@media screen and (hover: hover) {
+	.cube-with-num__cube:hover {
+		filter: brightness(0.7);
+		-webkit-filter: brightness(0.7);
+	}
+}
+
+@media screen and (width < 1280px){
+	.cubes-container {
+		width: 100%;
+	}
+}
+
+@media screen and (width < 600px){
+	.cube-with-num__cube {
+		width: 60px;
+		height: 60px;
+	}
+}
