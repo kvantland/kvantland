@@ -197,7 +197,7 @@ def Geoma():
 		name="Периметр пятиугольника",
 		points=2,
 		type_='integer',
-		image='perimeter_of_pentagon.png'
+		image='perimeter_of_pentagon.svg'
 	)
 	problem_2.add_variant({
 		'content': {
