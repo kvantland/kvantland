@@ -325,7 +325,31 @@ def Golovolomsk():
 			},
 		})
 	
-	current_town.add_problems([problem_1, ])
+	problem_2 = Problem(
+		name="Фермер и петушок",
+		points=2,
+		type_="farmer_and_cockerel"
+	)
+	
+	for board_width, board_height in [
+		(8, 10),
+		(8, 12),
+		(10, 10),
+		(10, 12)
+	]:
+		problem_2.add_variant({
+		'content': {
+			'board_width': board_width,
+			'board_height': board_height,
+			'remaining_moves': 50,
+			'turn': None,
+			'farmer_coordinates': [board_height - 1, 0],
+			'cockerel_coordinates': [0, board_width - 1],
+			'componentType': "farmerAndCockerel",
+			'inputType': "InteractiveTypeInput"
+		}
+	})
+	current_town.add_problems([problem_1, problem_2, ])
 
 
 def Kombi():

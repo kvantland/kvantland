@@ -1,0 +1,25 @@
+.play-board__button {
+	border: none;
+	display: inline-flex;
+	padding: 10px 20px;
+	background-color: #1E8B93;
+	border-radius: 10px;
+	color: white;
+	font-size: 0.7em;
+	font-weight: 600;
+	font-family: Montserrat Alternates;
+	cursor: pointer;
+}
+
+line {
+	stroke-width: 1px;
+	stroke: black;
+}
+
+.play-board {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	width: 50%;
+}
