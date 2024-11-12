@@ -1,9 +1,15 @@
 .svg_with_buttons {
 	display: inline-flex;
+	justify-content: center;
 	width: 100%;
 	gap: 80px;
 }
 
 svg {
+	z-index: 1;
 	width: 50%;
+}
+
+.target {
+	z-index: 10;
 }
