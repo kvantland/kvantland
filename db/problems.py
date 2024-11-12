@@ -352,8 +352,28 @@ def Kombi():
 				'inputType': "IntegerTypeInput"
 			}
 		})
+
+	problem_2 = Problem(
+		name="Шахматные фигуры",
+		type_="chess_figures",
+		points=3
+	)
+
+	for positions in [
+		[[1, 5], [2, 7]],
+		[[3, 2], [5, 4]],
+		[[1, 5], [5, 4]],
+		[[2, 7], [3, 2]]
+	]:
+		problem_2.add_variant({
+			'content': {
+				'positions': positions,
+				'componentType': "chessFigures",
+				'inputType': "InteractiveTypeInput"
+			}
+		})
 	
-	current_town.add_problems([problem_1, ])
+	current_town.add_problems([problem_1, problem_2])
 
 
 def update_positions_town(cur, town, problem_count):

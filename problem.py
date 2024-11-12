@@ -209,7 +209,7 @@ def get_problem_data(db):
 			resp['problem']['componentType'] = content['componentType']
 		if 'descriptionType' in content.keys():
 			resp['problem']['descriptionType'] = content['descriptionType']
-		print('newProblemData: ', resp, file=sys.stderr)
+		# print('newProblemData: ', resp, file=sys.stderr)
 		resp['status'] = True
 		return json.dumps(resp)
 	

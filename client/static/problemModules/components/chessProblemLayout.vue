@@ -60,6 +60,7 @@ export default {
     },
     computed: {
         boardArrayConfiguration() {
+					console.log(this.boardConfiguration)
             let configuration = []
             if (this.boardConfiguration === 'empty') {
                 for (let row = 0; row < this.boardSide; row++) {
