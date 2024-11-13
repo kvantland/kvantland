@@ -11,15 +11,42 @@
 	cursor: pointer;
 }
 
-line {
-	stroke-width: 1px;
-	stroke: black;
-}
-
 .play-board {
 	display: inline-flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
-	width: 50%;
+	width: 40%;
+}
+
+.possible_position {
+	fill: lightgreen;
+	stroke: none;
+	filter: blur(1px);
+	pointer-events: none;
+}
+
+.cockerel {
+	pointer-events: none;
+}
+
+rect {
+	cursor: pointer;
+}
+
+.turn_sign {
+	font-weight: 600;
+	font-size: 3vw;
+}
+
+.turn_sign.player {
+	color: lightgreen;
+	text-stroke: 1px darkgreen;
+	-webkit-text-stroke: 1px darkgreen;
+}
+
+.turn_sign.computer {
+	text-stroke: 1px darkred;
+	-webkit-text-stroke: 1px darkred;
+	color: lightcoral;
 }

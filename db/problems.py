@@ -346,7 +346,7 @@ def Golovolomsk():
 			'farmer_coordinates': [board_height - 1, 0],
 			'cockerel_coordinates': [0, board_width - 1],
 			'componentType': "farmerAndCockerel",
-			'inputType': "InteractiveTypeInput"
+			'inputType': "HintOnlyInput"
 		}
 	})
 	current_town.add_problems([problem_1, problem_2, ])
