@@ -20,7 +20,8 @@
 						l ${-hexagonalWidth / 2} ${-(hexagonalHeight - hexagonalSide) / 2}
 						v ${-hexagonalSide}
 						l ${hexagonalWidth / 2} ${-(hexagonalHeight - hexagonalSide) / 2} z`"/>
-				<text v-if="honeycombs[rowNum][itemNum] !== ''" 
+				<text 
+					v-if="honeycombs[rowNum][itemNum] !== ''" 
 					:x="hexagonalWidth / 2" :y="hexagonalHeight / 2" dy="0.35em"
 					 class='honeycomb-row__item-text'> 
 					{{ honeycombs[rowNum][itemNum] }} </text>

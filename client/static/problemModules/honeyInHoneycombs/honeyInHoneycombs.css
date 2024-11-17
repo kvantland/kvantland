@@ -3,19 +3,25 @@ svg {
 }
 
 .honeycomb-row__item {
-	fill: white;
-	stroke-width: 1px;
-	stroke: black;
+	fill: rgba(246, 146, 30, 1);
+	stroke: rgba(255, 222, 79, 1);
+	stroke-width: 4px;
+	box-shadow: 20px 20px 12px 0px rgba(0, 0, 0, 0.1) inset;
+	box-shadow: -20px -20px 12px 0px rgba(0, 0, 0, 0.1) inset;
 	transition: 0.3s all;
 }
 
 text {
+	font-family: Montserrat Alternates;
+	color: rgba(96, 61, 19, 1);
 	text-anchor: middle;
-	font-size: 1em;
+	font-weight: 700;
+	font-size: 0.6em;
 }
 
 .honeycomb-row__item_active-false {
 	pointer-events: none;
+	fill: rgba(246, 146, 30, 1);
 }
 
 .honeycomb-row__item_active-true {
@@ -23,11 +29,11 @@ text {
 }
 
 .honeycomb-row__item_choosed-true {
-	fill: yellow;
+	fill: rgba(252, 184, 19, 1);
 }
 
 @media screen and (hover: hover) {
 	.honeycomb-row__item_active-true:hover:not(.honeycomb-row__item_choosed-true) {
-		fill: lightyellow;
+		fill: rgba(255, 215, 118, 1)
 	}
 }
