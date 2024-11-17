@@ -20,6 +20,30 @@
 	box-sizing: border-box;
 }
 
+.table__item_color-0 {
+	background-color: rgba(254, 228, 198, 1);
+}
+
+.table__item_color-1 {
+	background-color: rgba(255, 253, 189, 1);
+}
+
+.table__item_color-2 {
+	background-color: rgba(252, 211, 236, 1);
+}
+
+.table__item_color-3 {
+	background-color: rgba(214, 255, 212, 1);
+}
+
+.table__item_color-4 {
+	background-color: rgba(214, 255, 254, 1);
+}
+
+.table__item_color-5 {
+	background-color: rgba(226, 213, 255, 1);
+}
+
 .left-border {
 	border-left: 2px black solid;
 }

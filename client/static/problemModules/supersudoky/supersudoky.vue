@@ -6,11 +6,12 @@
 				:key="`plot-row_num-${rowNum}`"
 				class="table__row">
 				<div 
-					v-for="_, itemNum in row"
+					v-for="itemColor, itemNum in row"
 					:key="`plot-item_num-${itemNum}_row-${rowNum}`"
-					:class="['table__item', ...getBorderClasses(rowNum, itemNum)]">
+					:class="['table__item', `table__item_color-${itemColor}`,...getBorderClasses(rowNum, itemNum)]">
 					<p v-if="startNumbers[rowNum][itemNum] !== 0"> {{ startNumbers[rowNum][itemNum] }} </p>
-					<input v-else 
+					<input 
+						v-else 
 						:input-save-value="inputValues[rowNum][itemNum]"
 						:value="inputValues[rowNum][itemNum]" @keydown="inputNUmber(rowNum, itemNum, $event)" />
 				</div>
