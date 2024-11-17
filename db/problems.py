@@ -139,7 +139,33 @@ def Chiselburg():
 				'numberValue': number_value,
 			}
 		})
-	current_town.add_problems([problem_1])
+
+	problem_2 = Problem(
+		name='Дни недели',
+		points=2,
+		type_='week_days'
+	)
+	for first_month, day_type, second_month, month_day, correct in [
+		("июне", "воскресных дней", "июле", "1 августа", [1, 2]),
+
+	 ("апреле", "четвергов", "мае", "27 мая", [3, 4]),
+
+	 ("сентябре", "пятниц", "октябре", "31 октября", [1, 2]),
+
+	 ("ноябре", "суббот", "декабре", "22 декабря", [1, 7])
+	]:
+		problem_2.add_variant({
+			'content': {
+				'correct': correct,
+				'first_month': first_month,
+				'second_month': second_month,
+				'day_type': day_type,
+				'month_day': month_day,
+				'componentType': 'weekDays',
+				'inputType': 'InteractiveTypeInput'
+			}
+		})
+	current_town.add_problems([problem_1, problem_2])
 
 
 def Geoma():
