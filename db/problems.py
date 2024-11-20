@@ -120,7 +120,19 @@ def Liars_Island():
 			}
 		})
 
-	current_town.add_problems([problem_1, ])
+	problem_2 = Problem(
+		name='Предсказания',
+		points=3,
+		type_='predictions'
+	)
+	problem_2.add_variant({
+		'content': {
+			'componentType': "predictions",
+			'inputType': "InteractiveTypeInput",
+			'correct': ['g', 'g', 'g']
+		}
+	})
+	current_town.add_problems([problem_1, problem_2, ])
 	
 
 def Chiselburg():
