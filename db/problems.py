@@ -453,7 +453,28 @@ def Kombi():
 			}
 		})
 	
-	current_town.add_problems([problem_1, problem_2])
+	problem_3 = Problem(
+		name="В поезде",
+		points=3,
+		type_='multy_integer',
+		image='in_train.svg'
+	)
+	for wagon, distance, correct in [
+		(8, 2, [9, 21]),
+		(9, 2, [11, 23]),
+		(9, 3, [9, 25]),
+		(10, 3, [11, 27])
+	]:
+		problem_3.add_variant({
+			'content': {
+				'wagon': wagon,
+				'distance': distance,
+				'correct': correct,
+				'inputType': "MultyIntegerTypeInput",
+				'descriptionType': "inTrain",
+			}
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3])
 
 
 def update_positions_town(cur, town, problem_count):
