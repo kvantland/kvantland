@@ -2,16 +2,18 @@
     <div class="result_area">
         <p :class="answerStatus ? 'correct' : 'incorrect'"> {{ answerStatus ? 'Верно': 'Heверно' }} </p>
         <p v-if="isInteger" class="answer"> Ваш ответ: {{ answer }} </p>
+				<p v-if="isMultyInteger" class="answer"> Ваш ответ: {{ JSON.parse(answer).join(', ') }} </p>
     </div>
 </template>
 
 <script>
 export default {
-    props: {
-        answer: {default: ''},
-        answerStatus: {default: false},
-        isInteger: {default: false}
-    }
+	props: {
+		answer: {default: ''},
+		answerStatus: {default: false},
+		isInteger: {default: false},
+		isMultyInteger: {default: false}
+	},
 }
 </script>
 
