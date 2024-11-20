@@ -132,7 +132,25 @@ def Liars_Island():
 			'correct': ['g', 'g', 'g']
 		}
 	})
-	current_town.add_problems([problem_1, problem_2, ])
+	problem_3 = Problem(
+		name="Самый богатый житель острова",
+		points=2,
+		type_='richest_island_resident'
+	)
+	for names, correct in [
+		(['Дональд', 'Билл', 'Илон'], [1, 2, 0]),
+		(['Билл', 'Илон', 'Дональд'], [0, 2, 1]),
+		(['Илон', 'Дональд', 'Билл'], [2, 0, 1]),
+	]:
+		problem_3.add_variant({
+			'content': {
+				'names': names,
+				'correct': correct, # correct index order, first - richest
+				'componentType': "richestIslandResident",
+				'inputType': "InteractiveTypeInput",
+			}
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3])
 	
 
 def Chiselburg():
