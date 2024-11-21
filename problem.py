@@ -200,6 +200,8 @@ def get_problem_data(db):
 	if isNewProblem:
 		if type_ == 'integer':
 			resp['problem']['inputType'] = 'IntegerTypeInput'
+		if type_ == 'multy_integer':
+			resp['problem']['inputType'] = 'MultyIntegerTypeInput'
 		if type_ == 'radio':
 			resp['problem']['inputType'] = 'InteractiveTypeInput'
 			resp['problem']['componentType'] = 'radio'

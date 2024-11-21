@@ -388,10 +388,10 @@ def Golovolomsk():
 	)
 	
 	for board_width, board_height in [
-		(8, 10),
-		(8, 12),
-		(10, 10),
-		(10, 12)
+		(8, 6),
+		(10, 6),
+		(7, 5),
+		(9, 5)
 	]:
 		problem_2.add_variant({
 		'content': {
@@ -470,7 +470,6 @@ def Kombi():
 				'wagon': wagon,
 				'distance': distance,
 				'correct': correct,
-				'inputType': "MultyIntegerTypeInput",
 				'descriptionType': "inTrain",
 			}
 		})

@@ -17,14 +17,10 @@ def steps(step_num, params, data):
 			data['remaining_moves'] -= 1
 			print('move to: ', data['farmer_coordinates'])
 			print(data['farmer_coordinates'], data['cockerel_coordinates'])
-			if data['remaining_moves'] == 0:
-				return {
-					'answer': {'status': "you lose"},
-					'user_answer': "no catch",
-					'solution': params['solution'],
-					'answer_correct': False,
-					'data_update': data
-				}
+			return {'answer': {'status': "allowed"}, 'data_update': data}
+		
+		elif params['moveObject'] == "cockerel":
+			print('cockerel')
 			if data['farmer_coordinates'] == data['cockerel_coordinates']:
 				return {
 					'answer': {'status': "you win!"}, 
@@ -33,10 +29,14 @@ def steps(step_num, params, data):
 					'answer_correct': True,
 					'data_update': data
 					}
-			return {'answer': {'status': "allowed"}, 'data_update': data}
-		
-		elif params['moveObject'] == "cockerel":
-			print('cockerel')
+			if data['remaining_moves'] == 0:
+				return {
+					'answer': {'status': "you lose"},
+					'user_answer': "no catch",
+					'solution': params['solution'],
+					'answer_correct': False,
+					'data_update': data
+				}
 			cockerel_coordinates = data['cockerel_coordinates']
 			farmer_coordinates = data['farmer_coordinates']
 			good_possible_coordinates = []
