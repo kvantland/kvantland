@@ -39,6 +39,7 @@ export default {
 		version: 2,
 	},
 	tournamentMode: process.env.MODE || 'private',
+	tournamentType: process.env.TOURNAMENT_TYPE || 'math',
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

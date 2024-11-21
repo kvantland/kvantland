@@ -2,14 +2,19 @@
 <g class="towns">
 	<image v-for="twn in townsInfo" :key="`shadow_${twn.townID}`" class="icon-shadow" href="/town-icon/icon-shadow.svg" :x="twn.x - 50" :y="twn.y + 30" width="100px" />
     <NuxtLink v-for="twn in townsInfo" :class="twn.opened ? 'town' : 'town town_completed'" :transform="`translate(${twn.x} ${twn.y})`" :to="`/town/${twn.townID}/`" :key="`towns_${twn.townID}`">
-        <image :href="`/town-icon/icon-${twn.townID}.svg`" x="-40px" y ="-40px" width="80px" clip-path="url(#icon_border)" />
-        <circle class="town-icon" r="40px" />
+        <image 
+					:href="`/town-icon/${$config.tournamentType}/icon-${twn.townID}.svg`" 
+					:x="`${-iconRadius}px`"	:y="`${-iconRadius}px`" 
+					:width="`${2 * iconRadius}px`" clip-path="url(#icon_border)" />
+        <circle class="town-icon" :r="`${iconRadius}px`" />
         <g class="town-name">
-			<path 
-			class="town-name" :num="twn.townID-1" :d="townNamesPaths[twn.townID-1]" 
-			:transform="`translate(${transformOrigins[twn.townID-1]})`" 
-			style="filter:url(#dropshadow)"/>
-            <text class="town-name" style="font-family:Montserrat Alternates" :num="twn.townID-1" y="-60" dy="0.35em">{{twn.name}}</text>
+					<g :transform="`translate(0 ${-iconRadius * 1.7})`">
+					<path 
+					class="town-name" :num="twn.townID-1" :d="townNamesPaths[twn.townID-1]" 
+					:transform="`translate(${transformOrigins[twn.townID-1]})`" 
+					style="filter:url(#dropshadow)"/>
+					<text class="town-name" style="font-family:Montserrat Alternates" :num="twn.townID-1" dy="0.35em">{{twn.name}}</text>
+					</g>
         </g>
     </NuxtLink>
 </g>
@@ -18,20 +23,20 @@
 export default {
     data() {
         return {
+						iconRadius: 40,
             townsInfo:{},
 						townNamesPaths: [
-                    'm 0 6 v 21.72199043273926 a 6 6 0 0 0 6 6 h 154.96492919921874 a 6 6 0 0 0 6 -6 v -21.72199043273926 a 6 6 0 0 0 -6 -6 h -154.96492919921874 a 6 6 0 0 0 -6 6 z',
-                    'm 0 6 v 21.72199043273926 a 6 6 0 0 0 6 6 h 230.9311767578125 a 6 6 0 0 0 6 -6 v -21.72199043273926 a 6 6 0 0 0 -6 -6 h -230.9311767578125 a 6 6 0 0 0 -6 6 z',
-                    'm 0 6 v 21.72199043273926 a 6 6 0 0 0 6 6 h 183.9388214111328 a 6 6 0 0 0 6 -6 v -21.72199043273926 a 6 6 0 0 0 -6 -6 h -183.9388214111328 a 6 6 0 0 0 -6 6 z',
-                    'm 0 6 v 21.72199043273926 a 6 6 0 0 0 6 6 h 92.43402252197265 a 6 6 0 0 0 6 -6 v -21.72199043273926 a 6 6 0 0 0 -6 -6 h -92.43402252197265 a 6 6 0 0 0 -6 6 z',
-                    'm 0 6 v 21.72199043273926 a 6 6 0 0 0 6 6 h 265.24155578613284 a 6 6 0 0 0 6 -6 v -21.72199043273926 a 6 6 0 0 0 -6 -6 h -265.24155578613284 a 6 6 0 0 0 -6 6 z'
-                    ],
+							'm 0 5 v 29.24428939819336 a 5 5 0 0 0 5 5 h 150.3788299560547 a 5 5 0 0 0 5 -5 v -29.24428939819336 a 5 5 0 0 0 -5 -5 h -150.3788299560547 a 5 5 0 0 0 -5 5 z',
+							'm 0 5 v 29.24428939819336 a 5 5 0 0 0 5 5 h 226.30149841308594 a 5 5 0 0 0 5 -5 v -29.24428939819336 a 5 5 0 0 0 -5 -5 h -226.30149841308594 a 5 5 0 0 0 -5 5 z',
+							'm 0 5 v 29.24428939819336 a 5 5 0 0 0 5 5 h 179.31068420410156 a 5 5 0 0 0 5 -5 v -29.24428939819336 a 5 5 0 0 0 -5 -5 h -179.31068420410156 a 5 5 0 0 0 -5 5 z',
+							'm 0 5 v 29.24428939819336 a 5 5 0 0 0 5 5 h 87.82855224609375 a 5 5 0 0 0 5 -5 v -29.24428939819336 a 5 5 0 0 0 -5 -5 h -87.82855224609375 a 5 5 0 0 0 -5 5 z',
+							'm 0 5 v 29.24428939819336 a 5 5 0 0 0 5 5 h 260.59169006347656 a 5 5 0 0 0 5 -5 v -29.24428939819336 a 5 5 0 0 0 -5 -5 h -260.59169006347656 a 5 5 0 0 0 -5 5 z'],
             transformOrigins: [ 
-                    '-83.48246459960937 -76.86099521636963',
-                    '-121.46558837890625 -76.86099521636963',
-                    '-97.9694107055664 -76.86099521636963',
-                    '-52.217011260986325 -76.86099521636963',
-                    '-138.62077789306642 -76.86099521636963'
+                    '-80.18941497802734 -19.62214469909668',
+                    '-118.15074920654297 -19.62214469909668',
+                    '-94.65534210205078 -19.62214469909668',
+                    '-48.914276123046875 -19.62214469909668',
+                    '-135.29584503173828 -19.62214469909668'
                     ],
         }
     },
@@ -41,7 +46,7 @@ export default {
         this.townsInfo = townsInfoData
     },
 
-	/* mounted() {
+	mounted() {
 		for(const test of document.querySelectorAll('text')) {
 			const rect = test.getBBox()
 			this.printPath(rect.width, rect.height)
@@ -56,10 +61,10 @@ export default {
 			const r = 5
 			const h = height + paddingY * 2 - 2 * r
 			const w = width + paddingX * 2 - 2 * r
-			console.log('origin: ', h / 2 + r, w / 2 + r)
-			console.log(`m 0 ${r} v ${h} a ${r} ${r} 0 0 0 ${r} ${r} h ${w} a ${r} ${r} 0 0 0 ${r} ${-r} v ${-h} a ${r} ${r} 0 0 0 ${-r} ${-r} h ${-w} a ${r} ${r} 0 0 0 ${-r} ${r} v ${h} z`)
+			console.log('origin: ', -(w / 2 + r), -(h / 2 + r))
+			console.log(`m 0 ${r} v ${h} a ${r} ${r} 0 0 0 ${r} ${r} h ${w} a ${r} ${r} 0 0 0 ${r} ${-r} v ${-h} a ${r} ${r} 0 0 0 ${-r} ${-r} h ${-w} a ${r} ${r} 0 0 0 ${-r} ${r} z`)
 		}
-	}, */
+	},
 
 	
 }
@@ -72,7 +77,7 @@ export default {
 }
 
 .town-name {
-    fill: #3946B9;
+    fill: #B62C5A;
 }
 
 text.town-name {
