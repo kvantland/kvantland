@@ -23,7 +23,7 @@ def get_tournament_history():
 	]
 	tournament_type = config['tournament']['type']
 	events_amount = 4
-	first_event = max(0, len(tournament_history) - events_amount)
+	first_event = max(0, len(tournament_history[tournament_type]) - events_amount)
 	return json.dumps(tournament_history[tournament_type][first_event:])
 
 
