@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 export default {
 	server: {
 		port: 80 // default: 3000
@@ -86,14 +84,14 @@ export default {
 	'@nuxtjs/proxy',
   ],
   proxy: {
-	'/api/': {
-		target: process.env.API,
-	}
+		'/api/': {
+			target: process.env.API,
+		}
   },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-	proxy: true,
-	baseUrl: process.env.API
+		proxy: true,
+		baseUrl: process.env.API
 	// Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
   },
 

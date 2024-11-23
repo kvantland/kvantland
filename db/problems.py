@@ -195,7 +195,26 @@ def Chiselburg():
 				'inputType': 'InteractiveTypeInput'
 			}
 		})
-	current_town.add_problems([problem_1, problem_2])
+	problem_3 = Problem(
+		name="Откройте сейф",
+		points=1,
+		type_="open_safe"
+	)
+	for tries, correct in [
+		[[[6, 8, 2], [6, 1, 4], [2, 0, 6], [7, 3, 8], [8, 7, 0]], [0, 4, 2]],
+		[[[0, 6, 1], [0, 5, 7], [1, 0, 3], [4, 9, 6], [6, 3, 4]], [3, 7, 1]],
+		[[[3, 7, 0], [4, 5, 0], [7, 4, 1], [9, 2, 3], [3, 1, 2]], [1, 7, 5]],
+		[[[9, 1, 3], [6, 8, 3], [3, 5, 9], [4, 1, 0], [5, 0, 4]], [9, 6, 5]]
+	]:
+		problem_3.add_variant({
+			'content': {
+				'tries': tries,
+				'correct': correct,
+				'componentType': "openSafe",
+				'inputType': "InteractiveTypeInput",
+			}
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3])
 
 
 def Geoma():
