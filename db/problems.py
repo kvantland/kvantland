@@ -424,7 +424,31 @@ def Golovolomsk():
 			'inputType': "HintOnlyInput"
 		}
 	})
-	current_town.add_problems([problem_1, problem_2, ])
+		
+	problem_3 = Problem(
+		name="Яблоневый сад",
+		points=1,
+		type_="apple_orchard",
+	)
+	for apple_amount in [
+		3, 4, 6, 7
+	]:
+		problem_3.add_variant({
+			'content': {
+				'apple_amount': apple_amount,
+				'orchard_config': [
+					[0, 0, 1, 0, 1, 1],
+					[1, 1, 1, 0, 0, 1],
+					[0, 1, 0, 1, 1, 0],
+					[0, 1, 0, 0, 1, 1],
+					[1, 0, 0, 1, 1, 1],
+					[1, 1, 1, 1, 1, 1]
+				],
+				'componentType': "appleOrchard",
+				'inputType': "InteractiveTypeInput",
+			}
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3])
 
 
 def Kombi():

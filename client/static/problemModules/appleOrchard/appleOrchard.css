@@ -1,0 +1,21 @@
+svg {
+	width: 40%;
+}
+
+line {
+	stroke: grey;
+	stroke-width: 4px;
+	stroke-linecap: round;
+	cursor: pointer;
+}
+
+line.choosed-true {
+	stroke: red;
+}
+
+@media screen and (hover: hover) {
+	line:hover {
+		stroke: red;
+		opacity: 0.7;
+	}
+}
