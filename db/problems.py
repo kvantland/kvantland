@@ -416,7 +416,7 @@ def Golovolomsk():
 		'content': {
 			'board_width': board_width,
 			'board_height': board_height,
-			'remaining_moves': 50,
+			'remaining_moves': 30,
 			'turn': None,
 			'farmer_coordinates': [board_height - 1, 0],
 			'cockerel_coordinates': [0, board_width - 1],

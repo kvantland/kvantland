@@ -9,6 +9,13 @@
 	flex-direction: column;
 	gap: 22px;
 	align-items: center;
+	padding: 20px;
+	border-radius: 20px;
+}
+
+.cube-with-num_active {
+	background-color: rgba(225, 225, 225, 1);
+	box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.3);
 }
 
 .cube-with-num__cube {
@@ -18,19 +25,15 @@
 	transition: 0.3s all;
 }
 
-.cube-with-num__cube_active {
-	filter: brightness(0.5);
-	-webkit-filter: brightness(0.5);
-}
-
 .cube-with-num__num {
 	font-size: 2em;
 }
 
 @media screen and (hover: hover) {
-	.cube-with-num__cube:hover {
-		filter: brightness(0.7);
-		-webkit-filter: brightness(0.7);
+	.cube-with-num:hover {
+		background-color: rgba(225, 225, 225, 1);
+		box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.3);
+		opacity: 0.5;
 	}
 }
 

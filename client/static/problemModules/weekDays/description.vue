@@ -1,7 +1,7 @@
 <template>
 	<p class="description">
 		В {{ firstMonth }} было больше {{ dayType }}, чем в {{ secondMonth }} того же года. 
-		Каким днём недели было {{ monthDay }} этого года?
+		Каким днём недели было {{ monthDay }} этого года? Выберите все варианты ниже.
 	</p>
 </template>
 

@@ -3,6 +3,7 @@
 		<ClientOnly>
 			На поле \(6 \times 6\) растут яблони. 
 			Огородите участок \(3 \times 3\), на котором растёт ровно \( {{ appleAmount }} \) {{ langForm }}.
+			Выделите клетки этого участка.
 		</ClientOnly> 
 	</p>
 </template>
