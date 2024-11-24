@@ -2,11 +2,12 @@
 	<div class="cubes-container">
 		<div 
 			v-for="cube, cubeNum in cubes" :key="`cube_num-${cubeNum}`"
-			:class="['cube-with-num', choosed === cubeNum ? 'cube-with-num_active' : 'cube-with-num_passive']">
+			:class="['cube-with-num', choosed === cubeNum ? 'cube-with-num_active' : 'cube-with-num_passive']"
+			@click="choose(cube, cubeNum)" >
 			<img 
 				:class="['cube-with-num__cube']" 
 				:src="`/problem_assets/cubes_with_images/cube_${cube}.svg`"
-				@click="choose(cube, cubeNum)" />
+				/>
 			<p class="cube-with-num__num"> {{ alph[cubeNum] }} </p>
 		</div>
 	</div>

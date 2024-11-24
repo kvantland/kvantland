@@ -11,6 +11,8 @@
 	align-items: center;
 	padding: 20px;
 	border-radius: 20px;
+	cursor: pointer;
+	transition: 0.3s all;
 }
 
 .cube-with-num_active {
@@ -21,8 +23,6 @@
 .cube-with-num__cube {
 	width: 100px;
 	height: 100px;
-	cursor: pointer;
-	transition: 0.3s all;
 }
 
 .cube-with-num__num {
