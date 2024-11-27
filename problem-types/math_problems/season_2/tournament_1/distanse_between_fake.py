@@ -61,6 +61,6 @@ def validate(data, answer):
 	try:
 		position_1 = data['correct']['position_1']
 		position_2 = data['correct']['position_2']
-		return abs(position_2 - position_1) == int(answer)
+		return abs(position_2 - position_1) - 1 == int(answer)
 	except:
 		return False
