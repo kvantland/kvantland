@@ -23,7 +23,7 @@
 	<Safe 
 		:slots-amount="3" 
 		:start-values="['*', '*', '*']"
-		style="width: 30%; height: 30%;" 
+		style="width: 25%; height: 30%;" 
 		@changeConfig="changeConfig">
 	</Safe>
 	</div>

@@ -122,7 +122,7 @@ def Liars_Island():
 
 	problem_2 = Problem(
 		name='Предсказания',
-		points=3,
+		points=4,
 		type_='predictions'
 	)
 	problem_2.add_variant({
@@ -158,7 +158,7 @@ def Chiselburg():
 	current_town = Town('Чиселбург')
 	problem_1 = Problem(
 		name='Хитрая таблица',
-		points=3,
+		points=4,
 		type_='tricky_table',
 	)
 	for number_value in [36, 98, 50, 28]:
@@ -172,7 +172,7 @@ def Chiselburg():
 
 	problem_2 = Problem(
 		name='Дни недели',
-		points=2,
+		points=3,
 		type_='week_days'
 	)
 	for first_month, day_type, second_month, month_day, correct in [
@@ -197,7 +197,7 @@ def Chiselburg():
 		})
 	problem_3 = Problem(
 		name="Откройте сейф",
-		points=1,
+		points=2,
 		type_="open_safe"
 	)
 	for tries, correct in [
@@ -270,7 +270,7 @@ def Geoma():
 	
 	problem_2 = Problem(
 		name="Периметр пятиугольника",
-		points=2,
+		points=4,
 		type_='integer',
 		image='perimeter_of_pentagon.svg'
 	)
@@ -287,7 +287,7 @@ def Geoma():
 
 	problem_3 = Problem(
 		name="Кубики с рисунками",
-		points=1,
+		points=3,
 		type_="cubes_with_images"
 	)
 	for cube_list in [
@@ -314,7 +314,7 @@ def Golovolomsk():
 
 	problem_1 = Problem(
 		name="Суперсудоку",
-		points=3,
+		points=4,
 		type_="supersudoky",
 	)
 	for plot, start_numbers in [
@@ -402,7 +402,7 @@ def Golovolomsk():
 	
 	problem_2 = Problem(
 		name="Фермер и петушок",
-		points=2,
+		points=3,
 		type_="farmer_and_cockerel"
 	)
 	
@@ -427,7 +427,7 @@ def Golovolomsk():
 		
 	problem_3 = Problem(
 		name="Яблоневый сад",
-		points=1,
+		points=2,
 		type_="apple_orchard",
 	)
 	for apple_amount in [
@@ -498,7 +498,7 @@ def Kombi():
 	
 	problem_3 = Problem(
 		name="В поезде",
-		points=3,
+		points=2,
 		type_='multy_integer',
 		image='in_train.svg'
 	)
