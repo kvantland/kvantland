@@ -1,24 +1,19 @@
 <template>
 	<div class="game-plot">
 		<div class="tries">
-			<table
-				v-for="tryTable, tryTableNum in tries" 
-				:key="`try-table_num-${tryTableNum}`"
-				class="try-table">
-				<tbody>
-					<tr>
-						<td 
-							v-for="key, keyNum in tryTable" 
-							:key="`try__item_num-${keyNum}`"
-							class="try__item">
-							{{ key }}
-						</td>
-						<td class="description">
-							{{ results[tryTableNum] }}
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<template
+				v-for="tryRow, tryRowNum in tries">
+				<div 
+					v-for="tryItem, tryItemNum in tryRow"
+					:key="`try-item_row-${tryRowNum}_num-${tryItemNum}`"
+					class="try__item">
+					{{ tryItem }}
+				</div>
+				<div :key="`try__result_num-${tryRowNum}`" class="try__result">
+					<p v-if="results[tryRowNum]?.number" class="result__number"> {{ results[tryRowNum].number }} </p>
+					<div :class="['circle', `circle_${results[tryRowNum].color}`]"></div>
+				</div>
+			</template>
 		</div>
 	<Safe 
 		:slots-amount="3" 
@@ -50,11 +45,11 @@ export default {
 	data() {
 		return {
 			results: [
-				'одна цифра верна и на месте',
-				'одна цифра верна, но не на месте',
-				'две цифры верны, но не на месте',
-				'нет верных цифр',
-				'одна цифра верна, но не на месте'
+				{number: 1, color: 'green'},
+				{number: 1, color: 'yellow'},
+				{number: 2, color: 'yellow'},
+				{color: 'red'},
+				{number: 1, color: 'yellow'},
 			]
 		}
 	},
