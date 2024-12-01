@@ -15,6 +15,7 @@ def steps(step_num, params, data):
 			data['farmer_coordinates'][0] = move_position['y']
 			data['farmer_coordinates'][1] = move_position['x']
 			data['remaining_moves'] -= 1
+			data['turn'] = 'computer'
 			print('move to: ', data['farmer_coordinates'])
 			print(data['farmer_coordinates'], data['cockerel_coordinates'])
 			return {'answer': {'status': "allowed"}, 'data_update': data}
@@ -61,6 +62,7 @@ def steps(step_num, params, data):
 			
 			print('move to: ', new_cockerel_coordinates)
 			data['cockerel_coordinates'] = new_cockerel_coordinates
+			data['turn'] = 'player'
 			return {'answer': {'status': "allowed"}, 'data_update': data}
 	except:
 		return {'answer': {'status': "Unknown error"}}

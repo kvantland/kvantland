@@ -1,12 +1,12 @@
 <template>
 	<div class="play-board">
 		<div 
-			v-if="mode === 'chooseTurn'"
+			v-if="turn === undefined"
 			class="play-board__buttons">
 			<button class="play-board__button" @click="setTurn('player')"> Ходить первым </button>
 			<button class="play-board__button" @click="setTurn('computer')"> Ходить вторым </button>
 		</div>
-		<div v-else-if="mode === 'await' || mode === 'move'" style="display: flex; flex-direction: column; align-items: center;">
+		<div v-else style="display: flex; flex-direction: column; align-items: center;">
 			<p :class="['turn_sign', turn]"> 
 				{{ turn === 'player' ? 'Ваш ход' : 'Ход компьютера' }} 
 			</p>
@@ -75,8 +75,8 @@ export default {
 	},
 	data() {
 		return {
-			mode: 'chooseTurn', // chooseTurn, await or move
-			turn: undefined, // player or computer
+			mode: this.problemParams.turn ? 'await' : 'chooseTurn', // chooseTurn, await or move
+			turn: this.problemParams.turn ? this.problemParams.turn : undefined, // player or computer
 			boardItemSide: 50,
 			farmerPositionCurrent: {x: undefined, y: undefined},
 			cockerelPositionCurrent: {x: undefined, y: undefined},
