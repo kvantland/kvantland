@@ -18,7 +18,7 @@
 
 
 <script>
-import ProgramTypeDescription from '../programType/components/ProgramTypeDescription.vue';
+import ProgramTypeDescription from '../../../common/programType/components/ProgramTypeDescription.vue';
 
 export default {
 	components: {

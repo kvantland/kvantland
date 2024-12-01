@@ -116,7 +116,7 @@
 	appearance: none;
 	gap: 10px;
 	display: inline-flex;
-	background: url('../../icons/custom_select_arrow.svg') no-repeat right center; 
+	background: url('../../../../icons/custom_select_arrow.svg') no-repeat right center; 
 	background-color: #E1E1E1;
 	border-radius: 10px;
 	font-size: 20px;
