@@ -1,0 +1,72 @@
+
+.week-grid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 20px;
+	width: 100%;
+}
+
+.week-day {
+	width: 250px;
+	box-sizing: border-box;
+	display: flex;
+	margin-top: 10px;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	padding: 30px 20px 25px 20px;
+	border-radius: 10px;
+	font-family: Montserrat Alternates;
+	transition: 0.3s all;
+	cursor: pointer;
+}
+
+.week-day * {
+	transition: 0.3s all;
+}
+
+.week-day__title {
+	font-weight: 600;
+	align-self: stretch;
+	text-align: center;
+	border-radius: 5px;
+	padding: 10px;
+}
+
+.left-decoration {
+	background-color: rgba(201, 147, 255, 1);
+	width: 10px;
+	height: 30px;
+	position: absolute;
+	border-radius: 1000px;
+	transform: translate(-60px, -45px);
+}
+
+.right-decoration {
+	background-color: rgba(201, 147, 255, 1);
+	width: 10px;
+	height: 30px;
+	position: absolute;
+	border-radius: 1000px;
+	transform: translate(60px, -45px);
+}
+
+.week-day_choosed-true {
+	background-color: rgba(198, 225, 255, 1);
+}
+
+.week-day_choosed-true .week-day__title {
+	background-color: rgba(71, 121, 179, 1);
+	color: white;
+}
+
+.week-day_choosed-false {
+	background-color: rgba(241, 247, 255, 1);
+	border: 2px rgba(71, 121, 179, 1) solid;
+}
+
+.week-day_choosed-false .week-day__title {
+	color: rgba(71, 121, 179, 1);
+	border: 1px solid rgba(71, 121, 179, 1);
+}
