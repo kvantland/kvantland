@@ -21,7 +21,6 @@ def reset_problem(db):
 	print('reset problem request')
 	if not config['tournament']['test']:
 		return 'not test mode'
-
 	try:
 		variant = json.loads(request.body.read())['variant']
 	except:
@@ -127,6 +126,7 @@ def get_problem_data(db):
 			'hint': {'status':"", 'cost':1, 'description': ''},
 			'inputType': "",
 			'componentType': "",
+			'componentPath': "",
 			'descriptionType': "",
 			'problemHTML': "",
 			'problemCSS': "",
@@ -198,6 +198,8 @@ def get_problem_data(db):
 		isNewProblem = True
 		
 	if isNewProblem:
+		resp['problem']['componentPath'] = get_component_path(content['componentType'])
+		print(resp['problem']['componentPath'])
 		if type_ == 'integer':
 			resp['problem']['inputType'] = 'IntegerTypeInput'
 		if type_ == 'multy_integer':
@@ -332,6 +334,48 @@ def get_languages():
 
 MODE = config['tournament']['mode']
 
+
+def get_component_path(component_type: str):
+	path_start = 'client/static/problemModules/'
+
+	usual_component_path = [
+		f"{config['tournament']['type']}",
+		f"season-{config['tournament']['season']}",
+		f"tournament-{config['tournament']['version']}",
+		component_type,
+		f"{component_type}.vue"
+	]
+	print(path_start + '/'.join(usual_component_path))
+	if try_read_file(path_start + '/'.join(usual_component_path)):
+		usual_component_path = '/'.join(usual_component_path)
+		print('usual_component_path: ', usual_component_path)
+	else:
+		usual_component_path = None
+	common_for_tournament_component_path = [
+		f"{config['tournament']['type']}",
+		"common",
+		component_type,
+		f"{component_type}.vue"
+	]
+	if try_read_file(path_start + '/'.join(common_for_tournament_component_path)):
+		common_for_tournament_component_path = '/'.join(common_for_tournament_component_path)
+		print('common_for_tournament_problem_path: ', common_for_tournament_component_path)
+	else:
+		common_for_tournament_component_path = None
+	common_component_path = [
+		"common",
+		component_type,
+		f"{component_type}.vue"
+	]
+	if try_read_file(path_start + '/'.join(common_component_path)):
+		common_component_path = '/'.join(common_component_path)
+		print('common_problem_path: ',  common_component_path)
+	else:
+		common_component_path = None
+	component_path = usual_component_path or common_for_tournament_component_path or common_component_path or None
+	return component_path
+
+
 def get_problem_typedesc(problem_type: str):
 	usual_problem_path = [
 		"problem-types",
@@ -341,7 +385,7 @@ def get_problem_typedesc(problem_type: str):
 		problem_type,
 	]
 	try:
-		usual_problem_typedesc = import_module('.'.join(usual_problem_path))
+		usual_problem_typedesc = import_module('/'.join(usual_problem_path))
 		print('usual_problem_path: ', '.'.join(usual_problem_path))
 	except:
 		usual_problem_typedesc = None

@@ -59,6 +59,10 @@ export default {
 		description: {default: ''},
 		image: {default: null},
 		problemComponent: {default: null},
+		componentPath: {
+			type: String,
+			default: ''
+		},
 		problemDescription: {default: null},
 		problemContent: {default: null},
 		variantParams: {default: '' },
@@ -73,7 +77,7 @@ export default {
 			confirmDialogMode: false,
 			confirmDialogParams: {},
 			dynamicInput: this.problemInputType ? () => import(`./components/${this.problemInputType}.vue`) : undefined,
-			dynamicProblemComponent: () => import(`../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`),
+			dynamicProblemComponent: () => import(`../../../static/problemModules/${this.componentPath}`),
 			dynamicDescription: () => import(`../../../static/problemModules/${this.problemDescription ? this.problemDescription : this.problemComponent}/description.vue`),
 			currentAnswer: '',
 			xhrData: undefined,
@@ -88,6 +92,24 @@ export default {
 				href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
 				}
 			]
+		}
+	},
+
+	computed: {
+		path() {
+			console.log('path calculation')
+			let path = `../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`
+			return () => import(`${path}`)
+			try {
+				console.log('success!')
+				return () => import(`${path}`)
+			}
+			catch {
+				path = `../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`
+				import(`${path}`)
+				console.log('unsuccess!')
+				return () => import(`${path}`)
+			}
 		}
 	},
 
@@ -106,6 +128,7 @@ export default {
 	mounted() {
 		console.log(this.problemDescription)
 		console.log(this.variantParams)
+		console.log(this.path)
 	},
 	
 	methods: {
