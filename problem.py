@@ -125,9 +125,8 @@ def get_problem_data(db):
 			'variantParams': "",
 			'hint': {'status':"", 'cost':1, 'description': ''},
 			'inputType': "",
-			'componentType': "",
 			'componentPath': "",
-			'descriptionType': "",
+			'descriptionPath': "",
 			'problemHTML': "",
 			'problemCSS': "",
 			'problemJS': "",
@@ -198,7 +197,6 @@ def get_problem_data(db):
 		isNewProblem = True
 		
 	if isNewProblem:
-		resp['problem']['componentPath'] = get_component_path(content['componentType'])
 		print(resp['problem']['componentPath'])
 		if type_ == 'integer':
 			resp['problem']['inputType'] = 'IntegerTypeInput'
@@ -206,13 +204,14 @@ def get_problem_data(db):
 			resp['problem']['inputType'] = 'MultyIntegerTypeInput'
 		if type_ == 'radio':
 			resp['problem']['inputType'] = 'InteractiveTypeInput'
-			resp['problem']['componentType'] = 'radio'
+			resp['problem']['componentPath'] = get_component_path('radio')
 		if 'inputType' in content.keys():
 			resp['problem']['inputType'] = content['inputType']
 		if 'componentType' in content.keys():
-			resp['problem']['componentType'] = content['componentType']
+			resp['problem']['componentPath'] = get_component_path(content['componentType'])
+			resp['problem']['descriptionPath'] = get_description_path(content['componentType'])
 		if 'descriptionType' in content.keys():
-			resp['problem']['descriptionType'] = content['descriptionType']
+			resp['problem']['descriptionPath'] = get_description_path(content['descriptionType'])
 		# print('newProblemData: ', resp, file=sys.stderr)
 		resp['status'] = True
 		return json.dumps(resp)
@@ -335,45 +334,69 @@ def get_languages():
 MODE = config['tournament']['mode']
 
 
+def choose_most_relevant_path(paths: list):
+	most_relevant_path = None
+	for path in paths:
+		if try_read_file('/'.join(path)):
+			most_relevant_path = path
+	return most_relevant_path
+
+
+def get_description_path(description_type: str):
+	path_start = 'client/static/problemModules/'
+
+	paths = [
+		[
+			path_start,
+			f"{config['tournament']['type']}",
+			f"season-{config['tournament']['season']}",
+			f"tournament-{config['tournament']['version']}",
+			description_type,
+			"description.vue"
+		],
+		[
+			path_start,
+			f"{config['tournament']['type']}",
+			"common",
+			description_type,
+			"description.vue"
+		],
+		[
+			path_start,
+			"common",
+			description_type,
+			"description.vue"
+		]
+	]
+	return '/'.join(choose_most_relevant_path(paths)[1:])
+
 def get_component_path(component_type: str):
 	path_start = 'client/static/problemModules/'
 
-	usual_component_path = [
-		f"{config['tournament']['type']}",
-		f"season-{config['tournament']['season']}",
-		f"tournament-{config['tournament']['version']}",
-		component_type,
-		f"{component_type}.vue"
+	paths = [
+		[
+			path_start,
+			f"{config['tournament']['type']}",
+			f"season-{config['tournament']['season']}",
+			f"tournament-{config['tournament']['version']}",
+			component_type,
+			f"{component_type}.vue"
+		],
+		[
+			path_start,
+			f"{config['tournament']['type']}",
+			"common",
+			component_type,
+			f"{component_type}.vue"
+		],
+		[
+			path_start,
+			"common",
+			component_type,
+			f"{component_type}.vue"
+		]
 	]
-	print(path_start + '/'.join(usual_component_path))
-	if try_read_file(path_start + '/'.join(usual_component_path)):
-		usual_component_path = '/'.join(usual_component_path)
-		print('usual_component_path: ', usual_component_path)
-	else:
-		usual_component_path = None
-	common_for_tournament_component_path = [
-		f"{config['tournament']['type']}",
-		"common",
-		component_type,
-		f"{component_type}.vue"
-	]
-	if try_read_file(path_start + '/'.join(common_for_tournament_component_path)):
-		common_for_tournament_component_path = '/'.join(common_for_tournament_component_path)
-		print('common_for_tournament_problem_path: ', common_for_tournament_component_path)
-	else:
-		common_for_tournament_component_path = None
-	common_component_path = [
-		"common",
-		component_type,
-		f"{component_type}.vue"
-	]
-	if try_read_file(path_start + '/'.join(common_component_path)):
-		common_component_path = '/'.join(common_component_path)
-		print('common_problem_path: ',  common_component_path)
-	else:
-		common_component_path = None
-	component_path = usual_component_path or common_for_tournament_component_path or common_component_path or None
-	return component_path
+	return '/'.join(choose_most_relevant_path(paths)[1:])
 
 
 def get_problem_typedesc(problem_type: str):

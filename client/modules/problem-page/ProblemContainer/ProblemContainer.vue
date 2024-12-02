@@ -9,7 +9,7 @@
 			<div v-if="description" v-html="description"></div>
 			<component :is="dynamicDescription" v-if="!description" :problem-params="variantParams" />
 			<img v-if="image" class="problem_img" :src="image" />
-			<div v-if="problemComponent" ref="problem" class="problem newTypeProblem">
+			<div v-if="componentPath" ref="problem" class="problem newTypeProblem">
 				<component 
 					:is="dynamicProblemComponent" v-if="!answerGiven && dynamicProblemComponent" v-model="currentAnswer" :xhr-data="xhrData" 
 					:new-xhr="newXhr"
@@ -45,28 +45,66 @@ export default {
 	},
 
 	props: {
-		answerStatus: {default: false},
-		answerGiven: {default: false},
-		answer: {default: ''},
-		solution: {default: ''},
-		variant: {default: null},
-		title: {default: ''},
-		cost: {default: 0},
+		answerStatus: {
+			type: Boolean,
+			default: false
+		},
+		answerGiven: {
+			type: Boolean,
+			default: false
+		},
+		answer: {
+			type: String,
+			default: ''
+		},
+		solution: {
+			type: String,
+			default: ''
+		},
+		variant: {
+			type: Number,
+			default: null
+		},
+		title: {
+			type: String,
+			default: ''
+		},
+		cost: {
+			type: Number,
+			default: 0
+		},
 		hint: {
 			type: Object,
 			default() { return {status: true, cost: 1, description: ''} }
 		},
-		description: {default: ''},
-		image: {default: null},
-		problemComponent: {default: null},
-		componentPath: {
+		description: {
 			type: String,
 			default: ''
 		},
-		problemDescription: {default: null},
-		problemContent: {default: null},
-		variantParams: {default: '' },
-		problemInputType: {default: 'InteractiveTypeInput'},
+		image: {
+			type: String,
+			default: null
+		},
+		componentPath: {
+			type: String,
+			default: undefined
+		},
+		descriptionPath: {
+			type: String,
+			default: undefined
+		},
+		problemContent: {
+			type: Object,
+			default: () => {}
+		},
+		variantParams: {
+			type: Object,
+			default: () => {}
+		},
+		problemInputType: {
+			type: String,
+			default: 'InteractiveTypeInput'
+		},
 	},
 
 	data() {
@@ -77,8 +115,8 @@ export default {
 			confirmDialogMode: false,
 			confirmDialogParams: {},
 			dynamicInput: this.problemInputType ? () => import(`./components/${this.problemInputType}.vue`) : undefined,
-			dynamicProblemComponent: () => import(`../../../static/problemModules/${this.componentPath}`),
-			dynamicDescription: () => import(`../../../static/problemModules/${this.problemDescription ? this.problemDescription : this.problemComponent}/description.vue`),
+			dynamicProblemComponent: () => this.componentPath ? import(`../../../static/problemModules/${this.componentPath}`) : undefined,
+			dynamicDescription: this.descriptionPath ? () => import(`../../../static/problemModules/${this.descriptionPath}`) : undefined,
 			currentAnswer: '',
 			xhrData: undefined,
 			confirmActionResult: undefined,
@@ -86,33 +124,16 @@ export default {
 	},
 
 	head() {
+		let commonPath = this.componentPath
+		commonPath = commonPath.slice(0, -4)
 		return {
 			link: [{
 				rel: 'stylesheet',
-				href: `/problemModules/${this.problemComponent}/${this.problemComponent}.css`,
+				href: `/problemModules/${commonPath}.css`,
 				}
 			]
 		}
 	},
-
-	computed: {
-		path() {
-			console.log('path calculation')
-			let path = `../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`
-			return () => import(`${path}`)
-			try {
-				console.log('success!')
-				return () => import(`${path}`)
-			}
-			catch {
-				path = `../../../static/problemModules/${this.problemComponent}/${this.problemComponent}.vue`
-				import(`${path}`)
-				console.log('unsuccess!')
-				return () => import(`${path}`)
-			}
-		}
-	},
-
 	watch: {
 		variantParams(newValue) {
 			console.log('variant params changed!', newValue)
@@ -128,7 +149,6 @@ export default {
 	mounted() {
 		console.log(this.problemDescription)
 		console.log(this.variantParams)
-		console.log(this.path)
 	},
 	
 	methods: {
