@@ -90,7 +90,9 @@ def Liars_Island():
 	problem_1 = Problem(
 		name="Мёд в сотах",
 		points=3,
-		type_='honey_in_honeycombs'
+		type_='honey_in_honeycombs',
+		hint="""Начните с двух сот, в которых рядом стоят 4 и 1. 
+		Так можно определить три соты, которые точно заполнены мёдом."""
 	)
 
 	for honeycombsConfig in [
@@ -123,7 +125,10 @@ def Liars_Island():
 	problem_2 = Problem(
 		name='Предсказания',
 		points=4,
-		type_='predictions'
+		type_='predictions',
+		hint="""Высказывания Миши и Вали противоречат друг другу, 
+		поэтому одно из них верное, а другое нет. Рассмотрев 
+		оба возможных случая, можно понять, кто есть кто."""
 	)
 	problem_2.add_variant({
 		'content': {
@@ -135,7 +140,9 @@ def Liars_Island():
 	problem_3 = Problem(
 		name="Самый богатый житель острова",
 		points=2,
-		type_='richest_island_resident'
+		type_='richest_island_resident',
+		hint=""" По очереди предположите, что Дональд, Билл 
+				или Илон самый богатый житель и он солгал."""
 	)
 	for names, correct in [
 		(['Дональд', 'Билл', 'Илон'], [1, 2, 0]),
@@ -160,6 +167,9 @@ def Chiselburg():
 		name='Хитрая таблица',
 		points=4,
 		type_='tricky_table',
+		hint="""Разложите число из условия на простые множители. 
+		Числа в искомой таблице можно составить из произведений 
+		этих простых множителей в различных степенях.  """
 	)
 	for number_value in [36, 98, 50, 28]:
 		problem_1.add_variant({
@@ -173,7 +183,10 @@ def Chiselburg():
 	problem_2 = Problem(
 		name='Дни недели',
 		points=3,
-		type_='week_days'
+		type_='week_days',
+		hint="""Среди любых 7 дней подряд по одному понедельнику, вторнику и т.д. 
+		В первый месяц больше определённых дней недели, чем во второй, если один 
+		из двух последних дней первого месяца приходится на этот день недели."""
 	)
 	for first_month, day_type, second_month, month_day, correct in [
 		("июне", "воскресных дней", "июле", "1 июля", [1, 2]),
@@ -198,7 +211,10 @@ def Chiselburg():
 	problem_3 = Problem(
 		name="Откройте сейф",
 		points=2,
-		type_="open_safe"
+		type_="open_safe",
+		hint="""Высказывания Миши и Вали противоречат друг другу, 
+		поэтому одно из них верное, а другое нет. Рассмотрев 
+		оба возможных случая, можно понять, кто есть кто."""
 	)
 	for tries, correct in [
 		[[[6, 8, 2], [6, 1, 4], [2, 0, 6], [7, 3, 8], [8, 7, 0]], [0, 4, 2]],
@@ -224,7 +240,9 @@ def Geoma():
 	problem_1 = Problem(
 		name="Созвездие 'Квадрат'",
 		points=2,
-		type_='constellation_Square'
+		type_='constellation_Square',
+		hint="""Стороны нужного квадрата идут по диагоналям клеток,
+		  а не по линиям сетки."""
 	)
 	for map in [
 		[
@@ -272,7 +290,10 @@ def Geoma():
 		name="Периметр пятиугольника",
 		points=3,
 		type_='integer',
-		image='perimeter_of_pentagon.svg'
+		image='perimeter_of_pentagon.svg',
+		hint="""Некоторые отрезки входят и в сумму периметров белых фигур, 
+		и в сумму периметров зелёных. Длины таких отрезков не влияют 
+		на разность указанных сумм."""
 	)
 	problem_2.add_variant({
 		'content': {
@@ -288,7 +309,9 @@ def Geoma():
 	problem_3 = Problem(
 		name="Кубики с рисунками",
 		points=4,
-		type_="cubes_with_images"
+		type_="cubes_with_images",
+		hint="""Два варианта отличаются только одной гранью. Один из них и есть кубик Джека. 
+		Чтобы понять, какой, попробуйте полностью восстановить кубик, используя его развёртку."""
 	)
 	for cube_list in [
 		[1, 2, 3, 4, 5],
@@ -316,6 +339,8 @@ def Golovolomsk():
 		name="Суперсудоку",
 		points=4,
 		type_="supersudoky",
+		hint="""Начинайте заполнение с тех строк, столбцов 
+		или фигур, в которых расставлено больше чисел."""
 	)
 	for plot, start_numbers in [
 		[
@@ -403,7 +428,8 @@ def Golovolomsk():
 	problem_2 = Problem(
 		name="Фермер и петушок",
 		points=3,
-		type_="farmer_and_cockerel"
+		type_="farmer_and_cockerel",
+		hint="""Нужно выбирать ходить вторым."""
 	)
 	
 	for board_width, board_height in [
@@ -429,6 +455,8 @@ def Golovolomsk():
 		name="Яблоневый сад",
 		points=2,
 		type_="apple_orchard",
+		hint="""Посмотрите, как меняется число яблонь на участке, 
+		когда вы сдвигаете участок \(3 \\times 3\) на одну клетку"""
 	)
 	for apple_amount in [
 		3, 4, 6, 7
@@ -458,7 +486,10 @@ def Kombi():
 	problem_1 = Problem(
 		name='Расстояние между фальшивыми',
 		points=4,
-		type_="distanse_between_fake"
+		type_="distanse_between_fake",
+		hint="""Обратите внимание, что не требуется находить сами фальшивые монеты. 
+		Поэтому если в результате взвешиваний Вы поймёте, что фальшивой может быть, 
+		например, пара (A, D) или (B, E), то уже решите задачу."""
 	)
 
 	for position_1,  position_2 in [
@@ -479,7 +510,10 @@ def Kombi():
 	problem_2 = Problem(
 		name="Шахматные фигуры",
 		type_="chess_figures",
-		points=3
+		points=3,
+		hint="""Сначала поставьте четырёх слонов и выделите клетки, 
+		которые они бьют. Слоны должны находиться в двух горизонталях 
+		и двух вертикалях."""
 	)
 
 	for positions in [
