@@ -533,7 +533,10 @@ def Kombi():
 		name="В поезде",
 		points=2,
 		type_='multy_integer',
-		image='in_train.svg'
+		image='in_train.svg',
+		hint="""В задаче два возможных ответа, так как номер вагона, 
+		о котором идёт речь, может быть как больше, так и меньше 
+		номера среднего вагона."""
 	)
 	for wagon, distance, correct in [
 		(8, 2, [9, 21]),
