@@ -175,7 +175,6 @@ def Chiselburg():
 		problem_1.add_variant({
 			'content': {
 				'inputType': "InteractiveTypeInput",
-				'componentType': "trickyTable",
 				'numberValue': number_value,
 			}
 		})

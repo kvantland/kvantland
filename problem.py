@@ -210,6 +210,11 @@ def get_problem_data(db):
 		if 'componentType' in content.keys():
 			resp['problem']['componentPath'] = get_component_path(content['componentType'])
 			resp['problem']['descriptionPath'] = get_description_path(content['componentType'])
+		else:
+			componentType = convert_to_camel_case(type_)
+			print('component type: ', componentType)
+			resp['problem']['componentPath'] = get_component_path(componentType)
+			resp['problem']['descriptionPath'] = get_description_path(componentType)
 		if 'descriptionType' in content.keys():
 			resp['problem']['descriptionPath'] = get_description_path(content['descriptionType'])
 		# print('newProblemData: ', resp, file=sys.stderr)
@@ -435,6 +440,11 @@ def get_problem_typedesc(problem_type: str):
 		common_problem_typedesc = None
 	typedesc = usual_problem_typedesc or common_for_tournament_problem_typedesc or common_problem_typedesc or None
 	return typedesc
+
+
+def convert_to_camel_case(name: str): 
+	camel_version_of_name = ''.join(map(lambda str_path : str_path.capitalize(), name.split('_')))
+	return camel_version_of_name[0].lower() + camel_version_of_name[1:]
 
 
 def get_old_problem_input_type(typedesc):
