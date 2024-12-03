@@ -51,13 +51,18 @@
 
 <script>
 export default {
-    props: ['slotsAmount', 'startValues'],
+    props: {
+			startValues: {
+				type: Array,
+				default: () => []
+			}
+		},
     data() {
-        let AngleArr = Array(this.slotsAmount).fill().map((_i) => {return 0})
+        const AngleArr = Array(this.startValues.length).fill().map((_i) => {return 0})
         console.log(AngleArr)
-        let currentValues = []
+        const currentValues = []
         for (const value of this.startValues) {
-            if (value == '*')
+            if (value === '*')
                 currentValues.push([9, '✱', 0])
             else
                 currentValues.push([(value + 9) % 10, value, (value + 1) % 10])
@@ -73,10 +78,13 @@ export default {
             scrollAngleSpeed: Math.PI/100,
             scrollMode: false,
             scrollAngles: AngleArr,
-            currentValues: currentValues,
+            currentValues,
         }
     },
     computed: {
+				slotsAmount() {
+					return this.startValues.length
+				},
         outerRectWidth() {
             return (this.slotWidth + this.gap) * this.slotsAmount + this.gap + this.paddingLeft * 2
         },
@@ -100,18 +108,6 @@ export default {
         },
         scrollTrigger() {
             return JSON.stringify(this.scrollAngles)
-        },
-    },
-    methods: {
-        scrollUp(num) {
-            if (this.scrollMode) {return}
-            this.scrollMode = true
-            this.$set(this.scrollAngles, num, this.scrollAngles[num] - this.scrollAngleSpeed)
-        },
-        scrollDown(num) {
-            if (this.scrollMode) {return}
-            this.scrollMode = true
-            this.$set(this.scrollAngles, num,  this.scrollAngles[num] + this.scrollAngleSpeed)
         },
     },
     watch: {
@@ -145,6 +141,18 @@ export default {
                     }
                 }.bind(this), 10)
             }
+        },
+    },
+    methods: {
+        scrollUp(num) {
+            if (this.scrollMode) {return}
+            this.scrollMode = true
+            this.$set(this.scrollAngles, num, this.scrollAngles[num] - this.scrollAngleSpeed)
+        },
+        scrollDown(num) {
+            if (this.scrollMode) {return}
+            this.scrollMode = true
+            this.$set(this.scrollAngles, num,  this.scrollAngles[num] + this.scrollAngleSpeed)
         },
     },
 }
