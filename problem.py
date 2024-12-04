@@ -348,7 +348,11 @@ def choose_most_relevant_path(paths: list):
 
 
 def get_description_path(description_type: str):
-	path_start = 'client/static/problemModules/'
+	client_mode = config['client']['mode']
+	if client_mode == 'dev':
+		path_start = 'client/static/problemModules/'
+	elif client_mode == 'prod':
+		path_start = 'client/problemModules/'
 
 	paths = [
 		[
@@ -376,7 +380,11 @@ def get_description_path(description_type: str):
 	return '/'.join(choose_most_relevant_path(paths)[1:])
 
 def get_component_path(component_type: str):
-	path_start = 'client/static/problemModules/'
+	client_mode = config['client']['mode']
+	if client_mode == 'dev':
+		path_start = 'client/static/problemModules/'
+	elif client_mode == 'prod':
+		path_start = 'client/problemModules/'
 
 	paths = [
 		[
@@ -413,7 +421,7 @@ def get_problem_typedesc(problem_type: str):
 		problem_type,
 	]
 	try:
-		usual_problem_typedesc = import_module('/'.join(usual_problem_path))
+		usual_problem_typedesc = import_module('.'.join(usual_problem_path))
 		print('usual_problem_path: ', '.'.join(usual_problem_path))
 	except:
 		usual_problem_typedesc = None
