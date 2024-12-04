@@ -30,7 +30,7 @@ export default {
 	props: {
 		plotConfig: {
 			type: Array,
-			default:() => { return []}
+			default:() => {return []}
 		},
 		itemSide: {
 			type: Number,

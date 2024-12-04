@@ -62,7 +62,7 @@ export default {
 			default: ''
 		},
 		variant: {
-			type: Number,
+			type: String,
 			default: null
 		},
 		title: {
@@ -70,8 +70,8 @@ export default {
 			default: ''
 		},
 		cost: {
-			type: Number,
-			default: 0
+			type: String,
+			default: '0'
 		},
 		hint: {
 			type: Object,

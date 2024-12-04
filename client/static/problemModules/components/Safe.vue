@@ -39,7 +39,7 @@
             </g>
         </g>
         <g class="arrows" :transform="`translate(${paddingLeft + gap} 0)`" style="fill:red; stroke: darkred; user-select: none; -webkit-user-select: none;">
-            <path v-for="(slot, slotNum) in slotsAmount" v-if="startValues[slotNum] == '*'" :key="`arrow_up_${slotNum}`"
+            <path v-for="(slot, slotNum) in slotsAmount" v-if="startValues" :key="`arrow_up_${slotNum}`"
                 :transform="`translate(${slotNum * (slotWidth + gap)} ${arrowsHeight})`" @click="scrollUp(slotNum)"
                 :d="`M 0 0 h ${slotWidth} l ${-slotWidth/2},${-arrowsHeight/2} z`" class="up_arrow arrow" ></path>
             <path v-for="(slot, slotNum) in slotsAmount" v-if="startValues[slotNum] == '*'" @click="scrollDown(slotNum)" :key="`arrow_down_${slotNum}`"
