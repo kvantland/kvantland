@@ -12,15 +12,15 @@
 }
 
 .drop-container__background {
-	width: 860px;
+	width: 700px;
 }
 
 .drop-container__content {
 	position: absolute;
 	display: inline-flex;
-	gap: 150px;
-	width: 860px;
-	margin-top: 245px;
+	gap: 120px;
+	width: 700px;
+	margin-top: 196px;
 	justify-content: center;
 	align-self: center;
 }
@@ -31,15 +31,15 @@
 	flex-direction: column;
 	justify-content: center;
 	gap: 30px;
-	padding: 40px 10px;
+	padding: 10px 10px;
 	background-color: rgba(166, 166, 166, 0.2);
 	border-radius: 10px;
-	width: 130px;
+	width: 110px;
 }
 
 .drag-person {
-	width: 130px;
-	height: 194px;
+	width: 110px;
+	height: 164px;
 	cursor: pointer;
 }
 
@@ -55,8 +55,8 @@
 }
 
 .place {
-	width: 130px;
-	height: 194px;
+	width: 110px;
+	height: 164px;
 }
 
 .place_first {
