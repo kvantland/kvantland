@@ -58,6 +58,10 @@ export default {
 		newXhr: {
 			type: Boolean,
 			default: false
+		},
+		confirmActionResult:{
+			type: Boolean,
+			default: undefined,
 		}
 	},
 	data() {
@@ -89,6 +93,9 @@ export default {
 		},
 		weightingHistory() {
 			return this.problemParams?.history
+		},
+		confirmResult() {
+			return this.confirmActionResult
 		}
 	},
 	watch: {
@@ -100,6 +107,11 @@ export default {
 					this.$emit('showXhrDialog', this.xhrData.xhr_answer.message)
 				}
 				this.newSide = this.xhrData.xhr_answer.move_side
+			}
+		},
+		confirmResult(result) {
+			if (result) {
+				this.$emit('xhrRequest', {weights: this.cupWeights})
 			}
 		}
 	},
@@ -197,7 +209,10 @@ export default {
 			this.newSide = "equal"
 		},
 		startWeight(){
-			this.$emit('xhrRequest', {weights: this.cupWeights})
+			this.$emit('showConfirmDialog', {
+				content: "Вы уверены, что хотите совершить взвешивание?", 
+				acceptText: "Да", 
+				refuseText: "Нет"})
 		},
 		convertDOMtoSVG(x, y) {
 			try {
