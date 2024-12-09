@@ -500,7 +500,7 @@ def Kombi():
 		problem_1.add_variant({
 			'content': {
 				'weightings_amount': 2,
-				'correct': {'position_1': position_1, 'position_2': position_2},
+				'correct': [position_1, position_2],
 				'componentType': "distanseBetweenFake",
 				'inputType': "IntegerTypeInput"
 			}
