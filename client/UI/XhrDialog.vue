@@ -4,7 +4,7 @@
             <div class="header">
                 <div class="title">
                     <img class="info" src="/icons/warning.svg" />
-                    <p> Обрати внимание! </p>
+                    <p> Обратите внимание! </p>
                 </div>
                 <img class="cross" @click="close" src="/icons/cross.svg" />
             </div>
