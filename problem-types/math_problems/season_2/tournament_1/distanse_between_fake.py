@@ -59,8 +59,8 @@ def steps(step_num, params, data):
 def validate(data, answer):
 	print('correct check function!')
 	try:
-		position_1 = data['correct']['position_1']
-		position_2 = data['correct']['position_2']
+		position_1 = data['correct'][0]
+		position_2 = data['correct'][1]
 		return abs(position_2 - position_1) - 1 == int(answer)
 	except:
 		return False
