@@ -1,16 +1,18 @@
 <template>
 	<div class="problem-input">
 		<MultyInputArea @sendAnswer="sendAnswer" />
-		<HintButton v-if="hasHint" @getHint="getHint" :hintCost="hintCost" />
+		<HintButton v-if="hasHint" :hint-cost="hintCost" @getHint="getHint" />
 	</div>
 </template>
 
 <script>
 import MultyInputArea from './components/MultyInputArea.vue';
+import HintButton from './components/HintButton.vue';
 
 export default {
 	components: {
 		MultyInputArea,
+		HintButton,
 	},
 	props: {
 		hasHint: {default: false},
@@ -26,3 +28,11 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+.problem-input {
+	display: inline-flex;
+	justify-content: space-between;
+	width: 100%;
+}
+</style>

@@ -377,7 +377,12 @@ def get_description_path(description_type: str):
 			"description.vue"
 		]
 	]
-	return '/'.join(choose_most_relevant_path(paths)[1:])
+
+	most_relevant_path = choose_most_relevant_path(paths)
+	if most_relevant_path:
+		return '/'.join(most_relevant_path[1:])
+	return None
+
 
 def get_component_path(component_type: str):
 	client_mode = config['client']['mode']
@@ -409,7 +414,11 @@ def get_component_path(component_type: str):
 			f"{component_type}.vue"
 		]
 	]
-	return '/'.join(choose_most_relevant_path(paths)[1:])
+
+	most_relevant_path = choose_most_relevant_path(paths)
+	if most_relevant_path:
+		return '/'.join(most_relevant_path[1:])
+	return None
 
 
 def get_problem_typedesc(problem_type: str):

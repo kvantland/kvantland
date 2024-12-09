@@ -125,13 +125,15 @@ export default {
 
 	head() {
 		let commonPath = this.componentPath
-		commonPath = commonPath.slice(0, -4)
-		return {
-			link: [{
-				rel: 'stylesheet',
-				href: `/problemModules/${commonPath}.css`,
-				}
-			]
+		if (commonPath) {
+			commonPath = commonPath.slice(0, -4)
+			return {
+				link: [{
+					rel: 'stylesheet',
+					href: `/problemModules/${commonPath}.css`,
+					}
+				]
+			}
 		}
 	},
 	watch: {
