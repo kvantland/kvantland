@@ -16,7 +16,7 @@
                     h -1237
                     a 20 20 0 0 0 -20 20
                     z" />
-            <Problems :problems_data="town_data"/>
+            <Problems :problems-data="townData" :class-value="classValue"/>
         </svg>
     </div>
 </template>
@@ -41,7 +41,7 @@ export default {
             townData = resp.towns
         })
         if (status) {
-            resp.town_data = townData
+            resp.townData = townData
         }
         else {
             return redirect('/')
@@ -54,6 +54,7 @@ export default {
                 resp.crumbs = []
         })
         resp.townNum = params.townNum
+				resp.classValue = params.classValue
         console.log(resp)
         return resp
     },

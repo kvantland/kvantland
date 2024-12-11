@@ -8,6 +8,7 @@
 				:answer="answer"
 				:solution="solution"
 				:variant="problemNum"
+				:class-value="classValue"
 				:description="description" 
 				:cost="cost"
 				:image="image"
@@ -39,6 +40,7 @@ export default {
 
 	async asyncData({ params, $axios, redirect }){
 		const problemNum = params.problemNum
+		const classValue = params.classValue
 		let status, problemData
 		const resp = {}
 		await $axios.$post("/api/problem_data", {variant: problemNum})
@@ -62,6 +64,8 @@ export default {
 				resp.crumbs = []
 		})
 		resp.problemNum = params.problemNum
+		resp.classValue = classValue
+
 		console.log(resp)
 		return resp
 	},
