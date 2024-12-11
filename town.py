@@ -9,31 +9,6 @@ import sys
 
 MODE = config['tournament']['mode']
 
-@route('/api/town_breadcrumbs', method="POST")
-def get_town_breadcrumbs(db):
-	resp = {
-		'status': False,
-		'breadcrumbs': [],
-	}
-	try:
-		town = json.loads(request.body.read())['town']
-		print('town: ', town, file=sys.stderr)
-	except:
-		return json.dumps(resp)
-	try:
-		db.execute('''select Kvantland.Town.name
-				from Kvantland.Town where town = %s''', (town,))
-		(town_name, ), = db.fetchall()
-		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
-		resp['breadcrumbs'].append({'name': town_name, 'link': f'/town/{town}'})
-	except:
-		print('bad db', resp, file=sys.stderr)
-		return json.dumps(resp)
-	
-	print('resp: ', resp, file=sys.stderr)
-	resp['status'] = True
-	return json.dumps(resp)
-
 @route('/api/town_data', method="POST")
 def get_town_data(db):
 	resp = {
