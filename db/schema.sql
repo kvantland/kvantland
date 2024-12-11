@@ -36,6 +36,7 @@ create table Variant (
 	, problem int not null references Problem on delete cascade
 	, description text not null
 	, content jsonb not null
+	, classes text default 'all',
 );
 
 create table Student (
