@@ -9,7 +9,7 @@
 
 
 <script>
-import LandMap from '../modules/land-page/LandMap.vue'
+import LandMap from '~/modules/land-page/LandMap.vue';
 export default {
 	
 	components: {

@@ -26,8 +26,8 @@
 
 
 <script>
-import ProblemContainer from "../../modules/problem-page/ProblemContainer/ProblemContainer.vue"
-import SupportInfoContainer from "../../modules/problem-page/SupportInfoContaner/SupportInfoContainer.vue"
+import ProblemContainer from "~/modules/problem-page/ProblemContainer/ProblemContainer.vue";
+import SupportInfoContainer from "~/modules/problem-page/SupportInfoContaner/SupportInfoContainer.vue";
 
 export default {
 	components: {

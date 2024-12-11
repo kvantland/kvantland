@@ -21,8 +21,8 @@
     </div>
 </template>
 <script>
-import TownDefs from "../../modules/town-page/TownDefs.vue"
-import Problems from "../../modules/town-page/Problems.vue"
+import TownDefs from "~/modules/town-page/TownDefs.vue";
+import Problems from "~/modules/town-page/Problems.vue";
 export default {
     
     components: {
@@ -57,7 +57,6 @@ export default {
         console.log(resp)
         return resp
     },
-
 }
 </script>
 <style scoped>
