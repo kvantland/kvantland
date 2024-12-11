@@ -17,8 +17,8 @@
 export default {
     props: {
 			problemsData: {
-				type: Object,
-				default: () => {}
+				type: Array,
+				default: () => []
 			},
 			classValue: {
 				type: String,

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="content_wrapper_land">
-			<Breadcrumbs :crumbs="landCrumbs" />
+			<Breadcrumbs :crumbs="crumbs" />
 			<LandMap />
 		</div>
 	</div>
@@ -18,15 +18,15 @@ export default {
 
 	middleware: 'full-auth',
 
-	data() {
-		return {
-			landCrumbs: {},
-		}
-	},
-
-	async fetch() {
-		const landCrumbsData = await this.$axios.$get('/api/land_crumbs')
-		this.landCrumbs = landCrumbsData
+	async asyncData({params, $axios}) {
+		console.log(params.classValue)
+		let crumbs
+		await $axios.$post('/api/breadcrumbs', {url: `/class/${params.classValue}/land`})
+		.then((resp) => {
+			console.log('breadcrumbs: ', resp, resp.breadcrumbs)
+			crumbs = resp.breadcrumbs
+		})
+		return {crumbs,}
 	},
 
 	head() {

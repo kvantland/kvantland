@@ -56,7 +56,11 @@ export default {
 		else {
 			return redirect('/')
 		}
-		await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
+		resp.crumbs = [
+			{name: 'Квантландия', link: `/class/${classValue}/land`},
+			{name: ''}
+		]
+		await $axios.$post('/api/breadcrumbs', {url: `/class/${classValue}/problem/${problemNum}`})
 		.then((res) => {
 			if (res.status)
 				resp.crumbs = res.breadcrumbs
