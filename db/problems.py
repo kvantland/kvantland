@@ -40,9 +40,19 @@ class Town:
 				description = variant['description']
 			except:
 				description = ''
-			variant_num = current_tournament * 1000 + current_problem_num
-			cur.execute("insert into Kvantland.Variant (variant, problem, description, content) overriding system value values (%s, %s, %s, %s)", (variant_num, problem.id, description, json.dumps(variant['content'])))	
-			current_problem_num += 1
+
+			try:
+				classes = variant['classes']
+			except:
+				classes = ['all']
+
+			for possible_class in classes:
+				variant_num = current_tournament * 1000 + current_problem_num
+				cur.execute("""insert into Kvantland.Variant 
+								(variant, problem, description, content, class) overriding system value 
+								values (%s, %s, %s, %s, %s)""", 
+								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class))	
+				current_problem_num += 1
 
 	def add_problems(self, problem_list):
 		for problem in problem_list:
@@ -135,7 +145,8 @@ def Liars_Island():
 			'componentType': "predictions",
 			'inputType': "InteractiveTypeInput",
 			'correct': ['g', 'g', 'g']
-		}
+		},
+		'classes': ['4-6', '7-9']
 	})
 	problem_3 = Problem(
 		name="Самый богатый житель острова",
@@ -155,7 +166,8 @@ def Liars_Island():
 				'correct': correct, # correct index order, first - richest
 				'componentType': "richestIslandResident",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6', '7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 	
