@@ -129,7 +129,8 @@ def Liars_Island():
 				'honeycombsConfig': honeycombsConfig,
 				'componentType': "honeyInHoneycombs",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6']
 		})
 
 	problem_2 = Problem(
@@ -146,7 +147,7 @@ def Liars_Island():
 			'inputType': "InteractiveTypeInput",
 			'correct': ['g', 'g', 'g']
 		},
-		'classes': ['4-6', '7-9']
+		'classes': ['4-6']
 	})
 	problem_3 = Problem(
 		name="Самый богатый житель острова",
@@ -167,7 +168,7 @@ def Liars_Island():
 				'componentType': "richestIslandResident",
 				'inputType': "InteractiveTypeInput",
 			},
-			'classes': ['4-6', '7-9']
+			'classes': ['4-6']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 	
@@ -188,7 +189,8 @@ def Chiselburg():
 			'content': {
 				'inputType': "InteractiveTypeInput",
 				'numberValue': number_value,
-			}
+			},
+			'classes': ['4-6']
 		})
 
 	problem_2 = Problem(
@@ -239,7 +241,8 @@ def Chiselburg():
 				'correct': correct,
 				'componentType': "openSafe",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
@@ -294,7 +297,8 @@ def Geoma():
 				'componentType': "constellationSquare",
 				'inputType': "InteractiveTypeInput",
 				'skyMap': map
-			}
+			},
+			'classes': ['4-6']
 		})
 	
 	problem_2 = Problem(
@@ -337,7 +341,8 @@ def Geoma():
 				'componentType': "cubesWithImages",
 				'inputType': "InteractiveTypeInput",
 				'correct': 1,
-			}
+			},
+			'classes': ['4-6']
 	})
 
 	current_town.add_problems([problem_1, problem_2, problem_3])
@@ -435,6 +440,7 @@ def Golovolomsk():
 				'componentType': "supersudoky",
 				'inputType': "InteractiveTypeInput"
 			},
+			'classes': ['4-6']
 		})
 	
 	problem_2 = Problem(
@@ -460,7 +466,8 @@ def Golovolomsk():
 			'cockerel_coordinates': [0, board_width - 1],
 			'componentType': "farmerAndCockerel",
 			'inputType': "HintOnlyInput"
-		}
+		},
+		'classes': ['4-6']
 	})
 		
 	problem_3 = Problem(
@@ -486,7 +493,8 @@ def Golovolomsk():
 				],
 				'componentType': "appleOrchard",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
@@ -516,7 +524,8 @@ def Kombi():
 				'correct': [position_1, position_2],
 				'componentType': "distanseBetweenFake",
 				'inputType': "IntegerTypeInput"
-			}
+			},
+			'classes': ['4-6']
 		})
 
 	problem_2 = Problem(
@@ -539,7 +548,8 @@ def Kombi():
 				'positions': positions,
 				'componentType': "chessFigures",
 				'inputType': "InteractiveTypeInput"
-			}
+			},
+			'classes': ['4-6']
 		})
 	
 	problem_3 = Problem(
@@ -563,7 +573,8 @@ def Kombi():
 				'distance': distance,
 				'correct': correct,
 				'descriptionType': "inTrain",
-			}
+			},
+			'classes': ['4-6']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
