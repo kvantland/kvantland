@@ -37,6 +37,7 @@ create table Variant (
 	, description text not null
 	, content jsonb not null
 	, class text default 'all'
+	, variant_points int 
 );
 
 create table Student (
