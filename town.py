@@ -17,6 +17,7 @@ def get_town_data(db):
 	}
 	try:
 		town = json.loads(request.body.read())['town']
+		classes = json.loads(request.body.read())['classes']
 	except:
 		return json.dumps(resp)
 
@@ -27,7 +28,8 @@ def get_town_data(db):
 	try:
 		db.execute('''select variant, position, curr_points, points, name, answer_true from Kvantland.AvailableProblem 
 			join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) 
-			where town = %s and student = %s and tournament = %s''', (town, user_id, config["tournament"]["version"]))
+			where town = %s and student = %s and tournament = %s and (class = %s or class = 'all')''', 
+			(town, user_id, config["tournament"]["version"], classes))
 		for variant, position, curr_points, points, name, ans_true in db.fetchall():
 			print(curr_points)
 			try:

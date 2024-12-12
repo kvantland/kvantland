@@ -38,7 +38,7 @@ export default {
 				const townNum = params.townNum
 				const classValue = params.classValue
 
-        await $axios.$post("/api/town_data", {town: townNum})
+        await $axios.$post("/api/town_data", {town: townNum, classes: classValue})
         .then((resp) => {
             status = resp.status
             townData = resp.towns
