@@ -26,11 +26,11 @@ def get_town_data(db):
 		return json.dumps(resp)
 	user_id = token_status['user_id']
 	try:
-		db.execute('''select variant, position, curr_points, points, name, answer_true from Kvantland.AvailableProblem 
+		db.execute('''select variant, position, curr_points, points, variant_points, name, answer_true from Kvantland.AvailableProblem 
 			join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) 
 			where town = %s and student = %s and tournament = %s and (class = %s or class = 'all')''', 
 			(town, user_id, config["tournament"]["version"], classes))
-		for variant, position, curr_points, points, name, ans_true in db.fetchall():
+		for variant, position, curr_points, points, variant_points, name, ans_true in db.fetchall():
 			print(curr_points)
 			try:
 				x, y = position
@@ -43,7 +43,9 @@ def get_town_data(db):
 				True: 'solved',
 				False: 'failed',
 			}[ans_true]
-			if curr_points:
+			if variant_points:
+				send_points = variant_points
+			elif curr_points:
 				send_points = curr_points
 			else:
 				send_points = points
