@@ -48,10 +48,15 @@ class Town:
 
 			for possible_class in classes:
 				variant_num = current_tournament * 1000 + current_problem_num
+
+				variant_points = problem.points
+				if 'points' in variant.keys():
+					variant_points = variant['points'][possible_class]
+
 				cur.execute("""insert into Kvantland.Variant 
-								(variant, problem, description, content, class) overriding system value 
-								values (%s, %s, %s, %s, %s)""", 
-								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class))	
+								(variant, problem, description, content, class, variant_points) overriding system value 
+								values (%s, %s, %s, %s, %s, %s)""", 
+								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class, variant_points))	
 				current_problem_num += 1
 
 	def add_problems(self, problem_list):
@@ -147,7 +152,7 @@ def Liars_Island():
 			'inputType': "InteractiveTypeInput",
 			'correct': ['g', 'g', 'g']
 		},
-		'classes': ['4-6']
+		'classes': ['4-6'],
 	})
 	problem_3 = Problem(
 		name="Самый богатый житель острова",

@@ -2,7 +2,7 @@
 	<div>
 		<div class="content_wrapper_land">
 			<Breadcrumbs :crumbs="crumbs" />
-			<LandMap />
+			<LandMap :class-value=classValue />
 		</div>
 	</div>
 </template>
@@ -19,14 +19,14 @@ export default {
 	middleware: 'full-auth',
 
 	async asyncData({params, $axios}) {
-		console.log(params.classValue)
+		const classValue = params.classValue
 		let crumbs
-		await $axios.$post('/api/breadcrumbs', {url: `/class/${params.classValue}/land`})
+		await $axios.$post('/api/breadcrumbs', {url: `/class/${classValue}/land`})
 		.then((resp) => {
 			console.log('breadcrumbs: ', resp, resp.breadcrumbs)
 			crumbs = resp.breadcrumbs
 		})
-		return {crumbs,}
+		return {crumbs, classValue}
 	},
 
 	head() {
