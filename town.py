@@ -11,6 +11,10 @@ MODE = config['tournament']['mode']
 
 @route('/api/town_data', method="POST")
 def get_town_data(db):
+	print('===================')
+	print()
+	print()
+	print('get town data:')
 	resp = {
 		'status': False,
 		'towns': []
@@ -20,6 +24,8 @@ def get_town_data(db):
 		classes = json.loads(request.body.read())['classes']
 	except:
 		return json.dumps(resp)
+	print('town: ', town)
+	print('classes: ', classes)
 
 	token_status = check_token(request)
 	if token_status['error']:
@@ -28,10 +34,9 @@ def get_town_data(db):
 	try:
 		db.execute('''select variant, position, curr_points, points, variant_points, name, answer_true from Kvantland.AvailableProblem 
 			join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) 
-			where town = %s and student = %s and tournament = %s and (class = %s or class = 'all')''', 
+			where town = %s and student = %s and tournament = %s and (classes = %s or classes = 'all')''', 
 			(town, user_id, config["tournament"]["version"], classes))
 		for variant, position, curr_points, points, variant_points, name, ans_true in db.fetchall():
-			print(curr_points)
 			try:
 				x, y = position
 			except TypeError:

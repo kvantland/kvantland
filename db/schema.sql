@@ -36,7 +36,7 @@ create table Variant (
 	, problem int not null references Problem on delete cascade
 	, description text not null
 	, content jsonb not null
-	, class text default 'all'
+	, classes text default 'all'
 	, variant_points int 
 );
 

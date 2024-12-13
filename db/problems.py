@@ -47,17 +47,19 @@ class Town:
 				classes = ['all']
 
 			for possible_class in classes:
+				current_problem_num += 1
 				variant_num = current_tournament * 1000 + current_problem_num
 
-				variant_points = problem.points
-				if 'points' in variant.keys():
+				try:
 					variant_points = variant['points'][possible_class]
+				except:
+					variant_points = problem.points
 
 				cur.execute("""insert into Kvantland.Variant 
-								(variant, problem, description, content, class, variant_points) overriding system value 
+								(variant, problem, description, content, classes, variant_points) overriding system value 
 								values (%s, %s, %s, %s, %s, %s)""", 
-								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class, variant_points))	
-				current_problem_num += 1
+								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class, variant_points))
+
 
 	def add_problems(self, problem_list):
 		for problem in problem_list:
@@ -135,7 +137,7 @@ def Liars_Island():
 				'componentType': "honeyInHoneycombs",
 				'inputType': "InteractiveTypeInput",
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9'],
 		})
 
 	problem_2 = Problem(
@@ -152,7 +154,7 @@ def Liars_Island():
 			'inputType': "InteractiveTypeInput",
 			'correct': ['g', 'g', 'g']
 		},
-		'classes': ['4-6'],
+		'classes': ['4-6', '7-9'],
 	})
 	problem_3 = Problem(
 		name="Самый богатый житель острова",
@@ -173,7 +175,7 @@ def Liars_Island():
 				'componentType': "richestIslandResident",
 				'inputType': "InteractiveTypeInput",
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 	
@@ -195,7 +197,7 @@ def Chiselburg():
 				'inputType': "InteractiveTypeInput",
 				'numberValue': number_value,
 			},
-			'classes': ['4-6']
+			'classes': ["4-6"]
 		})
 
 	problem_2 = Problem(
@@ -224,7 +226,8 @@ def Chiselburg():
 				'month_day': month_day,
 				'componentType': 'weekDays',
 				'inputType': 'InteractiveTypeInput'
-			}
+			},
+			'classes': ['4-6']
 		})
 	problem_3 = Problem(
 		name="Откройте сейф",
@@ -320,6 +323,7 @@ def Geoma():
 			'content': {
 				'correct': 5 * N,
 			},
+			'classes': ['4-6'],
 			'description': f"""Пятиугольник, стороны которого равны, разрезали по 
 					диагоналям на несколько фигур (см. рисунок). Сумма периметров белых 
 					фигур на {N} см больше суммы периметров зелёных фигур. Чему равен 
