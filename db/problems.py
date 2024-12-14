@@ -164,9 +164,9 @@ def Liars_Island():
 				или Илон самый богатый житель и он солгал."""
 	)
 	for names, correct in [
-		(['Дональд', 'Билл', 'Илон'], [1, 2, 0]),
+		
 		(['Билл', 'Илон', 'Дональд'], [0, 1, 2]),
-		(['Илон', 'Дональд', 'Билл'], [2, 0, 1]),
+	
 	]:
 		problem_3.add_variant({
 			'content': {
@@ -354,8 +354,47 @@ def Geoma():
 			},
 			'classes': ['4-6']
 	})
+		
+	problem_4 = Problem(
+		name="Шоссе в никуда",
+		points=3,
+		type_='integer',
+		image='highway.png'
+	)
+	for distances, correct in [
+		([3, 4], 4),
+		([4, 5], 2),
+		([5, 3], 3),
+		([5, 2], 4)
+	]:
+		problem_4.add_variant({
+			'content': {
+				'correct': correct
+			},
+			'description': f"""Две деревни Вилларибо и Виллабаджо расположены одна 
+			от другой на расстоянии 8 км по прямой. Сколькими способами можно 
+			построить прямое шоссе, которое проходит на расстоянии 
+			{distances[0]} км и {distances[1]} км соответственно от этих деревень?""",
+			'classes': ['7-9']
+		})
+	
+	problem_5 = Problem(
+		name="Угол четырёхугольника",
+		points=4,
+		type_='multy_integer',
+		image='quadrangle_angle.svg'
+	)
+	for x in [ 3, 4, 6, 8]:
+		problem_5.add_variant({
+			'content': {
+				'correct': [60, 180 - 2 * x]
+			},
+			'description': f"""В четырёхугольнике ABCD угол A = {90 - x}, 
+			угол B = {2 * x + 60} и AB=BC=CD.
+			Чему может быть равен угол C? Укажите все варианты."""
+		})
 
-	current_town.add_problems([problem_1, problem_2, problem_3])
+	current_town.add_problems([problem_1, problem_2, problem_3, problem_4, problem_5])
 
 
 def Golovolomsk():
