@@ -197,7 +197,7 @@ def Chiselburg():
 				'inputType': "InteractiveTypeInput",
 				'numberValue': number_value,
 			},
-			'classes': ["4-6"]
+			'classes': ['4-6']
 		})
 
 	problem_2 = Problem(
@@ -588,31 +588,6 @@ def Kombi():
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
 
-def update_positions_town(cur, town, problem_count):
-	x0 = 1280 / 2
-	y0 = 720 / 2
-	R = 250
-	base = 0.25
-	cur.execute("select problem from Kvantland.Problem where town = %s and tournament = %s order by points", (town, current_tournament))
-	if (problem_count == 1):
-		(problem, ), = cur.fetchall()
-		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x0, y0, problem))
-	else:
-		for k, (problem, ) in enumerate(cur.fetchall()):
-			phi = 2 * math.pi * ((k // 2 + k % 2) / problem_count + base)
-			if k % 2 == 1:
-				x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
-			else:
-				x, y = x0 - R * math.cos(phi), y0 - R * math.sin(phi)
-			cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
-
-def update_positions():
-	global cur
-	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) where tournament = %s group by town", (current_tournament,))
-	for town, problem_count in cur.fetchall():
-		update_positions_town(cur, town, problem_count)
-
-
 db = 'postgres://kvantland:quant@127.0.0.1'
 if len(sys.argv) > 1:
 	db = sys.argv[1]
@@ -624,4 +599,3 @@ with psycopg.connect(db) as con:
 			Geoma()
 			Chiselburg()
 			Kombi()
-			update_positions()
