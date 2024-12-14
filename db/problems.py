@@ -197,7 +197,8 @@ def Chiselburg():
 				'inputType': "InteractiveTypeInput",
 				'numberValue': number_value,
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9'],
+			'points': {'7-9': 3}
 		})
 
 	problem_2 = Problem(
@@ -250,7 +251,7 @@ def Chiselburg():
 				'componentType': "openSafe",
 				'inputType': "InteractiveTypeInput",
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
@@ -306,7 +307,7 @@ def Geoma():
 				'inputType': "InteractiveTypeInput",
 				'skyMap': map
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9']
 		})
 	
 	problem_2 = Problem(
@@ -449,7 +450,8 @@ def Golovolomsk():
 				'componentType': "supersudoky",
 				'inputType': "InteractiveTypeInput"
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9'],
+			'points': {'7-9': 3}
 		})
 	
 	problem_2 = Problem(
@@ -476,7 +478,8 @@ def Golovolomsk():
 			'componentType': "farmerAndCockerel",
 			'inputType': "HintOnlyInput"
 		},
-		'classes': ['4-6']
+		'classes': ['4-6', '7-9'],
+		'points': {'7-9': 2}
 	})
 		
 	problem_3 = Problem(
@@ -583,7 +586,7 @@ def Kombi():
 				'correct': correct,
 				'descriptionType': "inTrain",
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
