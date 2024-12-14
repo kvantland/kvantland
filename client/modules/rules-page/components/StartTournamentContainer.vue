@@ -1,7 +1,7 @@
 <template>
 <div class="conformation_box">
 	<p class="conformation_text">С правилами ознакомился(-лась) и готов(а) приступить!</p>
-	<NuxtLink  to="/land" class="start_button_wrapper">
+	<NuxtLink  to="/class/7-9/land" class="start_button_wrapper">
 		<div class ="start_button"> Открыть турнир </div>
 	</NuxtLink>
 </div>

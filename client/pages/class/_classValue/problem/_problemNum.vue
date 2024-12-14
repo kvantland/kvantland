@@ -8,6 +8,7 @@
 				:answer="answer"
 				:solution="solution"
 				:variant="problemNum"
+				:class-value="classValue"
 				:description="description" 
 				:cost="cost"
 				:image="image"
@@ -26,8 +27,8 @@
 
 
 <script>
-import ProblemContainer from "../../modules/problem-page/ProblemContainer/ProblemContainer.vue"
-import SupportInfoContainer from "../../modules/problem-page/SupportInfoContaner/SupportInfoContainer.vue"
+import ProblemContainer from "~/modules/problem-page/ProblemContainer/ProblemContainer.vue";
+import SupportInfoContainer from "~/modules/problem-page/SupportInfoContaner/SupportInfoContainer.vue";
 
 export default {
 	components: {
@@ -39,6 +40,7 @@ export default {
 
 	async asyncData({ params, $axios, redirect }){
 		const problemNum = params.problemNum
+		const classValue = params.classValue
 		let status, problemData
 		const resp = {}
 		await $axios.$post("/api/problem_data", {variant: problemNum})
@@ -54,7 +56,11 @@ export default {
 		else {
 			return redirect('/')
 		}
-		await $axios.$post('/api/problem_breadcrumbs', {variant: params.problemNum})
+		resp.crumbs = [
+			{name: 'Квантландия', link: `/class/${classValue}/land`},
+			{name: ''}
+		]
+		await $axios.$post('/api/breadcrumbs', {url: `/class/${classValue}/problem/${problemNum}`})
 		.then((res) => {
 			if (res.status)
 				resp.crumbs = res.breadcrumbs
@@ -62,6 +68,8 @@ export default {
 				resp.crumbs = []
 		})
 		resp.problemNum = params.problemNum
+		resp.classValue = classValue
+
 		console.log(resp)
 		return resp
 	},

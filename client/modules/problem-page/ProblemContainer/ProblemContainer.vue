@@ -65,6 +65,10 @@ export default {
 			type: String,
 			default: null
 		},
+		classValue: {
+			type: String,
+			default: 'all'
+		},
 		title: {
 			type: String,
 			default: ''

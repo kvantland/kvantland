@@ -85,12 +85,6 @@ def get_rules_info():
 	]
 	return json.dumps(rules_info)
 
-@route('/api/land_crumbs')
-def get_land_breadcrumbs():
-	land_crumbs = [
-		{   'name': "Квантландия",
-            'link':  "/"},]
-	return json.dumps(land_crumbs)
 
 def get_user_id(db): 
 	token_check_status = check_token(request)

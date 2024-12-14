@@ -1,15 +1,15 @@
 <template>
 	<div>
 		<div class="content_wrapper_land">
-			<Breadcrumbs :crumbs="landCrumbs" />
-			<LandMap />
+			<Breadcrumbs :crumbs="crumbs" />
+			<LandMap :class-value=classValue />
 		</div>
 	</div>
 </template>
 
 
 <script>
-import LandMap from '../modules/land-page/LandMap.vue'
+import LandMap from '~/modules/land-page/LandMap.vue';
 export default {
 	
 	components: {
@@ -18,15 +18,15 @@ export default {
 
 	middleware: 'full-auth',
 
-	data() {
-		return {
-			landCrumbs: {},
-		}
-	},
-
-	async fetch() {
-		const landCrumbsData = await this.$axios.$get('/api/land_crumbs')
-		this.landCrumbs = landCrumbsData
+	async asyncData({params, $axios}) {
+		const classValue = params.classValue
+		let crumbs
+		await $axios.$post('/api/breadcrumbs', {url: `/class/${classValue}/land`})
+		.then((resp) => {
+			console.log('breadcrumbs: ', resp, resp.breadcrumbs)
+			crumbs = resp.breadcrumbs
+		})
+		return {crumbs, classValue}
 	},
 
 	head() {

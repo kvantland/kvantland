@@ -1,14 +1,57 @@
 <template>
-<g class="problems">
-	<NuxtLink v-for="prb in problems_data" :to="`/problem/${prb.variantID}/`" :class="`level level_${prb.status}`" :transform="`translate(${prb.x} ${prb.y})`" :key="`problem_${prb.variantID}`"><title>{{prb.name}}</title>
-		<circle class="level-icon" r="0.65em" />
-		<text class="level-value" dy="0.35em">{{prb.points}}</text>
-    </NuxtLink>
-</g>
+	<g class="problems">
+		<NuxtLink
+			v-for="prb in problemsData" 
+			:key="`problem_${prb.variantID}`" 
+			:to="`/class/${classValue}/problem/${prb.variantID}/`" 
+			:class="`level level_${prb.status}`" 
+			:transform="`translate(${positions[prb.variantID].x} ${positions[prb.variantID].y})`">
+
+			<title>{{prb.name}}</title>
+			<circle class="level-icon" r="0.65em" />
+			<text class="level-value" dy="0.35em">{{prb.points}}</text>
+			</NuxtLink>
+	</g>
 </template>
 <script>
 export default {
-    props: ['problems_data']
+    props: {
+			problemsData: {
+				type: Array,
+				default: () => []
+			},
+			classValue: {
+				type: String,
+				default: 'all'
+			}
+		},
+		computed: {
+			positions() {
+				const sortedPostions = JSON.parse(JSON.stringify(this.problemsData))
+					.sort((problem1, problem2) => problem1.points - problem2.points)
+				const center = {x: 1280 / 2, y: 720 / 2 }
+				const radius = 250
+				const startAngle = Math.PI / 2
+				const vertexAmount = sortedPostions.length
+				const addAngle = Math.PI * 2 / vertexAmount
+				const positions = {}
+
+				if (vertexAmount === 1) {
+					positions[sortedPostions[0].variantID] = center
+				}
+				else {
+					let angle = startAngle
+					for (let vertexNum = 0; vertexNum < vertexAmount; vertexNum++) {
+						const position = {x: center.x + radius * Math.cos(angle),
+							y: center.y - radius * Math.sin(angle)}
+						positions[sortedPostions[vertexNum].variantID] = position
+						angle += addAngle
+					}
+				}
+				console.log(positions)
+				return positions
+			}
+		}
 }
 </script>
 <style scoped>

@@ -16,13 +16,13 @@
                     h -1237
                     a 20 20 0 0 0 -20 20
                     z" />
-            <Problems :problems_data="town_data"/>
+            <Problems :problems-data="townData" :class-value="classValue"/>
         </svg>
     </div>
 </template>
 <script>
-import TownDefs from "../../modules/town-page/TownDefs.vue"
-import Problems from "../../modules/town-page/Problems.vue"
+import TownDefs from "~/modules/town-page/TownDefs.vue";
+import Problems from "~/modules/town-page/Problems.vue";
 export default {
     
     components: {
@@ -32,32 +32,38 @@ export default {
 
     middleware: 'full-auth',
 
-    async asyncData({ params, $axios, redirect }){
+    async asyncData({ params, $axios, redirect}){
         let status, townData
         const resp = {}
-        await $axios.$post("/api/town_data", {town: params.townNum})
+				const townNum = params.townNum
+				const classValue = params.classValue
+
+        await $axios.$post("/api/town_data", {town: townNum, classes: classValue})
         .then((resp) => {
             status = resp.status
             townData = resp.towns
         })
         if (status) {
-            resp.town_data = townData
+            resp.townData = townData
         }
         else {
             return redirect('/')
         }
-        await $axios.$post('/api/town_breadcrumbs', {town: params.townNum})
+        await $axios.$post('/api/breadcrumbs', {url: `/class/${classValue}/town/${townNum}`})
         .then((res) => {
             if (res.status)
                 resp.crumbs = res.breadcrumbs
             else
                 resp.crumbs = []
         })
-        resp.townNum = params.townNum
+        resp.townNum = townNum
+				resp.classValue = classValue
         console.log(resp)
         return resp
     },
-
+		mounted() {
+			console.log(this.crumbs)
+		}
 }
 </script>
 <style scoped>

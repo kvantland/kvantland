@@ -9,52 +9,34 @@ import sys
 
 MODE = config['tournament']['mode']
 
-@route('/api/town_breadcrumbs', method="POST")
-def get_town_breadcrumbs(db):
-	resp = {
-		'status': False,
-		'breadcrumbs': [],
-	}
-	try:
-		town = json.loads(request.body.read())['town']
-		print('town: ', town, file=sys.stderr)
-	except:
-		return json.dumps(resp)
-	try:
-		db.execute('''select Kvantland.Town.name
-				from Kvantland.Town where town = %s''', (town,))
-		(town_name, ), = db.fetchall()
-		resp['breadcrumbs'].append({'name': 'Квантландия', 'link': '/land'})
-		resp['breadcrumbs'].append({'name': town_name, 'link': f'/town/{town}'})
-	except:
-		print('bad db', resp, file=sys.stderr)
-		return json.dumps(resp)
-	
-	print('resp: ', resp, file=sys.stderr)
-	resp['status'] = True
-	return json.dumps(resp)
-
 @route('/api/town_data', method="POST")
 def get_town_data(db):
+	print('===================')
+	print()
+	print()
+	print('get town data:')
 	resp = {
 		'status': False,
 		'towns': []
 	}
 	try:
 		town = json.loads(request.body.read())['town']
+		classes = json.loads(request.body.read())['classes']
 	except:
 		return json.dumps(resp)
+	print('town: ', town)
+	print('classes: ', classes)
 
 	token_status = check_token(request)
 	if token_status['error']:
 		return json.dumps(resp)
 	user_id = token_status['user_id']
 	try:
-		db.execute('''select variant, position, curr_points, points, name, answer_true from Kvantland.AvailableProblem 
+		db.execute('''select variant, position, curr_points, points, variant_points, name, answer_true from Kvantland.AvailableProblem 
 			join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) 
-			where town = %s and student = %s and tournament = %s''', (town, user_id, config["tournament"]["version"]))
-		for variant, position, curr_points, points, name, ans_true in db.fetchall():
-			print(curr_points)
+			where town = %s and student = %s and tournament = %s and (classes = %s or classes = 'all')''', 
+			(town, user_id, config["tournament"]["version"], classes))
+		for variant, position, curr_points, points, variant_points, name, ans_true in db.fetchall():
 			try:
 				x, y = position
 			except TypeError:
@@ -66,7 +48,9 @@ def get_town_data(db):
 				True: 'solved',
 				False: 'failed',
 			}[ans_true]
-			if curr_points:
+			if variant_points:
+				send_points = variant_points
+			elif curr_points:
 				send_points = curr_points
 			else:
 				send_points = points

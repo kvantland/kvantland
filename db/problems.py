@@ -40,9 +40,26 @@ class Town:
 				description = variant['description']
 			except:
 				description = ''
-			variant_num = current_tournament * 1000 + current_problem_num
-			cur.execute("insert into Kvantland.Variant (variant, problem, description, content) overriding system value values (%s, %s, %s, %s)", (variant_num, problem.id, description, json.dumps(variant['content'])))	
-			current_problem_num += 1
+
+			try:
+				classes = variant['classes']
+			except:
+				classes = ['all']
+
+			for possible_class in classes:
+				current_problem_num += 1
+				variant_num = current_tournament * 1000 + current_problem_num
+
+				try:
+					variant_points = variant['points'][possible_class]
+				except:
+					variant_points = problem.points
+
+				cur.execute("""insert into Kvantland.Variant 
+								(variant, problem, description, content, classes, variant_points) overriding system value 
+								values (%s, %s, %s, %s, %s, %s)""", 
+								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class, variant_points))
+
 
 	def add_problems(self, problem_list):
 		for problem in problem_list:
@@ -119,7 +136,8 @@ def Liars_Island():
 				'honeycombsConfig': honeycombsConfig,
 				'componentType': "honeyInHoneycombs",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6', '7-9'],
 		})
 
 	problem_2 = Problem(
@@ -135,7 +153,8 @@ def Liars_Island():
 			'componentType': "predictions",
 			'inputType': "InteractiveTypeInput",
 			'correct': ['g', 'g', 'g']
-		}
+		},
+		'classes': ['4-6', '7-9'],
 	})
 	problem_3 = Problem(
 		name="Самый богатый житель острова",
@@ -155,7 +174,8 @@ def Liars_Island():
 				'correct': correct, # correct index order, first - richest
 				'componentType': "richestIslandResident",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6', '7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 	
@@ -176,7 +196,9 @@ def Chiselburg():
 			'content': {
 				'inputType': "InteractiveTypeInput",
 				'numberValue': number_value,
-			}
+			},
+			'classes': ['4-6', '7-9'],
+			'points': {'7-9': 3}
 		})
 
 	problem_2 = Problem(
@@ -205,7 +227,8 @@ def Chiselburg():
 				'month_day': month_day,
 				'componentType': 'weekDays',
 				'inputType': 'InteractiveTypeInput'
-			}
+			},
+			'classes': ['4-6']
 		})
 	problem_3 = Problem(
 		name="Откройте сейф",
@@ -227,7 +250,8 @@ def Chiselburg():
 				'correct': correct,
 				'componentType': "openSafe",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6', '7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
@@ -282,7 +306,8 @@ def Geoma():
 				'componentType': "constellationSquare",
 				'inputType': "InteractiveTypeInput",
 				'skyMap': map
-			}
+			},
+			'classes': ['4-6', '7-9']
 		})
 	
 	problem_2 = Problem(
@@ -299,6 +324,7 @@ def Geoma():
 			'content': {
 				'correct': 5 * N,
 			},
+			'classes': ['4-6'],
 			'description': f"""Пятиугольник, стороны которого равны, разрезали по 
 					диагоналям на несколько фигур (см. рисунок). Сумма периметров белых 
 					фигур на {N} см больше суммы периметров зелёных фигур. Чему равен 
@@ -325,7 +351,8 @@ def Geoma():
 				'componentType': "cubesWithImages",
 				'inputType': "InteractiveTypeInput",
 				'correct': 1,
-			}
+			},
+			'classes': ['4-6']
 	})
 
 	current_town.add_problems([problem_1, problem_2, problem_3])
@@ -423,6 +450,8 @@ def Golovolomsk():
 				'componentType': "supersudoky",
 				'inputType': "InteractiveTypeInput"
 			},
+			'classes': ['4-6', '7-9'],
+			'points': {'7-9': 3}
 		})
 	
 	problem_2 = Problem(
@@ -448,7 +477,9 @@ def Golovolomsk():
 			'cockerel_coordinates': [0, board_width - 1],
 			'componentType': "farmerAndCockerel",
 			'inputType': "HintOnlyInput"
-		}
+		},
+		'classes': ['4-6', '7-9'],
+		'points': {'7-9': 2}
 	})
 		
 	problem_3 = Problem(
@@ -474,7 +505,8 @@ def Golovolomsk():
 				],
 				'componentType': "appleOrchard",
 				'inputType': "InteractiveTypeInput",
-			}
+			},
+			'classes': ['4-6']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
 
@@ -504,7 +536,8 @@ def Kombi():
 				'correct': [position_1, position_2],
 				'componentType': "distanseBetweenFake",
 				'inputType': "IntegerTypeInput"
-			}
+			},
+			'classes': ['4-6']
 		})
 
 	problem_2 = Problem(
@@ -527,7 +560,8 @@ def Kombi():
 				'positions': positions,
 				'componentType': "chessFigures",
 				'inputType': "InteractiveTypeInput"
-			}
+			},
+			'classes': ['4-6']
 		})
 	
 	problem_3 = Problem(
@@ -551,34 +585,10 @@ def Kombi():
 				'distance': distance,
 				'correct': correct,
 				'descriptionType': "inTrain",
-			}
+			},
+			'classes': ['4-6', '7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3])
-
-
-def update_positions_town(cur, town, problem_count):
-	x0 = 1280 / 2
-	y0 = 720 / 2
-	R = 250
-	base = 0.25
-	cur.execute("select problem from Kvantland.Problem where town = %s and tournament = %s order by points", (town, current_tournament))
-	if (problem_count == 1):
-		(problem, ), = cur.fetchall()
-		cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x0, y0, problem))
-	else:
-		for k, (problem, ) in enumerate(cur.fetchall()):
-			phi = 2 * math.pi * ((k // 2 + k % 2) / problem_count + base)
-			if k % 2 == 1:
-				x, y = x0 + R * math.cos(phi), y0 - R * math.sin(phi)
-			else:
-				x, y = x0 - R * math.cos(phi), y0 - R * math.sin(phi)
-			cur.execute("update Kvantland.Problem set position = point(%s, %s) where problem = %s", (x, y, problem))
-
-def update_positions():
-	global cur
-	cur.execute("select town, count(*) from Kvantland.Problem join Kvantland.Town using (town) where tournament = %s group by town", (current_tournament,))
-	for town, problem_count in cur.fetchall():
-		update_positions_town(cur, town, problem_count)
 
 
 db = 'postgres://kvantland:quant@127.0.0.1'
@@ -592,4 +602,3 @@ with psycopg.connect(db) as con:
 			Geoma()
 			Chiselburg()
 			Kombi()
-			update_positions()
