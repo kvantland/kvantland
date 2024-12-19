@@ -1,3 +1,4 @@
+SET client_encoding = 'UTF8';
 insert into Kvantland.Town (name, position) values
 ('Чиселбург', '(436,411)'),
 ('Остров Лжецов', '(926,522)'),

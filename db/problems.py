@@ -253,7 +253,27 @@ def Chiselburg():
 			},
 			'classes': ['4-6', '7-9']
 		})
-	current_town.add_problems([problem_1, problem_2, problem_3])
+	problem_4 = Problem(
+		name="Равенство",
+		points=2,
+		type_="equality_of_values",
+		hint="""Проверка равенства: После вставки знаков вам нужно проверить, 
+		действительно ли получившиеся выражения равны друг другу. 
+		Для этого вычислите результат для левой и правой части."""
+	)
+	for group_of_numbers in [
+        { 'id': 1, 'left': [97, 98, 99, 100], 'right': [97, 98, 99, 100] },
+        { 'id': 2, 'left': [98, 99, 100, 101], 'right': [98, 99, 100, 101] },
+        { 'id': 3, 'left': [99, 100, 101, 102], 'right': [99, 100, 101, 102] },
+        { 'id': 4, 'left': [100, 101, 102, 103], 'right': [100, 101, 102, 103] }]:
+		problem_4.add_variant({
+			'content': {
+				'variant':group_of_numbers,
+				'inputType': "InteractiveTypeInput",
+			},
+			'classes': ['4-6', '7-9']
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3,problem_4])
 
 
 def Geoma():
