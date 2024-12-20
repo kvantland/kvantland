@@ -1,11 +1,10 @@
 <template>
     <div class="number-section">
-        <span v-for="(number, index) in data[side]" :key="`number-${data.id}-${index}`" class="number">
+        <span v-for="(number, index) in data" :key="`number-${index + 1}`" class="number">
             {{ number }}
-            <span v-if="index < data[side].length - 1">
+            <span v-if="index < data.length - 1">
                 <div :class="dropZoneClass(index)" @dragover.prevent="handleDragOver(index)" @drop="handleDrop(index)">
-                    <div 
-                        v-if="hasSign(index)" :class="signClass(getSign(index))" draggable
+                    <div v-if="hasSign(index)" :class="signClass(getSign(index))" draggable
                         @dragstart="handleDragStart(index)" @dragend="handleDragEnd">
                         {{ getSign(index) }}
                     </div>
@@ -20,7 +19,7 @@
 
 export default {
     props: {
-        data: { type: Object, required: true },
+        data: { type: Array, required: true },
         signs: { type: Array, required: true },
         side: { type: String, required: true },
         currentDropIndex: { type: Number, default: null }
@@ -45,7 +44,7 @@ export default {
         },
 
         getAdjustedIndex(index) {
-            return this.side === 'right' ? index + this.data.left.length -1: index;
+            return this.side === 'right' ? index + this.data.length - 1 : index;
         },
 
         getSign(index) {

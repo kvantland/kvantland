@@ -1,52 +1,49 @@
 def validate(data, answer):
     try:
-        return True
+        return calculate_equality(data['variant'],answer['signs'])
     except:
         return False
 
-def calculate_expression(values, operations):
-    total_sum = 0
-    total_product = 1
 
-    for i in range(len(values)):
-        if operations[i] == '×':
-            total_product *= values[i]
-        elif operations[i] == '+':
-            total_sum += values[i]
-        elif operations[i] == '−':
-            total_sum -= values[i]
-
-    return total_sum * total_product
-
-def compute_results(initial_data, operations):
-    if None in operations:
+def calculate_equality(data, ops):
+    # Проверка на наличие недопустимого ввода
+    if None in ops or ops[:3] == ops[3:]:
         return False
 
-    left_operations = operations[:len(initial_data['left_values'])]
-    right_operations = operations[len(initial_data['left_values']):]
+    # Вычисляем результаты для обеих частей
+    left_result = calculate_expression(data, ops[:3])
+    right_result = calculate_expression(data, ops[3:])
 
-    left_result = calculate_expression(initial_data['left_values'], left_operations)
-    right_result = calculate_expression(initial_data['right_values'], right_operations)
+    # Выводим результаты
+    print(f'Результат для левой части: {left_result}, '
+          f'Результат для правой части: {right_result}, '
+          f'Сравнение: {"Равны" if left_result == right_result else "Не равны"}')
 
     return left_result == right_result
 
+def calculate_expression(data, ops):
+    results = [data[0]]  # Начинаем с первого числа
+    # Сначала обрабатываем операции с более высоким приоритетом (умножение)
+    for i in range(1, len(data)):
+        if ops[i - 1] == '×':
+            results[-1] *= data[i]  # Выполняем умножение немедленно
+        else:
+            results.append(data[i])  # Добавляем следующее число
+            results.append(ops[i - 1])  # Добавляем операцию
+
+    # Теперь обрабатываем операции с низким приоритетом (сложение и вычитание)
+    final_result = results[0]
+    for i in range(1, len(results), 2):
+        operator = results[i]
+        next_number = results[i + 1]
+
+        if operator == '−':
+            final_result -= next_number
+        elif operator == '+':
+            final_result += next_number
+        else:
+            raise ValueError(f'Неизвестная операция: {operator}')
+
+    return final_result
 
 
-# Пример данных для вызова функции
-initial_data = {
-    'left_values': [97, 98, 99, 100],
-    'right_values': [100, 101, 102, 103]
-}
-
-operations = [
-    '+',
-    'x',
-    '+',
-    '-',
-    '+',
-    '−',
-]
-
-# Вызов функции валидации и вывод результата
-result = validate({'data': initial_data, 'signs': operations})
-print(result)

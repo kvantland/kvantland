@@ -12,7 +12,7 @@
 					@drop="handleDrop" @dragover="handleDragOver" @dragstart="handleDragStart"
 					@dragend="handleDragEnd" />
 			</div>
-			<img :src='srcImg' alt="board" />
+			<img :src="`/problem_assets/equalityOfValues/${srcImg}`" alt="board" />
 		</div>
 
 		<ul class="group-signs">
@@ -49,7 +49,7 @@ export default {
 
 	data() {
 		return {
-			srcImg: "https://s3-alpha-sig.figma.com/img/7ca0/670c/f4b4280b1a9e9774c40a8ca87a4e0607?Expires=1735516800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=AeHfPHoXC3qDQ3h~tYrR1kGRAqVdPkm7dXrq9wJcmWMzKKWJddADc-jZJCUd~5bsnigqvVdPfFxVafXSAml3h6lnx1Xj8ZGkLKCDzggJlOk0M8rj8d~R2KOTCxcXRNM52CGbzbmPV1eind4gHL1noTJhnuRVKu02ON658ZVXA~UXvgb9C63ck3urJJn~WPbAF0OprlDUFmC7yf9w-B82tnr~OrkB5I7Pqobezy2v2AI1cdVIhPrE-6Tgu8r0UH1aLK8NYFXjUoW0yw91TEAu0OLgr1ry5GSfvyINlYAvikdk2voxkxutl3LUTBwjkHL7WD6ncnU3votWDev4fsW2SA__",
+			srcImg: "board.png",
 			availableSigns: ['+', '−', '×'],
 			signs: Array(6).fill(null), // Инициализация для всех чисел 
 			draggedSign: null,
@@ -65,6 +65,27 @@ export default {
 	},
 
 	methods: {
+		// TODO в дальнейшем, если нужно, можно использовать autoscroll
+		autoscroll() {
+			const targetX = window.event.clientX
+			const targetY = window.event.clientY
+			const xDiff = 100
+			const yDiff = 100
+			let [scrollX, scrollY] = [0, 0]
+			if (targetX + xDiff > window.innerWidth) {
+				scrollX = targetX + xDiff - window.innerWidth
+			}
+			else if (targetX - xDiff < 0) {
+				scrollX = targetX - xDiff
+			}
+			if (targetY + yDiff > window.innerHeight) {
+				scrollY = targetY + yDiff - window.innerHeight
+			}
+			else if (targetY - yDiff < 0) {
+				scrollY = targetY - yDiff
+			}
+			scrollBy(scrollX, scrollY)
+		},
 		handleDragStart(index, sign = null) {
 			this.draggedIndex = index;
 			this.draggedSign = sign || this.signs[index];
@@ -104,7 +125,7 @@ export default {
 
 			}
 			this.currentDropIndex = null; // Сброс текущей зоны после завершения перетаскивания
-			this.$emit('updateAnswer', { data: this.dataInit, signs: this.signs })
+			this.$emit('updateAnswer', { signs: this.signs })
 		}
 	},
 
