@@ -5,6 +5,9 @@ def validate(data, answer):
         return False
 
 
+ 
+
+
 def calculate_equality(data, ops):
     # Проверка на наличие недопустимого ввода
     if None in ops or ops[:3] == ops[3:]:
@@ -13,12 +16,7 @@ def calculate_equality(data, ops):
     # Вычисляем результаты для обеих частей
     left_result = calculate_expression(data, ops[:3])
     right_result = calculate_expression(data, ops[3:])
-
-    # Выводим результаты
-    print(f'Результат для левой части: {left_result}, '
-          f'Результат для правой части: {right_result}, '
-          f'Сравнение: {"Равны" if left_result == right_result else "Не равны"}')
-
+    print(left_result,right_result)
     return left_result == right_result
 
 def calculate_expression(data, ops):
@@ -41,9 +39,6 @@ def calculate_expression(data, ops):
             final_result -= next_number
         elif operator == '+':
             final_result += next_number
-        else:
-            raise ValueError(f'Неизвестная операция: {operator}')
 
     return final_result
-
-
+    
