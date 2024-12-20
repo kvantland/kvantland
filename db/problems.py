@@ -547,7 +547,26 @@ def Golovolomsk():
 			},
 			'classes': ['4-6']
 		})
-	current_town.add_problems([problem_1, problem_2, problem_3])
+
+	problem_4 = Problem(
+		name="Коням тесно",
+		type_="horses_cramped",
+		points=4
+	)
+	for horses_configuration in [
+		{'white': [2, 2], 'black': [4, 5]},
+		{'white': [2, 6], 'black': [5, 3]},
+		{'white': [6, 6], 'black': [7, 4]},
+		{'white': [6, 2], 'black': [4, 7]},
+	]:
+		problem_4.add_variant({
+			'content': {
+				'startConfig': horses_configuration,
+				'inputType': "InteractiveTypeInput"
+			},
+			'classes': ['7-9']
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3, problem_4])
 
 
 def Kombi():
