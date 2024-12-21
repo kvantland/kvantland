@@ -16,6 +16,16 @@ current_tournament = config['tournament']['version']
 current_problem_num = 1
 
 
+def get_class_content(content: dict, classes: str):
+	class_content = {}
+	for key in content.keys():
+		try:
+			class_content[key] = content[key][classes]
+		except:
+			class_content[key] = content[key]
+	return class_content
+
+
 class Town:
 	problems = []
 
@@ -58,7 +68,7 @@ class Town:
 				cur.execute("""insert into Kvantland.Variant 
 								(variant, problem, description, content, classes, variant_points) overriding system value 
 								values (%s, %s, %s, %s, %s, %s)""", 
-								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class, variant_points))
+								(variant_num, problem.id, description, json.dumps(get_class_content(variant['content'], possible_class)), possible_class, variant_points))
 
 
 	def add_problems(self, problem_list):
@@ -253,7 +263,27 @@ def Chiselburg():
 			},
 			'classes': ['4-6', '7-9']
 		})
-	current_town.add_problems([problem_1, problem_2, problem_3])
+	problem_4 = Problem(
+		name="Равенство",
+		points=2,
+		type_="equality_of_values",
+		hint="""Проверка равенства: После вставки знаков вам нужно проверить, 
+		действительно ли получившиеся выражения равны друг другу. 
+		Для этого вычислите результат для левой и правой части."""
+	)
+	for group_of_numbers in [
+        [97, 98, 99, 100],
+        [98, 99, 100, 101],
+        [99, 100, 101, 102],
+        [100, 101, 102, 103]]:
+		problem_4.add_variant({
+			'content': {
+				'variant':group_of_numbers,
+				'inputType': "InteractiveTypeInput",
+			},
+			'classes': ['4-6', '7-9']
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3,problem_4])
 
 
 def Geoma():
@@ -574,9 +604,10 @@ def Kombi():
 				'weightings_amount': 2,
 				'correct': [position_1, position_2],
 				'componentType': "distanseBetweenFake",
-				'inputType': "IntegerTypeInput"
+				'inputType': "IntegerTypeInput",
+				'descriptionType': {'4-6': "distanseBetweenFake", '7-9': "distanseBetweenFakeDifficult"}
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9']
 		})
 
 	problem_2 = Problem(
