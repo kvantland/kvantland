@@ -16,6 +16,16 @@ current_tournament = config['tournament']['version']
 current_problem_num = 1
 
 
+def get_class_content(content: dict, classes: str):
+	class_content = {}
+	for key in content.keys():
+		try:
+			class_content[key] = content[key][classes]
+		except:
+			class_content[key] = content[key]
+	return class_content
+
+
 class Town:
 	problems = []
 
@@ -58,7 +68,7 @@ class Town:
 				cur.execute("""insert into Kvantland.Variant 
 								(variant, problem, description, content, classes, variant_points) overriding system value 
 								values (%s, %s, %s, %s, %s, %s)""", 
-								(variant_num, problem.id, description, json.dumps(variant['content']), possible_class, variant_points))
+								(variant_num, problem.id, description, json.dumps(get_class_content(variant['content'], possible_class)), possible_class, variant_points))
 
 
 	def add_problems(self, problem_list):
@@ -594,9 +604,10 @@ def Kombi():
 				'weightings_amount': 2,
 				'correct': [position_1, position_2],
 				'componentType': "distanseBetweenFake",
-				'inputType': "IntegerTypeInput"
+				'inputType': "IntegerTypeInput",
+				'descriptionType': {'4-6': "distanseBetweenFake", '7-9': "distanseBetweenFakeDifficult"}
 			},
-			'classes': ['4-6']
+			'classes': ['4-6', '7-9']
 		})
 
 	problem_2 = Problem(
