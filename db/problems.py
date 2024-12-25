@@ -677,7 +677,25 @@ def Kombi():
 			},
 			'classes': ['4-6', '7-9']
 		})
-	current_town.add_problems([problem_1, problem_2, problem_3])
+	
+	problem_4 = Problem(
+		name="Роботизированые переливания",
+		type_="robotic_transfusions",
+		points=3
+	)
+	for start_config in [
+		[1, 7, 3, 9, 5],
+		[2, 9, 1, 7, 6],
+		[3, 4, 9, 2, 7],
+		[1, 7, 3, 6, 8]
+	]:
+		problem_4.add_variant({
+			'content': {
+				'start_config': start_config,
+			},
+			'classes': ['7-9']
+		})
+	current_town.add_problems([problem_1, problem_2, problem_3, problem_4])
 
 
 db = 'postgres://kvantland:quant@127.0.0.1'
