@@ -1,6 +1,6 @@
 <template>
-	<div :class="['vessel', `vessel_choosed-${choosed}`]" @click="toggle">
-		<div class="vessel__liquid" :style="`height: ${currentHeight / maxHeight * 100}%`"></div>
+	<div :class="['vessel', `vessel_choosed-${choosed}`, `vessel_visible-${visible}`]" @click="$emit('choose')">
+		<div class="vessel__liquid" :style="`height: ${(currentHeight + addLiquid) / maxHeight * 100}%`"></div>
 		<img class="vessel__mask" src="/problem_assets/transfusions/mask.svg" />
 		<img  class="vessel__image" src="/problem_assets/transfusions/empty_vessel.svg">
 	</div>
@@ -16,18 +16,20 @@ export default {
 		currentHeight:  {
 			type: Number,
 			default: 0
+		},
+		choosed: {
+			type: Boolean,
+			default: false
+		},
+		visible: {
+			type: Boolean,
+			default: true
+		},
+		addLiquid: {
+			type: Number,
+			default: 0
 		}
 	},
-	data() {
-		return {
-			choosed: false
-		}
-	},
-	methods: {
-		toggle() {
-			this.choosed = !this.choosed
-		}
-	}
 }
 </script>
 
@@ -40,9 +42,11 @@ export default {
 	flex-direction: column;
 	justify-content: end;
 	transition: 0.3s all;
-	user-select: none;
-	-webkit-user-select: none;
 	cursor: pointer;
+
+	&_visible-false {
+		opacity: 0;
+	}
 
 	&_choosed-true {
 		background-color: rgb(152, 194, 190);

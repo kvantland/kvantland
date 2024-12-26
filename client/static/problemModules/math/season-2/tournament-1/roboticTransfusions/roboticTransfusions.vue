@@ -1,5 +1,5 @@
 <template>
-	<TransfusionLayout :config="config"/>
+	<TransfusionLayout :vessel-config="config"/>
 </template>
 
 <script>
