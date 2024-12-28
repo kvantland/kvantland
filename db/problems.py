@@ -683,15 +683,18 @@ def Kombi():
 		type_="robotic_transfusions",
 		points=3
 	)
-	for start_config in [
-		[1, 7, 3, 9, 5],
-		[2, 9, 1, 7, 6],
-		[3, 4, 9, 2, 7],
-		[1, 7, 3, 6, 8]
+	for start_config, correct in [
+		([1, 7, 3, 9, 5], 2),
+		([2, 9, 1, 7, 6], 3),
+		([1, 7, 3, 6, 8], 3)
 	]:
 		problem_4.add_variant({
 			'content': {
-				'start_config': start_config,
+				'current_config': start_config,
+				'steps_amount': 0,
+				'max_height': 12,
+				'correct': correct,
+				'inputType': "InteractiveTypeInput"
 			},
 			'classes': ['7-9']
 		})

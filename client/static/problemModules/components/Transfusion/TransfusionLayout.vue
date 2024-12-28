@@ -24,6 +24,7 @@
 						:current-height=vessel 
 						:choosed="choosed[vesselNum]" 
 						:add-liquid="Number(mode === 'animation') * addLiquid * Number(vesselNum === animationObjects.to)"
+						:max-height="maxHeight"
 						@choose="choose(vesselNum)"
 						/>
 					<div class="vessel__sign"> {{ vessel }} мл</div>
@@ -44,6 +45,18 @@ export default {
 		vesselConfig: {
 			type: Array,
 			default: () => {return []}
+		},
+		maxHeight: {
+			type: Number,
+			default: 12
+		},
+		newXhr: {
+			type: Boolean,
+			default: false
+		},
+		xhrData: {
+			type: Object,
+			default: () => {return {}}
 		}
 	},
 	data() {
@@ -57,6 +70,18 @@ export default {
 			},
 			liquidAmount: 0,
 			addLiquid: 0,
+		}
+	},
+	watch: {
+		newXhr(isNew) {
+			this.$emit('xhrGet')
+			if (isNew && this.xhrData.xhr_answer === 'success') {
+				setTimeout(function() {this.stopAnimation()}.bind(this), 400)
+			}
+			else if (this.xhrData.xhr_answer === 'unsuccess' && isNew) {
+				this.$emit('showXhrDialog', "Невозможное действие!")
+				this.stopAnimation()
+			}
 		}
 	},
 	methods: {
@@ -77,8 +102,7 @@ export default {
 		},
 		setLiquidAddAmount() {
 			console.log('here!')
-			this.addLiquid = this.liquidAmount
-			setTimeout(this.stopAnimation, 400)
+			this.$emit('transfusion', {objects: this.animationObjects, liquid: this.liquidAmount})
 		},
 		stopAnimation() {
 			this.mode = 'choose'

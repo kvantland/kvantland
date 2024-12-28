@@ -11,7 +11,7 @@ export default {
 	props: {
 		maxHeight: {
 			type: Number,
-			default: 9
+			default: 12
 		},
 		currentHeight:  {
 			type: Number,

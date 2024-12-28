@@ -14,7 +14,7 @@ export default {
 	props: ["problemParams"],
 	computed: {
 		config() {
-			return this.problemParams.start_config
+			return this.problemParams.current_config
 		}
 	}
 }
