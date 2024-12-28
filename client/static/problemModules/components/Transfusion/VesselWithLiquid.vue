@@ -73,6 +73,7 @@ export default {
 	&__mask {
 		overflow: hidden;
 		position: absolute;
+		width: 100%;
 	};
 }
 </style>
