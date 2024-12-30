@@ -281,7 +281,7 @@ def Chiselburg():
 				'variant':group_of_numbers,
 				'inputType': "InteractiveTypeInput",
 			},
-			'classes': ['4-6', '7-9']
+			'classes': ['7-9']
 		})
 	current_town.add_problems([problem_1, problem_2, problem_3,problem_4])
 

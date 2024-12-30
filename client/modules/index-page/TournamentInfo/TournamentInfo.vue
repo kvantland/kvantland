@@ -10,9 +10,17 @@
                 <p class="text">Вас ждёт увлекательное путешествие по городам Квантландии, 
 					где встретятся интерактивные задачи из следующих разделов: Игры, Алгоритмы, 
 					Программирование, Блоки.</p>
-                <NuxtLink to="/rules">
-                    <div class="start_button"> Открыть турнир </div>
-                </NuxtLink>
+								<div class="tournament-buttons">
+									<NuxtLink to="/rules/1-3">
+											<div class="start_button"> Открыть турнир 1-3 классы </div>
+									</NuxtLink>
+									<NuxtLink to="/rules/4-6">
+											<div class="start_button"> Открыть турнир 4-6 классы </div>
+									</NuxtLink>
+									<NuxtLink to="/rules/7-9">
+											<div class="start_button"> Открыть турнир 7-9 классы </div>
+									</NuxtLink>
+								</div>
             </div>
         </div>
         <TournamentHistory :tournament-history="tournamentHistory" />
@@ -83,7 +91,11 @@ export default {
 	font-size: 40px;
 	font-weight: 500; 
 }
-
+.tournament-buttons {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 18px;
+}
 .start_button {
     flex: 1 1 0;
 	font-weight: 600;

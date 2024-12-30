@@ -1,13 +1,13 @@
 <template>
 	<div class="content_wrapper_rules">
 		<Breadcrumbs :crumbs="rulesCrumbs" />
-		<RulesInfo />
+		<RulesInfo :classes="$route.params.classValue"/>
 	</div>
 </template>
 
 
 <script>
-import RulesInfo from '../modules/rules-page/RulesInfo.vue'
+import RulesInfo from '~/modules/rules-page/RulesInfo.vue';
 	export default {
 		components: {
 			RulesInfo,

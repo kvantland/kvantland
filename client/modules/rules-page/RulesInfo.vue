@@ -8,7 +8,7 @@
 			<p v-if="item.bold" class="bold_text" v-html="item.bold"></p>
 		</div>
 	</div>
-	<StartTournamentContainer/>
+	<StartTournamentContainer :classes="classes"/>
 </div>
 </template>
 
@@ -17,6 +17,13 @@ import StartTournamentContainer from "./components/StartTournamentContainer.vue"
 export default {
    components: {
 		StartTournamentContainer,
+	},
+
+	props: {
+		classes: {
+			type: String,
+			default: 'all'
+		}
 	},
 
 	data() {

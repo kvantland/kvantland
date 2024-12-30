@@ -1,11 +1,23 @@
 <template>
 <div class="conformation_box">
 	<p class="conformation_text">С правилами ознакомился(-лась) и готов(а) приступить!</p>
-	<NuxtLink  to="/class/7-9/land" class="start_button_wrapper">
+	<NuxtLink :to="`/class/${classes}/land`" class="start_button_wrapper">
 		<div class ="start_button"> Открыть турнир </div>
 	</NuxtLink>
 </div>
 </template>
+
+<script>
+export default {
+	props: {
+		classes: {
+			type: String,
+			default: 'all'
+		}
+	}
+}
+</script>
+
 <style scoped>
 .conformation_box {
 	align-self: stretch;
