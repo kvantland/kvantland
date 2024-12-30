@@ -420,8 +420,9 @@ def Geoma():
 				'correct': [60, 180 - 2 * x]
 			},
 			'description': f"""В четырёхугольнике ABCD угол A = {90 - x}, 
-			угол B = {2 * x + 60} и AB=BC=CD.
-			Чему может быть равен угол C? Укажите все варианты."""
+			угол B = {2 * x + 60} и AB=BC=CD.7-9
+			Чему может быть равен угол C? Укажите все варианты.""",
+			'classes': ['7-9']
 		})
 
 	current_town.add_problems([problem_1, problem_2, problem_3, problem_4, problem_5])
