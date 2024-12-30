@@ -170,15 +170,20 @@ export default {
   generate: {
 	routes() {
 		const problemRoutes = []
-		for (let variantNum = 1; variantNum <= 100; variantNum++) {
-			problemRoutes.push(`/problem/${process.env.TOURNAMENT * 1000 + variantNum}`)
+		const townRoutes = []
+		const landRoutes = []
+		for (const classNum of ['1-3', '4-6', '7-9']) {
+			for (let variantNum = 1; variantNum <= 100; variantNum++) {
+				problemRoutes.push(`/class/${classNum}/problem/${process.env.TOURNAMENT * 1000 + variantNum}`)
+			}
+			for (let townNum = 1; townNum <= 5; townNum++) {
+				townRoutes.push(`/class/${classNum}/town/${townNum}`)
+			}
+			landRoutes.push(`/class/${classNum}/land`)
 		}
 		return [...problemRoutes,
-			'/town/1',
-			'/town/2',
-			'/town/3',
-			'/town/4',
-			'/town/5'
+			...townRoutes,
+			...landRoutes
 		]
 		}
   },
