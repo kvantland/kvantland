@@ -173,7 +173,7 @@ export default {
 		const townRoutes = []
 		const landRoutes = []
 		for (const classNum of ['1-3', '4-6', '7-9']) {
-			for (let variantNum = 1; variantNum <= 100; variantNum++) {
+			for (let variantNum = 1; variantNum <= 300; variantNum++) {
 				problemRoutes.push(`/class/${classNum}/problem/${process.env.TOURNAMENT * 1000 + variantNum}`)
 			}
 			for (let townNum = 1; townNum <= 5; townNum++) {
