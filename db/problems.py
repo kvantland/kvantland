@@ -680,7 +680,7 @@ def Kombi():
 		})
 	
 	problem_4 = Problem(
-		name="Роботизированые переливания",
+		name="Роботизированные переливания",
 		type_="robotic_transfusions",
 		points=3
 	)
