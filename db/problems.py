@@ -582,7 +582,8 @@ def Golovolomsk():
 	problem_4 = Problem(
 		name="Коням тесно",
 		type_="horses_cramped",
-		points=4
+		points=4,
+		hint="Всего на доске будет 8 белых и 8 чёрных коней."
 	)
 	for horses_configuration in [
 		{'white': [2, 2], 'black': [4, 5]},
