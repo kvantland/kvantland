@@ -14,6 +14,8 @@ import urllib.request as urllib2
 import urllib.parse
 from urllib.error import HTTPError, URLError
 
+relative_tournament_version = None
+
 @route('/api/reset_problem', method="POST")
 def reset_problem(db):
 	print()
@@ -109,6 +111,9 @@ def get_problem_data(db):
 	if token_status['error']:
 		return json.dumps(resp)
 	user_id = token_status['user_id']
+
+	set_relative_tournament_num(db)
+	print(relative_tournament_version)
 
 	is_answer_correct = get_past_answer_correctness(db, user_id, variant)
 	if is_answer_correct is not None:
@@ -327,7 +332,7 @@ def get_description_path(description_type: str):
 			path_start,
 			f"{config['tournament']['type']}",
 			f"season-{config['tournament']['season']}",
-			f"tournament-{config['tournament']['version']}",
+			f"tournament-{relative_tournament_version}",
 			description_type,
 			"description.vue"
 		],
@@ -364,7 +369,7 @@ def get_component_path(component_type: str):
 			path_start,
 			f"{config['tournament']['type']}",
 			f"season-{config['tournament']['season']}",
-			f"tournament-{config['tournament']['version']}",
+			f"tournament-{relative_tournament_version}",
 			component_type,
 			f"{component_type}.vue"
 		],
@@ -394,7 +399,7 @@ def get_problem_typedesc(problem_type: str):
 		"problem-types",
 		f"{config['tournament']['type']}_problems",
 		f"season_{config['tournament']['season']}",
-		f"tournament_{config['tournament']['version']}",
+		f"tournament_{relative_tournament_version}",
 		problem_type,
 	]
 	try:
@@ -404,7 +409,7 @@ def get_problem_typedesc(problem_type: str):
 		usual_problem_typedesc = None
 	common_for_tournament_problem_path = [
 		"problem-types",
-		f"{config['tournament']['type']}_problems",
+		f"{relative_tournament_version}_problems",
 		"common_types",
 		problem_type,
 	]
@@ -494,3 +499,11 @@ def is_current_tournament(db, var_id):
 	db.execute('select tournament from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s', (var_id,))
 	tourn, = db.fetchall()
 	return tourn[0] == config["tournament"]["version"]
+
+
+def set_relative_tournament_num(db):
+	global relative_tournament_version
+
+	db.execute('select tournament from Kvantland.Season')
+	tournaments = list(db.fetchall())
+	relative_tournament_version = len(tournaments)
