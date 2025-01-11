@@ -23,11 +23,11 @@ def calculate_expression(data, ops):
     results = [data[0]]  # Начинаем с первого числа
     # Сначала обрабатываем операции с более высоким приоритетом (умножение)
     for i in range(1, len(data)):
-        if ops[i - 1] == '×':
+        if ops[i - 1] == "*":
             results[-1] *= data[i]  # Выполняем умножение немедленно
         else:
-            results.append(data[i])  # Добавляем следующее число
             results.append(ops[i - 1])  # Добавляем операцию
+            results.append(data[i])  # Добавляем следующее число
 
     # Теперь обрабатываем операции с низким приоритетом (сложение и вычитание)
     final_result = results[0]
@@ -35,9 +35,9 @@ def calculate_expression(data, ops):
         operator = results[i]
         next_number = results[i + 1]
 
-        if operator == '−':
+        if operator == "-":
             final_result -= next_number
-        elif operator == '+':
+        elif operator == "+":
             final_result += next_number
 
     return final_result

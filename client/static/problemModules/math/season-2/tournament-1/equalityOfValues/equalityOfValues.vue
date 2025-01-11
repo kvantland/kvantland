@@ -125,10 +125,28 @@ export default {
 
 			}
 			this.currentDropIndex = null; // Сброс текущей зоны после завершения перетаскивания
-			this.$emit('updateAnswer', { signs: this.signs })
+			this.$emit('updateAnswer', { signs: this.signsForAnswer() })
+		},
+		signsForAnswer() {
+			const updatenForAnswerSigns = [];
+			for (const sign of this.signs) {
+				let updatedSign;
+				switch (sign) {
+					case '+':
+						updatedSign = "+";
+						break;
+					case '−':
+						updatedSign = "-";
+						break;
+					case '×':
+						updatedSign = "*";
+						break;
+				}
+				updatenForAnswerSigns.push(updatedSign)
+			}
+			return updatenForAnswerSigns;
 		}
 	},
-
 }
 
 
