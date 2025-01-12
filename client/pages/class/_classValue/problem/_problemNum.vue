@@ -95,7 +95,7 @@ export default {
 				{
 					body: true,
 					defer: true,
-					innerHTML:  "Promise.resolve().then(()=>{ setTimeout(() => {    MathJax.typesetPromise();  }, 100);})",
+					innerHTML:  "const mathjaxInterval = setInterval(() => {if(MathJax)  {MathJax.typesetPromise(); clerIntraval(mathjaxInterval)}}, 10)",
 				}
 			],
 		}
