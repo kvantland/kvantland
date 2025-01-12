@@ -257,6 +257,12 @@ def check_user_answer(db):
 	except:
 		answer_to_str = ''
 	
+	try:
+		db.execute("select * from Kvantland.Score where student=%s and tournament=%s and classes=%s", 
+						 (user_id, config["tournament"]["version"], classes))
+	except:
+		db.execute("insert into Kvantland.Score ('student', 'tournament', 'classes') values (%s, %s, %s)", 
+						 (user_id, config["tournament"]["version"], classes))
 	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, answer_to_str, solution, variant, user_id))
 	if is_answer_correct:
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))

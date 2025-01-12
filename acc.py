@@ -46,13 +46,17 @@ def get_user_info(db):
 		}
 	}
 	if user:
+		classes = request.query["classes"]
+		print("classes: ", classes)
 		try:
-			classes = request.query["classes"]
-			print("classes: ", classes)
-			db.execute("select score from Kvantland.Score where student=%s and classes=%s", (user, classes, ))
+			db.execute("select score from Kvantland.Score where student=%s and classes=%s and tournament=%s", 
+							(user, classes, config["tournament"]["version"]))
 			(score, ), = db.fetchall()
 		except:
-			db.execute("select score from Kvantland.Student where student=%s", (user, ))
+			db.execute("insert into Kvantland.Score (student, tournament, classes) values (%s, %s, %s)", 
+						 (user, config["tournament"]["version"], classes))
+			db.execute("select score from Kvantland.Score where student=%s and classes=%s and tournament=%s", 
+							(user, classes, config["tournament"]["version"]))
 			(score, ), = db.fetchall()
 		print("user score: ", score)
 		try:
