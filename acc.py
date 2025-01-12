@@ -46,7 +46,10 @@ def get_user_info(db):
 		}
 	}
 	if user:
-		classes = request.query["classes"]
+		try:
+			classes = request.query["classes"]
+		except:
+			classes = "all"
 		print("classes: ", classes)
 		try:
 			db.execute("select score from Kvantland.Score where student=%s and classes=%s and tournament=%s", 

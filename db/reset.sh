@@ -12,7 +12,6 @@ fi
 
 psql "$postgres" -1 -f "$dir/schema.sql"
 psql "$postgres" -1 -f "$dir/town-coordinates.sql"
-python "$dir/fill-season.py" "$postgres"
 python "$dir/set-current-tournament.py" "$postgres"
 psql "$postgres" -1 -f "$dir/users.sql"
 python "$dir/problems.py" "$postgres"
