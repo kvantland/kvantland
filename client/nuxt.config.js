@@ -105,7 +105,7 @@ export default {
 	},
 	strategies: {
 	  local: {
-		scheme: 'refresh',
+		scheme: '~auth-schemes/localForClasses',
 		token: {
 		  property: 'access_token',
 		  global: true,

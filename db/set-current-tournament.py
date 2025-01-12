@@ -25,4 +25,4 @@ with psycopg.connect(db) as con:
 			
 			cur.execute('create table Kvantland.CurrentTournament (tournament int, season int)') #только для первого использования!
 			cur.execute('insert into Kvantland.CurrentTournament values(%s, %s)', (current_tournament, current_season)) #только для первого использования!
-			#cur.execute('update Kvantland.CurrentTournament set tournament=%s, season=%s', (current_tournament, current_season)) #для последующих использований
+			# cur.execute('update Kvantland.CurrentTournament set tournament=%s, season=%s', (current_tournament, current_season)) #для последующих использований

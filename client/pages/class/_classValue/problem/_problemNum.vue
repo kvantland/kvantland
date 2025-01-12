@@ -106,7 +106,7 @@ export default {
 			console.log(hint)
 			this.$set(this.hint, 'description', hint)
 			this.$set(this.hint, 'status', false)
-			this.$auth.fetchUser()
+			this.$auth.fetchUser(this.classValue)
 		},
 		async updateProblemStatus() {
 			console.log('update_req')
@@ -114,8 +114,8 @@ export default {
 			await this.$axios.$post("/api/problem_data", {variant: this.problemNum})
 			.then((resp) => {
 				status = resp.status
-				problemData = resp.problem
-				this.$auth.fetchUser()
+				problemData = resp.problem 	
+				this.$auth.fetchUser(this.classValue)
 			})
 			if (status) {
 				this.cost = problemData.cost

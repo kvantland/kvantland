@@ -63,7 +63,6 @@ export default {
             .then((res) => {
                 if (res.data.status) {
                     this.$auth.setUserToken(res.data.tokens.access_token, res.data.tokens.refresh_token)
-                    this.$auth.setUser(res.data.user)
                 }
                 else {
                     this.errors = res.data.errors

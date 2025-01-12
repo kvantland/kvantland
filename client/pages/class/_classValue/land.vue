@@ -18,7 +18,7 @@ export default {
 
 	middleware: 'full-auth',
 
-	async asyncData({params, $axios}) {
+	async asyncData({params, $axios, $auth}) {
 		const classValue = params.classValue
 		let crumbs
 		await $axios.$post('/api/breadcrumbs', {url: `/class/${classValue}/land`})

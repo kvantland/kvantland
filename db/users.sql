@@ -19,8 +19,12 @@ COPY Kvantland.Student ("student", "login", "password", "name", "score") FROM st
 
 SELECT pg_catalog.setval('Kvantland.Student_student_seq', 3, true);
 
-insert into Kvantland.Score ("student", "tournament", "score") select 1, tournament, 10 from Kvantland.CurrentTournament;
-insert into Kvantland.Score ("student", "tournament", "score") select 2, tournament, 10 from Kvantland.CurrentTournament;
-insert into Kvantland.Score ("student", "tournament", "score") select 3, tournament, 10 from Kvantland.CurrentTournament;
+insert into Kvantland.Score ("student", "tournament", "score", "classes") select 1, tournament, 10, '7-9' from Kvantland.CurrentTournament;
+insert into Kvantland.Score ("student", "tournament", "score", "classes") select 2, tournament, 10, '7-9' from Kvantland.CurrentTournament;
+insert into Kvantland.Score ("student", "tournament", "score", "classes") select 3, tournament, 10, '7-9' from Kvantland.CurrentTournament;
+
+insert into Kvantland.Score ("student", "tournament", "score", "classes") select 1, tournament, 10, '4-6' from Kvantland.CurrentTournament;
+insert into Kvantland.Score ("student", "tournament", "score", "classes") select 2, tournament, 10, '4-6' from Kvantland.CurrentTournament;
+insert into Kvantland.Score ("student", "tournament", "score", "classes") select 3, tournament, 10, '4-6' from Kvantland.CurrentTournament;
 
 update Kvantland.Student set email = 'test@gmail.com', name = 'a', surname = 'a', school = 'a', clas = 'Другое', town = 'a';

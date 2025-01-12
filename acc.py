@@ -30,7 +30,7 @@ def get_user_info(db):
 		response.status = 400
 		return json.dumps({'error': token_check_status['error']})
 	else:
-		user = token_check_status['login']
+		user = token_check_status['user_id']
 	print(user, file=sys.stderr)
 		
 	resp = {
@@ -47,11 +47,20 @@ def get_user_info(db):
 	}
 	if user:
 		try:
-			db.execute('select name, email, surname, school, clas, town, score from Kvantland.Student where login = %s', (user, ))
+			classes = request.query["classes"]
+			print("classes: ", classes)
+			db.execute("select score from Kvantland.Score where student=%s and classes=%s", (user, classes, ))
+			(score, ), = db.fetchall()
+		except:
+			db.execute("select score from Kvantland.Student where student=%s", (user, ))
+			(score, ), = db.fetchall()
+		print("user score: ", score)
+		try:
+			db.execute('select name, email, surname, school, clas, town from Kvantland.Student where student=%s', (user, ))
+			(name, email, surname, school, clas, town, ), = db.fetchall()
 		except:
 			response.status = 400
 			return json.dumps({'error': "No such user!"})
-		(name, email, surname, school, clas, town, score), = db.fetchall()
 		resp['user']['name'] = name
 		resp['user']['email'] = email
 		resp['user']['surname'] = surname

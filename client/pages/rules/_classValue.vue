@@ -13,12 +13,14 @@ import RulesInfo from '~/modules/rules-page/RulesInfo.vue';
 			RulesInfo,
 		},
 		middleware: 'auth',
-
+	async asyncData({ $auth, params }) {
+		await $auth.fetchUser(params.classValue)
+	},
 		data() {
 			return {
 				rulesCrumbs: {},
 			}
-		},
+	},
 
 	async fetch() {
 		const rulesCrumbsData = await this.$axios.$get('/api/rules_crumbs')

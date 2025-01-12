@@ -47,7 +47,8 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 		window.location.replace(url)
 	}
 
-	async fetchUser() {
+	async fetchUser(classes = "all") {
+		console.log('fetch!!', classes)
 		if (!this.check().valid) {
 			return
 		}
@@ -59,7 +60,7 @@ export default class LocalOauth2Scheme extends Oauth2Scheme {
 
 		const response = await this.$auth.request({
 			method: 'get',
-			url: this.options.endpoints.userInfo
+			url: this.options.endpoints.userInfo + '?' + `classes=${classes}`
 		})
 
 		this.$auth.setUser(response.data[this.options.user.property])

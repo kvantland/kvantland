@@ -195,7 +195,7 @@ export default {
 			catch {
 				solution = ''
 			}
-			await this.$axios.$post('/api/check_answer', {variant: this.variant, answer, solution})
+			await this.$axios.$post('/api/check_answer', { variant: this.variant, answer, solution, classes: this.classValue})
 			this.$emit('updateProblemStatus')
 		},
 		async getHint(){
