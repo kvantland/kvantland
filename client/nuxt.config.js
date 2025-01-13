@@ -22,7 +22,6 @@ export default {
 			src: '/jsLibraries/jQuery/jquery-3.7.1.js',
 		},
 		{
-			defer: true,
 			type: "text/javascript",
 			id: "MathJax-script",
 			src: "https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"

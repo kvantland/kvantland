@@ -92,13 +92,12 @@ export default {
 					body: true,
 					src: '/old-problem-types/confirm_action.js',
 				},
-				{
-					body: true,
-					defer: true,
-					innerHTML:  "const mathjaxInterval = setInterval(() => {if(MathJax)  {MathJax.typesetPromise(); clerIntraval(mathjaxInterval)}}, 10)",
-				}
 			],
 		}
+	},
+
+	mounted() {
+		setTimeout(() => { window.MathJax.typeset() }, 500);
 	},
 
 	methods: {
