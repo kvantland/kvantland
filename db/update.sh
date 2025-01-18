@@ -10,8 +10,12 @@ if [ -z "$postgres" ]; then
 	postgres="$(PYTHONPATH="$dir/.." python3 -c "from config import config; print(config['db']['url'])")"
 fi
  
-python "$dir/set-current-tournament.py" "$postgres"
+python3 "$dir/set-current-tournament.py" "$postgres"
 psql "$postgres" -1 -f "$dir/update-score.sql"
-python "$dir/problems.py" "$postgres"
+
+# only for first use in each tournament type (math, IT, etc)
+psql "$postgres" -1 -f "$dir/fill-classes.sql" 
+
+python3 "$dir/problems.py" "$postgres"
 psql "$postgres" -1 -f "$dir/assign-problems.sql"
 
