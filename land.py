@@ -103,8 +103,23 @@ def get_user_id(db):
 @route('/api/towns_info')
 def get_towns_info(db):
 	user_id = get_user_id(db)
+	try:
+		classes = request.query.classes
+	except:
+		classes = "all"
+	print("check flag")
+	print('classes: ', classes)
+
 	if user_id is not None:
-		db.execute('select town, name, position, exists(select 1 from Kvantland.AvailableProblem join Kvantland.Variant using (variant) join Kvantland.Problem using (problem) where town = Kvantland.Town.town and student = %s and answer_given = false and tournament = %s) from Kvantland.Town', (user_id, config["tournament"]["version"]))
+		db.execute("""select town, name, position, 
+						 exists(
+						 	select 1 from Kvantland.AvailableProblem 
+								join Kvantland.Variant using (variant) 
+								join Kvantland.Problem using (problem) 
+						 			where town = Kvantland.Town.town and 
+						 			student = %s and answer_given = false and 
+						 			tournament = %s and (classes = %s or classes = 'all') 
+						 ) from Kvantland.Town""", (user_id, config["tournament"]["version"], classes))
 	else:
 		db.execute('select town, name, position, true from Kvantland.Town')
 	resp = []

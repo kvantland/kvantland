@@ -53,7 +53,7 @@ export default {
     },
 
     async fetch() {
-        const townsInfoData = await this.$axios.$get('/api/towns_info')
+        const townsInfoData = await this.$axios.$get(`/api/towns_info?classes=${this.classValue}`)
         this.townsInfo = townsInfoData
     },
 
