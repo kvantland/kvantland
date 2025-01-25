@@ -13,7 +13,7 @@ fi
 python3 "$dir/set-current-tournament.py" "$postgres"
 psql "$postgres" -1 -f "$dir/update-score.sql"
 
-# only for first use in each tournament type (math, IT, etc)
+# only for first use in each tournament type (math, IT, etc), if column classes is not in table
 psql "$postgres" -1 -f "$dir/fill-classes.sql" 
 
 python3 "$dir/problems.py" "$postgres"
