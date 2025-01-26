@@ -11,10 +11,10 @@
                     Головоломки, Логика, Комбинаторика, Арифметика, Геометрия</p>
 								<div class="tournament-buttons">
 									<NuxtLink to="/rules/4-6">
-											<div class="start_button"> Открыть турнир 4-6 классы </div>
+											<div class="start_button"> Открыть турнир 4-6 класса </div>
 									</NuxtLink>
 									<NuxtLink to="/rules/7-9">
-											<div class="start_button"> Открыть турнир 7-9 классы </div>
+											<div class="start_button"> Открыть турнир 7-9 класса </div>
 									</NuxtLink>
 								</div>
             </div>

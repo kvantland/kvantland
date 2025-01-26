@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style scoped>
-.examples_container .nav {
+.nav {
     width: 100%;
 	justify-content: space-between; 
 	align-items: center; 

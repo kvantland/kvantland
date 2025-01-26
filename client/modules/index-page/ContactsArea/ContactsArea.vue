@@ -27,7 +27,7 @@ export default {
     computed: {
         supportEmail() {
             try {
-                const email = this.contacts.filter((contact) => contact.id == 'email')[0].source_link
+                const email = this.contacts.filter((contact) => contact.id === 'email')[0].source_link
                 return { link: email, title: email.split(':')[1]}
             }
             catch {
