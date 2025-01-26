@@ -8,11 +8,11 @@
 				"buttons": [
 					{
 						"title": "Открыть турнир 4-6 класса",
-						"link": "/rules/4-6"
+						"link": "https://math.kvantland.com/rules/4-6"
 					},
 					{
 						"title": "Открыть турнир 7-9 класса",
-						"link": "/rules/7-9"
+						"link": "https://math.kvantland.com/rules/7-9"
 					}
 				]
 			},
