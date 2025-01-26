@@ -1,0 +1,33 @@
+{
+	"tournamentList": 
+	[
+		{
+			"id": 1,
+			"tournamentType": "math",
+			"classes": "4-6",
+			"dates": "31.01.2025 - 31.03.2025",
+			"link": "/rules/4-6",
+			"tags": [
+				"4-6 класс"
+			]
+		},
+		{
+			"id": 2,
+			"tournamentType": "math",
+			"classes": "7-9",
+			"dates": "31.01.2025 - 31.03.2025",
+			"link": "/rules/7-9",
+			"tags": [
+				"7-9 класс"
+			]
+		},
+		{
+			"id": 3,
+			"tournamentType": "IT",
+			"classes": "all",
+			"dates": "25.10.2024 - 31.12.2024",
+			"link": "https://informatics.kvantland.com/rules",
+			"tags": []
+		}
+	]
+}
