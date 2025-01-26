@@ -42,17 +42,9 @@ export default {
 			prefix: false,
 		},
 		{
-			path: '~UI/Form',
-			prefix: false,
-		},
-		{
 			path: '~UI/Headers',
 			prefix: false,
 		},
-		{
-			path: '~static/problemModules/components',
-			prefix: false,
-		}
 	] 
   },
 
@@ -69,10 +61,8 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+	build: {},
 
   target: 'static',
-  
-  layout: 'default',
 }
 
