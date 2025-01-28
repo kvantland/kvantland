@@ -515,6 +515,7 @@ def is_current_tournament(db, var_id):
 def set_relative_tournament_num(db):
 	global relative_tournament_version
 
-	db.execute('select tournament from Kvantland.Season')
+	db.execute('select tournament from Kvantland.Season where season = %s', (config["tournament"]["season"], ))
 	tournaments = list(db.fetchall())
+	print("relative tournament: ", len(tournaments))
 	relative_tournament_version = len(tournaments)
