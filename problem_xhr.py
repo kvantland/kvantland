@@ -48,10 +48,12 @@ def get_xhr_request(db):
 	try:
 		var_id = request.forms.get('variant')
 		solution = request.forms.get('solution')
+		classes = request.forms.get('classes')
 		params = json.loads(request.forms.get('xhr_params'))
 		files = request.files
 		params['files'] = files
 		params['solution'] = solution
+		params['classes'] = classes
 	except:
 		return json.dumps(resp)
 	
@@ -63,13 +65,13 @@ def get_xhr_request(db):
 	print('var_id: ', var_id, file=sys.stderr)
 	#print('params: ', params)
 	#print(xhr_request(db, user_id, var_id, params), file=sys.stderr)
-	resp['xhr_answer'] = xhr_request(db, user_id, var_id, params)
+	resp['xhr_answer'] = xhr_request(db, user_id, var_id, params, classes)
 	print(resp['xhr_answer'], file=sys.stderr)
 	resp['status'] = True
 	return json.dumps(resp)
 
 
-def xhr_request(db, user_id, var_id, params):
+def xhr_request(db, user_id, var_id, params, classes="all"):
 	db.execute('update Kvantland.AvailableProblem set xhr_amount = xhr_amount + 1 where variant = %s and student = %s returning xhr_amount', (var_id, user_id))
 	(xhr_amount, ), = db.fetchall()
 	if (xhr_amount >= config['xhr']['dead_step']):
@@ -115,7 +117,7 @@ def xhr_request(db, user_id, var_id, params):
 	try:
 		if resp.extra_points:
 			db.execute('update Kvantland.Student set score=score + %s where student = %s', (resp.extra_points, user_id))
-			db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s', (resp.extra_points, user_id, config["tournament"]["version"]))
+			db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s and classes=%s', (resp.extra_points, user_id, config["tournament"]["version"], classes))
 	except:
 		pass
 
@@ -130,12 +132,12 @@ def xhr_request(db, user_id, var_id, params):
 		if not partial_solution:
 			db.execute('select curr_points from Kvantland.AvailableProblem where variant = %s and student=%s', (var_id, user_id))
 			(curr_points, ), = db.fetchall()
-			db.execute('select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s', (var_id, ))
+			db.execute('select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s and classes=%s', (var_id, classes))
 			(points, ), = db.fetchall()
 			if curr_points:
 				points = curr_points
 			db.execute('update Kvantland.Student set score=score + %s * %s where student = %s', (points, int(resp.answer_correct), user_id))
-			db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s', (points, user_id, config["tournament"]["version"]))
+			db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s and classes=%s', (points, user_id, config["tournament"]["version"], classes))
 	
 	return resp.answer
 

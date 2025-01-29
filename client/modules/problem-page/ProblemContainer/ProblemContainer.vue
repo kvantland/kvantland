@@ -225,6 +225,7 @@ export default {
 			}
 			console.log(dataToSend)
 			dataToSend.append('solution', solution)
+			dataToSend.append('classes', this.classValue)
 			await this.$axios.$post(sendUrl, dataToSend, config)
 				.then((resp) => {
 					console.log('xhrData: ', resp)
