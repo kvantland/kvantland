@@ -43,6 +43,7 @@ def get_hint(db):
 	}
 	try:
 		variant = json.loads(request.body.read())['variant']
+		classes = json.loads(request.body.read())['classes']
 	except:
 		return json.dumps(resp)
 
@@ -63,6 +64,8 @@ def get_hint(db):
 		db.execute('select score from Kvantland.Student where student=%s', (user_id, ))
 		(score, ), = db.fetchall()
 		if score >= hint_cost:
+			db.execute('update Kvantland.Score set score=score-%s where student=%s and tournament=%s and classes=%s', 
+							(hint_cost, user_id, config["tournament"]["version"], classes))
 			db.execute('update Kvantland.Student set score=%s where student=%s', (score - hint_cost, user_id, ))
 			db.execute('update Kvantland.AvailableProblem set hint_taken=True where student=%s and variant=%s', (user_id, variant, ))
 			resp['hint'] = hint

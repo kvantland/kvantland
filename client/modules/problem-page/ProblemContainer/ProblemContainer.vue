@@ -199,7 +199,7 @@ export default {
 			this.$emit('updateProblemStatus')
 		},
 		async getHint(){
-			const response = await this.$axios.$post('/api/get_hint', {variant: this.variant})
+			const response = await this.$axios.$post('/api/get_hint', {variant: this.variant, classes: this.classValue})
 			console.log(response)
 			if (response.status) {
 				this.$emit('updateHint', response.hint)
