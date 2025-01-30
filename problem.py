@@ -145,14 +145,24 @@ def get_problem_data(db):
 		description = db_description
 	resp['problem']['description'] = description
 	
-	default = content
-	if 'correct' in content.keys(): # пользователь не должен знать ответ)
-		del content['correct']
+	default = deepcopy(content)
+	
 	if curr:
 		content = curr
 	if curr_points:
 		points = curr_points
-	resp['problem']['variantParams'] = content
+
+	if 'correct' in content.keys(): # пользователь не должен знать ответ)
+		del content['correct']
+	default_without_correct = default
+	if 'correct' in default.keys():
+		del default['correct']
+
+	resp['problem']['variantParams'] = deepcopy(content)	
+	print(default_without_correct)
+	resp['problem']['variantParams'].update({'default': default_without_correct})
+	print(resp['problem'])
+
 	resp['problem']['cost'] = f'{points} {lang_form(points)}'
 
 	print('hint_taken: ', hint_taken, file=sys.stderr)
@@ -194,7 +204,7 @@ def get_problem_data(db):
 		if 'descriptionType' in content.keys():
 			resp['problem']['descriptionPath'] = get_description_path(content['descriptionType'])
 		# print('newProblemData: ', resp, file=sys.stderr)
-		resp['status'] = True
+		resp['status'] = True	
 		return json.dumps(resp)
 	
 	kwargs = {'step': step, 'default': default}
