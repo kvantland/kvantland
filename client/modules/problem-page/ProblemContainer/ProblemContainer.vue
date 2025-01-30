@@ -6,8 +6,8 @@
 		</div>
 
 		<div class="problem_body">
-			<div v-if="description" v-html="description"></div>
-			<component :is="dynamicDescription" v-if="!description" :problem-params="variantParams" />
+			<component :is="dynamicDescription" v-if="dynamicDescription" :problem-params="variantParams" />
+			<div v-if="description && !dynamicDescription" v-html="description"></div>
 			<img v-if="image" class="problem_img" :src="image" />
 			<div v-if="componentPath" ref="problem" class="problem newTypeProblem">
 				<component 
