@@ -593,7 +593,7 @@ def Golovolomsk():
 	)
 	for horses_configuration in [
 		{'white': [2, 2], 'black': [4, 5]},
-		{'white': [2, 6], 'black': [5, 3]},
+		{'white': [2, 6], 'black': [5, 4]},
 		{'white': [6, 6], 'black': [7, 4]},
 		{'white': [6, 2], 'black': [4, 7]},
 	]:
