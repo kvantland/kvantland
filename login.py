@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from unittest import result
 from bottle import route, request
 from passlib.hash import pbkdf2_sha256 as pwhash
 import json
@@ -76,12 +77,21 @@ def check_login_request(db):
 	expected_fields = ['login', 'password']
 	pw_check = ['password']
 	
-	try:
-		db.execute('select password, student from Kvantland.Student where login = %s', (login, ))
-		(password_hash, user_id, ), = db.fetchall()
-	except:
+	db.execute('select password, student from Kvantland.Student where login = %s', (login, ))
+	user_results = db.fetchall()
+	if len(user_results) == 0:
+		db.execute('select password, student from Kvantland.Student where email = %s', (login, ))
+		user_results = db.fetchall()
+	if len(user_results) == 0:
 		resp['errors']['password'] = 'Неверный логин или пароль'
 		password_hash = pwhash.hash('-')
+	else:
+		(password_hash, user_id) = user_results[0]
+
+		db.execute('select login from Kvantland.Student where email = %s and password = %s', (login, password_hash)) # получаем реальный логин
+		(real_login, ) = db.fetchall()[0]
+		login = real_login
+
 
 	if pwhash.verify(password, password_hash) and login and user_id:
 		access_key = config['keys']['access_key']

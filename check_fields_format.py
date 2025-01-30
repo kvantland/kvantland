@@ -23,6 +23,7 @@ def check_fields_format(data, expected_fields=[], pw_check=[], email_check=[], s
 	alph_lower = 'abcdefghijklmnopqrstuvwxyz'
 	alph_upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 	num = '0123456789'
+	login_spec_symb = '-_@.'
 
 	for expected_field_name in expected_fields:
 		if not(expected_field_name in data.keys()):
@@ -68,7 +69,7 @@ def check_fields_format(data, expected_fields=[], pw_check=[], email_check=[], s
 		if field_name == "login":
 			tmp_alph = 0
 			for s in field_data:
-				if s != '_' and s != '-' and s not in alph and s not in num:
+				if s not in login_spec_symb and s not in alph and s not in num:
 					err_dict[field_name] = "Логин должен состоять из английских букв, </br> цифр и символов - и _"
 				if s in alph:
 					tmp_alph = 1
