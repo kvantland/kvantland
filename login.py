@@ -20,7 +20,7 @@ params = {'client_id': 	client_id, 'redirect_uri': redirect_uri, 'response_type'
 @route('/api/login_fields')
 def get_login_fields():
 	fields = [
-		{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин"},
+		{'type': "input", 'inputType': "text", 'name': "login", 'placeholder': "Логин или email"},
 		{'type': "input", 'inputType': "password", 'name': "password", 'placeholder': "Пароль"}
 	]
 	return json.dumps(fields)
@@ -76,18 +76,29 @@ def check_login_request(db):
 	print(login, password, file=sys.stderr)
 	expected_fields = ['login', 'password']
 	pw_check = ['password']
+	login_password_strategy = False
+	email_password_strategy = False
 	
-	db.execute('select password, student from Kvantland.Student where login = %s', (login, ))
-	user_results = db.fetchall()
-	if len(user_results) == 0:
+	while True:
+		db.execute('select password, student from Kvantland.Student where login = %s', (login, ))
+		user_results = db.fetchall()
+		if len(user_results) != 0:
+			login_password_strategy = True
+			break
 		db.execute('select password, student from Kvantland.Student where email = %s', (login, ))
 		user_results = db.fetchall()
+		if len(user_results) != 0:
+			email_password_strategy = True
+			break
+		break
+
 	if len(user_results) == 0:
 		resp['errors']['password'] = 'Неверный логин или пароль'
 		password_hash = pwhash.hash('-')
 	else:
 		(password_hash, user_id) = user_results[0]
 
+	if email_password_strategy:
 		db.execute('select login from Kvantland.Student where email = %s and password = %s', (login, password_hash)) # получаем реальный логин
 		(real_login, ) = db.fetchall()[0]
 		login = real_login
