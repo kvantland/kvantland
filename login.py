@@ -73,7 +73,6 @@ def check_login_request(db):
 		password = user_data['password']
 	except:
 		password = ''
-	print(login, password, file=sys.stderr)
 	expected_fields = ['login', 'password']
 	pw_check = ['password']
 	login_password_strategy = False
@@ -99,6 +98,8 @@ def check_login_request(db):
 		(password_hash, user_id) = user_results[0]
 
 	if email_password_strategy:
+		expected_fields = ['email', 'password']
+		user_data = {"email" : login, "password": password}
 		db.execute('select login from Kvantland.Student where email = %s and password = %s', (login, password_hash)) # получаем реальный логин
 		(real_login, ) = db.fetchall()[0]
 		login = real_login
