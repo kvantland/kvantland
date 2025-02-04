@@ -8,14 +8,16 @@ import problem
 def get_tournament_history():
 	tournament_history = {}
 	tournament_history['math'] = [
-		{'event_name': 'Старт Турнира 1', 'event_date': '05.12.2023'},
-		{'event_name': 'Финиш Турнира 1', 'event_date': '31.03.2024'},
-		{'event_name': 'Старт Турнира 2', 'event_date': '24.02.2024'},
-		{'event_name': 'Финиш Турнира 2', 'event_date': '31.03.2024'},
-		{'event_name': 'Старт Турнира 3', 'event_date': '22.04.2024'},
-		{'event_name': 'Финиш Турнира 3', 'event_date': '15.06.2024'},
-		{'event_name': 'Старт Турнира 4', 'event_date': '08.08.2024'},
-		{'event_name': 'Финиш Турнира 4', 'event_date': '09.09.2024'},
+		{'event_name': 'Старт Турнира 1 (2023)', 'event_date': '05.12.2023'},
+		{'event_name': 'Финиш Турнира 1 (2024)', 'event_date': '31.03.2024'},
+		{'event_name': 'Старт Турнира 2 (2024)', 'event_date': '24.02.2024'},
+		{'event_name': 'Финиш Турнира 2 (2024)', 'event_date': '31.03.2024'},
+		{'event_name': 'Старт Турнира 3 (2024)', 'event_date': '22.04.2024'},
+		{'event_name': 'Финиш Турнира 3 (2024)', 'event_date': '15.06.2024'},
+		{'event_name': 'Старт Турнира 4 (2024)', 'event_date': '08.08.2024'},
+		{'event_name': 'Финиш Турнира 4 (2024)', 'event_date': '09.09.2024'},
+		{'event_name': 'Старт Турнира 1 (2025)', 'event_date': '31.01.2025'},
+		{'event_name': 'Финиш Турнира 1 (2025)', 'event_date': '31.03.2025'},
 		]
 	tournament_history['IT'] = [
 		{'event_name': 'Старт Турнира 1', 'event_date': '25.10.2024'},
