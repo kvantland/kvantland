@@ -13,7 +13,9 @@
 					<input 
 						v-else 
 						:input-save-value="inputValues[rowNum][itemNum]"
-						:value="inputValues[rowNum][itemNum]" @keydown="inputNUmber(rowNum, itemNum, $event)" />
+						:value="inputValues[rowNum][itemNum]" 
+						@input="inputChange($event, rowNum, itemNum)"
+						/>
 				</div>
 			</div>
 		</div>
@@ -64,6 +66,21 @@ export default {
 		this.$emit('updateAnswer', this.inputValues)
 	},
 	methods: {
+		inputChange(event, row, column) {
+			if (event.target.value.length > 0)
+			{
+				const inputValueLength = event.target.value.length;
+				const newInputValue = event.target.value[inputValueLength - 1];
+				if (['1', '2', '3', '4', '5', '6'].includes(newInputValue))
+					event.target.value = newInputValue;
+				else
+					event.target.value = event.target.value[0];
+			}
+			if (!['1', '2', '3', '4', '5', '6'].includes(event.target.value))
+				event.target.value = "";
+			this.$set(this.inputValues[row], column, event.target.value);
+			this.$emit('updateAnswer', this.inputValues);
+		},
 		getBorderClasses(row, column) {
 			const currentColor = this.plot[row][column]
 			const leftColor = column > 0 ? this.plot[row][column - 1] : null
@@ -85,7 +102,7 @@ export default {
 				this.$set(this.inputValues[row], column, '')
 				return;
 			}
-			event.preventDefault()
+			//event.preventDefault()
 			if (!['1', '2', '3', '4', '5', '6'].includes(event.key)) return;
 			this.$set(this.inputValues[row], column, event.key)	
 			this.$emit('updateAnswer', this.inputValues)
