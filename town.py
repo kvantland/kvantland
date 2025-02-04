@@ -48,12 +48,16 @@ def get_town_data(db):
 				True: 'solved',
 				False: 'failed',
 			}[ans_true]
-			if variant_points:
-				send_points = variant_points
-			elif curr_points:
-				send_points = curr_points
-			else:
-				send_points = points
+
+			send_points = points
+
+			# Добавить в следующем турнире!!! [INF]
+			# if variant_points:
+			# 	send_points = variant_points
+			# elif curr_points:
+			# 	send_points = curr_points
+			# else:
+			# 	send_points = points
 			resp['towns'].append({"variantID": variant, "x": x, "y": y, "points": send_points, "name": name, "status": status})
 	except:
 		return json.dumps(resp)

@@ -149,8 +149,10 @@ def get_problem_data(db):
 	
 	if curr:
 		content = curr
-	if curr_points:
-		points = curr_points
+
+	# Добавить в следующем турнире!!!!	[INF]
+	# if curr_points:       
+	# 	points = curr_points
 
 	if 'correct' in content.keys(): # пользователь не должен знать ответ)
 		del content['correct']
@@ -278,6 +280,19 @@ def check_user_answer(db):
 						 (user_id, config["tournament"]["version"], classes))
 	db.execute('update Kvantland.AvailableProblem set answer_true=%s, answer=%s, solution=%s where variant = %s and student = %s', (is_answer_correct, answer_to_str, solution, variant, user_id))
 	if is_answer_correct:
+
+		# Добавить в следующем турнире!!! [INF]
+		# db.execute("""select points from Kvantland.Variant 
+		# 				 join Kvantland.Problem using (problem) where variant = %s""", (variant, ))
+		# (points, ), = db.fetchall()
+		# db.execute("""select variant_points from Kvantland.Variant 
+		# 				 where variant = %s""", (variant, ))
+		# (curr_points, ), = db.fetchall()
+		# if curr_points:
+		# 	points = curr_points
+		# db.execute('update Kvantland.Student set score=score + %s where student = %s', (points, user_id))
+		# db.execute('update Kvantland.Score set score=score + %s where student = %s and tournament = %s and classes=%s', (points, user_id, config["tournament"]["version"], classes))
+
 		db.execute('update Kvantland.Student set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s', (variant, user_id))
 		db.execute('update Kvantland.Score set score=score + (select points from Kvantland.Variant join Kvantland.Problem using (problem) where variant = %s) where student = %s and tournament = %s and classes=%s', (variant, user_id, config["tournament"]["version"], classes))
 
