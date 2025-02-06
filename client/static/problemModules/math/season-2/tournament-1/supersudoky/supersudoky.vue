@@ -96,17 +96,6 @@ export default {
 
 			return classes
 		},
-
-		inputNUmber(row, column, event) {
-			if (event.key === 'Backspace' || event.key === 'Delete') {
-				this.$set(this.inputValues[row], column, '')
-				return;
-			}
-			//event.preventDefault()
-			if (!['1', '2', '3', '4', '5', '6'].includes(event.key)) return;
-			this.$set(this.inputValues[row], column, event.key)	
-			this.$emit('updateAnswer', this.inputValues)
-		}
 	},
 }
 </script>
