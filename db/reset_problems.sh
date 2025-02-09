@@ -73,8 +73,6 @@ problems_list = "$problems_str".split(',')
 db = config['db']['url']
 
 # Вызов функции с переданными аргументами
-result = resetProblemsForUsers(users_list, problems_list, db)
-
-# Возвращаем результат в Bash
-sys.exit(result)
+for result in resetProblemsForUsers(users_list, problems_list, db):
+    print(result)
 END

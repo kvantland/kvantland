@@ -23,14 +23,16 @@ def resetProblemsForUsers(users_list, problems_list, db):
 												where name=%s and student=%s""", (problem, student,))
 									variants = list(cur.fetchall())
 									for (variant, ) in variants:
+										yield f"Executing query: update Kvantland.AvailableProblem set curr=NULL, answer=NULL, solution=NULL, answer_given=DEFAULT, answer_true=NULL where student={student} and variant={variant} \n"
 										cur.execute("""
 										update Kvantland.AvailableProblem set curr=NULL, answer=NULL, solution=NULL, answer_given=DEFAULT, answer_true=NULL where
 										student=%s and
 										variant=%s""", (student, variant))
 		if warnings:
 			warnings = list(set(warnings))
-			return "DB succesfully updated" + " \nusers : " + ", ".join(users_list) + " \nproblems : " + ", ".join(problems_list) + "\n\nWarnings :\n" + "\n".join(warnings)
-		return "DB succesfully updated" + " \nusers : " + ", ".join(users_list) + " \nproblems : " + ", ".join(problems_list)
+			yield "DB succesfully updated" + " \nusers : " + ", ".join(users_list) + " \nproblems : " + ", ".join(problems_list) + "\n\nWarnings :\n" + "\n".join(warnings)
+		else:
+			yield "DB succesfully updated" + " \nusers : " + ", ".join(users_list) + " \nproblems : " + ", ".join(problems_list)
 	except Exception:
 		ex_type, ex_value, ex_traceback = sys.exc_info()
-		return "Error : " + str(ex_value)
+		yield "Error : " + str(ex_value)
