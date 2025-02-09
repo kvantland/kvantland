@@ -3,7 +3,7 @@ import random
 
 def steps(step_num, params, data):
 	try:
-		if params['moveObject'] == "farmer":
+		if params['moveObject'] == "farmer" and (data['turn'] == "player" or data['remaining_moves'] == 30 and data['turn'] == None):
 			print('farmer')
 			move_position = params['moveTo']
 			if move_position['x'] < 0 or move_position['x'] >= data['board_width']:
@@ -20,7 +20,7 @@ def steps(step_num, params, data):
 			print(data['farmer_coordinates'], data['cockerel_coordinates'])
 			return {'answer': {'status': "allowed"}, 'data_update': data}
 		
-		elif params['moveObject'] == "cockerel":
+		elif params['moveObject'] == "cockerel" and (data['turn'] == "computer" or data['remaining_moves'] == 30 and data['turn'] == None):
 			print('cockerel')
 			if data['farmer_coordinates'] == data['cockerel_coordinates']:
 				return {

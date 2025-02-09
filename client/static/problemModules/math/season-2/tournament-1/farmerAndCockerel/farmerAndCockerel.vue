@@ -146,6 +146,8 @@ export default {
 		}
 	},
 	created() {
+		if (this.turn === "computer")
+			this.setTurn(this.turn)
 		this.farmerPositionCurrent.x = this.farmerPositionReal.x
 		this.farmerPositionCurrent.y = this.farmerPositionReal.y
 		this.cockerelPositionCurrent.x = this.cockerelPositionReal.x
