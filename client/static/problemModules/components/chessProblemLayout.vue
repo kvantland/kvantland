@@ -12,8 +12,8 @@
                     <rect v-else fill="orange" stroke="black" :width="boardItemSide" :height="boardItemSide" x="0" y="0" />
                     <image v-if="boardArrayConfiguration[rowIndex][columnIndex].type" 
                         :class="`dragFigure ${boardArrayConfiguration[rowIndex][columnIndex].moveStatus}`"
-                        @touchstart="startDrag(boardArrayConfiguration[rowIndex][columnIndex].type, $event, rowIndex, columnIndex)" 
-                        @mousedown="startDrag(boardArrayConfiguration[rowIndex][columnIndex].type, $event, rowIndex, columnIndex)"
+                        @touchstart="moveFromBoard(boardArrayConfiguration[rowIndex][columnIndex].type, $event, rowIndex, columnIndex)" 
+                        @mousedown="moveFromBoard(boardArrayConfiguration[rowIndex][columnIndex].type, $event, rowIndex, columnIndex)"
                         :href="`/problem_assets/chess/${boardArrayConfiguration[rowIndex][columnIndex].type}.png`"
                         :width="dragFigureWidth" :height="dragFigureWidth" :x="figureMarginTop" :y="figureMarginTop" />
                 </g>
@@ -94,6 +94,11 @@ export default {
             return this.boardWidth + this.gap + this.dragFigureWidth
         }
     },
+    mounted() {
+			document.addEventListener('pointermove', this.drag, { passive: false })
+			document.addEventListener('pointerup', this.endDrag)
+				
+    },
     methods: {
         convertDOMtoSVG(x, y) {
             try {
@@ -105,18 +110,16 @@ export default {
                 return false
             }
         },
-        inAllowedArea() { // if target object in allowed aarea
-            const targetX = window.event.clientX
-            const targetY = window.event.clientY
+        inAllowedArea(targetX, targetY) { // if target object in allowed aarea
             if (targetX < 0 || targetX > window.innerWidth)
                 return false
             if (targetY < 0 || targetY > window.innerHeight)
                 return false
             return true
         },
-        autoscroll() {
-            const targetX = window.event.clientX
-            const targetY = window.event.clientY
+        autoscroll(targetX, targetY) {
+            // const targetX = window.event.clientX
+            // const targetY = window.event.clientY
             const xDiff = 100
             const yDiff = 100
             let [scrollX, scrollY] = [0, 0]
@@ -134,53 +137,62 @@ export default {
             }
             scrollBy(scrollX, scrollY)
         },
-        inRect(x, y, rect){
-            if (x > rect.right || x < rect.left) {
-                return false
-            }
-            if (y > rect.bottom || y < rect.top) {
-                return false
-            }
-            return true
+			inRect(x, y, rect) {
+				if (x === undefined || y === undefined)
+					return false;
+				if (x > rect.right || x < rect.left) {
+					return false;
+				}
+				if (y > rect.bottom || y < rect.top) {
+					return false;
+				}
+				return true;
         },
-        moveAt(x, y) {
+        moveAt(x, y, event) {
             const newCursorCoordinates = this.convertDOMtoSVG(x, y)
             if (!newCursorCoordinates)
                 return
-            this.autoscroll()
+            this.autoscroll(x, y)
             this.$set(this.target, 'x', newCursorCoordinates.x - this.dragFigureWidth / 2)
-            this.$set(this.target, 'y', newCursorCoordinates.y - this.dragFigureHeight / 2)
-            if (!this.inAllowedArea()) {
-                this.endDrag()
+					this.$set(this.target, 'y', newCursorCoordinates.y - this.dragFigureHeight / 2)
+						console.log("herrrrr")
+					if (!this.inAllowedArea(x, y)) {
+						console.log("not in allowed area!");
+                this.endDrag(event)
             }
         },
-        startDrag(type, event, fromRow=undefined, fromColumn=undefined) {
-            if (fromRow != undefined && fromColumn != undefined) {
-                if (this.boardArrayConfiguration[fromRow][fromColumn].moveStatus == 'passive') {
+			startDrag(type, event, fromRow = undefined, fromColumn = undefined) {
+				console.log('start drag');
+            if (fromRow !==undefined && fromColumn !== undefined) {
+                if (this.boardArrayConfiguration[fromRow][fromColumn].moveStatus === 'passive') {
                     return
                 }
             }
             let x, y
-            if (event.touches) {
+				if (event.changedTouches) {
+					console.log("touches");
+					console.log(event.type);
                 event.preventDefault()
-                x = event.touches[0].clientX
-                y = event.touches[0].clientY
+                x = event.changedTouches[0].clientX
+                y = event.changedTouches[0].clientY
             }
             else {
                 x = event.clientX
                 y = event.clientY
             }
             this.$set(this.target, 'type', type)
-            if (fromRow != undefined && fromColumn != undefined) {
+            if (fromRow !== undefined && fromColumn !== undefined) {
                 let currentConfig = this.boardArrayConfiguration
                 currentConfig[fromRow][fromColumn].type = ''
                 currentConfig[fromRow][fromColumn].moveStatus = ''
                 this.$emit('updateConfig', currentConfig)
             }
-            this.moveAt(x, y)
+				this.moveAt(x, y, event)
+						console.log("moved!")
             this.dragMode = true
         },
-        drag(event) {
+			drag(event) {
+					console.log("drag!")
             if (!this.dragMode) {
                 return
             }
@@ -196,20 +208,31 @@ export default {
                 x = event.clientX
                 y = event.clientY
             }
-            this.moveAt(x, y)
+            this.moveAt(x, y, event)
         },
-        endDrag() {
-            if (!this.dragMode) {
-                return
-            }
+        endDrag(event) {
+					if (!this.dragMode) {
+						return;
+					}
+					let x, y;
+					if (event.touches) {
+						event.preventDefault()
+						x = event.changedTouches[0].clientX
+						y = event.changedTouches[0].clientY
+					}
+					else {
+						x = event.clientX
+						y = event.clientY
+					}
             const boardItems = document.querySelectorAll('.item')
             let backToDragZone = true
-            for (let boardItem of boardItems) {
-                const itemRect = boardItem.getBoundingClientRect()
-                if (this.inRect(window.event.x, window.event.y, itemRect)) {
-                    const rowIndex = boardItem.getAttribute('row')
-                    const columnIndex = boardItem.getAttribute('column')
-                    let currentConfig = this.boardArrayConfiguration
+            for (const boardItem of boardItems) {
+							const itemRect = boardItem.getBoundingClientRect()
+							const rowIndex = boardItem.getAttribute('row')
+              const columnIndex = boardItem.getAttribute('column')
+                if (this.inRect(x, y, itemRect)) {
+                    
+                    const currentConfig = this.boardArrayConfiguration
                     if (currentConfig[rowIndex][columnIndex].moveStatus === 'passive' || currentConfig[rowIndex][columnIndex].moveStatus === 'active') {
                         break;
                     }
@@ -224,7 +247,7 @@ export default {
                 console.log('here!')
                 for(let index = 0; index < this.dragFigures.length; index++) {
                     if (this.dragFigures[index].type === this.target.type) {
-                        this.$emit('updateFiguresAmount', {index: index, amount: this.dragFigures[index].amount + 1})
+                        this.$emit('updateFiguresAmount', {index, amount: this.dragFigures[index].amount + 1})
                     }
                 }
             }
@@ -232,21 +255,15 @@ export default {
         },
         moveFromDragZone(type, index, event) {
             console.log(index, this.dragFigures[index])
-            if (this.dragFigures[index].amount <= 0) {
-                return
-            }
-            else {
+            if (this.dragFigures[index].amount > 0) {
                 console.log('update amount')
-                this.$emit('updateFiguresAmount', {index: index, amount: this.dragFigures[index].amount - 1})
+                this.$emit('updateFiguresAmount', {index, amount: this.dragFigures[index].amount - 1})
                 this.startDrag(type, event)
             }
-        }
-    },
-    mounted() {
-        document.addEventListener('mousemove', this.drag, {passive: false})
-        document.addEventListener('touchmove', this.drag, {passive: false})
-        document.addEventListener('touchend', this.endDrag)
-        document.addEventListener('mouseup', this.endDrag)
+			},
+			moveFromBoard(type, event, fromRow, fromColumn) {
+				this.startDrag(type, event, fromRow, fromColumn)
+			}
     }
 }
 </script>
