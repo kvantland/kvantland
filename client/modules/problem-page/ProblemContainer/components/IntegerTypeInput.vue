@@ -21,8 +21,11 @@ export default {
     },
 
     methods: {
-        sendAnswer(answer) {
-            this.$emit('sendAnswer', answer)
+			sendAnswer(answer) {
+				if (!/^-?\d*\.?\d+$/.test(answer))
+					this.$emit("showXhrDialog", "Ответ должен быть числом!");
+				else
+					this.$emit('sendAnswer', answer);
         },
         getHint() {
             this.$emit('getHint')

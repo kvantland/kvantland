@@ -21,7 +21,8 @@
 			<HintContainer v-if="hint.description" :description="hint.description" />
 		</div>
 
-		<component :is="dynamicInput" v-if="!answerGiven && dynamicInput" :has-hint="hint.status" @sendAnswer="sendAnswer" @getHint="getHint"/>
+		<component :is="dynamicInput" v-if="!answerGiven && dynamicInput" :has-hint="hint.status" 
+			@sendAnswer="sendAnswer" @getHint="getHint" @showXhrDialog="showXhrDialog" />
 		<ProblemResult 
 			v-if="answerGiven" 
 			:answer="answer" :answer-status="answerStatus" 
