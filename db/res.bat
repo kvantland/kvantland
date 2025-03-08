@@ -1,5 +1,7 @@
 @echo OFF
 
+cd /d "%~dp0"
+
 FOR /F "tokens=*" %%a IN ('python -c "import sys; sys.path.append('..'); from config import config; print(config['db']['url'])"') DO (SET db=%%a)
 
 
